@@ -1,0 +1,35 @@
+<h1><%= @journal_article.title %></h1>
+<dl>
+  <dt>Title</dt>
+  <dd>
+    <%= @journal_article.title %>
+  </dd>
+  <dt>Abstract</dt>
+  <dd>
+    <%= @journal_article.abstract %>
+  </dd>
+  <dt>Start page</dt>
+  <dd>
+    <%= @journal_article.start_page[0] %>
+  </dd>
+  <dt>End page</dt>
+  <dd>
+    <%= @journal_article.end_page[0] %>
+  </dd>
+  <dt>Publication date</dt>
+  <dd>
+    <%= @journal_article.publication_date[0] %>
+  </dd>
+  <dt>Journal</dt>
+  <dd>
+    <%= @journal_article.journal_title[0] %>
+  </dd>
+  <dt>Journal volume</dt>
+  <dd>
+    <%= @journal_article.journal_volume[0] %>
+  </dd>
+  <dt>Journal issue</dt>
+  <dd>
+    <%= @journal_article.journal_issue[0] %>
+  </dd>
+</dl>

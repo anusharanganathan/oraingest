@@ -1,0 +1,17 @@
+  <%= f.label 'Authors or Contributors' %>
+  <%#= f.fields_for :person[count] do |agent_form| %>
+  <%= f.fields_for :person do |agent_form| %>
+    <%= agent_form.label :last_name %>
+    <%= agent_form.text_field :last_name %>
+    <%= agent_form.label :first_name %>
+    <%= agent_form.text_field :first_name %>
+    <%= agent_form.label :role %>
+    <%= agent_form.text_field :role, :value =>"Author" %>
+    <%= agent_form.label :affiliation %>
+    <%= agent_form.text_field :affiliation %>
+    <%= agent_form.label :funder %>
+    <%= agent_form.text_field :funder %>
+    <%= agent_form.label :grant_number %>
+    <%= agent_form.text_field :grant_number %>
+  <% end %>
+

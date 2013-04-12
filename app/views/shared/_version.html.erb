@@ -1,0 +1,11 @@
+  <%= f.label :version, "Which version are you depositing in ORA?" %>
+  <%= f.select(:version, options_for_select([
+    ["Select an option", ""],
+    ["Author's Original", "Author's Original"],
+    ["Updated Author's Original", "Updated Author's Original"],
+    ["Accepted Manuscript", "Accepted Manuscript"],
+    ["Proof", "Proof"],
+    ["Publisher's version", "Publisher's version"],
+    ["Updated Publisher's version", "Updated Publisher's version"],
+  ], :selected => params[:version])) %>
+

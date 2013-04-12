@@ -1,0 +1,9 @@
+<%= f.label :peer_reviewed, "Has the work been peer-reviewed?" %>
+<%= f.select(:peer_reviewed, options_for_select([
+  ["Select an option", ""],
+  ["Peer reviewed", "Peer reviewed"],
+  ["Reviewed (other)", "Reviewed (other)"],
+  ["Under review", "Under review"],
+  ["Not peer reviewed", "Not peer reviewed"]
+], :selected => params[:peer_reviewed])) %>
+

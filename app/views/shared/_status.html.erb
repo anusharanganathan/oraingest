@@ -1,0 +1,9 @@
+<%= f.label :status, "Status of your work" %>
+<%= f.select(:status, options_for_select([
+  ["Select an option", ""],
+  ["Published", "Published"],
+  ["In Press", "In Press"],
+  ["Submitted", "Submitted"],
+  ["Not Published","Not Published"]
+], :selected => params[:status])) %>
+

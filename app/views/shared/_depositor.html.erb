@@ -1,0 +1,7 @@
+<%#= f.fields_for :agent[count] do |agent_form| %>
+<%= f.fields_for :person do |agent_form| %>
+  <%= agent_form.hidden_field :webauth, :value =>"INSERT DEPOSITOR WEBAUTH FROM LOGIN" %>
+  <%= agent_form.hidden_field :display_name, :value =>"INSERT DEPOSITOR NAME FROM LOGIN" %>
+  <%= agent_form.hidden_field :role, :value =>"Depositor" %>
+<% end %>
+

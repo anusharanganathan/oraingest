@@ -1,0 +1,22 @@
+  <%= f.label 'Is your article an output of funded research?' %>
+  <%= radio_button 'funded', 'funded', 'yes', {:class => "isitfunded funded_yes"} %> Yes
+  <%= radio_button 'funded', 'funded', 'no', {:class => "isitfunded funded_no"} %> No
+  <div id="isfunded" style="display:none">
+  <%= f.label 'Research funder(s)' %>
+  <%#= f.fields_for :agent[count] do |agent_form| %>
+    <%#= agent_form.hidden_field :agent[count]['type'], :value =>"corporate" %>
+  <%= f.fields_for :organisation do |agent_form| %>
+    <%= agent_form.label :display_name, 'Name of funder' %>
+    <%= agent_form.text_field :display_name %>
+    <%= agent_form.label :grant_number %>
+    <%= agent_form.text_field :grant_number %>
+    <%= agent_form.hidden_field :role, :value =>"Funder" %>
+  <% end %>
+  </div>
+
+<script>
+$(".isitfunded").on("change", function(){
+  $("#isfunded").toggle($(this).hasClass("funded_yes"));
+});
+</script>
+

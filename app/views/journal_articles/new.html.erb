@@ -1,0 +1,147 @@
+<h1>Add new journal article</h1>
+<%= debug @journal_article %>
+<%= form_for @journal_article do |f| %>
+  <%= render :partial => "shared/depositor", :locals=>{:f=>f, :count=>1} %>
+
+  <%= f.label :type, "Select type of work being deposited?" %>
+  <%= f.select(:type, options_for_select([
+    ["Select type", ""], 
+    ["Article", "article"], 
+    ["Journal article", "journalarticle"], 
+    ["Discussion paper", "discussionpaper"], 
+    ["Wokring paper", "workingpaper"], 
+    ["Press article","pressarticle"]
+  ], :selected => params[:type])) %>
+
+  <div id="subtype" style="display:none">
+  <%= f.label :subtype, "What typoe of article is it?" %>
+  <%= f.select(:subtype, options_for_select([
+    ["Select type of article", ""], 
+    ["Internet publication", "Internet publication"], 
+    ["Lead essay", "Lead essay"], 
+    ["Op ed", "Op ed"]
+  ], :selected => params[:subtype])) %>
+  </div>
+
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+
+  <%= f.label :subtitle %>
+  <%= f.text_field :subtitle %>
+
+  <%= f.label :abstract %>
+  <%= f.text_area :abstract, :size => "80x6"%>
+
+  <%= f.label :journal_title %>
+  <%= f.text_field :journal_title %>
+
+  <%= f.label :journal_volume %>
+  <%= f.text_field :journal_volume %>
+
+  <%= f.label :journal_issue %>
+  <%= f.text_field :journal_issue %>
+
+  <%= f.label :start_page %>
+  <%= f.text_field :start_page %>
+
+  <%= f.label :end_page %>
+  <%= f.text_field :end_page %>
+
+  <%= f.label :publication_date %>
+  <%= f.text_field :publication_date %>
+
+  <%= f.label :doi %>
+  <%= f.text_field :doi %>
+
+  <%= f.label :issn %>
+  <%= f.text_field :issn %>
+
+  <%= f.label :eissn %>
+  <%= f.text_field :eissn %>
+
+  <%= f.label :article_number %>
+  <%= f.text_field :article_number %>
+
+  <!-- <div id="identifiers">
+    <%#= f.label :identifier %>
+    <div id="id1" class="idInput">
+    <%#= select(:identifier, :identifier['type'], [
+      ["Select type of identifier", ""], 
+      ["DOI", "doi"], 
+      ["ISSN", "issn"], 
+      ["eISSN", "eissn"], 
+      ["Article number","article_number"]
+    ], :selected => params[:identifier['type']]) %>
+    <%#= f.text_field :identifier, :value =>"" %>
+      <div class="actions">
+        <button class="remove">-</a>
+        <button class="clone">+</a>
+      </div>
+    </div>
+  </div> -->
+
+  <%= f.label 'Publisher' %>
+  <%= f.fields_for :organisation do |agent_form| %>
+    <%= agent_form.text_field :display_name %>
+    <%= agent_form.hidden_field :role, :value =>"Publisher" %>
+  <% end %>
+
+  <%= f.label :publisher_note %>
+  <%= f.text_area :publisher_note, :size => "80x3" %>
+
+  <%= render :partial => "shared/status", :locals=>{:f=>f} %>
+
+  <%= render :partial => "shared/review_status", :locals=>{:f=>f} %>
+
+  <%= render :partial => "shared/version", :locals=>{:f=>f} %>
+
+  <%= f.label :subject, "Subject (one per line)"%>
+  <%= f.text_area :subject, :size => "80x6", :value=>"" %>
+
+  <%= f.label :keyword, "Keywords (one per line)"%>
+  <%= f.text_area :keyword, :size => "80x6", :value=>"" %>
+
+  <%#= render :partial => "shared/funder", :locals=>{:f=>f, :count=>2} %>
+  <%= render :partial => "shared/funder", :locals=>{:f=>f} %>
+  
+  <%= f.label :language %>
+  <%= f.text_field :language, :value=>params[:language] %>
+
+  <%#= render :partial => "shared/author", :locals=>{:f=>f, :count=>3} %>
+  <%= render :partial => "shared/author", :locals=>{:f=>f} %>
+
+  <%= f.label :license, 'Do you want to assign a license to this work?' %>
+  <%= f.text_field :license %>
+
+  <%#= render :partial => "shared/copyright", :locals=>{:f=>f, :count=>4} %>
+  <%= render :partial => "shared/copyright", :locals=>{:f=>f, :count=>4} %>
+
+  <%#TODO - Embargo Info %>
+
+  <%= render :partial => "shared/relateditem", :locals=>{:f=>f} %>
+  <%= render :partial => "shared/relateditem", :locals=>{:f=>f} %>
+
+  <%= f.label :note, 'Note for display' %>
+  <%= f.text_area :note, :size => "80x3"%>
+
+  <%#TODO - Only display if logged in? %>
+  <%= f.label :admin_note, 'Note for reviewers' %>
+  <%= f.text_area :admin_note, :size => "80x3"%>
+
+  <%= f.submit "Save" %>
+<% end %>
+
+<script>
+$("#journal_article_type").on("change", function(){
+  var selectVal = $('#journal_article_type :selected').val();
+  $("#subtype").toggle( selectVal=='article');
+});
+
+//var idIndex = $(".idInput").length;
+//$("button.clone").live("click", function(){
+//  $(this).parents(".idInput").clone()
+//    .appendTo("#identifiers")
+//    .attr("id", "id" +  cloneIndex)
+//  });
+//  idIndex++;
+</script>

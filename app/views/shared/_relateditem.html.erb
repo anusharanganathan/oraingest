@@ -1,0 +1,12 @@
+  <%= f.label 'Want to tell us of any related items?' %>
+  <%= f.fields_for :related_item do |rel_form| %>
+    <%= rel_form.label :title %>
+    <%= rel_form.text_field :title %>
+    <%= rel_form.label :location, 'Location of item (url)' %>
+    <%= rel_form.text_field :location %>
+    <%#= rel_form.label :related_item['type'], 'Type of relation' %>
+    <%#= rel_form.text_field :related_item['type'] %>
+    <%#= rel_form.label :type, 'Type of relation' %>
+    <%#= rel_form.text_field :type %>
+  <% end %>
+

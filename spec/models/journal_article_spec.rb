@@ -28,7 +28,15 @@ describe JournalArticle do
       "end_page" => "30",
     }
     
-    @article.update_attributes( attributes_hash )
+    #@article.update_attributes( attributes_hash )
+    @article.title = "All the Awesome you can Handle"
+    @article.abstract = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    @article.journal_title = "The Journal of Cool"
+    @article.publication_date = "1967-11-01"
+    @article.journal_volume = "3"
+    @article.journal_issue = "2"
+    @article.start_page = "25"
+    @article.end_page = "30"
     
     # These attributes have been marked "unique" in the call to delegate, which causes the results to be singular
     @article.title.should == attributes_hash["title"]

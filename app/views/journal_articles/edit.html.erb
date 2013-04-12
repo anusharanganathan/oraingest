@@ -1,0 +1,37 @@
+<h1>Add new journal article</h1>
+<%= form_for @journal_article do |f| %>
+
+  <%#= f.inspect %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+
+  <%= f.label :abstract %>
+  <%= f.text_area :abstract, :size => "200x6" %>
+
+  <%# @journal_article.journal_title.each do |journal| %>
+    <%#= f.fields_for journal, :index => journal do |journal_form|%>
+      <%#= journal_form.text_field :journal_title %>
+    <%# end %>
+  <%# end %>
+
+  <%= f.label :start_page %>
+  <%= f.text_field :start_page %>
+
+  <%= f.label :end_page %>
+  <%= f.text_field :end_page %>
+
+  <%= f.label :publication_date %>
+  <%= f.text_field :publication_date %>
+
+  <%= f.label :journal_title %>
+  <%= f.text_field :journal_title %>
+
+  <%= f.label :journal_volume %>
+  <%= f.text_field :journal_volume %>
+
+  <%= f.label :journal_issue %>
+  <%= f.text_field :journal_issue %>
+
+  <%= f.submit "Save" %>
+<% end %>
+
