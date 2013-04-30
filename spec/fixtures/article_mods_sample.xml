@@ -1,39 +1,99 @@
-<mods xmlns="http://www.loc.gov/mods/v3" version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3
-http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
-  <titleInfo>
-    <title>SAMPLE ARTICLE TITLE</title> <!-- title -->
-  </titleInfo>
-  <name type="personal">
-    <namePart type="family">Washington</namePart> <!-- author last name -->
-    <namePart type="given">George</namePart> <!-- author first name -->
-    <role>
-      <roleTerm authority="marcrelator" type="text">Creator</roleTerm> <!-- author role -->
-    </role>
-  </name>
-  <name type="personal">
-    <namePart type="family">Lincoln</namePart> <!-- author last name -->
-    <namePart type="given">Abraham</namePart> <!-- author first name -->
-    <role>
-      <roleTerm authority="marcrelator" type="text">Contributor</roleTerm> <!-- author role -->
-    </role>
-  </name>
-  <abstract>THIS IS AN ABSTRACT</abstract> <!-- abstract -->
-  <relatedItem type="host">
-    <titleInfo>
-      <title>SAMPLE HOST JOURNAL TITLE</title> <!-- journal title -->
-    </titleInfo>
-    <part>
-      <detail type="volume">
-        <number>2</number> <!-- journal volume -->
-      </detail>
-      <detail type="level">
-        <number>18</number> <!-- journal issue -->
-      </detail>
-      <extent unit="pages">
-        <start>195</start> <!-- start page -->
-        <end>230</end> <!-- end page -->
-      </extent>
-      <date>FEB. 2007</date> <!-- publication date -->
-    </part>
-  </relatedItem>
-</mods>
+<mods:modsCollection xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://ora.ox.ac.uk/access/mods-3.2-oxford.xsd">
+  <mods:mods version="3.2">
+    <mods:titleInfo>
+      <mods:title>Sample article title</mods:title>
+	  <mods:subTitle>Subtitle of article</mods:title>
+    </mods:titleInfo>
+    <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="personal">
+      <mods:namePart type="family">Smith</mods:namePart>
+      <mods:namePart type="given">Will</mods:namePart>
+	  <mods:displayForm>Smith, W</mods:displayForm>
+      <mods:namePart type="termsOfAddress">Dr</mods:namePart>
+      <mods:affiliation type="email">will.smith@example.com</mods:affiliation>
+      <mods:affiliation type="institution">University of Oxford</mods:affiliation>
+      <mods:affiliation type="faculty">Humanities Division - English Language and Literature</mods:affiliation>
+      <mods:affiliation type="oxfordCollege">Linacre College</mods:affiliation>
+	  <mods:role><mods:roleTerm type="text">author</mods:roleTerm></mods:role>
+	  <mods:affiliation type="funding">Leverhulme Trust</mods:affiliation>
+	  <mods:identifier type="urn">uuid:1bcbd111-1477-412c-960e-453ce7f97dc5</mods:identifier>
+    </mods:name>
+    <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority">
+      <mods:displayForm>Will Smith</mods:displayForm>
+      <mods:role>
+        <mods:roleTerm type="text">Copyright Holder</mods:roleTerm>
+      </mods:role>
+      <mods:affiliation type="rightsOwnership">Sole authorship</mods:affiliation>
+      <mods:affiliation type="ThirdPartyCopyright">Contains Third Party copyright</mods:affiliation>
+    </mods:name>
+    <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="personal">
+      <mods:namePart type="family">Smith</mods:namePart>
+      <mods:namePart type="given">Jada</mods:namePart>
+	  <mods:displayForm>Smith, J</mods:displayForm>
+      <mods:namePart type="termsOfAddress">Prof</mods:namePart>
+      <mods:role>
+        <mods:roleTerm type="text">Supervisor</mods:roleTerm>
+      </mods:role>
+    </mods:name>
+    <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="corporate">
+      <mods:displayForm>Name of Publisher</mods:displayForm>
+      <mods:role>
+        <mods:roleTerm type="text">Publisher</mods:roleTerm>
+      </mods:role>
+      <mods:affiliation type="website">http://www.example.org/</mods:affiliation>
+    </mods:name>
+    <mods:typeOfResource>text</mods:typeOfResource>
+    <mods:genre type="typeofwork">Journal article</mods:genre>
+    <mods:originInfo>
+      <mods:dateCreated encoding="iso8601">2013</mods:dateCreated>
+      <mods:dateIssued encoding="iso8601">2012-03</mods:dateIssued>
+      <mods:copyrightDate encoding="iso8601">2012-04</mods:copyrightDate>
+    </mods:originInfo>
+    <mods:language>
+      <mods:languageTerm authority="iso639-3">English</mods:languageTerm>
+    </mods:language>
+    <mods:physicalDescription>
+      <mods:digitalOrigin>born digital</mods:digitalOrigin>
+	  <mods:form type="status">Published</mods:form>
+	  <mods:form type="peerReviewed">Peer reviewed</mods:form>
+	  <mods:form type="version">Publisher's version</mods:form>
+    </mods:physicalDescription>
+	<mods:relatedItem type="otherVersion">
+      <mods:location>
+        <mods:url>http://journals.iucr.org/s/</mods:url>
+      </mods:location>
+	</mods:relatedItem>
+	<mods:relatedItem type="host">
+      <mods:titleInfo>
+        <mods:title>Sample host Journal title</mods:title>
+      </mods:titleInfo>
+      <mods:part>
+        <mods:detail type="volume">
+		  <mods:number>20</mods:number>
+		</mods:detail>
+		<mods:detail type="issue">
+		  <mods:number>1</mods:number>
+		</mods:detail>
+		<mods:extent unit="pages">
+		  <mods:start>200</mods:start>
+		  <mods:end>204</mods:end>
+		  <mods:list>200-204</mods:list>
+		</mods:extent>
+      </mods:part>
+	</mods:relatedItem>
+    <mods:abstract>The abstract for the paper</mods:abstract>
+    <mods:note>This paper is not currently available</mods:note>
+    <mods:subject>
+      <mods:genre>Dorothea Herbert</mods:genre>
+      <mods:genre>life-writing</mods:genre>
+      <mods:genre>18th century writing</mods:genre>
+      <mods:genre>women's writing</mods:genre>
+      <mods:topic>History of the book</mods:topic>
+      <mods:topic>English Language and Literature</mods:topic>
+    </mods:subject>
+    <mods:identifier type="pid">uuid:01234567-89ab-cdef-0123-456789abcdef</mods:identifier>
+	<mods:identifier type="urn">uuid:01234567-89ab-cdef-0123-456789abcdef</mods:identifier>
+	<mods:identifier type="doi">10.00/xxxx</mods:identifier>
+	<mods:accessCondition type="restrictionOnAccess">cc-0</mods:accessCondition>
+  </mods:mods>
+</mods:modsCollection>
+                                                                        

@@ -1,6 +1,6 @@
 <h1>Add new journal article</h1>
-<%= debug @journal_article %>
-<%= form_for @journal_article do |f| %>
+<%= debug @article %>
+<%= form_for @article do |f| %>
   <%= render :partial => "shared/depositor", :locals=>{:f=>f, :count=>1} %>
 
   <%= f.label :type, "Select type of work being deposited?" %>
@@ -91,9 +91,9 @@
 
   <%= render :partial => "shared/status", :locals=>{:f=>f} %>
 
-  <%= render :partial => "shared/review_status", :locals=>{:f=>f} %>
+  <%#= render :partial => "shared/review_status", :locals=>{:f=>f} %>
 
-  <%= render :partial => "shared/version", :locals=>{:f=>f} %>
+  <%#= render :partial => "shared/version", :locals=>{:f=>f} %>
 
   <%= f.label :subject, "Subject (one per line)"%>
   <%= f.text_area :subject, :size => "80x6", :value=>"" %>

@@ -1,9 +1,9 @@
-describe JournalArticlesController do
+describe ArticleController do
 
   describe "creating" do
     it "should render the create page" do
        get :new
-       assigns[:journal_article].should be_kind_of JournalArticle
+       assigns[:journal_article].should be_kind_of Article
        renders.should == "new"
     end
     it "should support create requests" do
@@ -16,7 +16,7 @@ describe JournalArticlesController do
   describe "editing" do
     it "should support edit requests" do
        get :edit, :id=>"hydra:fixture_journal_article"
-       assigns[:journal_article].should be_kind_of JournalArticle
+       assigns[:journal_article].should be_kind_of Article
        assigns[:journal_article].pid.should == "hydra:fixture_journal_article"
     end
     it "should support updating objects" do

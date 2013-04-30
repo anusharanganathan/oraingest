@@ -1,9 +1,31 @@
-<%= f.label :status, "Status of your work" %>
-<%= f.select(:status, options_for_select([
-  ["Select an option", ""],
-  ["Published", "Published"],
-  ["In Press", "In Press"],
-  ["Submitted", "Submitted"],
-  ["Not Published","Not Published"]
-], :selected => params[:status])) %>
+<%= f.fields_for :physical_description do |desc_form| %>
+  <%= desc.label :status, "Status of your work" %>
+  <%= desc.select(:status, options_for_select([
+    ["Select an option", ""],
+    ["Published", "Published"],
+    ["In Press", "In Press"],
+    ["Submitted", "Submitted"],
+    ["Not Published","Not Published"]
+  ], :selected => params[:status])) %>
+
+  <%= desc.label :peer_reviewed, "Has the work been peer-reviewed?" %>
+  <%= desc.select(:peer_reviewed, options_for_select([
+    ["Select an option", ""],
+    ["Peer reviewed", "Peer reviewed"],
+    ["Reviewed (other)", "Reviewed (other)"],
+    ["Under review", "Under review"],
+    ["Not peer reviewed", "Not peer reviewed"]
+  ], :selected => params[:peer_reviewed])) %>
+
+  <%= desc.label :version, "Which version are you depositing in ORA?" %>
+  <%= desc.select(:version, options_for_select([
+    ["Select an option", ""],
+    ["Author's Original", "Author's Original"],
+    ["Updated Author's Original", "Updated Author's Original"],
+    ["Accepted Manuscript", "Accepted Manuscript"],
+    ["Proof", "Proof"],
+    ["Publisher's version", "Publisher's version"],
+    ["Updated Publisher's version", "Updated Publisher's version"],
+  ], :selected => params[:version])) %>
+<% end %>
 

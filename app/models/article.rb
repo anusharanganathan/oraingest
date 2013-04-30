@@ -1,14 +1,17 @@
 # app/models/journal_article.rb
-# a Fedora object for the Journal Article hydra content type
-class JournalArticle < ActiveFedora::Base
+# a Fedora object for the Article hydra content type
+class Article < ActiveFedora::Base
   include Hydra::ModelMethods
   include Hydra::Datastream
   
-  has_metadata :name => "descMetadata", :type=> JournalArticleModsDatastream
+  has_metadata :name => "descMetadata", :type=> ArticleModsDatastream
   has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
 
   # The delegate method allows you to set up attributes on the model that are stored in datastreams
   # When you set :unique=>"true", searches will return a single value instead of an array.
+  delegate :pid, :to=>"descMetadata", :unique=>"true"
+  delegate :urn, :to=>"descMetadata", :unique=>"true"
+
   delegate :title, :to=>"descMetadata", :unique=>"true"
   delegate :subtitle, :to=>"descMetadata", :unique=>"true"
 
@@ -24,17 +27,17 @@ class JournalArticle < ActiveFedora::Base
   delegate :agent, :to=>"descMetadata"
   delegate :person, :to=>"descMetadata"
   delegate :organisation, :to=>"descMetadata"
+  delegate :copyright_holder, :to=>"descMetadata"
   
   delegate :type, :to=>"descMetadata"
   delegate :subtype, :to=>"descMetadata"
 
   delegate :publication_date, :to=>"descMetadata", :unique=>"true"
+  delegate :creation_date, :to=>"descMetadata", :unique=>"true"
   delegate :copyright_date, :to=>"descMetadata", :unique=>"true"
 
   delegate :language, :to=>"descMetadata"
-  delegate :status, :to=>"descMetadata", :unique=>"true"
-  delegate :peer_reviewed, :to=>"descMetadata", :unique=>"true"
-  delegate :version, :to=>"descMetadata", :unique=>"true"
+  delegate :physical_description, :to=>"descMetadata"
   delegate :subject, :to=>"descMetadata"
   delegate :keyword, :to=>"descMetadata"
   delegate :license, :to=>"descMetadata", :unique=>"true"
