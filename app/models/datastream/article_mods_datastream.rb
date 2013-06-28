@@ -9,22 +9,24 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
   set_terminology do |t|
     t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3 http://ora.ox.ac.uk/access/mods-3.2-oxford.xsd")
     t.pid(:path=>"identifier", :attributes=>{:type=>"pid"}, :label=>"PID")
+
     t.urn(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"urn")
+
     t.title_info(:path=>"titleInfo") {
       t.main_title(:index_as=>[:facetable],:path=>"title", :label=>"title")
       t.sub_title(:index_as=>[:facetable],:path=>"subTitle", :label=>"subtitle")
     }
+    t.title(:proxy=>[:mods, :title_info, :main_title])
+    t.subtitle(:proxy=>[:mods, :title_info, :sub_title])
 
     t.abstract 
 
     t.journal(:path=>'relatedItem', :attributes=>{:type=>"host"}) {
       t.title_info(:ref=>[:title_info])
       t.part {
-        #t.volume(:path=>"detail", :attributes=>{:type=>"volume"}, :default_content_path=>"number") 
         t.volume(:path=>"detail", :attributes=>{:type=>"volume"}) {
           t.number
         }
-        #t.issue(:path=>"detail", :attributes=>{:type=>"issue"}, :default_content_path=>"number")
         t.issue(:path=>"detail", :attributes=>{:type=>"issue"}){
           t.number
         }
@@ -33,11 +35,14 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
           t.start
           t.end
         }
-        #t.start_page(:proxy=>[:pages, :start])
-        #t.end_page(:proxy=>[:pages, :end])
-        #t.page(:proxy=>[:pages, :list])
       }
     }
+    t.journal_title(:proxy=>[:journal, :title_info, :main_title])
+    t.journal_volume(:proxy=>[:journal, :part, :volume, :number])
+    t.journal_issue(:proxy=>[:journal, :part, :issue, :number])
+    t.start_page(:proxy=>[:journal, :part, :pages, :start])
+    t.end_page(:proxy=>[:journal, :part, :pages, :end])
+    t.page_numbers(:proxy=>[:journal, :part, :pages, :list])
 
     #t.agent(:path=>"name", :attributes=>{:type=>["personal", "corporate", ""], :authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}) {
     t.agent(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}) {
@@ -45,29 +50,50 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
       t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
       t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"}, :label=>"terms of address")
       t.display_name(:path=>"displayForm", :label=>"display form of name")
-      t.roleterm(:path=>"role", :label=>"role"){
-        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"})
+      t.roleterm(:path=>"role"){
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"}, :label=>"role")
       }
       t.role(:proxy=>[:roleterm, :text])
       t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
-      t.pid(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"pid")
-      t.institution(:path=>"affiliation", :attributes=>{:type=>"institution"})
-      t.faculty(:path=>"affiliation", :attributes=>{:type=>"faculty"})
-      t.research_group(:path=>"affiliation", :attributes=>{:type=>"researchGroup"}, :label=>"research group")
-      t.oxford_college(:path=>"affiliation", :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
+      #t.pid(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"pid")
+      t.pid(:ref=>[:pid])
       t.affiliation
-      t.funder(:path=>"affiliation", :attributes=>{:type=>"funding"})
-      t.grant_number(:path=>"affiliation", :attributes=>{:type=>"grantNumber"}, :label=>"grant number")
-      t.website(:path=>"affiliation", :attributes=>{:type=>"website"})
-      t.email(:path=>"affiliation", :attributes=>{:type=>"email"})
-      t.rights_ownership(:path=>"affiliation", :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
-      t.third_party_copyright(:path=>"affiliation", :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
+      t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
+      t.faculty(:ref=>[:agent, :affiliation], :attributes=>{:type=>"faculty"})
+      t.research_group(:ref=>[:agent, :affiliation], :attributes=>{:type=>"researchGroup"}, :label=>"research group")
+      t.oxford_college(:ref=>[:agent, :affiliation], :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
+      t.funder(:ref=>[:agent, :affiliation], :attributes=>{:type=>"funding"})
+      t.grant_number(:ref=>[:agent, :affiliation], :attributes=>{:type=>"grantNumber"}, :label=>"grant number")
+      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
+      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
+      t.rights_ownership(:ref=>[:agent, :affiliation], :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
+      t.third_party_copyright(:ref=>[:agent, :affiliation], :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
     }
+    t.agent_first_name(:proxy=>[:agent, :first_name])
+    t.agent_last_name(:proxy=>[:agent, :last_name])
+    t.agent_terms_of_address(:proxy=>[:agent, :terms_of_address])
+    t.agent_display_name(:proxy=>[:agent, :display_name])
+    t.agent_role(:proxy=>[:agent, :roleterm, :text])
+    t.agent_webauth(:proxy=>[:agent, :webauth])
+    t.agent_pid(:proxy=>[:agent, :pid])
+    t.agent_affiliation(:proxy=>[:agent, :affiliation])
+    t.agent_institution(:proxy=>[:agent, :institution])
+    t.agent_faculty(:proxy=>[:agent, :faculty])
+    t.agent_research_group(:proxy=>[:agent, :research_group])
+    t.agent_oxford_college(:proxy=>[:agent, :oxford_college])
+    t.agent_funder(:proxy=>[:agent, :funder])
+    t.agent_grant_number(:proxy=>[:agent, :grant_number])
+    t.agent_website(:proxy=>[:agent, :website])
+    t.agent_email(:proxy=>[:agent, :email])
+    t.agent_rights_ownership(:proxy=>[:agent, :rights_ownership])
+    t.agent_third_party_copyright(:proxy=>[:agent, :third_party_copyright])
+    
     t.person(:ref=>:agent, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
     t.organisation(:ref=>:agent, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
     t.copyright_holder(:ref=>:agent, :index_as=>[:facetable])
 
     t.type(:path=>"genre", :attributes=>{:type=>"typeofwork"})
+
     t.subtype(:path=>"genre", :attributes=>{:type=>"subtypeofwork"})
    
     t.origin_info(:path=>"originInfo") {
@@ -75,63 +101,81 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
       t.date_created(:path=>"dateCreated", :attributes=>{:encoding=>"iso8601"}, :label=>"creation date")
       t.copyright_date(:path=>"copyrightDate", :attributes=>{:encoding=>"iso8601"}, :label=>"copyright date")
     }
+    t.publication_date(:proxy=>[:origin_info, :date_issued])
+    t.creation_date(:proxy=>[:origin_info, :date_created])
+    t.copyright_date(:proxy=>[:origin_info, :copyright_date])
 
     t.language_text(:path=>"language"){
       t.text(:path=>"languageTerm", :attributes=>{:type=>"text", :authority=>"iso639-3"})
     }
+    t.language(:proxy=>[:language_text, :text])
+
     t.physical_description(:path=>"physicalDescription"){
       t.status(:path=>"form", :attributes=>{:type=>"status"}, :label=>"status")
       t.peer_reviewed(:path=>"form", :attributes=>{:type=>"peerReviewed"}, :label=>"peer reviewed")
       t.version(:path=>"form", :attributes=>{:type=>"version"}, :label=>"version")
     }
+    t.status(:proxy=>[:physical_description, :status])
+    t.peer_reviewed(:proxy=>[:physical_description, :peer_reviewed])
+    t.version(:proxy=>[:physical_description, :version])
 
     t.subject_parent(:path=>"subject"){
       t.topic(:path=>"topic", :label=>"subject")
       t.genre(:path=>"genre", :label=>"keyword")
     }
+    t.subject(:proxy=>[:subject_parent, :topic])
+    t.keyword(:proxy=>[:subject_parent, :genre])
 
     t.license(:path=>"accessCondition", :attributes=>{:type=>"restrictionOnAccess"}, :label=>"license")
 
     t.identifier(:path=>"identifier", :attributes=>{:type=>""})
+
     t.local_id(:path=>"identifier", :attributes=>{:type=>"local"}, :label=>"local")
+
     t.doi(:path=>"identifier", :attributes=>{:type=>"doi"}, :label=>"DOI")
+
     t.issn(:path=>"identifier", :attributes=>{:type=>"issn"}, :label=>"ISSN")
+
     t.eissn(:path=>"identifier", :attributes=>{:type=>"eissn"}, :label=>"eISSN")
+
     t.publisher_id(:path=>"identifier", :attributes=>{:type=>"publisher"}, :label=>"publisher's copy" )
+
     t.barcode(:path=>"identifier", :attributes=>{:type=>"local", :displayLabel=>"Barcode"}, :label=>"barcode")
+
     t.pii(:path=>"identifier", :attributes=>{:type=>"pii"}, :label=>"publisher item identifier")
+
     t.article_number(:path=>"identifier", :attributes=>{:type=>"article_number"}, :label=>"article number")
 
     t.note
+
     t.publisher_note(:path=>"note", :attributes=>{:type=>"publisher"}, :label=>"publisher note")
+
     t.admin_note(:path=>"note", :attributes=>{:type=>"admin"}, :label=>"private note")
 
     t.related_item(:path=>"relatedItem", :attributes=>{:type=>""}){
       t.title_info(:ref=>[:title_info])
-      t.location_url(:path=>"location"){
+      t.location{
         t.url
       }
-      t.location(:proxy=>[:location_url, :url])
-      t.name
+      t.note
     }
+    t.related_item_title(:proxy=>[:related_item, :title_info, :main_title])
+    t.related_item_location(:proxy=>[:related_item, :location, :url])
+    t.related_item_note(:proxy=>[:related_item, :note])
+
+    t.related_item_enumerated(:ref=>:related_item, :attributes=>{:type=>"enumerated"}, :index_as=>[:facetable])
+    t.related_item_preceding(:ref=>:related_item, :attributes=>{:type=>"preceding"}, :index_as=>[:facetable])
+    t.related_item_succeeding(:ref=>:related_item, :attributes=>{:type=>"succeeding"}, :index_as=>[:facetable])
+    t.related_item_original(:ref=>:related_item, :attributes=>{:type=>"original"}, :index_as=>[:facetable])
+    t.related_item_host(:ref=>:related_item, :attributes=>{:type=>"host"}, :index_as=>[:facetable])
+    t.related_item_constituent(:ref=>:related_item, :attributes=>{:type=>"constituent"}, :index_as=>[:facetable])
+    t.related_item_series(:ref=>:related_item, :attributes=>{:type=>"series"}, :index_as=>[:facetable])
+    t.related_item_otherVersion(:ref=>:related_item, :attributes=>{:type=>"otherVersion"}, :index_as=>[:facetable])
+    t.related_item_otherFormat(:ref=>:related_item, :attributes=>{:type=>"otherFormat"}, :index_as=>[:facetable])
+    t.related_item_isReferencedBy(:ref=>:related_item, :attributes=>{:type=>"isReferencedBy"}, :index_as=>[:facetable])
+    t.related_item_references(:ref=>:related_item, :attributes=>{:type=>"references"}, :index_as=>[:facetable])
+    t.related_item_reviewOf(:ref=>:related_item, :attributes=>{:type=>"reviewOf"}, :index_as=>[:facetable])
  
-    # these proxy declarations allow you to use more familiar term/field names that hide the details of the XML structure
-    t.title(:proxy=>[:mods, :title_info, :main_title])
-    t.subtitle(:proxy=>[:mods, :title_info, :sub_title])
-    t.journal_title(:proxy=>[:journal, :title_info, :main_title])
-    #t.journal_volume(:proxy=>[:journal, :issue, :volume, :number])
-    #t.journal_issue(:proxy=>[:journal, :issue, :level, :number])
-    t.journal_volume(:proxy=>[:journal, :part, :volume, :number])
-    t.journal_issue(:proxy=>[:journal, :part, :issue, :number])
-    t.start_page(:proxy=>[:journal, :part, :pages, :start])
-    t.end_page(:proxy=>[:journal, :part, :pages, :end])
-    t.page_numbers(:proxy=>[:journal, :part, :pages, :list])
-    t.publication_date(:proxy=>[:origin_info, :date_issued])
-    t.creation_date(:proxy=>[:origin_info, :date_created])
-    t.copyright_date(:proxy=>[:origin_info, :copyright_date])
-    t.subject(:proxy=>[:subject_parent, :topic])
-    t.keyword(:proxy=>[:subject_parent, :genre])
-    t.language(:proxy=>[:language_text, :text])
   end # set_terminology
 
   # This defines what the default xml should look like when you create empty MODS datastreams.

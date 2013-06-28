@@ -1,6 +1,6 @@
 class ArticleController < ApplicationController
   def new
-    debugger
+    #debugger
     @article = Article.new
   end
 
@@ -19,7 +19,7 @@ class ArticleController < ApplicationController
   end
 
   def create
-    debugger
+    #debugger
     #@article = Article.new
     @article = Article.new(params[:article])
     @article.to_solr

@@ -1,5 +1,4 @@
 <h1>Add new journal article</h1>
-<%= debug @article %>
 <%= form_for @article do |f| %>
   <%= render :partial => "shared/depositor", :locals=>{:f=>f, :count=>1} %>
 

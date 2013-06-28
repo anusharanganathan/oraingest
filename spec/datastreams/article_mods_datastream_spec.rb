@@ -33,7 +33,7 @@ describe ArticleModsDatastream do
     @ds.mods.physical_description.status = ["Published"]
     @ds.mods.physical_description.peer_reviewed = ["Peer reviewed"]
     @ds.mods.physical_description.version = ["Publisher's version"]
-    @ds.mods.related_item.location_url.url = ["http://journals.iucr.org/s/"]
+    @ds.mods.related_item.location.url = ["http://journals.iucr.org/s/"]
     @ds.pid = ["uuid:01234567-89ab-cdef-0123-456789abcdef"]
     @ds.urn = ["uuid:01234567-89ab-cdef-0123-456789abcdef"]
     @ds.doi = ["10.00/xxxx"]
@@ -42,6 +42,7 @@ describe ArticleModsDatastream do
 
   
   it "should expose nested/hierarchical metadata" do
+    @ds.agent_first_name.should == ["Will","Jada"]
     @ds.person.first_name.should == ["Will","Jada"]
     @ds.person.last_name.should == ["Smith", "Smith"]
     @ds.person.display_name.should == ["Smith, W", "Smith, J"]
