@@ -3,12 +3,12 @@
 # ActiveFedora and OM.
 require 'hydra-mods'
 
-class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
+class ArticleModsDatastream < ActiveFedora::OmDatastream
 #class ArticleModsDatastream < ActiveFedora::OmDatastream
   # OM (Opinionated Metadata) terminology mapping for the mods xml
   set_terminology do |t|
     t.root(:path=>"mods", :xmlns=>"http://www.loc.gov/mods/v3", :schema=>"http://www.loc.gov/standards/mods/v3 http://ora.ox.ac.uk/access/mods-3.2-oxford.xsd")
-    t.pid(:path=>"identifier", :attributes=>{:type=>"pid"}, :label=>"PID")
+    t.uuid(:path=>"identifier", :attributes=>{:type=>"pid"}, :label=>"PID")
 
     t.urn(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"urn")
 
@@ -16,8 +16,7 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
       t.main_title(:index_as=>[:facetable],:path=>"title", :label=>"title")
       t.sub_title(:index_as=>[:facetable],:path=>"subTitle", :label=>"subtitle")
     }
-    t.title(:proxy=>[:mods, :title_info, :main_title])
-    t.subtitle(:proxy=>[:mods, :title_info, :sub_title])
+    t.subtitle(:proxy=>[:title_info, :sub_title])
 
     t.abstract 
 
@@ -56,7 +55,7 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
       t.role(:proxy=>[:roleterm, :text])
       t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
       #t.pid(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"pid")
-      t.pid(:ref=>[:pid])
+      t.uuid(:ref=>[:uuid])
       t.affiliation
       t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
       t.faculty(:ref=>[:agent, :affiliation], :attributes=>{:type=>"faculty"})
@@ -75,7 +74,7 @@ class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
     t.agent_display_name(:proxy=>[:agent, :display_name])
     t.agent_role(:proxy=>[:agent, :roleterm, :text])
     t.agent_webauth(:proxy=>[:agent, :webauth])
-    t.agent_pid(:proxy=>[:agent, :pid])
+    t.agent_pid(:proxy=>[:agent, :uuid])
     t.agent_affiliation(:proxy=>[:agent, :affiliation])
     t.agent_institution(:proxy=>[:agent, :institution])
     t.agent_faculty(:proxy=>[:agent, :faculty])

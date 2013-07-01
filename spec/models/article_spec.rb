@@ -7,6 +7,12 @@ describe Article do
     @article = Article.new
   end
   
+  it "should save" do
+    puts @article.datastreams["RELS-EXT"].to_rels_ext
+    @article.save.should be_true
+    @article.errors.should be_empty
+  end
+  
   it "should have the specified datastreams" do
     # Check for descMetadata datastream with MODS in it
     @article.datastreams.keys.should include("descMetadata")
@@ -60,7 +66,7 @@ describe Article do
       "display_name" => "Smith, J",
       "role" => "Supervisor",
       "webauth" => "zyxw4567",
-      "pid" => "uuid:1bcbd111-1477-412c-960e-453ce7f97d34",
+      "uuid" => "uuid:1bcbd111-1477-412c-960e-453ce7f97d34",
       "affiliation" => "some 2 place"
     }
   }
@@ -68,7 +74,7 @@ describe Article do
 
   it "should have the attributes of a journal article and support update_attributes" do
     #@article.update_attributes( attributes_hash )
-    @article.pid = "uuid:01234567-89ab-cdef-0123-456789abcdef"
+    @article.uuid = "uuid:01234567-89ab-cdef-0123-456789abcdef"
     @article.urn = "uuid:01234567-89ab-cdef-0123-456789abcdef"
     @article.title = "Sample article title updated"
     @article.subtitle = "Subtitle of article updated"
@@ -110,7 +116,7 @@ describe Article do
     #@article.person = person0
 
     # These attributes have been marked "unique" in the call to delegate, which causes the results to be singular
-    @article.pid.should == "uuid:01234567-89ab-cdef-0123-456789abcdef"
+    @article.uuid.should == "uuid:01234567-89ab-cdef-0123-456789abcdef"
     @article.urn.should == "uuid:01234567-89ab-cdef-0123-456789abcdef"
     @article.title.should == "Sample article title updated"
     @article.subtitle.should == "Subtitle of article updated"
@@ -140,8 +146,7 @@ describe Article do
     @article.agent_first_name.should == ["Will", "Jada"]
     @article.agent_last_name.should == ["", "Smithsonian"]
     @article.agent_terms_of_address.should == ["Mr"]
-    @article.agent_display_name.should == ["Smith, W", ""] #This seems incorrect
-    #@article.agent_display_name.should == ["Smith, W"]
+    @article.agent_display_name.should == ["Smith, W"]
     @article.agent_role.should == ["Author", "Supervisor"]
     @article.agent_webauth.should == ["abcdefgh"]
     @article.agent_pid.should == ["area-llylon-gide-ntif-ier"]
@@ -159,7 +164,8 @@ describe Article do
 
     #@article.descMetadata.person.first_name.should == ["Will", "Jada"]
     @article.descMetadata.person.first_name.should == ["Will"]
-    @article.descMetadata.person(0).first_name.should == "Will"
+    @article.descMetadata.person(0).first_name.should == ["Will"]
+    debugger
     @article.descMetadata.person.first_name.should == ["Will", "Jada"]
 
     @article.type.should == ["Journal article"]
