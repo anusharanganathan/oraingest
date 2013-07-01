@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<fields>
+<!-- Possible values for starus are: Draft, Submitted, In Review, Approved, Escalated, Referred, Rejected, Completed -->
+<dateModified>2013-06-23T17:00:06Z</dateModified>
+<record>
+  <date>2013-06-15T15:41:56Z</date>
+  <status>Draft</status>
+  <reviewer/>
+</record>
+<record>
+  <date>2013-06-18T15:41:56Z</date>
+  <status>Draft</status>
+  <reviewer/>
+</record>
+<record>
+  <date>2013-06-20T15:41:56Z</date>
+  <status>Submitted</status>
+  <reviewer/>
+</record>
+<record>
+  <date>2013-06-20T15:44:56Z</date>
+  <status>In Review</status>
+  <reviewer>
+    <name>Anusha</name>
+    <webauth>bodl0000</webauth>
+  </reviewer>
+  <note>This is assigned to Anne for review</note>
+</record>
+<record>
+  <date>2013-06-21T15:44:56Z</date>
+  <status>Escalated</status>
+  <reviewer>
+    <name>Anne</name>
+    <webauth>bodl0001</webauth>
+  </reviewer>
+  <note>Copyright clarification needed for x</note>
+</record>
+<record>
+  <date>2013-06-22T15:44:56Z</date>
+  <status>Referred</status>
+  <reviewer>
+    <name>Anusha</name>
+    <webauth>bodl0000</webauth>
+  </reviewer>
+  <note>Author clarification needed for x</note>
+</record>
+<record>
+  <date>2013-06-23T15:44:56Z</date>
+  <status>Approved</status>
+  <reviewer>
+    <name>Anne</name>
+    <webauth>bodl0001</webauth>
+  </reviewer>
+  <note>This is ready to be published</note>
+</record>
+<record>
+  <date>2013-06-23T17:00:06Z</date>
+  <status>Completed</status>
+  <note>Record migrated, indexed and citation text created</note>
+</record>
+</fields>

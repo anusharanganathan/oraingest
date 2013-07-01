@@ -1,0 +1,26 @@
+<rdf:RDF
+  xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+  xmlns:oxds="http://vocab.ox.ac.uk/dataset/schema#"
+  xmlns:rdfs='http://www.w3.org/2000/01/rdf-schema#'
+>
+  <rdf:Description rdf:about="info:fedora/uuid:1d00eebb-8fed-46ad-8e38-45dbdb4b224c/ATTACHMENT01">
+    <oxds:embargoedUntil>2015-01-01</oxds:embargoedUntil>
+    <oxds:embargoed>True</oxds:embargoed>
+    <rdfs:comment>This in under a 3 year publisher embargo until 2015</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/uuid:1d00eebb-8fed-46ad-8e38-45dbdb4b224c/ATTACHMENT04">
+    <oxds:embargoedUntil>2012-01-02T10:33:02</oxds:embargoedUntil>
+    <oxds:embargoed>True</oxds:embargoed>
+    </rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/uuid:1d00eebb-8fed-46ad-8e38-45dbdb4b224c/ATTACHMENT06">
+    <oxds:embargoedUntil>2012-01-03T01:02:03Z</oxds:embargoedUntil>
+    <oxds:embargoed>True</oxds:embargoed>
+    </rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/uuid:1d00eebb-8fed-46ad-8e38-45dbdb4b224c/ATTACHMENT08">
+    <oxds:embargoedUntil/>
+    <oxds:embargoed>False</oxds:embargoed> 
+    </rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
