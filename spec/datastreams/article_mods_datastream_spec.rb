@@ -47,11 +47,12 @@ describe Datastream::ArticleModsDatastream do
     @ds.end_page.should == ["204"]
     @ds.journal.part.pages.list.should == ["200-204"]
     @ds.page_numbers.should == ["200-204"]
-    # related item - other version
+    # related items
     @ds.mods.related_item.location.url.should == ["http://journals.iucr.org/s/", "http://example.org/referenced_article/"]
+    @ds.mods.related_item.type.should == ["otherVersion", "references"]
+    @ds.related_item_otherVersion.type.should == ["otherVersion"]
     @ds.related_item_otherVersion.location.url.should == ["http://journals.iucr.org/s/"]
-    # TODO: Why is this giving me a wrong value?
-    #@ds.related_item_otherVersion.related_item_location.should == ["http://journals.iucr.org/s/"]
+    @ds.related_item_references.type.should == ["references"]
     @ds.related_item_references.location.url.should == ["http://example.org/referenced_article/"]
     # abstract
     @ds.abstract.should == ["The abstract for the paper"]

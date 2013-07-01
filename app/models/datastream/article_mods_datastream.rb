@@ -164,13 +164,14 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
 
     #t.related_item(:path=>"relatedItem", :attributes=>{:type=>nil}){
     t.related_item(:path=>"relatedItem"){
-      t.related_item_type(:path=>{:attribute=>"type"})
+      t.type(:path=>{:attribute=>"type"})
       t.title_info(:ref=>[:title_info])
       t.location{
         t.url
       }
       t.note
     }
+    t.related_item_type(:proxy=>[:related_item, :type])
     t.related_item_title(:proxy=>[:related_item, :title_info, :main_title])
     t.related_item_location(:proxy=>[:related_item, :location, :url])
     t.related_item_note(:proxy=>[:related_item, :note])
