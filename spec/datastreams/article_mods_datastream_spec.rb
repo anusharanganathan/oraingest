@@ -75,6 +75,7 @@ describe Datastream::ArticleModsDatastream do
     #pp @ds.organisation
     #pp @ds.copyright_holder
     #pp @ds.agent(1)
+
     @ds.person.first_name.should == ["Will", "Jack", "Jada"]
     @ds.person.last_name.should == ["Smith", "Jones", "Smith"]
     @ds.person.display_name.should == ["Smith, W", "Jones, J", "Smith, J"]
@@ -122,6 +123,7 @@ describe Datastream::ArticleModsDatastream do
     @ds.person(1).uuid.should == ["uuid:2bcbd222-2588-523d-960e-453ce7f97dc5"]
     @ds.person(1).webauth.should == ["abcd5678"]
 
+    @ds.person(2).agent_type.should == []
     @ds.person(2).first_name.should == ["Jada"]
     @ds.person(2).last_name.should == ["Smith"]
     @ds.person(2).display_name.should == ["Smith, J"]
@@ -132,17 +134,17 @@ describe Datastream::ArticleModsDatastream do
     @ds.organisation.display_name.should == ["Name of Publisher"]
     @ds.organisation.roleterm.text.should == ["Publisher"]
     @ds.organisation.website.should == ["http://www.example.org/"]
-    @ds.organisation.first_name.should == []
- 
+    @ds.organisation.email.should == []
+
     @ds.organisation(0).display_name.should == ["Name of Publisher"]
     @ds.organisation(0).roleterm.text.should == ["Publisher"]
     @ds.organisation(0).website.should == ["http://www.example.org/"]
-    @ds.organisation(0).first_name.should == []
 
-    @ds.agent(2).display_name.should == ["Will Smith"]
-    @ds.agent(2).roleterm.text.should == ["Copyright Holder"]
-    @ds.agent(2).rights_ownership.should == ["Sole authorship"]
-    @ds.agent(2).third_party_copyright.should == ["Contains Third Party copyright"]
+    @ds.copyright_holder.display_name.should == ["Will Smith"]
+    @ds.copyright_holder.roleterm.text.should == ["Copyright Holder"]
+    @ds.copyright_holder.rights_ownership.should == ["Sole authorship"]
+    @ds.copyright_holder.third_party_copyright.should == ["Contains Third Party copyright"]
+    @ds.copyright_holder.type.should == []
 
   end
 end

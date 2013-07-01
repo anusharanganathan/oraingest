@@ -45,7 +45,7 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
     t.page_numbers(:proxy=>[:journal, :part, :pages, :list])
 
     #t.agent(:path=>"name", :attributes=>{:type=>["personal", "corporate", ""], :authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}) {
-    t.agent(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}) {
+    t.person(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority", :type=>"personal"}, :index_as=>[:facetable]) {
       t.first_name(:path=>"namePart", :attributes=>{:type=>"given"})
       t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
       t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"}, :label=>"terms of address")
@@ -64,30 +64,40 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
       t.grant_number(:ref=>[:agent, :affiliation], :attributes=>{:type=>"grantNumber"}, :label=>"grant number")
       t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
       t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
+    }
+    
+    t.organisation(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority", :type=>"corporate"}, :index_as=>[:facetable]) {
+      t.display_name(:path=>"displayForm", :label=>"display form of name")
+      t.roleterm(:path=>"role"){
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"}, :label=>"role")
+      }
+      t.uuid(:ref=>[:uuid])
+      t.affiliation
+      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
+      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
+    }
+    
+    t.copyright_holder(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}, :index_as=>[:facetable]) {
+      t.type(:path=>{:attribute=>"type"})
+      t.first_name(:path=>"namePart", :attributes=>{:type=>"given"})
+      t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
+      t.terms_of_address(:path=>"namePart", :attributes=>{:type=>"termsOfAddress"}, :label=>"terms of address")
+      t.display_name(:path=>"displayForm", :label=>"display form of name")
+      t.roleterm(:path=>"role"){
+        t.text(:path=>"roleTerm",:attributes=>{:type=>"text"}, :label=>"role", :value=>"Copyright Holder")
+      }
+      t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
+      t.uuid(:ref=>[:uuid])
+      t.affiliation
+      t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
+      t.faculty(:ref=>[:agent, :affiliation], :attributes=>{:type=>"faculty"})
+      t.research_group(:ref=>[:agent, :affiliation], :attributes=>{:type=>"researchGroup"}, :label=>"research group")
+      t.oxford_college(:ref=>[:agent, :affiliation], :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
+      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
+      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
       t.rights_ownership(:ref=>[:agent, :affiliation], :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
       t.third_party_copyright(:ref=>[:agent, :affiliation], :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
     }
-    #t.agent_first_name(:proxy=>[:agent, :first_name])
-    #t.agent_last_name(:proxy=>[:agent, :last_name])
-    #t.agent_terms_of_address(:proxy=>[:agent, :terms_of_address])
-    #t.agent_display_name(:proxy=>[:agent, :display_name])
-    #t.agent_role(:proxy=>[:agent, :roleterm, :text])
-    #t.agent_webauth(:proxy=>[:agent, :webauth])
-    #t.agent_pid(:proxy=>[:agent, :uuid])
-    #t.agent_affiliation(:proxy=>[:agent, :affiliation])
-    #t.agent_institution(:proxy=>[:agent, :institution])
-    #t.agent_faculty(:proxy=>[:agent, :faculty])
-    #t.agent_research_group(:proxy=>[:agent, :research_group])
-    #t.agent_oxford_college(:proxy=>[:agent, :oxford_college])
-    #t.agent_funder(:proxy=>[:agent, :funder])
-    #t.agent_grant_number(:proxy=>[:agent, :grant_number])
-    #t.agent_website(:proxy=>[:agent, :website])
-    #t.agent_email(:proxy=>[:agent, :email])
-    #t.agent_rights_ownership(:proxy=>[:agent, :rights_ownership])
-    #t.agent_third_party_copyright(:proxy=>[:agent, :third_party_copyright])
-    
-    t.person(:ref=>:agent, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
-    t.organisation(:ref=>:agent, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
 
     t.type_of_resource(:path=>"typeOfResource", :label=>"type of resource")
 
@@ -155,6 +165,7 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
 
     #t.related_item(:path=>"relatedItem", :attributes=>{:type=>nil}){
     t.related_item(:path=>"relatedItem"){
+      t.related_item_type(:path=>{:attribute=>"type"})
       t.title_info(:ref=>[:title_info])
       t.location{
         t.url
