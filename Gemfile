@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.12'
 gem 'blacklight', '~> 4.0.1'
-gem 'hydra-head', '6.0.0.rc4'
+gem 'hydra-head', '6.3.0.rc1'
 gem 'hydra-mods'
 
 # Bundle edge Rails instead:
