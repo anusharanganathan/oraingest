@@ -3,7 +3,8 @@
 # ActiveFedora and OM.
 require 'hydra-mods'
 
-class ArticleModsDatastream < ActiveFedora::OmDatastream
+class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
+#class ArticleModsDatastream < ActiveFedora::NokogiriDatastream
 #class ArticleModsDatastream < ActiveFedora::OmDatastream
   # OM (Opinionated Metadata) terminology mapping for the mods xml
   set_terminology do |t|
@@ -52,9 +53,7 @@ class ArticleModsDatastream < ActiveFedora::OmDatastream
       t.roleterm(:path=>"role"){
         t.text(:path=>"roleTerm",:attributes=>{:type=>"text"}, :label=>"role")
       }
-      t.role(:proxy=>[:roleterm, :text])
       t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
-      #t.pid(:path=>"identifier", :attributes=>{:type=>"urn"}, :label=>"pid")
       t.uuid(:ref=>[:uuid])
       t.affiliation
       t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
@@ -68,28 +67,29 @@ class ArticleModsDatastream < ActiveFedora::OmDatastream
       t.rights_ownership(:ref=>[:agent, :affiliation], :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
       t.third_party_copyright(:ref=>[:agent, :affiliation], :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
     }
-    t.agent_first_name(:proxy=>[:agent, :first_name])
-    t.agent_last_name(:proxy=>[:agent, :last_name])
-    t.agent_terms_of_address(:proxy=>[:agent, :terms_of_address])
-    t.agent_display_name(:proxy=>[:agent, :display_name])
-    t.agent_role(:proxy=>[:agent, :roleterm, :text])
-    t.agent_webauth(:proxy=>[:agent, :webauth])
-    t.agent_pid(:proxy=>[:agent, :uuid])
-    t.agent_affiliation(:proxy=>[:agent, :affiliation])
-    t.agent_institution(:proxy=>[:agent, :institution])
-    t.agent_faculty(:proxy=>[:agent, :faculty])
-    t.agent_research_group(:proxy=>[:agent, :research_group])
-    t.agent_oxford_college(:proxy=>[:agent, :oxford_college])
-    t.agent_funder(:proxy=>[:agent, :funder])
-    t.agent_grant_number(:proxy=>[:agent, :grant_number])
-    t.agent_website(:proxy=>[:agent, :website])
-    t.agent_email(:proxy=>[:agent, :email])
-    t.agent_rights_ownership(:proxy=>[:agent, :rights_ownership])
-    t.agent_third_party_copyright(:proxy=>[:agent, :third_party_copyright])
+    #t.agent_first_name(:proxy=>[:agent, :first_name])
+    #t.agent_last_name(:proxy=>[:agent, :last_name])
+    #t.agent_terms_of_address(:proxy=>[:agent, :terms_of_address])
+    #t.agent_display_name(:proxy=>[:agent, :display_name])
+    #t.agent_role(:proxy=>[:agent, :roleterm, :text])
+    #t.agent_webauth(:proxy=>[:agent, :webauth])
+    #t.agent_pid(:proxy=>[:agent, :uuid])
+    #t.agent_affiliation(:proxy=>[:agent, :affiliation])
+    #t.agent_institution(:proxy=>[:agent, :institution])
+    #t.agent_faculty(:proxy=>[:agent, :faculty])
+    #t.agent_research_group(:proxy=>[:agent, :research_group])
+    #t.agent_oxford_college(:proxy=>[:agent, :oxford_college])
+    #t.agent_funder(:proxy=>[:agent, :funder])
+    #t.agent_grant_number(:proxy=>[:agent, :grant_number])
+    #t.agent_website(:proxy=>[:agent, :website])
+    #t.agent_email(:proxy=>[:agent, :email])
+    #t.agent_rights_ownership(:proxy=>[:agent, :rights_ownership])
+    #t.agent_third_party_copyright(:proxy=>[:agent, :third_party_copyright])
     
     t.person(:ref=>:agent, :attributes=>{:type=>"personal"}, :index_as=>[:facetable])
     t.organisation(:ref=>:agent, :attributes=>{:type=>"corporate"}, :index_as=>[:facetable])
-    t.copyright_holder(:ref=>:agent, :index_as=>[:facetable])
+
+    t.type_of_resource(:path=>"typeOfResource", :label=>"type of resource")
 
     t.type(:path=>"genre", :attributes=>{:type=>"typeofwork"})
 
@@ -110,10 +110,12 @@ class ArticleModsDatastream < ActiveFedora::OmDatastream
     t.language(:proxy=>[:language_text, :text])
 
     t.physical_description(:path=>"physicalDescription"){
+      t.digital_origin(:path=>"digitalOrigin", :label=>"digital origin")
       t.status(:path=>"form", :attributes=>{:type=>"status"}, :label=>"status")
       t.peer_reviewed(:path=>"form", :attributes=>{:type=>"peerReviewed"}, :label=>"peer reviewed")
       t.version(:path=>"form", :attributes=>{:type=>"version"}, :label=>"version")
     }
+    t.digital_origin(:proxy=>[:physical_description, :digital_origin])
     t.status(:proxy=>[:physical_description, :status])
     t.peer_reviewed(:proxy=>[:physical_description, :peer_reviewed])
     t.version(:proxy=>[:physical_description, :version])
@@ -151,7 +153,8 @@ class ArticleModsDatastream < ActiveFedora::OmDatastream
 
     t.admin_note(:path=>"note", :attributes=>{:type=>"admin"}, :label=>"private note")
 
-    t.related_item(:path=>"relatedItem", :attributes=>{:type=>""}){
+    #t.related_item(:path=>"relatedItem", :attributes=>{:type=>nil}){
+    t.related_item(:path=>"relatedItem"){
       t.title_info(:ref=>[:title_info])
       t.location{
         t.url

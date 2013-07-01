@@ -1,7 +1,8 @@
 # a Fedora Datastream object containing Mods XML for the descMetadata 
 # datastream in the Journal Article hydra content type, defined using 
 # ActiveFedora and OM.
-class RecordStatusDatastream < ActiveFedora::NokogiriDatastream
+class Datastream::RecordStatusDatastream < ActiveFedora::OmDatastream
+#class RecordStatusDatastream < ActiveFedora::NokogiriDatastream
 #class ArticleModsDatastream < ActiveFedora::OmDatastream
   # OM (Opinionated Metadata) terminology mapping for the mods xml
   set_terminology do |t|

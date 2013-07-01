@@ -2,20 +2,40 @@
   <mods:mods version="3.2">
     <mods:titleInfo>
       <mods:title>Sample article title</mods:title>
-	  <mods:subTitle>Subtitle of article</mods:title>
+      <mods:subTitle>Subtitle of article</mods:title>
     </mods:titleInfo>
     <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="personal">
       <mods:namePart type="family">Smith</mods:namePart>
       <mods:namePart type="given">Will</mods:namePart>
-	  <mods:displayForm>Smith, W</mods:displayForm>
+      <mods:displayForm>Smith, W</mods:displayForm>
       <mods:namePart type="termsOfAddress">Dr</mods:namePart>
       <mods:affiliation type="email">will.smith@example.com</mods:affiliation>
       <mods:affiliation type="institution">University of Oxford</mods:affiliation>
       <mods:affiliation type="faculty">Humanities Division - English Language and Literature</mods:affiliation>
       <mods:affiliation type="oxfordCollege">Linacre College</mods:affiliation>
-	  <mods:role><mods:roleTerm type="text">author</mods:roleTerm></mods:role>
-	  <mods:affiliation type="funding">Leverhulme Trust</mods:affiliation>
-	  <mods:identifier type="urn">uuid:1bcbd111-1477-412c-960e-453ce7f97dc5</mods:identifier>
+      <mods:affiliation type="researchGroup">Name of research group</mods:affiliation>
+      <mods:role><mods:roleTerm type="text">author</mods:roleTerm></mods:role>
+      <mods:affiliation type="funding">Leverhulme Trust</mods:affiliation>
+      <mods:affiliation type="grantNumber">Grant number for author funding</mods:affiliation>
+      <mods:affiliation type="website">http://example.com/author1</mods:affiliation>
+      <mods:identifier type="pid">uuid:1bcbd111-1477-412c-960e-453ce7f97dc5</mods:identifier>
+      <mods:identifier type="webauth">abcd1234</mods:identifier>
+    </mods:name>
+    <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="personal">
+      <mods:namePart type="family">Jones</mods:namePart>
+      <mods:namePart type="given">Jack</mods:namePart>
+      <mods:displayForm>Jones, J</mods:displayForm>
+      <mods:namePart type="termsOfAddress">Mr</mods:namePart>
+      <mods:affiliation type="email">jack.jones@example.com</mods:affiliation>
+      <mods:affiliation type="institution">St Andrews University</mods:affiliation>
+      <mods:affiliation type="faculty">English Department</mods:affiliation>
+      <mods:affiliation type="researchGroup">Name of 2nd research group</mods:affiliation>
+      <mods:role><mods:roleTerm type="text">author</mods:roleTerm></mods:role>
+      <mods:affiliation type="funding">National Trust</mods:affiliation>
+      <mods:affiliation type="grantNumber">Grant number for 2nd author funding</mods:affiliation>
+      <mods:affiliation type="website">http://example.com/author2</mods:affiliation>
+      <mods:identifier type="pid">uuid:2bcbd222-2588-523d-960e-453ce7f97dc5</mods:identifier>
+      <mods:identifier type="webauth">abcd5678</mods:identifier>
     </mods:name>
     <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority">
       <mods:displayForm>Will Smith</mods:displayForm>
@@ -28,7 +48,7 @@
     <mods:name authority="http://www.bodleian.ox.ac.uk/ora/authority" type="personal">
       <mods:namePart type="family">Smith</mods:namePart>
       <mods:namePart type="given">Jada</mods:namePart>
-	  <mods:displayForm>Smith, J</mods:displayForm>
+      <mods:displayForm>Smith, J</mods:displayForm>
       <mods:namePart type="termsOfAddress">Prof</mods:namePart>
       <mods:role>
         <mods:roleTerm type="text">Supervisor</mods:roleTerm>
@@ -53,33 +73,38 @@
     </mods:language>
     <mods:physicalDescription>
       <mods:digitalOrigin>born digital</mods:digitalOrigin>
-	  <mods:form type="status">Published</mods:form>
-	  <mods:form type="peerReviewed">Peer reviewed</mods:form>
-	  <mods:form type="version">Publisher's version</mods:form>
+      <mods:form type="status">Published</mods:form>
+      <mods:form type="peerReviewed">Peer reviewed</mods:form>
+      <mods:form type="version">Publisher's version</mods:form>
     </mods:physicalDescription>
-	<mods:relatedItem type="otherVersion">
-      <mods:location>
-        <mods:url>http://journals.iucr.org/s/</mods:url>
-      </mods:location>
-	</mods:relatedItem>
-	<mods:relatedItem type="host">
+    <mods:relatedItem type="host">
       <mods:titleInfo>
         <mods:title>Sample host Journal title</mods:title>
       </mods:titleInfo>
       <mods:part>
         <mods:detail type="volume">
-		  <mods:number>20</mods:number>
-		</mods:detail>
-		<mods:detail type="issue">
-		  <mods:number>1</mods:number>
-		</mods:detail>
-		<mods:extent unit="pages">
-		  <mods:start>200</mods:start>
-		  <mods:end>204</mods:end>
-		  <mods:list>200-204</mods:list>
-		</mods:extent>
+          <mods:number>20</mods:number>
+        </mods:detail>
+        <mods:detail type="issue">
+          <mods:number>1</mods:number>
+        </mods:detail>
+        <mods:extent unit="pages">
+          <mods:start>200</mods:start>
+          <mods:end>204</mods:end>
+          <mods:list>200-204</mods:list>
+        </mods:extent>
       </mods:part>
-	</mods:relatedItem>
+    </mods:relatedItem>
+    <mods:relatedItem type="otherVersion">
+      <mods:location>
+        <mods:url>http://journals.iucr.org/s/</mods:url>
+      </mods:location>
+    </mods:relatedItem>
+    <mods:relatedItem type="references">
+      <mods:location>
+        <mods:url>http://example.org/referenced_article/</mods:url>
+      </mods:location>
+    </mods:relatedItem>
     <mods:abstract>The abstract for the paper</mods:abstract>
     <mods:note>This paper is not currently available</mods:note>
     <mods:subject>
@@ -91,9 +116,9 @@
       <mods:topic>English Language and Literature</mods:topic>
     </mods:subject>
     <mods:identifier type="pid">uuid:01234567-89ab-cdef-0123-456789abcdef</mods:identifier>
-	<mods:identifier type="urn">uuid:01234567-89ab-cdef-0123-456789abcdef</mods:identifier>
-	<mods:identifier type="doi">10.00/xxxx</mods:identifier>
-	<mods:accessCondition type="restrictionOnAccess">cc-0</mods:accessCondition>
+    <mods:identifier type="urn">uuid:01234567-89ab-cdef-0123-456789abcdef</mods:identifier>
+    <mods:identifier type="doi">10.xxxx/xxxx</mods:identifier>
+    <mods:accessCondition type="restrictionOnAccess">cc-0</mods:accessCondition>
   </mods:mods>
 </mods:modsCollection>
                                                                         

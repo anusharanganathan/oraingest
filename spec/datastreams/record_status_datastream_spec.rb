@@ -1,9 +1,9 @@
 require 'spec_helper'
 #require 'pp'
-describe RecordStatusDatastream do
+describe Datastream::RecordStatusDatastream do
   before(:each) do
     @status = fixture("record_status_sample.xml")
-    @ds = RecordStatusDatastream.from_xml(@status)
+    @ds = Datastream::RecordStatusDatastream.from_xml(@status)
   end
   it "should expose record status info with explicit terms and simple proxies" do
     #print the metadata

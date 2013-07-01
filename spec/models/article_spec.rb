@@ -16,10 +16,13 @@ describe Article do
   it "should have the specified datastreams" do
     # Check for descMetadata datastream with MODS in it
     @article.datastreams.keys.should include("descMetadata")
-    @article.descMetadata.should be_kind_of ArticleModsDatastream
+    @article.descMetadata.should be_kind_of Datastream::ArticleModsDatastream
     # Check for rightsMetadata datastream
     @article.datastreams.keys.should include("rightsMetadata")
     @article.rightsMetadata.should be_kind_of Hydra::Datastream::RightsMetadata
+    # Check for recordStatus datastream
+    @article.datastreams.keys.should include("recordStatus")
+    @article.descMetadata.should be_kind_of Datastream::recordStatusModsDatastream
   end
   
   attributes_hash = {

@@ -12,6 +12,8 @@ gem 'hydra-mods'
 # but in a production setup you probably want to use a real sql database like mysql or postgres
 gem 'sqlite3'
 
+gem 'rdf'
+gem 'rdf-rdfxml'
 
 # Gems used only for assets and not required
 # in production environments by default.

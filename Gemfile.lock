@@ -269,6 +269,8 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   rails (= 3.2.12)
+  rdf
+  rdf-rdfxml
   rspec-rails (>= 2.9.0)
   sass-rails (~> 3.2.3)
   sqlite3
