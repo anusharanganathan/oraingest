@@ -48,8 +48,9 @@ describe Datastream::ArticleModsDatastream do
     @ds.journal.part.pages.list.should == ["200-204"]
     @ds.page_numbers.should == ["200-204"]
     # related items
-    @ds.mods.related_item.location.url.should == ["http://journals.iucr.org/s/", "http://example.org/referenced_article/"]
-    @ds.mods.related_item.type.should == ["otherVersion", "references"]
+    #NOTE: realted_item gets all related items, including host
+    @ds.related_item.location.url.should == ["http://journals.iucr.org/s/", "http://example.org/referenced_article/"]
+    @ds.related_item.type.should == ["host", "otherVersion", "references"]
     @ds.related_item_otherVersion.type.should == ["otherVersion"]
     @ds.related_item_otherVersion.location.url.should == ["http://journals.iucr.org/s/"]
     @ds.related_item_references.type.should == ["references"]
