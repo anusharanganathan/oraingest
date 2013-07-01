@@ -44,7 +44,6 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
     t.end_page(:proxy=>[:journal, :part, :pages, :end])
     t.page_numbers(:proxy=>[:journal, :part, :pages, :list])
 
-    #t.agent(:path=>"name", :attributes=>{:type=>["personal", "corporate", ""], :authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}) {
     t.person(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority", :type=>"personal"}, :index_as=>[:facetable]) {
       t.first_name(:path=>"namePart", :attributes=>{:type=>"given"})
       t.last_name(:path=>"namePart", :attributes=>{:type=>"family"})
@@ -56,14 +55,14 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
       t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
       t.uuid(:ref=>[:uuid])
       t.affiliation
-      t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
-      t.faculty(:ref=>[:agent, :affiliation], :attributes=>{:type=>"faculty"})
-      t.research_group(:ref=>[:agent, :affiliation], :attributes=>{:type=>"researchGroup"}, :label=>"research group")
-      t.oxford_college(:ref=>[:agent, :affiliation], :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
-      t.funder(:ref=>[:agent, :affiliation], :attributes=>{:type=>"funding"})
-      t.grant_number(:ref=>[:agent, :affiliation], :attributes=>{:type=>"grantNumber"}, :label=>"grant number")
-      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
-      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
+      t.institution(:path=>"affiliation", :attributes=>{:type=>"institution"}, :label=>"institution")
+      t.faculty(:path=>"affiliation", :attributes=>{:type=>"faculty"}, :label=>"faculty")
+      t.research_group(:path=>"affiliation", :attributes=>{:type=>"researchGroup"}, :label=>"research group")
+      t.oxford_college(:path=>"affiliation", :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
+      t.funder(:path=>"affiliation", :attributes=>{:type=>"funding"}, :label=>"funder")
+      t.grant_number(:path=>"affiliation", :attributes=>{:type=>"grantNumber"}, :label=>"grant number")
+      t.website(:path=>"affiliation", :attributes=>{:type=>"website"}, :label=>"website")
+      t.email(:path=>"affiliation", :attributes=>{:type=>"email"}, :label=>"email")
     }
     
     t.organisation(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority", :type=>"corporate"}, :index_as=>[:facetable]) {
@@ -73,8 +72,8 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
       }
       t.uuid(:ref=>[:uuid])
       t.affiliation
-      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
-      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
+      t.website(:path=>"affiliation", :attributes=>{:type=>"website"}, :label=>"website")
+      t.email(:path=>"affiliation", :attributes=>{:type=>"email"}, :label=>"email")
     }
     
     t.copyright_holder(:path=>"name", :attributes=>{:authority=>"http://www.bodleian.ox.ac.uk/ora/authority"}, :index_as=>[:facetable]) {
@@ -89,14 +88,14 @@ class Datastream::ArticleModsDatastream < ActiveFedora::OmDatastream
       t.webauth(:path=>"identifier", :attributes=>{:type=>"webauth"})
       t.uuid(:ref=>[:uuid])
       t.affiliation
-      t.institution(:ref=>[:agent, :affiliation], :attributes=>{:type=>"institution"})
-      t.faculty(:ref=>[:agent, :affiliation], :attributes=>{:type=>"faculty"})
-      t.research_group(:ref=>[:agent, :affiliation], :attributes=>{:type=>"researchGroup"}, :label=>"research group")
-      t.oxford_college(:ref=>[:agent, :affiliation], :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
-      t.website(:ref=>[:agent, :affiliation], :attributes=>{:type=>"website"})
-      t.email(:ref=>[:agent, :affiliation], :attributes=>{:type=>"email"})
-      t.rights_ownership(:ref=>[:agent, :affiliation], :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
-      t.third_party_copyright(:ref=>[:agent, :affiliation], :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
+      t.institution(:path=>"affiliation", :attributes=>{:type=>"institution"}, :label=>"institution")
+      t.faculty(:path=>"affiliation", :attributes=>{:type=>"faculty"}, :label=>"faculty")
+      t.research_group(:path=>"affiliation", :attributes=>{:type=>"researchGroup"}, :label=>"research group")
+      t.oxford_college(:path=>"affiliation", :attributes=>{:type=>"oxfordCollege"}, :label=>"college")
+      t.website(:path=>"affiliation", :attributes=>{:type=>"website"}, :label=>"website")
+      t.email(:path=>"affiliation", :attributes=>{:type=>"email"}, :label=>"email")
+      t.rights_ownership(:path=>"affiliation", :attributes=>{:type=>"rightsOwnership"}, :label=>"rights ownership")
+      t.third_party_copyright(:path=>"affiliation", :attributes=>{:type=>"ThirdPartyCopyright"}, :label=>"third party copyright")
     }
 
     t.type_of_resource(:path=>"typeOfResource", :label=>"type of resource")
