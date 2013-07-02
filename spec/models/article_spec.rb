@@ -26,52 +26,89 @@ describe Article do
   end
   
   attributes_hash = {
-    "title" => "Sample article title",
-    "subtitle" => "Subtitle of article",
-    "copyright_holder" => {
-      "display_name" => "Will Smith",
-      "role" => "Copyright Holder",
-      "rights_ownership" => "Sole authorship",
-      "third_party_copyright" => "Contains Third Party copyright",
-    },
-    "type" => "Journal article",
-    "language" => "English",
-    "physical_description" => {
-      "status" => "Published",
-      "peer_reviewed" => "Peer reviewed",
-      "version" => "Publisher's version",
-    },
-    "subject" => ["History of the book", "English Language and Literature"],
-    "keyword" => ["Dorothea Herbert", "life-writing", "18th century writing", "women's writing"],
-    "license" => "cc-0",
-    "doi" => "10.00/xxxx",
-    "urn" => "uuid:01234567-89ab-cdef-0123-456789abcdef",
-    "note" => "This paper is not currently available",
-    "related_item" => {
-       "title" => "My related journal",
-       "location" => "http://journals.iucr.org/s/",
-       "note" => "Other version"
-    },
-    "abstract" => "The abstract for the paper",
-    "journal_title" => "Sample host Journal title",
-    "journal_volume" => "20",
-    "journal_issue" => "1",
-    "start_page" => "200",
-    "end_page" => "204",
-    "page_numbers" => "200-204",
-    "publication_date" => "1967-11-01",
-    "creation_date" => "2012",
-    "copyright_date" => "2012-04",
-    "person" => {
-      "first_name" => "Jada",
-      "last_name" => "Smith",
-      "terms_of_address" => "Prof",
-      "display_name" => "Smith, J",
-      "role" => "Supervisor",
-      "webauth" => "zyxw4567",
-      "uuid" => "uuid:1bcbd111-1477-412c-960e-453ce7f97d34",
-      "affiliation" => "some 2 place"
-    }
+    :title => "Sample article title",
+    :subtitle => "Subtitle of article",
+    :person => [{
+      :last_name => "Smith",
+      :first_name => "Will",
+      :display_name => "Smith, W",
+      :terms_of_address => "Dr",
+      :email => "will.smith@example.com",
+      :institution => "University of Oxford",
+      :faculty => "Humanities Division - English Language and Literature",
+      :oxford_college => "Linacre College",
+      :researchGroup => "Name of research group",
+      :roleterm => {:text=>"author"},
+      :funder => "Leverhulme Trust",
+      :grant_number => "Grant number for author funding",
+      :website => "http://example.com/author1",
+      :uuid => "uuid:1bcbd111-1477-412c-960e-453ce7f97dc5",
+      :webauth => "abcd1234"
+      },{
+      :last_name => "Jones",
+      :first_name => "Jack",
+      :display_name => "Jones, J",
+      :terms_of_address => "Mr",
+      :email => "jack.jones@example.com",
+      :institution => "St Andrews University",
+      :faculty => "English Department",
+      :researchGroup => "Name of 2nd research group",
+      :roleterm => {:text=>"author"},
+      :funder => "National Trust",
+      :grant_number => "Grant number for 2nd author funding",
+      :website => "http://example.com/author2",
+      :uuid => "uuid:2bcbd222-2588-523d-960e-453ce7f97dc5",
+      :webauth => "abcd5678"
+      },{
+      :last_name => "Smith",
+      :first_name => "Jada",
+      :display_name => "Smith, J",
+      :terms_of_address => "Prof",
+      :roleterm => {:text=>"supervisor"}
+      }
+    ],
+    :copyright_holder => [{
+      :display_name => "Will Smith",
+      :roleterm => {:text=>"Coyright Holder"},
+      :rights_ownership => "Sole authorship",
+      :third_party_copyright => "Contains Third Party copyright"
+    }],
+    :organisation =>[{
+      :display_name => "Name of Publisher",    
+      :roleterm => {:text=>"Publisher"},
+      :website => "http://www.example.org/"
+    }],
+    :type_of_resource => "text",
+    :type => "Journal article",
+    :creation_date => "2013",
+    :publication_date => "2012-03",
+    :copyright_date => "2012-04",
+    :language => "English",
+    :digital_origin => "born digital",
+    :status => "Published",
+    :peer_reviewed => "Peer reviewed",
+    :version => "Publisher's version",
+    :journal_title => "Sample host Journal title",
+    :journal_volume => "20",
+    :journal_issue => "1",
+    :start_page => "200",
+    :end_page => "204",
+    :page_numbers => "200-204",
+    :related_item => [{
+      :location => {:url => "http://journals.iucr.org/s/"},
+      :type => "otherVersion"
+    }, {
+      :location => {:url => "http://example.org/referenced_article/"},
+      :type => "references"
+    }],
+    :abstract => "The abstract for the paper",
+    :note => "This paper is not currently available",
+    :subject => ["History of the book", "English Language and Literature"],
+    :keyword => ["Dorothea Herbert", "life-writing", "18th century writing", "women's writing"],
+    :uuid => "uuid:01234567-89ab-cdef-0123-456789abcdef",
+    :urn => "uuid:01234567-89ab-cdef-0123-456789abcdef",
+    :doi => "10.00/xxxx",
+    :license => "cc-0"
   }
 
 
