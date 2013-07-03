@@ -48,4 +48,5 @@ gem "bootstrap-sass"
 group :development, :test do
   gem "rspec-rails"
   gem "jettywrapper"
+  gem "debugger"
 end
