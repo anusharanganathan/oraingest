@@ -6,7 +6,7 @@ QUARTER_HOUR_AGO = (Time.now-900).to_s
 
 describe WorkflowRdfDatastream do
   before do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.find_or_create(:user)
     @generic_file = GenericFile.new
     @datstream = @generic_file.workflowMetadata
     

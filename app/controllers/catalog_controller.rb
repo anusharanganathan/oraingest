@@ -96,6 +96,9 @@ class CatalogController < ApplicationController
     config.add_facet_field solr_name("desc_metadata__language", :facetable), :label => "Language", :limit => 5
     config.add_facet_field solr_name("desc_metadata__based_near", :facetable), :label => "Location", :limit => 5
     config.add_facet_field solr_name("desc_metadata__publisher", :facetable), :label => "Publisher", :limit => 5
+    config.add_facet_field solr_name("all_workflow_statuses", :facetable), :label => "Workflow Status", :limit => 5
+    config.add_facet_field solr_name("MediatedSubmission_status", :facetable), :label => "Submission Workflow Status", :limit => 5
+
     config.add_facet_field solr_name("file_format", :facetable), :label => "File Format", :limit => 5
 
     # Have BL send all facet field names to Solr, which has been the default

@@ -24,10 +24,12 @@ describe GenericFile do
                                   comments_attributes: {creator:"bob123", description:"Some comment text"}
                                   } )
                               
-      subject.workflows.first.entries.count.should == 2
-      subject.workflows.first.entries.last.reviewer_id.should == ["bob123"]
-      subject.workflows.first.comments.first.creator.should == ["bob123"]
-      subject.workflows.first.comments.first.description.should == ["Some comment text"]
-      
+    subject.workflows.first.entries.count.should == 2
+    subject.workflows.first.entries.first.status.should == ["Submitted"]
+    subject.workflows.first.entries.last.reviewer_id.should == ["bob123"]
+    subject.workflows.first.entries.last.status.should == ["Assigned"]
+    subject.workflows.first.current_status.should == "Assigned"
+    subject.workflows.first.comments.first.creator.should == ["bob123"]
+    subject.workflows.first.comments.first.description.should == ["Some comment text"]
   end
 end
