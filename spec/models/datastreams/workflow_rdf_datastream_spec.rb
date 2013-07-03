@@ -24,7 +24,7 @@ describe WorkflowRdfDatastream do
   end
   subject { @datstream }
   it "should allow you to express multiple workflows with multiple entries and comments" do
-    puts subject.content
+    # puts subject.content
     wf1 = subject.workflows.first
     wf1.entries.count.should == 4
     wf1.entries.first.status.should == ["Submitted"]

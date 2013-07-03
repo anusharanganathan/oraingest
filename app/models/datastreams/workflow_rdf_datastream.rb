@@ -14,6 +14,8 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.workflows(to: :workflow, in: OxfordWorkflow, class_name:"Workflow")
   end
   
+  accepts_nested_attributes_for :workflows
+  
   def current_statuses
     self.workflows.map {|wf| wf.current_status }
   end
@@ -37,6 +39,8 @@ class Workflow
     map.entries(to: :entry, :in => OxfordWorkflow, class_name:"WorkflowEntry")
     map.comments(to: :comment, :in => OxfordWorkflow, class_name:"WorkflowComment")
   end
+  
+  accepts_nested_attributes_for :entries, :comments
   
   def current_status
     self.entries.last.status.first
