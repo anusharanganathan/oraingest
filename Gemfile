@@ -48,5 +48,6 @@ gem "bootstrap-sass"
 group :development, :test do
   gem "rspec-rails"
   gem "jettywrapper"
+  gem "factory_girl_rails", "~> 4.2.1"
   gem "debugger"
 end

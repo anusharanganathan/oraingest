@@ -8,6 +8,9 @@ require 'rspec/autorun'
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+# FactoryGirl.find_definitions
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
