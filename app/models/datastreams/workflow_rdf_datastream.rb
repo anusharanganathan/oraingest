@@ -24,7 +24,7 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     super
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :facetable)] = self.current_statuses
     self.workflows.each do |wf|
-      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :facetable)] = wf.current_status
+      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :facetable)] = wf.current_status unless wf.identifier.empty?
     end
     solr_doc
   end
@@ -43,11 +43,23 @@ class Workflow
   accepts_nested_attributes_for :entries, :comments
   
   def current_status
-    self.entries.last.status.first
+    if self.entries.empty?
+      return nil
+    else
+      return self.entries.last.status.first 
+    end
   end
   
   def current_reviewer
-    self.entries.last.reviewer
+    if self.entries.empty?
+      return nil
+    else
+      self.entries.last.reviewer
+    end
+  end
+  
+  def persisted?
+    false
   end
 end
 
@@ -62,6 +74,11 @@ class WorkflowEntry
   def reviewer
     User.find_by_email(self.reviewer_id.first)
   end
+  
+  def persisted?
+    false
+  end
+  
 end
 
 class WorkflowComment
