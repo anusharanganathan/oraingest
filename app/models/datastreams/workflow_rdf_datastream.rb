@@ -14,8 +14,17 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.workflows(to: :workflow, in: OxfordWorkflow, class_name:"Workflow")
   end
   
-  def status
+  def current_statuses
     self.workflows.map {|wf| wf.current_status }
+  end
+  
+  def to_solr(solr_doc={})
+    super
+    solr_doc[Solrizer.solr_name("all_workflow_statuses", :facetable)] = self.current_statuses
+    self.workflows.each do |wf|
+      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :facetable)] = wf.current_status
+    end
+    solr_doc
   end
   
 end

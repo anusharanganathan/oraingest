@@ -44,9 +44,9 @@ describe WorkflowRdfDatastream do
       subject.workflows.first.current_status.should == "Approved"
     end
   end
-  describe "Datastream#status" do
+  describe "Datastream#current_statuses" do
     it "should return the status from the _last_ entry of each workflow" do
-      subject.status.should == ["Approved", "Success"]
+      subject.current_statuses.should == ["Approved", "Success"]
     end
   end
   describe "WorkflowEntry#reviewer" do
@@ -61,10 +61,9 @@ describe WorkflowRdfDatastream do
     end
   end
   it "should solrize" do
-    pending
     solr_doc = subject.to_solr
-    solr_doc["all_workflow_statuses_ssim"].should == ["Accepted", "Success"]
-    solr_doc["MediatedSubmission_status_ssim"].should == "Accepted"
-    solr_doc["VirusCheck_status_ssim"].should == "Success"
+    solr_doc[Solrizer.solr_name("all_workflow_statuses", :facetable)].should == ["Approved", "Success"]
+    solr_doc[Solrizer.solr_name("MediatedSubmission_status", :facetable)].should == "Approved"
+    solr_doc[Solrizer.solr_name("VirusCheck_status", :facetable)].should == "Success"
   end
 end
