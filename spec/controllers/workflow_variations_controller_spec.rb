@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe "Workflow Variations" do
+  before do
+    @routes = Sufia::Engine.routes
+  end
   before(:all) do
     @user = FactoryGirl.find_or_create(:user)
     @archivist = FactoryGirl.find_or_create(:archivist)
