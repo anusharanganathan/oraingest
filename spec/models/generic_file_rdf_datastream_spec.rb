@@ -56,13 +56,12 @@ describe GenericFileRdfDatastream do
   it "shoud allow you to associate files with people" do
     @generic_file.authors.count == 2
     @generic_file.copyright_holders.count == 1
-
-    puts @generic_file.authors.first
-    puts @generic_file.datastreams["RELS-EXT"].to_rels_ext
+    #puts @generic_file.authors.first
+    #puts @generic_file.datastreams["RELS-EXT"].to_rels_ext
   end
 
   it "should allow you to get people attaributes" do
-    pending "Is this possible?"
+    #pending "Is this possible?"
     @generic_file.authors.first.first_name.should == ["Mark"]
     @generic_file.authors.first.last_name.should == ["Twain"]
     @generic_file.authors.first.display_name.should == ["Twain, M"]

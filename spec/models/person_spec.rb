@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe PersonRdfDatastream do
+describe Person do
   before do
     @person1 = Person.new
     @ds1 = @person1.descMetadata
