@@ -14,6 +14,9 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.subtitle(:in => OxfordTerms) do |index|
       index.as :stored_searchable
     end
+    map.creator(:in => RDF::DC) do |index|
+      index.as :stored_searchable, :facetable
+    end
     map.rights_ownership(:to=> "rightsOwnership", :in => OxfordTerms) do |index|
       index.as :stored_searchable
     end
