@@ -3,6 +3,7 @@ require "spec_helper"
 describe GenericFileRdfDatastream do
   before do
     @generic_file = GenericFile.new
+    @generic_file.apply_depositor_metadata('anusha')
     @dsg = @generic_file.descMetadata
     @dsg.attributes = {title:"test", subtitle:"subtitle", abstract:"Abstract for paper"}
 
@@ -40,6 +41,10 @@ describe GenericFileRdfDatastream do
     #@generic_file.authors = [@person1]
     @generic_file.copyright_holders = [@person3]
     @generic_file.save
+    #Has many associations writes to rels-ext of person
+    @person1.save
+    @person2.save
+    @person3.save
   end
 
   it "should allow you to express values" do
@@ -49,7 +54,6 @@ describe GenericFileRdfDatastream do
   end
 
   it "shoud allow you to associate files with people" do
-    #pending "associations don't work"
     @generic_file.authors.count == 2
     @generic_file.copyright_holders.count == 1
 
