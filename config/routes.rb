@@ -7,6 +7,18 @@ OraHydra::Application.routes.draw do
 
 
   devise_for :users
+  
+  # DELETE THIS SECTION if the bug is fixed in Sufia.  See https://github.com/projecthydra/sufia/pull/144
+  # Explicitly defining dashboard routes b/c the sub-routes (ie. pages) are not being properly inherited from Sufia
+  resources 'dashboard', :only=>:index do
+    collection do
+      get 'page/:page', :action => :index
+      get 'activity', :action => :activity, :as => :dashboard_activity
+      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+    end
+  end
+  
+  
   mount Sufia::Engine => '/'
 
 
