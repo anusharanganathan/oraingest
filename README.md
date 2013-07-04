@@ -37,20 +37,3 @@ brew install ffmpeg --with-libvpx --with-libvorbis
 
 #### On Ubuntu Linux
 See https://ffmpeg.org/trac/ffmpeg/wiki/UbuntuCompilationGuide
-
-## Developers:
-This information is for people who want to modify the engine itself, not an application that uses the engine:
-### Create fixtures
-```
-# configure jetty & start jetty (if you haven't already)
-rake jetty:config
-rake jetty:start
-
-# load sufia fixtures
-rake sufia:fixtures:create sufia:fixtures:generate
-rake fixtures
-
-# run the tests
-rake clean spec
-bundle exec cucumber features
-```
