@@ -107,28 +107,6 @@ class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     end
     map.related_url(:to => "seeAlso", :in => RDF::RDFS)
 
-    def terms_for_display
-      return ["title", "subtitle", "rights_ownership", "third_party_copyright", 
-        "description", "abstract", "subject", "keyword", "doi", "local_id", 
-        "issn", "isbn", "eissn", "uuid", "identifier", "grantNumber", "edition", 
-        "language", "status", "version", "host", "volume", "issue", "pages", 
-        "type", "date_created", "date_uploaded", "date_modified"]
-    end
-
-    def terms_for_editing
-       return ["title", "subtitle", "rights_ownership", "third_party_copyright", 
-         "description", "abstract", "subject", "keyword", "doi", "issn", 
-         "isbn", "eissn", "identifier", "grantNumber", "edition", "language", 
-         "status", "version", "host", "volume", "issue", "pages"]
-    end
- 
-    def fields 
-       return ["title", "subtitle", "rights_ownership", "third_party_copyright", 
-        "description", "abstract", "subject", "keyword", "doi", "local_id", 
-        "issn", "isbn", "eissn", "uuid", "identifier", "grantNumber", "edition", 
-        "language", "status", "version", "host", "volume", "issue", "pages", 
-        "type", "date_created", "date_uploaded", "date_modified"]
-    end
 
     # Not including people/organisations in descMetadata
     #map.contributor(:in => RDF::DC)

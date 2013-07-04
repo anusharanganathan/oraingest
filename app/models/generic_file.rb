@@ -13,10 +13,7 @@ class GenericFile < ActiveFedora::Base
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
 
   delegate_to "workflowMetadata",  [:workflows, :workflows_attributes] 
-
-  #has_many :authors, :property=> :has_author, :class_name=>"Person"
-  #has_many :contributors, :property=> :has_contributor, :class_name=>"Person"
-  #has_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
+  delegate_to "descMetadata", GenericFileRdfDatastream.fields
 
   has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
