@@ -51,8 +51,8 @@ describe "Workflow Variations" do
         it "should return an array of documents I can edit and include Submission status facet" do
           user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
           assigns(:document_list).count.should eql(user_results["response"]["numFound"])
-          ["Approved", "Assigned", "Draft", "Escalated", "Rejected", "Submitted"] .each do |stat|
-            assigns(:response).facet_fields["MediatedSubmission_status_ssim"].should include(stat)
+          ["Approved", "Assigned", "Draft", "Escalated", "Rejected", "Submitted"] .each do |statuses|
+            assigns(:response).facet_fields["MediatedSubmission_status_ssim"].should include(statuses)
           end
         end
       end

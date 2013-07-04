@@ -23,8 +23,14 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   def to_solr(solr_doc={})
     super
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)] = self.current_statuses
+    # Indexes each workflow individually using the :identifier to build a workflow-specific solr field name.  
+    # If multiple workflow nodes are using the same :identifier, only the first one will be indexed.
     self.workflows.each do |wf|
-      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :symbol)] = wf.current_status unless wf.identifier.empty?
+      already_indexed = []
+      unless wf.identifier.empty?
+        solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :symbol)] = wf.current_status unless already_indexed.include?(wf.identifier.first)
+        already_indexed << wf.identifier.first
+      end
     end
     solr_doc
   end
@@ -69,6 +75,7 @@ class WorkflowEntry
     map.date(in: RDF::DC) 
     map.status(in: OxfordWorkflow)
     map.reviewer_id(in: OxfordWorkflow)
+    map.creator(in: RDF::DC)
   end
   
   def reviewer

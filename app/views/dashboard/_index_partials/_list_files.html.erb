@@ -13,11 +13,11 @@
   <td width="37%">
     <a href="" title="Click for more details"><i id="expand_<%= noid %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
     <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <span class=center><%= link_to document.title_or_label, sufia.generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
+    <span class=center><%= link_to document.title_or_label, sufia.edit_generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
-  <td width="17%"><%= document.date_uploaded %> </td>
+  <td width="5%"><%= document.date_uploaded %> </td>
   <td>
-    <%= document.submission_workflow_status %>
+    <%= workflow_status_indicator(document) %>
   </td>
   <td width="5%" align="center">
     <% if document.registered? %>

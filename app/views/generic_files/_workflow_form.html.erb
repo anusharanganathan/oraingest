@@ -4,21 +4,30 @@
   <div class="row">
     <div class="control-group">
       
-      <% if generic_file.workflows.empty? %>
+      <% unless generic_file.workflows.first.nil? %>
+        <% wf = generic_file.workflows.first %>
+        <input type="hidden" name="generic_file[workflows_attributes][id]" value="<%= wf.rdf_subject.to_s%>" />
+      <% end %>
+      
+      <% if generic_file.workflows.empty? || generic_file.workflows.first.current_status == "Draft" %>
         <h3>History - <small>what's happened so far</small></h3>
         This Article has never been submitted for review.
         <input type="hidden" name="generic_file[workflows_attributes][identifier]" value="MediatedSubmission" />
         <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][status]" value="Submitted" />
+        <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][date]" value="<%= Time.now.to_s %>" />
+        <input type="hidden" name="generic_file[workflows_attributes][comments_attributes][creator]" value="<%= current_user.user_key %>" />
+        
       <% else %>
       
         <h3>Change Status</h3>
         <%# generic_file.workflows.each_with_index do |wf, wf_index| %>
-        <% wf = generic_file.workflows.first %>
-          <input type="hidden" name="generic_file[workflows_attributes][id]" value="<%= wf.rdf_subject.to_s%>" />
           <div class="controls">
             <%= label_tag "generic_file[workflows_attributes][entries_attributes][status]", "Status", :class=>"control-label" %>
       
             <%= select_tag "generic_file[workflows_attributes][entries_attributes][status]", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], wf.current_status), :class=>'span20 select_perm' %>   
+            <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][date]" value="<%= Time.now.to_s %>" />
+            <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][creator]" value="<%= current_user.user_key %>" />
+            
           </div>
           <div class="controls">
             <%= label_tag "generic_file[workflows_attributes][entries_attributes][reviewer_id]", "Reviewer", :class=>"control-label" %>
@@ -30,17 +39,21 @@
           </div>
           <div class="controls">
             <%= label_tag "generic_file[workflows_attributes][comments_attributes][description]", "Comment", :class=>"control-label" %>
-            <%= text_area_tag "generic_file[workflows_attributes][comments_attributes][description]" %>   
+            <%= text_area_tag "generic_file[workflows_attributes][comments_attributes][description]" %> 
+            <input type="hidden" name="generic_file[workflows_attributes][comments_attributes][date]" value="<%= Time.now.to_s %>" />
+            <input type="hidden" name="generic_file[workflows_attributes][comments_attributes][creator]" value="<%= current_user.user_key %>" />
+              
           </div>
         <%# end %>
         <h3>History - <small>what's happened so far</small></h3>
         <table class="table table-bordered">
           <tr>
-            <th>Date</th><th>Status</th><th>Assignee</th>
+            <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th>
           </tr>
           <% wf.entries.each do |entry| %>
             <tr>
-              <td><%= entry.date.first %></td>
+              <td><%= format_date(entry.date.first) %></td>
+              <td><%= entry.creator.first %></td>
               <td><%= entry.status.first %></td>
               <td><%= entry.reviewer_id.first %></td>
             </tr>
@@ -53,7 +66,7 @@
           </tr>
           <% wf.comments.each do |comment| %>
             <tr>
-              <td><%= comment.date.first %></td>
+              <td><%= format_date(comment.date.first) %></td>
               <td><%= comment.creator.first %></td>
               <td><%= comment.description.first %></td>
             </tr>

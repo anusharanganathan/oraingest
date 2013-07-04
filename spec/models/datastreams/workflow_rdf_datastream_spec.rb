@@ -13,11 +13,11 @@ describe WorkflowRdfDatastream do
     wf1 = @datstream.workflows.build(identifier:"MediatedSubmission")
     wf2 =  @datstream.workflows.build(identifier:"VirusCheck")
     wf1.entries.build(status:"Submitted", reviewer_id: nil, date:HOUR_AGO)
-    wf1.entries.build(status:"Assigned", reviewer_id: "user23", date:HALF_HOUR_AGO)
+    wf1.entries.build(status:"Assigned", reviewer_id: "user23", date:HALF_HOUR_AGO, creator:"foouser")
     wf1.comments.build(creator:"user23", date:UNDER_HALF_HOUR_AGO, description:"This is over my head\n I can't review it.")
-    wf1.entries.build(status:"Escalated", reviewer_id: @user.user_key, date:UNDER_HALF_HOUR_AGO)
+    wf1.entries.build(status:"Escalated", reviewer_id: @user.user_key, date:UNDER_HALF_HOUR_AGO, creator:"user23")
     wf1.comments.build(creator:@user.user_key, date:QUARTER_HOUR_AGO, description:"Looks fine to me.")
-    wf1.entries.build(status:"Approved", reviewer_id: @user.user_key, date:QUARTER_HOUR_AGO)
+    wf1.entries.build(status:"Approved", reviewer_id: @user.user_key, date:QUARTER_HOUR_AGO, creator:@user.user_key)
     
     wf2.entries.build(status:"Submitted", reviewer_id: nil, date:HOUR_AGO)
     wf2.entries.build(status:"Success", reviewer_id: nil, date:HOUR_AGO)
@@ -31,9 +31,12 @@ describe WorkflowRdfDatastream do
     wf1.entries.first.date.should == [HOUR_AGO]
     wf1.entries.last.status.should == ["Approved"]
     wf1.entries.last.date.should == [QUARTER_HOUR_AGO]
+    wf1.entries.last.creator.should == [@user.user_key]
     wf1.comments.count.should == 2
     wf1.comments.first.description.should == ["This is over my head\n I can't review it."]
+    wf1.comments.first.creator.should == ["user23"]
     wf1.comments.last.description.should == ["Looks fine to me."]
+    wf1.comments.last.creator.should == [@user.user_key]
     
     wf2 = subject.workflows[1]
     wf2.entries.count.should == 2

@@ -32,4 +32,29 @@ describe GenericFile do
     subject.workflows.first.comments.first.creator.should == ["bob123"]
     subject.workflows.first.comments.first.description.should == ["Some comment text"]
   end
+  describe "create" do
+    before(:each) do
+      @generic_file.apply_depositor_metadata("fake@example.com")
+      @generic_file.save
+    end
+    after(:each) do
+      @generic_file.delete
+    end
+    it "should initialize submission workflow" do
+      @generic_file.workflows.count.should == 1
+      wf = @generic_file.workflows.first
+      wf.identifier.should == ["MediatedSubmission"]
+      wf.current_status.should == "Draft"
+      wf.entries.first.date.first.should include(Time.new.strftime("%Y-%m-%d %H:%M"))
+    end
+    it "should skip initializing workflow if it's already there" do
+      @in_review = GenericFile.new(title:"Item In Review", workflows_attributes:
+                            {identifier:"MediatedSubmission", entries_attributes:{status:"Assigned", reviewer_id:"fake@example.com"}})
+      @in_review.apply_depositor_metadata("fake@example.com")
+      @in_review.workflows.count.should == 1
+      @in_review.save
+      @in_review.workflows.count.should == 1
+      @in_review.workflows.first.current_status.should == "Assigned"
+    end
+  end
 end
