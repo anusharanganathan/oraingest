@@ -52,7 +52,7 @@ describe "Workflow Variations" do
           user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
           assigns(:document_list).count.should eql(user_results["response"]["numFound"])
           ["Approved", "Assigned", "Draft", "Escalated", "Rejected", "Submitted"] .each do |stat|
-            assigns(:response).facet_fields["MediatedSubmission_status_sim"].should include(stat)
+            assigns(:response).facet_fields["MediatedSubmission_status_ssim"].should include(stat)
           end
         end
       end

@@ -62,8 +62,8 @@ describe WorkflowRdfDatastream do
   end
   it "should solrize" do
     solr_doc = subject.to_solr
-    solr_doc[Solrizer.solr_name("all_workflow_statuses", :facetable)].should == ["Approved", "Success"]
-    solr_doc[Solrizer.solr_name("MediatedSubmission_status", :facetable)].should == "Approved"
-    solr_doc[Solrizer.solr_name("VirusCheck_status", :facetable)].should == "Success"
+    solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)].should == ["Approved", "Success"]
+    solr_doc[Solrizer.solr_name("MediatedSubmission_status", :symbol)].should == "Approved"
+    solr_doc[Solrizer.solr_name("VirusCheck_status", :symbol)].should == "Success"
   end
 end

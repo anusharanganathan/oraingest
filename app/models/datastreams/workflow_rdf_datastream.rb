@@ -22,9 +22,9 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   
   def to_solr(solr_doc={})
     super
-    solr_doc[Solrizer.solr_name("all_workflow_statuses", :facetable)] = self.current_statuses
+    solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)] = self.current_statuses
     self.workflows.each do |wf|
-      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :facetable)] = wf.current_status unless wf.identifier.empty?
+      solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :symbol)] = wf.current_status unless wf.identifier.empty?
     end
     solr_doc
   end

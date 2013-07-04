@@ -90,7 +90,7 @@ class CatalogController < ApplicationController
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
     config.add_facet_field solr_name("desc_metadata__resource_type", :facetable), :label => "Resource Type", :limit => 5
-    config.add_facet_field solr_name("MediatedSubmission_status", :facetable), :label => "Workflow Status", :limit => 5
+    config.add_facet_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status", :limit => 5
     config.add_facet_field solr_name("desc_metadata__creator", :facetable), :label => "Creator", :limit => 5
     config.add_facet_field solr_name("desc_metadata__tag", :facetable), :label => "Keyword", :limit => 5
     config.add_facet_field solr_name("desc_metadata__subject", :facetable), :label => "Subject", :limit => 5
@@ -108,6 +108,7 @@ class CatalogController < ApplicationController
 
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
+    config.add_index_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status"
     config.add_index_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
     config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
     config.add_index_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), :label => "Keyword"

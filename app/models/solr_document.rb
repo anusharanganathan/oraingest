@@ -7,6 +7,10 @@ class SolrDocument
 
   # self.unique_key = 'id'
   
+  def submission_workflow_status 
+    get(Solrizer.solr_name("MediatedSubmission_status", :symbol))
+  end
+  
   # The following shows how to setup this blacklight document to display marc documents
   extension_parameters[:marc_source_field] = :marc_display
   extension_parameters[:marc_format_type] = :marcxml
