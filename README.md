@@ -1,5 +1,6 @@
-# Sufia [![Version](https://badge.fury.io/rb/sufia.png)](http://badge.fury.io/rb/sufia) [![Build Status](https://travis-ci.org/projecthydra/sufia.png?branch=master)](https://travis-ci.org/projecthydra/sufia) [![Dependency Status](https://gemnasium.com/projecthydra/sufia.png)](https://gemnasium.com/projecthydra/sufia)
+# ORA: Oxford University Research Archives
 
+This is a [Sufia](https://github.com/projecthydra/sufia)-based [Hydra Head](http://projecthydra.org)
 
 # Installation
 
