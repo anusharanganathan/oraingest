@@ -97,7 +97,11 @@ class Workflow
     solr_doc[Solrizer.solr_name(self.identifier.first+"_current_reviewer_id", :symbol)] = self.current_reviewer_id
     solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.reviewer_id.first }.uniq.reject{|v| v.nil? || v.empty? }    
     unless self.date_submitted.nil?
-      solr_doc[Solrizer.solr_name(self.identifier.first+"_date_submitted", :dateable)] = Time.utc(self.date_submitted).iso8601
+      begin
+        solr_doc[Solrizer.solr_name(self.identifier.first+"_date_submitted", :dateable)] = Time.parse(self.date_submitted).utc.iso8601
+      rescue ArgumentError
+        # This means the date_submitted value is not a valid date.  Don't put it into the solr doc, or solr will choke.
+      end
     end
   end
 end

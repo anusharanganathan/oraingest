@@ -1,8 +1,8 @@
 require "spec_helper"
-HOUR_AGO = (Time.now-3600).iso8601
-HALF_HOUR_AGO = (Time.now-1800).iso8601
-UNDER_HALF_HOUR_AGO = (Time.now-1700).iso8601
-QUARTER_HOUR_AGO = (Time.now-900).iso8601
+HOUR_AGO = (Time.now-3600).utc.iso8601
+HALF_HOUR_AGO = (Time.now-1800).utc.iso8601
+UNDER_HALF_HOUR_AGO = (Time.now-1700).utc.iso8601
+QUARTER_HOUR_AGO = (Time.now-900).utc.iso8601
 
 describe WorkflowRdfDatastream do
   before do
@@ -12,7 +12,7 @@ describe WorkflowRdfDatastream do
     
     wf1 = @datstream.workflows.build(identifier:"MediatedSubmission")
     wf2 =  @datstream.workflows.build(identifier:"VirusCheck")
-    wf1.entries.build(status:"Submitted", reviewer_id: nil, date:HOUR_AGO)
+    @submission_entry = wf1.entries.build(status:"Submitted", reviewer_id: nil, date:HOUR_AGO)
     wf1.entries.build(status:"Assigned", reviewer_id: "user23", date:HALF_HOUR_AGO, creator:"foouser")
     wf1.comments.build(creator:"user23", date:UNDER_HALF_HOUR_AGO, description:"This is over my head\n I can't review it.")
     wf1.entries.build(status:"Escalated", reviewer_id: @user.user_key, date:UNDER_HALF_HOUR_AGO, creator:"user23")
@@ -63,13 +63,30 @@ describe WorkflowRdfDatastream do
       subject.workflows.first.current_reviewer.should == @user
     end
   end
+  describe "Workflow#submission_entry" do
+    it "should return a User object based on the reviewer_id on the last entry of the workflow" do
+      subject.workflows.first.submission_entry.should == @submission_entry
+    end
+  end
+  describe "Workflow#date_submitted" do
+    it "should return a User object based on the reviewer_id on the last entry of the workflow" do
+      subject.workflows.first.date_submitted.should == HOUR_AGO
+    end
+  end
   it "should solrize" do
     solr_doc = subject.to_solr
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)].should == ["Approved", "Success"]
     solr_doc[Solrizer.solr_name("MediatedSubmission_status", :symbol)].should == "Approved"
     solr_doc[Solrizer.solr_name("MediatedSubmission_current_reviewer_id", :symbol)].should == @user.user_key
     solr_doc[Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol)].should == ["user23",@user.user_key] 
-    solr_doc[Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable)].should == HOUR_AGO
+    solr_doc[Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable)].should == Time.parse(HOUR_AGO).utc.iso8601
     solr_doc[Solrizer.solr_name("VirusCheck_status", :symbol)].should == "Success"
+  end
+  it "should skip invalid dates when solrizing" do
+    @datstream.workflows = []
+    wf1 = @datstream.workflows.build(identifier:"MediatedSubmission")
+    wf1.entries.build(status:"Submitted", reviewer_id: nil, date:"1nvalid3 DATE")
+    solr_doc = @datstream.to_solr
+    solr_doc[Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable)].should be_nil
   end
 end
