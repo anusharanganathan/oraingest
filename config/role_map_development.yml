@@ -2,6 +2,8 @@ uva-only:
   - uva-only
 archivist:
   - archivist1@example.com
+reviewer:
+  - archivist1@example.com
 donor:
   - donor1@example.com
 researcher:

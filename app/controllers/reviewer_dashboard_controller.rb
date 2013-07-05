@@ -1,0 +1,46 @@
+require 'blacklight/catalog'
+class ReviewerDashboardController < ApplicationController
+  include  Sufia::DashboardControllerBehavior
+  
+  # Remove the solr_search_params_logic that we don't want applied 
+  # (No advanced search & Don't apply the Hydra gated discovery, which filters out all things that don't list you in their permissions.)
+  # See: https://github.com/projectblacklight/blacklight/wiki/Extending-or-Modifying-Blacklight-Search-Behavior
+  ReviewerDashboardController.solr_search_params_logic = CatalogController.solr_search_params_logic - [:add_advanced_parse_q_to_solr, :add_advanced_search_to_solr, :add_access_controls_to_solr_params]
+  # Add query filter
+  solr_search_params_logic << :exclude_draft_and_approved
+   
+  before_filter :restrict_access_to_reviewers
+  
+  self.copy_blacklight_config_from(CatalogController)
+  
+  configure_blacklight do |config|
+    config.add_facet_field "is_part_of_ssim", :label => "Parents", :limit => 5
+  end
+  
+  private
+  
+  def restrict_access_to_reviewers
+    unless can? :review, GenericFile
+      raise Hydra::AccessDenied.new("You do not have permission to review submissions.", :review_submissions, params[:id])
+    end 
+  end
+  
+  # Limits search results just to GenericFile and Collection objects
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  def exclude_unwanted_models solr_parameters, user_parameters
+    solr_parameters[:fq] ||= []
+    # Only include GenericFile and Collection objects
+    solr_parameters[:fq] << "active_fedora_model_ssi:GenericFile OR active_fedora_model_ssi:Collection"
+  end
+  
+  # Limits search results to exclude items whose Workflow status is "Draft" or "Approved"
+  # @param solr_parameters the current solr parameters
+  # @param user_parameters the current user-subitted parameters
+  def exclude_draft_and_approved solr_parameters, user_parameters
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << '-'+Solrizer.solr_name("MediatedSubmission_status", :symbol)+':Approved'
+    solr_parameters[:fq] << '-'+Solrizer.solr_name("MediatedSubmission_status", :symbol)+':Draft'
+  end
+  
+end
