@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'blacklight'
 gem 'hydra-head'
 gem 'sufia', github: "projecthydra/sufia", ref: "95c1c8f3a7d071275f588ed3c08369776aa61b13"
+gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'jettywrapper'
 gem 'font-awesome-sass-rails'
 
