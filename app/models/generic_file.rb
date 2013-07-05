@@ -6,8 +6,7 @@ require "rdf"
 
 class GenericFile < ActiveFedora::Base
   include Sufia::GenericFile
-  attr_accessible :workflows, :workflows_attributes
-  attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
+  attr_accessible *(GenericFileRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
   
   before_create :initialize_submission_workflow
 
