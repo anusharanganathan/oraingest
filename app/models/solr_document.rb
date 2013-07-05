@@ -11,6 +11,14 @@ class SolrDocument
     get(Solrizer.solr_name("MediatedSubmission_status", :symbol))
   end
   
+  def submission_workflow_date_submitted
+    get(Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable))
+  end
+  
+  def submission_workflow_current_reviewer_id
+    get(Solrizer.solr_name("MediatedSubmission_current_reviewer_id", :symbol))
+  end
+  
   # The following shows how to setup this blacklight document to display marc documents
   extension_parameters[:marc_source_field] = :marc_display
   extension_parameters[:marc_format_type] = :marcxml

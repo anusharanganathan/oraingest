@@ -27,8 +27,8 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # If multiple workflow nodes are using the same :identifier, only the first one will be indexed.
     self.workflows.each do |wf|
       already_indexed = []
-      unless wf.identifier.empty?
-        solr_doc[Solrizer.solr_name(wf.identifier.first+"_status", :symbol)] = wf.current_status unless already_indexed.include?(wf.identifier.first)
+      unless wf.identifier.empty? || already_indexed.include?(wf.identifier.first)
+        wf.to_solr(solr_doc) 
         already_indexed << wf.identifier.first
       end
     end
@@ -56,6 +56,8 @@ class Workflow
     end
   end
   
+  # Returns the User matching the reviewer id on last entry in the workflow
+  # Returns nil if no reviewer_id available or if the reviewer_id does not match any existing Users
   def current_reviewer
     if self.entries.empty?
       return nil
@@ -64,8 +66,39 @@ class Workflow
     end
   end
   
+  # Returns the (String) id of current reviewer on last entry
+  # Returns nil if no value to return
+  def current_reviewer_id
+    if self.entries.empty?
+      return nil
+    else
+      self.entries.last.reviewer_id.first
+    end
+  end
+  
+  # The entry marking when the User submitted an item into workflow
+  def submission_entry
+    self.entries.select{|e| e.status == ["Submitted"]}.first
+  end
+  
+  # The date value from the esubmission_entry
+  def date_submitted
+    unless submission_entry.nil?
+      submission_entry.date.first
+    end
+  end
+  
   def persisted?
     false
+  end
+  
+  def to_solr(solr_doc)
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_status", :symbol)] = self.current_status 
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_current_reviewer_id", :symbol)] = self.current_reviewer_id
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.reviewer_id.first }.uniq.reject{|v| v.nil? || v.empty? }    
+    unless self.date_submitted.nil?
+      solr_doc[Solrizer.solr_name(self.identifier.first+"_date_submitted", :dateable)] = Time.utc(self.date_submitted).iso8601
+    end
   end
 end
 
@@ -78,6 +111,8 @@ class WorkflowEntry
     map.creator(in: RDF::DC)
   end
   
+  # Returns the User matching the reviewer id on the entry
+  # Returns nil if no reviewer_id available or if the reviewer_id does not match any existing Users
   def reviewer
     User.find_by_email(self.reviewer_id.first)
   end

@@ -1,8 +1,8 @@
 require "spec_helper"
-HOUR_AGO = (Time.now-3600).to_s
-HALF_HOUR_AGO = (Time.now-1800).to_s
-UNDER_HALF_HOUR_AGO = (Time.now-1700).to_s
-QUARTER_HOUR_AGO = (Time.now-900).to_s
+HOUR_AGO = (Time.now-3600).iso8601
+HALF_HOUR_AGO = (Time.now-1800).iso8601
+UNDER_HALF_HOUR_AGO = (Time.now-1700).iso8601
+QUARTER_HOUR_AGO = (Time.now-900).iso8601
 
 describe WorkflowRdfDatastream do
   before do
@@ -67,6 +67,9 @@ describe WorkflowRdfDatastream do
     solr_doc = subject.to_solr
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)].should == ["Approved", "Success"]
     solr_doc[Solrizer.solr_name("MediatedSubmission_status", :symbol)].should == "Approved"
+    solr_doc[Solrizer.solr_name("MediatedSubmission_current_reviewer_id", :symbol)].should == @user.user_key
+    solr_doc[Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol)].should == ["user23",@user.user_key] 
+    solr_doc[Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable)].should == HOUR_AGO
     solr_doc[Solrizer.solr_name("VirusCheck_status", :symbol)].should == "Success"
   end
 end
