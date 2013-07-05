@@ -68,9 +68,11 @@ describe "Workflow Variations" do
       end
       describe "#index" do
         it "should not show other users content" do
+          editable_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@archivist.user_key}"]}
+          
           xhr :post, :index
           response.should be_success
-          assigns(:document_list).count.should eql(0)
+          assigns(:result_set_size).should eql(editable_results["response"]["numFound"])
         end
       end
     end
