@@ -7,6 +7,9 @@ require "rdf"
 class GenericFile < ActiveFedora::Base
   include Sufia::GenericFile
   attr_accessible *(GenericFileRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
+  #include Hydra::Collections::Collectible
+  #attr_accessible :workflows, :workflows_attributes
+  #attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
   
   before_create :initialize_submission_workflow
 
@@ -19,6 +22,13 @@ class GenericFile < ActiveFedora::Base
   has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
   has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
+
+  #def to_solr(solr_doc={}, opts={})
+  #  super(solr_doc, opts)
+  #  solr_doc[Solrizer.solr_name('label')] = self.label
+  #  index_collection_pids(solr_doc)
+  #  return solr_doc
+  #end
   
   private
   

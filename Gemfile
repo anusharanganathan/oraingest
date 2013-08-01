@@ -12,6 +12,7 @@ gem 'sufia', github: "projecthydra/sufia", ref: "2c8a438227767e9f314128f4a887fbe
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'jettywrapper'
 gem 'font-awesome-sass-rails'
+#gem 'hydra-collections'
 
 # Gems used only for assets and not required
 # in production environments by default.

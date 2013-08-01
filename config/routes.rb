@@ -17,6 +17,7 @@ OraHydra::Application.routes.draw do
   end
   
   
+  #mount Hydra::Collections::Engine => '/' 
   mount Sufia::Engine => '/'
 
 
