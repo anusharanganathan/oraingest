@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe GenericFileRdfDatastream do
+describe GenericArticleRdfDatastream do
   before do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('anusha')
