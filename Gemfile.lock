@@ -223,6 +223,8 @@ GEM
     parslet (1.5.0)
       blankslate (~> 2.0)
     polyglot (0.3.4)
+    protected_attributes (1.0.5)
+      activemodel (>= 4.0.1, < 5.0)
     rack (1.5.2)
     rack-protection (1.5.2)
       rack
@@ -401,6 +403,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   kaminari!
+  protected_attributes
   rails (= 4.0.3)
   rspec-rails
   sass-rails (~> 4.0.0)
