@@ -5,7 +5,7 @@ require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
 
 
-class GenericArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
+class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   map_predicates do |map|
 	#-- title --
     map.title(:in => RDF::DC) do |index|

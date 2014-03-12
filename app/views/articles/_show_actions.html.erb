@@ -1,12 +1,12 @@
     <h2 class="non lower">Actions</h2>
     <p>
-      <%= link_to "Download", sufia.download_path(@generic_article.noid) %>
+      <%= link_to "Download", sufia.download_path(@article.noid) %>
       <!-- &nbsp;|&nbsp; -->
-      <%# link_to "Cite", citation_generic_article_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
-      <% if can? :edit, @generic_article %>
+      <%# link_to "Cite", citation_article_path, {:id => 'citeLink', :name => 'citation', :class => 'lightboxLink'}, :action => 'citation' %>
+      <% if can? :edit, @article %>
           &nbsp;|&nbsp;
-          <%= link_to "Edit", sufia.edit_generic_article_path unless @generic_article.processing?   %>
-          <%= "File is being processed you may edit once it is complete" if @generic_article.processing?   %>
+          <%= link_to "Edit", edit_article_path unless @article.processing?   %>
+          <%= "File is being processed you may edit once it is complete" if @article.processing?   %>
       <%end %>
     </p>
     

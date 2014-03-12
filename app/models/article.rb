@@ -1,23 +1,23 @@
 require "datastreams/workflow_rdf_datastream"
-require "datastreams/generic_article_rdf_datastream"
+require "datastreams/article_rdf_datastream"
 require "person"
 require "oxford_terms"
 require "rdf"
 
-class GenericArticle < ActiveFedora::Base
+class Article < ActiveFedora::Base
   include Sufia::GenericFile
-  attr_accessible *(GenericArticleRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
+  attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
   #include Hydra::Collections::Collectible
   #attr_accessible :workflows, :workflows_attributes
   #attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
   
   before_create :initialize_submission_workflow
 
-  has_metadata :name => "descMetadata", :type => GenericFileRdfDatastream
+  has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
 
   delegate_to "workflowMetadata",  [:workflows, :workflows_attributes] 
-  delegate_to "descMetadata", GenericFileRdfDatastream.fields
+  delegate_to "descMetadata", ArticleRdfDatastream.fields
 
   has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"

@@ -43,7 +43,7 @@ $("a[rel=popover]").popover({ html: true });
 
 <%= render :partial => 'breadcrumbs' %>
 
-<h1 class="lower">Edit <%= @generic_article %></h1>
+<h1 class="lower">Edit <%= @article %></h1>
 
 <div class="row">
   <div class="span40">
@@ -51,7 +51,7 @@ $("a[rel=popover]").popover({ html: true });
   </div>
   <div class="span2">&nbsp;</div>
   <div class="span68">
-    <%= link_to "&lt;&lt;Browse view".html_safe, sufia.generic_article_path %></li>
+    <%= link_to "&lt;&lt;Browse view".html_safe, article_path %></li>
     <ul class="nav nav-tabs">
       <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="icon-tags"></i> Descriptions</a></li>
       <li id="edit_versioning_link"><a href="#versioning_display" data-toggle="tab"><i class="icon-sitemap"></i> Versions</a></li>
@@ -59,10 +59,10 @@ $("a[rel=popover]").popover({ html: true });
       <li id="edit_workflow_link"><a href="#workflow_display" data-toggle="tab"><i class="icon-key"></i> Workflow</a></li>
     </ul>
     <div class="tab-content">
-      <%= render :partial => "descriptions", :locals => { :generic_article => @generic_article } %>
-      <%= render :partial => "permission", :locals => { :gf => @generic_article} %>
-      <%= render :partial => "versioning", :locals => { :generic_article => @generic_article } %>
-      <%= render :partial => "workflow", :locals => { :generic_article => @generic_article } %>
+      <%= render :partial => "descriptions", :locals => { :article => @article } %>
+      <%= render :partial => "permission", :locals => { :gf => @article} %>
+      <%= render :partial => "versioning", :locals => { :article => @article } %>
+      <%= render :partial => "workflow", :locals => { :article => @article } %>
     </div>
   </div> <!-- /.span68-->
 </div><!-- /.row -->
