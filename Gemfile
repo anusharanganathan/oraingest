@@ -35,6 +35,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+#gem 'sufia', "~> 3.6.1"
 gem 'sufia'
 # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  

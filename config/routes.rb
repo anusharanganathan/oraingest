@@ -16,7 +16,13 @@ OraHydra::Application.routes.draw do
     end
   end
   
-  
+  resources 'article', :only=>:index do
+    collection do
+      get 'page/:page', :action => :index
+      get 'activity', :action => :activity, :as => :dashboard_activity
+      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+    end
+  end
   #mount Hydra::Collections::Engine => '/' 
   mount Sufia::Engine => '/'
 

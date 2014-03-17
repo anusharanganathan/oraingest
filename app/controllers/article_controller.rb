@@ -38,7 +38,7 @@ class ArticleController < ApplicationController
 
   def index
     super
-    #recent
+    recent
     #also grab my recent docs too
     #recent_me    
   end

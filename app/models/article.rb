@@ -1,6 +1,6 @@
 require "datastreams/workflow_rdf_datastream"
 require "datastreams/article_rdf_datastream"
-require "person"
+#require "person"
 require "oxford_terms"
 require "rdf"
 
@@ -19,9 +19,9 @@ class Article < ActiveFedora::Base
   delegate_to "workflowMetadata",  [:workflows, :workflows_attributes] 
   delegate_to "descMetadata", ArticleRdfDatastream.fields
 
-  has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
-  has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
-  has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
+  #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
+  #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
+  #has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
 
   #def to_solr(solr_doc={}, opts={})
   #  super(solr_doc, opts)
