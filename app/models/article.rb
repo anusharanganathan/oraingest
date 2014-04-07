@@ -5,14 +5,17 @@ require "oxford_terms"
 require "rdf"
 
 class Article < ActiveFedora::Base
-  include Sufia::GenericFile
-  attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
+  include Sufia::Noid
+  include Hydra::AccessControls::Permissions
+  #include Sufia::GenericFile
   #include Hydra::Collections::Collectible
+  #attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
   #attr_accessible :workflows, :workflows_attributes
   #attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
   
   before_create :initialize_submission_workflow
 
+  has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
 

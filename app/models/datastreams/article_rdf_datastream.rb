@@ -1,11 +1,14 @@
+#require 'active_support/concern'
 require 'rdf'
 #require 'datastreams/person_rdf_datastream'
 require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
-
+#require 'lib/mads_topic'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
+  #extend ActiveSupport::Concern
+  #include MadsTopic
   map_predicates do |map|
     #-- title --
     map.title(:in => RDF::DC) do |index|
@@ -40,9 +43,9 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.type(:in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
     end
-    #-- broader type --
+    #-- broader type (category) --
     #TODO - needs to be a drop down list or auto complete
-    map.broader_type(:to => "broader", :in => RDF::SKOS) do |index|
+    map.type_category(:to => "broader", :in => RDF::SKOS) do |index|
       index.as :stored_searchable, :facetable
     end
     #-- material --

@@ -35,11 +35,12 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-#gem 'sufia', "~> 3.6.1"
-gem 'sufia'
+gem 'sufia', "~> 3.6.1"
+#gem 'sufia'
 # required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
 gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  
-gem 'jettywrapper'
+gem 'jettywrapper', "~> 1.5.0"
+#gem 'jettywrapper'
 #gem 'hydra-collections'
 
 gem 'font-awesome-sass-rails'
@@ -64,7 +65,8 @@ gem "unicode", :platforms => [:mri_18, :mri_19]
 
 group :development, :test do
   gem "rspec-rails"
-  gem "jettywrapper"
+  gem 'jettywrapper', "~> 1.5.0"
+  #gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'capybara', '~>2.1.0'
   gem "debugger"

@@ -1,9 +1,11 @@
 uva-only:
   - uva-only
 archivist:
-  - archivist1@example.com
+  - anusha1@example.com
 reviewer:
-  - archivist1@example.com
+  - anusha1@example.com
+  - anusha@example.com
+  - rajanandakumar@gmail.com
 donor:
   - donor1@example.com
 researcher:
