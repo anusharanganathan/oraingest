@@ -20,8 +20,8 @@ require 'blacklight_advanced_search'
 # bl_advanced_search 1.2.4 is doing unitialized constant on these because we're calling ParseBasicQ directly
 require 'parslet'  
 require 'parsing_nesting/tree'
-
 class ArticlesController < ApplicationController
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -31,43 +31,28 @@ class ArticlesController < ApplicationController
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
+  before_filter :authenticate_user!, :except => [:show, :citation]
+  before_filter :has_access?, :except => [:show]
   # This applies appropriate access controls to all solr queries
-  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  ArticlesController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
-  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
+  ArticlesController.solr_search_params_logic += [:exclude_unwanted_models]
 
   skip_before_filter :default_html_head
 
   def index
     @articles = Article.all
-    #puts "I am printing articles - Start -------------------"
-    #puts @articles.methods
-    #puts @articles.inspect
-    #puts "I am printing articles - End -------------------"
-    recent
+    #Grab the recent public documents
+    #recent
+    #@articles = @recent_documents
     #also grab my recent docs too
-    recent_me    
+    #recent_me
+    #@articles = @recent_user_documents
   end
 
   def show
-    #puts "Id = ", params[:id]
-    @article = Article.find(params[:id])
-    #puts "I am printing articles - Start -------------------"
-    #puts "Article =", Article.first, Article.__id__
-    #for x in Article.all
-    #    puts "Id = ", x.id
-    #end
-    #puts "Find index = ", Article.first.id
-    #puts "I am printing articles - End1 -------------------"
-    #puts "@Article =", @article
-    #puts "I am printing articles - End2 -------------------"
-    #@articles = Article.all
-    #puts "I am printing articles - End3 -------------------"
-    #@article = Article.first
-    #puts @articles.methods
-    #puts @articles.inspect
-    #pid = @article.noid
-    #id = @article.noid
+    authorize! :show, params[:id]
+    puts @article.workflows
   end
 
   def new
@@ -75,19 +60,26 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+    #authorize! :edit, params[:id]
   end
 
   def create
     @article = Article.new(article_params)
-    
-    puts "I am creating article - Start -------------------"
-    puts article_params
-    puts "I am creating article - end -------------------"
+    #@article.workflows.depositor = current_user.user_key
+    @article.apply_permissions(current_user) 
+    #puts "I am creating article - Start -------------------"
+    #puts article_params
+    #puts "article permissions - start"
+    #puts @article.permissions
+    #puts "article permissions - end "
+    #puts "I am creating article - end -------------------"
 
     respond_to do |format|
       if @article.save
-        format.html { redirect_to article_path, notice: 'Article was successfully created.' }
+        #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
+        #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
+        format.html { redirect_to action: 'show', id: @article.id }
+        #format.html { render action: 'show', notice: 'Article was successfully created.', location: @article }
         format.json { render action: 'show', status: :created, location: @article }
       else
         format.html { render action: 'new' }
@@ -97,7 +89,6 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    @article = Article.find(params[:id])
     respond_to do |format|
       if @article.update(article_params)
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
@@ -110,7 +101,7 @@ class ArticlesController < ApplicationController
   end
 
   def destroy
-    @article = Article.find(params[:id])
+    #authorize! :edit, params[:id]
     @article.destroy
     respond_to do |format|
       format.html { redirect_to articles_url }
@@ -122,7 +113,7 @@ class ArticlesController < ApplicationController
     if user_signed_in?
       # grab other people's documents
       (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>4)      
+                                        :sort=>sort_field, :rows=>10)      
     else 
       # grab any documents we do not know who you are
       (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
@@ -132,7 +123,7 @@ class ArticlesController < ApplicationController
   def recent_me
     if user_signed_in?
       (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>4)
+                                        :sort=>sort_field, :rows=>10)
     end
   end
 
@@ -517,13 +508,13 @@ class ArticlesController < ApplicationController
     #  }
     #end
 
-    config.add_search_field('depositor') do |field|
-      solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
+    #config.add_search_field('depositor') do |field|
+    #  solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
+    #  field.solr_local_parameters = {
+    #    :qf => solr_name,
+    #    :pf => solr_name
+    #  }
+    #end
 
     #config.add_search_field('rights') do |field|
     #  solr_name = solr_name("desc_metadata__rights", :stored_searchable, type: :string)
@@ -574,21 +565,26 @@ class ArticlesController < ApplicationController
 
   private
     def article_params
-      params.require(:article).permit(:title, :subtitle, :description, :abstract, :keyword, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :workflows, :workflows_attributes, :permissions, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
+      params.require(:article).permit(:title, :subtitle, :description, :abstract, :keyword, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
     end
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
 
   protected
 
   # Limits search results just to GenericFiles
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
+
   def exclude_unwanted_models(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:GenericFile\""
+    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Article\""
   end
 
-  def depositor 
-    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+  def depositor
+  #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 

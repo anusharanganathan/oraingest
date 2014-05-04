@@ -1,4 +1,5 @@
 class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
+  property :depositor
   property :workflow
   property :entry
   property :comment
@@ -11,6 +12,9 @@ end
 
 class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   map_predicates do |map|
+    # Depositor
+    map.depositor(to: :depositor, :in => OxfordWorkflow)
+    # Workflows
     map.workflows(to: :workflow, in: OxfordWorkflow, class_name:"Workflow")
   end
   
@@ -23,6 +27,7 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   def to_solr(solr_doc={})
     super
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)] = self.current_statuses
+    solr_doc[Solrizer.solr_name("depositor", :stored_searchable)] = self.depositor
     # Indexes each workflow individually using the :identifier to build a workflow-specific solr field name.  
     # If multiple workflow nodes are using the same :identifier, only the first one will be indexed.
     self.workflows.each do |wf|

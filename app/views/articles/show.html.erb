@@ -1,54 +1,74 @@
 <p id="notice"><%= notice %></p>
 
+<% if @article.title %>
 <p>
   <strong>Title:</strong>
-  <%= @article.title %>
+  <%= @article.title.first %>
 </p>
+<% end %>
 
+<% if @article.subtitle %>
 <p>
   <strong>Subtitle:</strong>
-  <%= @article.subtitle %>
+  <%= @article.subtitle.first %>
 </p>
+<% end %>
 
+<% if @article.description %>
 <p>
   <strong>Description:</strong>
-  <%= @article.description %>
+  <%= @article.description.first %>
 </p>
+<% end %>
 
+<% if @article.abstract %>
 <p>
   <strong>Abstract:</strong>
-  <%= @article.abstract %>
+  <%= @article.abstract.first %>
 </p>
+<% end %>
 
+<% if @article.medium %>
 <p>
   <strong>Medium or material:</strong>
-  <%= @article.medium %>
+  <%= @article.medium.first %>
 </p>
+<% end %>
 
+<% if @article.edition %>
 <p>
   <strong>Edition:</strong>
-  <%= @article.edition %>
+  <%= @article.edition.first %>
 </p>
+<% end %>
 
+<% if @article.numPages %>
 <p>
   <strong>Number of pages:</strong>
-  <%= @article.numPages %>
+  <%= @article.numPages.first %>
 </p>
+<% end %>
 
+<% if @article.pages %>
 <p>
   <strong>Page numbers:</strong>
-  <%= @article.pages %>
+  <%= @article.pages.first %>
 </p>
+<% end %>
 
+<% if @article.publicationStatus %>
 <p>
   <strong>Publication status:</strong>
-  <%= @article.publicationStatus %>
+  <%= @article.publicationStatus.first %>
 </p>
+<% end %>
 
+<% if @article.reviewStatus %>
 <p>
   <strong>reviewStatus:</strong>
-  <%= @article.reviewStatus %>
+  <%= @article.reviewStatus.first %>
 </p>
+<% end %>
 
 <%= link_to 'Edit', edit_article_path(@article) %> |
 <%= link_to 'Back', articles_path %>
