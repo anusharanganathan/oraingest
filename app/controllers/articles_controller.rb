@@ -40,6 +40,22 @@ class ArticlesController < ApplicationController
 
   skip_before_filter :default_html_head
 
+
+  # Catch permission errors
+  rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
+    if exception.action == :edit
+      #redirect_to action: 'show', alert: "You do not have sufficient privileges to edit this document"
+      redirect_to action: 'show'
+    elsif current_user and current_user.persisted?
+      #redirect_to action: 'index', alert: exception.message
+      redirect_to action: 'index'
+    else
+      session["user_return_to"] = request.url
+      #redirect_to new_user_session_url, :alert => exception.message
+      redirect_to new_user_session_url
+    end
+  end
+
   def index
     @articles = Article.all
     #Grab the recent public documents
