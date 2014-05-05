@@ -174,7 +174,7 @@ class ArticlesController < ApplicationController
     config.add_facet_field solr_name("desc_metadata__type", :facetable), :label => "Resource Type", :limit => 5
     config.add_facet_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status", :limit => 5
     config.add_facet_field solr_name("desc_metadata__creator", :facetable), :label => "Creator", :limit => 5
-    #config.add_facet_field solr_name("desc_metadata__tag", :facetable), :label => "Keyword", :limit => 5
+    config.add_facet_field solr_name("desc_metadata__keyword", :facetable), :label => "Keyword", :limit => 5
     config.add_facet_field solr_name("desc_metadata__subject", :facetable), :label => "Subject", :limit => 5
     config.add_facet_field solr_name("desc_metadata__language", :facetable), :label => "Language", :limit => 5
     #config.add_facet_field solr_name("desc_metadata__based_near", :facetable), :label => "Location", :limit => 5
@@ -200,7 +200,7 @@ class ArticlesController < ApplicationController
     config.add_index_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
     config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
     config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
-    #config.add_index_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), :label => "Keyword"
+    config.add_index_field solr_name("desc_metadata__keyword", :stored_searchable, type: :string), :label => "Keyword"
     config.add_index_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
     config.add_index_field solr_name("desc_metadata__medium", :stored_searchable, type: :string), :label => "Medium"
     config.add_index_field solr_name("desc_metadata__edition", :stored_searchable, type: :string), :label => "Edition"
@@ -228,7 +228,7 @@ class ArticlesController < ApplicationController
     config.add_show_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
     config.add_show_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
     config.add_show_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
-    #config.add_show_field solr_name("desc_metadata__tag", :stored_searchable, type: :string), :label => "Keyword"
+    config.add_show_field solr_name("desc_metadata__keyword", :stored_searchable, type: :string), :label => "Keyword"
     config.add_show_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
     config.add_show_field solr_name("desc_metadata__medium", :stored_searchable, type: :string), :label => "Medium"
     config.add_show_field solr_name("desc_metadata__edition", :stored_searchable, type: :string), :label => "Edition"

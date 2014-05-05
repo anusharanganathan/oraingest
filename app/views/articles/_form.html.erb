@@ -48,6 +48,17 @@
     <%= f.text_field :reviewStatus, :value=>@article.reviewStatus.first %>
   </div>
 
+    <div class="control-group">
+      <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
+      <div class="controls" id="additional_keyword_clone">
+          <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>"", :required=> true  %>
+          <button class="adder btn" name="additional_keyword" id="additional_keyword_submit">+<span class="accessible-hidden">add another keyword</span></button>
+          &nbsp;
+          <%= help_icon(:keyword) %>
+      </div>
+      <div id="additional_keyword_elements"></div>
+    </div>
+
   <% if false %>
   <%= render partial: "mads_topic_fields", as: :mads_topic %>
   <%= render partial: "permission_form", as: :article %>
