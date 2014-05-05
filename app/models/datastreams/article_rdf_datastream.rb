@@ -34,7 +34,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     #  index.as :stored_searchable, :facetable
     #end
     #-- keyword --
-    #TODO - one to many
+    #TODO - multiple
     map.keyword(:in => CAMELOT) do |index|
       index.as :stored_searchable, :facetable
     end

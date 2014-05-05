@@ -83,9 +83,9 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
     #@article.workflows.depositor = current_user.user_key
     @article.apply_permissions(current_user) 
-    #puts "I am creating article - Start -------------------"
-    #puts article_params
-    #puts "article permissions - start"
+    puts "I am creating article - Start -------------------"
+    puts article_params
+    puts "article permissions - start"
     #puts @article.permissions
     #puts "article permissions - end "
     #puts "I am creating article - end -------------------"
@@ -106,6 +106,9 @@ class ArticlesController < ApplicationController
 
   def update
     respond_to do |format|
+       puts "I am updating article - Start -------------------"
+       puts article_params
+       puts "article permissions - start"
       if @article.update(article_params)
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
@@ -513,16 +516,16 @@ class ArticlesController < ApplicationController
     #  }
     #end
 
-    #config.add_search_field('tag') do |field|
-    #  field.solr_parameters = {
-    #    :"spellcheck.dictionary" => "tag"
-    #  }
-    #  solr_name = solr_name("desc_metadata__tag", :stored_searchable, type: :string)
-    #  field.solr_local_parameters = {
-    #    :qf => solr_name,
-    #    :pf => solr_name
-    #  }
-    #end
+    config.add_search_field('keyword') do |field|
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "keyword"
+      }
+      solr_name = solr_name("desc_metadata__keyword", :stored_searchable, type: :string)
+      field.solr_local_parameters = {
+        :qf => solr_name,
+        :pf => solr_name
+      }
+    end
 
     #config.add_search_field('depositor') do |field|
     #  solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
