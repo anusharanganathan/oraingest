@@ -28,12 +28,12 @@ class Article < ActiveFedora::Base
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
   #has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
 
-  #def to_solr(solr_doc={}, opts={})
-  #  super(solr_doc, opts)
-  #  solr_doc[Solrizer.solr_name('label')] = self.label
-  #  index_collection_pids(solr_doc)
-  #  return solr_doc
-  #end
+  def to_solr(solr_doc={}, opts={})
+    super(solr_doc, opts)
+    solr_doc[Solrizer.solr_name('label')] = self.label
+    #index_collection_pids(solr_doc)
+    return solr_doc
+  end
 
   def apply_permissions(depositor)
     prop_ds = self.datastreams["workflowMetadata"]

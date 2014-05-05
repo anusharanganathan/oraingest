@@ -6,7 +6,27 @@ class SolrDocument
   include Blacklight::Solr::Document
 
   # self.unique_key = 'id'
+
+  def subtitle
+    Array(self[Solrizer.solr_name('desc_metadata__subtitle')]).first
+  end
+
+  def medium
+    Array(self[Solrizer.solr_name('desc_metadata__medium')]).first
+  end
   
+  def numPages
+    Array(self[Solrizer.solr_name('desc_metadata__numPages')]).first
+  end
+  
+  def publicationStatus
+    Array(self[Solrizer.solr_name('desc_metadata__publicationStatus')]).first
+  end
+ 
+  def reviewStatus
+    Array(self[Solrizer.solr_name('desc_metadata__reviewStatus')]).first
+  end
+ 
   def submission_workflow_status 
     get(Solrizer.solr_name("MediatedSubmission_status", :symbol))
   end

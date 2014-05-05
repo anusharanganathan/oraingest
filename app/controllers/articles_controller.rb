@@ -26,7 +26,7 @@ class ArticlesController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
-  #include Sufia::Controller
+  include Sufia::Controller
   #include Sufia::FilesControllerBehavior
 
   # These before_filters apply the hydra access controls
@@ -57,13 +57,13 @@ class ArticlesController < ApplicationController
   end
 
   def index
-    @articles = Article.all
+    #@articles = Article.all
     #Grab the recent public documents
     #recent
     #@articles = @recent_documents
-    #also grab my recent docs too
-    #recent_me
-    #@articles = @recent_user_documents
+    #grab my recent docs
+    recent_me
+    @articles = @recent_user_documents
   end
 
   def show
@@ -76,7 +76,7 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    #authorize! :edit, params[:id]
+    authorize! :edit, params[:id]
   end
 
   def create
@@ -138,8 +138,8 @@ class ArticlesController < ApplicationController
 
   def recent_me
     if user_signed_in?
-      (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>10)
+      (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
+                                        :sort=>sort_field, :rows=>10, :fields=>"*:*")
     end
   end
 
@@ -606,6 +606,10 @@ class ArticlesController < ApplicationController
 
   def filter_not_mine 
     "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
+  end
+
+  def filter_mine
+    "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
   end
 
   def sort_field

@@ -13,9 +13,9 @@
   <tbody>
     <% @articles.each do |article| %>
       <tr>
-        <td><%= link_to article.title.first, article %></td>
-        <td><%= article.subtitle.first if not article.subtitle.blank? %></td>
-        <td><%= article.reviewStatus.first if not article.reviewStatus.blank? %></td>
+        <td><%= link_to article.title, article %></td>
+        <td><%= article.subtitle %></td> 
+        <td><%= article.reviewStatus %></td>
         <td><%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
