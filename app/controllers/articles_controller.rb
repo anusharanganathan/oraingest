@@ -68,7 +68,7 @@ class ArticlesController < ApplicationController
 
   def show
     authorize! :show, params[:id]
-    puts @article.workflows
+    #puts @article.workflows
   end
 
   def new
@@ -83,9 +83,9 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
     #@article.workflows.depositor = current_user.user_key
     @article.apply_permissions(current_user) 
-    puts "I am creating article - Start -------------------"
-    puts article_params
-    puts "article permissions - start"
+    #puts "I am creating article - Start -------------------"
+    #puts article_params
+    #puts "article permissions - start"
     #puts @article.permissions
     #puts "article permissions - end "
     #puts "I am creating article - end -------------------"
@@ -106,9 +106,9 @@ class ArticlesController < ApplicationController
 
   def update
     respond_to do |format|
-       puts "I am updating article - Start -------------------"
-       puts article_params
-       puts "article permissions - start"
+       #puts "I am updating article - Start -------------------"
+       #puts article_params
+       #puts "article permissions - start"
       if @article.update(article_params)
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
@@ -584,7 +584,7 @@ class ArticlesController < ApplicationController
 
   private
     def article_params
-      params.require(:article).permit(:title, :subtitle, :description, :abstract, :keyword, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
+      params.require(:article).permit(:title, :subtitle, :description, :abstract, {:keyword => []}, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
     end
 
   def set_article

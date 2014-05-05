@@ -56,6 +56,15 @@
 </p>
 <% end %>
 
+<% if @article.keyword %>
+<p>
+  <strong>Keywords:</strong>
+   <% @article.keyword.each do |tag|%>
+      <span><%=tag %></span>     
+   <% end %>
+</p>
+<% end %>
+
 <% if @article.publicationStatus %>
 <p>
   <strong>Publication status:</strong>
