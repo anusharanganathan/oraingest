@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :title %><br>
-    <%= f.text_field :title, :value=>@article.title.first %>
+    <%= f.text_field :title, :value=>@article.title.first, :required=>true %>
   </div>
   <div class="field">
     <%= f.label :subtitle %><br>
@@ -50,11 +50,17 @@
   <div class="control-group">
     <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
     <div class="controls" id="additional_keyword_clone">
-      <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>@article.keyword.first, :required=> true  %>
+      <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>@article.keyword.first %>
       <button class="adder btn" name="additional_keyword" id="additional_keyword_submit">+<span class="accessible-hidden">add another keyword</span></button>
         &nbsp;
         <%= help_icon(:keyword) %>
     </div>
+    <% for k in @article.keyword.from(1) %>
+      <div class="controls">
+        <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>k %>
+        <button id="additional_keyword_submit" class="remover btn" name="additional_keyword">-<span class="accessible-hidden">add another keyword</span></button>
+      </div>
+    <% end %>
     <div id="additional_keyword_elements"></div>
   </div>
 
