@@ -4,7 +4,7 @@ require 'rdf'
 require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
-#require 'lib/mads_topic'
+require 'vocabulary/mads_vocabulary'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #extend ActiveSupport::Concern
@@ -59,9 +59,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     end
     #-- language --
     #TODO: Need to include nested attributes and QA lookup for language
-    #map.language(:in => RDF::DC) do |index|
-    #  index.as :stored_searchable, :facetable
-    #end
+    map.language(:in => RDF::DC, class_name:"MadsLanguage")
     #-- edition --
     map.edition(:in => BIBO) do |index|
       index.as :stored_searchable
@@ -104,7 +102,9 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # -- thesis activity --
     # TODO: Nested attributes using Prov
     # -- Commissioning body --
-    # TODO: Nested attributes using Prov    
+    # TODO: Nested attributes using Prov
+
+    accepts_nested_attributes_for :language
   end
 
   #TODO: Add FAST authority list later

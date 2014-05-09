@@ -219,6 +219,10 @@ class ArticlesController < ApplicationController
     #config.add_index_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
     #config.add_index_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
     config.add_index_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
+    config.add_index_field solr_name("desc_metadata__languageLabel", :stored_searchable, type: :string), :label => "language"
+    config.add_index_field solr_name("desc_metadata__languageCode", :stored_searchable, type: :string), :label => "Language code"
+    config.add_index_field solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text), :label => "Language authority"
+    config.add_index_field solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text), :label => "Language scheme"
 
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
@@ -248,6 +252,10 @@ class ArticlesController < ApplicationController
     #config.add_show_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
     #config.add_show_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
     config.add_show_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
+    config.add_show_field solr_name("desc_metadata__languageLabel", :stored_searchable, type: :string), :label => "language"
+    config.add_show_field solr_name("desc_metadata__languageCode", :stored_searchable, type: :string), :label => "Language code"
+    config.add_show_field solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text), :label => "Language authority"
+    config.add_show_field solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text), :label => "Language scheme"
 
     # "fielded" search configuration. Used by pulldown among other places.
     # For supported keys in hash, see rdoc for Blacklight::SearchFields
@@ -565,6 +573,53 @@ class ArticlesController < ApplicationController
       }
     end
 
+    config.add_search_field('languageLabel') do |field|
+      field.label = "Language"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "languageLabel"
+      }
+      solr_name = solr_name("desc_metadata__languageLabel", :stored_searchable, type: :string)
+      field.solr_local_parameters = {
+        :qf => solr_name,
+        :pf => solr_name
+      }
+    end
+
+    config.add_search_field('languageCode') do |field|
+      field.label = "Language code"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "languageCode"
+      }
+      solr_name = solr_name("desc_metadata__languageCode", :stored_searchable, type: :string)
+      field.solr_local_parameters = {
+        :qf => solr_name,
+        :pf => solr_name
+      }
+    end
+
+    config.add_search_field('languageAuthority') do |field|
+      field.label = "Language authority"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "languageAuthority"
+      }
+      solr_name = solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text)
+      field.solr_local_parameters = {
+        :qf => solr_name,
+        :pf => solr_name
+      }
+    end
+
+    config.add_search_field('languageScheme') do |field|
+      field.label = "Language scheme"
+      field.solr_parameters = {
+        :"spellcheck.dictionary" => "languageScheme"
+      }
+      solr_name = solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text)
+      field.solr_local_parameters = {
+        :qf => solr_name,
+        :pf => solr_name
+      }
+    end
 
     # "sort results by" select (pulldown)
     # label in pulldown is followed by the name of the SOLR field to sort by and
@@ -584,7 +639,7 @@ class ArticlesController < ApplicationController
 
   private
     def article_params
-      params.require(:article).permit(:title, :subtitle, :description, :abstract, {:keyword => []}, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
+      params.require(:article).permit(:title, :subtitle, :description, :abstract, {:keyword => []}, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :language, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
     end
 
   def set_article
