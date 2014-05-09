@@ -5,6 +5,7 @@ require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
+require 'lib/mads_language'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #extend ActiveSupport::Concern
