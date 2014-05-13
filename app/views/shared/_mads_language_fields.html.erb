@@ -1,0 +1,20 @@
+<div id="language">
+  <%= f.fields_for :language do |l| %>
+    <div class="field">
+      <%= l.label :languageLabel, "Language" %><br>
+      <%= l.text_field :languageLabel, :value=>"" %>
+    </div>
+    <div class="field">
+      <%= l.label :languageCode, "Language code" %><br>
+      <%= l.text_field :languageCode, :value=>"" %>
+    </div>
+    <div class="field">
+      <%= l.label :languageAuthority, "Language authority" %><br>
+      <%= l.text_field :languageAuthority, :value=>"" %>
+    </div>
+    <div class="field">
+      <%= l.label :languageScheme, "Language Scheme" %><br>
+      <%= l.text_field :languageScheme, :value=>"" %>
+    </div>
+  <% end %>
+</div>

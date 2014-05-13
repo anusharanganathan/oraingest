@@ -5,7 +5,7 @@ require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
-require 'lib/mads_language'
+require 'fields/mads_language'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #extend ActiveSupport::Concern
@@ -105,8 +105,8 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # -- Commissioning body --
     # TODO: Nested attributes using Prov
 
-    accepts_nested_attributes_for :language
   end
+  accepts_nested_attributes_for :language
 
   #TODO: Add FAST authority list later
   #begin
@@ -117,3 +117,4 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #  puts "tables for vocabularies missing"
   #end
 end
+

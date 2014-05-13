@@ -9,20 +9,18 @@ class Article < ActiveFedora::Base
   include Sufia::GenericFile::WebForm
 
   #include Hydra::Collections::Collectible
-  #attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :workflows, :workflows_attributes])
+  #attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes, :language, :language_attributes])
   #attr_accessible :workflows, :workflows_attributes
   #attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
   
   before_create :initialize_submission_workflow
   before_save :remove_blank_assertions
 
-  #has_metadata :name => "rightsMetadata", :type => Hydra::Datastream::RightsMetadata
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
 
   delegate_to "workflowMetadata",  [:workflows, :workflows_attributes] 
-  delegate_to "descMetadata", ArticleRdfDatastream.fields
-  #delegate_to "rightsMetadata",  [:permissions] 
+  delegate_to "descMetadata", ArticleRdfDatastream.fields #+ [:language, :language_attributes]
 
   #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
@@ -40,9 +38,9 @@ class Article < ActiveFedora::Base
     rights_ds = self.datastreams["rightsMetadata"]
     depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
     if prop_ds
-      puts "properties of workflow ds ---------------------START"
-      puts prop_ds.methods
-      puts "properties of workflow ds ---------------------END"
+      #puts "properties of workflow ds ---------------------START"
+      #puts prop_ds.methods
+      #puts "properties of workflow ds ---------------------END"
       prop_ds.depositor = depositor_id unless prop_ds.nil?
     end
     rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
