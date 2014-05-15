@@ -8,7 +8,10 @@ require 'vocabulary/mads_vocabulary'
 require 'fields/mads_language'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
-  #extend ActiveSupport::Concern
+  #include ModelHelper
+
+  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :type, :type_category, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus
+
   #include MadsTopic
   map_predicates do |map|
     #-- title --

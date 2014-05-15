@@ -6,14 +6,14 @@ require "rdf"
 
 class Article < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
-  include Sufia::GenericFile::WebForm
+  include Sufia::GenericFile::AccessibleAttributes
+  #include Sufia::GenericFile::WebForm
+  #include ModelHelper
 
-  #include Hydra::Collections::Collectible
-  #attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes, :language, :language_attributes])
-  #attr_accessible :workflows, :workflows_attributes
-  #attr_accessible *(GenericFileRdfDatastream.fields + [:permissions])
+  attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes])
   
   before_create :initialize_submission_workflow
+
   before_save :remove_blank_assertions
 
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
@@ -56,5 +56,23 @@ class Article < ActiveFedora::Base
       wf.entries.build(status:"Draft", date:Time.now.to_s)
     end
   end
+
+ def remove_blank_assertions
+   ArticleRdfDatastream.fields.each do |key|
+     if key == 'language'
+       if self.language[0].languageLabel.empty?
+          self.language[0].delete(languageLabel)
+       end
+       if self.language[0].languageScheme.empty?
+          self.language[0].delete(languageScheme)
+       end
+       #self[key].each do |k, v| 
+       #  self[key].delete(k) if v.empty?
+       #end
+     else
+       self[key] = nil if self[key] == ['']
+     end
+   end
+ end
 
 end

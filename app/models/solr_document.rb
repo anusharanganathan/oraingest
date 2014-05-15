@@ -39,6 +39,22 @@ class SolrDocument
     get(Solrizer.solr_name("MediatedSubmission_current_reviewer_id", :symbol))
   end
   
+  def language
+    Array(self[Solrizer.solr_name('desc_metadata__language')]).first
+  end
+ 
+  def languageCode
+    Array(self[Solrizer.solr_name('desc_metadata__languageCode')]).first
+  end
+ 
+  def languageScheme
+    Array(self[Solrizer.solr_name('desc_metadata__languageScheme')]).first
+  end
+ 
+  def languageAuthority
+    Array(self[Solrizer.solr_name('desc_metadata__languageAuthority')]).first
+  end
+ 
   # The following shows how to setup this blacklight document to display marc documents
   extension_parameters[:marc_source_field] = :marc_display
   extension_parameters[:marc_format_type] = :marcxml
