@@ -73,7 +73,6 @@ class ArticlesController < ApplicationController
 
   def new
     @article = Article.new
-    @article.language.build
   end
 
   def edit
@@ -82,22 +81,24 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new
+    @article.attributes = article_params
     #remove_blank_assertions
     lp = article_params['language']
-    article_params.delete('language')
     lp.each do |k, v| 
       lp.delete(k) if v.empty?
     end
+    @article.language = nil
+    #@article.language.build(lp)
  
-    @article.attributes = article_params
     @article.apply_permissions(current_user) 
     respond_to do |format|
       if @article.save
-        #TODO: This is a dirty way of adding language with the correct id. Fix this double call of save and update. Generate ID before save?
-        @article.language.clear
+        #TODO: This is a dirty way of adding language with the correct id. 
+        #      Fix this double call of save. Generate ID when new?
+        #@article.language = nil
         lp['id'] = "info:fedora/%s#language"%(@article.id)
         @article.language.build(lp)
-        @article.update(article_params)
+        @article.save
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
         format.html { redirect_to action: 'show', id: @article.id }
@@ -115,7 +116,8 @@ class ArticlesController < ApplicationController
     article_params['language'].each do |k, v| 
       article_params['language'].delete(k) if v.empty?
     end
-    @article.language.clear
+    #@article.language.clear
+    @article.language = nil
     article_params['language']['id'] = "info:fedora/%s#language"%(@article.id)
     @article.language.build(article_params['language'])
     article_params.delete('language')
