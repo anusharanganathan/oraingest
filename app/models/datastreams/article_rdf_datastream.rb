@@ -6,11 +6,12 @@ require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
 require 'fields/mads_language'
+require 'fields/mads_subject'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :type, :type_category, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus
+  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :type, :type_category, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :subject_attributes
 
   #include MadsTopic
   map_predicates do |map|
@@ -33,12 +34,9 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :stored_searchable
     end
     #-- subject --
-    #TODO: Need to include nested attributes and QA lookup for subject - one to many
-    #map.subject(:in => RDF::DC) do |index|
-    #  index.as :stored_searchable, :facetable
-    #end
+    #TODO: Need to include QA lookup for subject
+    map.subject(:in => RDF::DC, class_name:"MadsSubject")
     #-- keyword --
-    #TODO - multiple
     map.keyword(:in => CAMELOT) do |index|
       index.as :stored_searchable, :facetable
     end
@@ -52,27 +50,17 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.type_category(:to => "broader", :in => RDF::SKOS) do |index|
       index.as :stored_searchable, :facetable
     end
-    #-- material --
-    #map.material(:to => "PhysicalMedium", :in => RDF::DC) do |index|
-    #  index.type :text
-    #  index.as :stored_searchable
-    #end
     #-- medium --
     map.medium(:in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
     end
     #-- language --
-    #TODO: Need to include nested attributes and QA lookup for language
+    #TODO: Need to include QA lookup for language
     map.language(:in => RDF::DC, class_name:"MadsLanguage")
     #-- edition --
     map.edition(:in => BIBO) do |index|
       index.as :stored_searchable
     end
-    #-- identifier --
-    #TODO: Need to include nested attributes and matching for type - one to many
-    #map.identifier(:in => RDF::DC) do |index|
-    #  index.as :stored_searchable
-    #end
     #-- numPages --    
     map.numPages(:in => BIBO) do |index|
       index.as :stored_searchable
@@ -109,7 +97,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes using Prov
 
   end
-  accepts_nested_attributes_for :language
+  accepts_nested_attributes_for :language, :subject
 
   #TODO: Add FAST authority list later
   #begin

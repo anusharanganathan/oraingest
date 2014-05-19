@@ -73,6 +73,8 @@ class ArticlesController < ApplicationController
 
   def new
     @article = Article.new
+    @article.language.build()
+    @article.subject.build()
   end
 
   def edit
@@ -82,22 +84,31 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new
     @article.attributes = article_params
-    #remove_blank_assertions
+    #remove_blank_assertions for language and build
     lp = article_params['language']
     lp.each do |k, v| 
       lp.delete(k) if v.empty?
     end
     @article.language = nil
     #@article.language.build(lp)
+
+    #remove_blank_assertions for subject and build
+    sp = article_params['subject']
+    sp.each do |k, v| 
+      sp.delete(k) if v.empty?
+    end
+    @article.subject = nil
  
     @article.apply_permissions(current_user) 
+    # Save article
     respond_to do |format|
       if @article.save
         #TODO: This is a dirty way of adding language with the correct id. 
         #      Fix this double call of save. Generate ID when new?
-        #@article.language = nil
-        lp['id'] = "info:fedora/%s#language"%(@article.id)
+        lp['id'] = "info:fedora/#{@article.id}#language"
+        sp['id'] = "info:fedora/#{@article.id}#subject1"
         @article.language.build(lp)
+        @article.subject.build(sp)
         @article.save
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
@@ -112,18 +123,25 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    #puts " ----------- Article PID is " + @article.id
+    #remove_blank_assertions for language and build
     article_params['language'].each do |k, v| 
       article_params['language'].delete(k) if v.empty?
     end
-    #@article.language.clear
     @article.language = nil
-    article_params['language']['id'] = "info:fedora/%s#language"%(@article.id)
+    article_params['language']['id'] = "info:fedora/#{@article.id}#language"
     @article.language.build(article_params['language'])
     article_params.delete('language')
-    #puts "I am updating article - Start -------------------"
-    #puts article_params
-    #puts "article permissions - start"
+
+    #remove_blank_assertions for subject and build
+    article_params['subject'].each do |k, v| 
+      article_params['subject'].delete(k) if v.empty?
+    end
+    @article.subject = nil
+    article_params['subject']['id'] = "info:fedora/#{@article.id}#subject1"
+    @article.subject.build(article_params['subject'])
+    article_params.delete('subject')
+
+    # Update article
     respond_to do |format|
       if @article.update(article_params)
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }

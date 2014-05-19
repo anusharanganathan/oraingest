@@ -1,7 +1,6 @@
 require 'vocabulary/mads_vocabulary'
 class MadsLanguage
   include ActiveFedora::RdfObject
-  #include ModelHelper
   attr_accessor :languageLabel, :languageCode, :languageAuthority, :languageScheme
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>
@@ -12,7 +11,7 @@ class MadsLanguage
     if ds.pid.nil?
       RDF::URI.new
     else
-      RDF::URI.new("http://ora.ox.ac.uk/objects/" + ds.pid + "#language")
+      RDF::URI.new("info:fedora/" + ds.pid + "#language")
     end
     }
   rdf_type MADS.Language

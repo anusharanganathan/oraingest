@@ -19,8 +19,8 @@ class Article < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
 
-  delegate_to "workflowMetadata",  [:workflows, :workflows_attributes] 
-  delegate_to "descMetadata", ArticleRdfDatastream.fields #+ [:language, :language_attributes]
+  delegate_to "workflowMetadata",  [:workflows, :workflows_attributes], multiple: true
+  delegate_to "descMetadata", ArticleRdfDatastream.fields, multiple: true
 
   #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
@@ -59,19 +59,25 @@ class Article < ActiveFedora::Base
 
  def remove_blank_assertions
    ArticleRdfDatastream.fields.each do |key|
-     if key == 'language'
-       if self.language[0].languageLabel.empty?
-          self.language[0].delete(languageLabel)
-       end
-       if self.language[0].languageScheme.empty?
-          self.language[0].delete(languageScheme)
-       end
-       #self[key].each do |k, v| 
-       #  self[key].delete(k) if v.empty?
-       #end
-     else
-       self[key] = nil if self[key] == ['']
-     end
+     #puts "%s, %s"%(key, key.class)
+     #if key == 'language'
+     #  puts self.language.languageLabel
+     #  puts self.language.languageCode
+     #  puts self.language.languageAuthority
+     #  puts self.language.languageScheme
+     #  #if self.language[0].languageLabel.empty?
+     #  #   self.language[0].delete(languageLabel)
+     #  #end
+     #  #if self.language[0].languageScheme.empty?
+     #  #   self.language[0].delete(languageScheme)
+     #  #end
+     #  #self[key].each do |k, v| 
+     #  #  self[key].delete(k) if v.empty?
+     #  #end
+     #else
+     #  self[key] = nil if self[key] == ['']
+     #end
+     self[key] = nil if self[key] == ['']
    end
  end
 

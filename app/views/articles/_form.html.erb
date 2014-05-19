@@ -65,6 +65,7 @@
     <div id="additional_keyword_elements"></div>
   </div>
   <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
   <% if false %>
   <%= render partial: "mads_topic_fields", as: :mads_topic %>
   <%= render partial: "permission_form", as: :article %>
