@@ -204,7 +204,7 @@ class ArticlesController < ApplicationController
   def recent_me
     if user_signed_in?
       (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
-                                        :sort=>sort_field, :rows=>10, :fields=>"*:*")
+                                        :sort=>sort_field, :rows=>20, :fields=>"*:*")
     end
   end
 
