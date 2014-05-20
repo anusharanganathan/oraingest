@@ -84,31 +84,42 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new
     @article.attributes = article_params
-    #remove_blank_assertions for language and build
+    #remove_blank_assertions for language
     lp = article_params['language']
-    lp.each do |k, v| 
-      lp.delete(k) if v.empty?
-    end
     @article.language = nil
     #@article.language.build(lp)
 
-    #remove_blank_assertions for subject and build
     sp = article_params['subject']
-    sp.each do |k, v| 
-      sp.delete(k) if v.empty?
-    end
     @article.subject = nil
  
     @article.apply_permissions(current_user) 
+
     # Save article
     respond_to do |format|
       if @article.save
         #TODO: This is a dirty way of adding language with the correct id. 
         #      Fix this double call of save. Generate ID when new?
-        lp['id'] = "info:fedora/#{@article.id}#language"
-        sp['id'] = "info:fedora/#{@article.id}#subject1"
-        @article.language.build(lp)
-        @article.subject.build(sp)
+        if !lp[:languageLabel].empty?
+          lp.each do |k, v| 
+            lp.delete(k) if v.empty?
+          end
+          lp['id'] = "info:fedora/#{@article.id}#language"
+          @article.language.build(lp)
+        end
+        # Remove blank subjects
+        sp.each do |s|
+          if s[:subjectLabel].empty?
+             sp.delete(s)
+          end
+        end
+        #remove_blank_assertions for subject and build
+        sp.each_with_index do |s, s_index|
+          s.each do |k, v| 
+            s.delete(k) if v.empty?
+          end
+          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
+          @article.subject.build(s)
+        end
         @article.save
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
@@ -123,27 +134,44 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    #remove_blank_assertions for language and build
-    article_params['language'].each do |k, v| 
-      article_params['language'].delete(k) if v.empty?
-    end
-    @article.language = nil
-    article_params['language']['id'] = "info:fedora/#{@article.id}#language"
-    @article.language.build(article_params['language'])
+    lp = article_params['language']
     article_params.delete('language')
 
-    #remove_blank_assertions for subject and build
-    article_params['subject'].each do |k, v| 
-      article_params['subject'].delete(k) if v.empty?
-    end
-    @article.subject = nil
-    article_params['subject']['id'] = "info:fedora/#{@article.id}#subject1"
-    @article.subject.build(article_params['subject'])
+    sp = article_params['subject']
     article_params.delete('subject')
 
     # Update article
     respond_to do |format|
       if @article.update(article_params)
+        # Save language and subject
+        #TODO: Fix this dirty double call of update and save.
+        #      Currently doing this to reset the length of subject to the new length.
+
+        #remove_blank_assertions for language and build
+        @article.language = nil
+        if !lp[:languageLabel].empty?
+          lp.each do |k, v| 
+            lp.delete(k) if v.empty?
+          end
+          lp['id'] = "info:fedora/#{@article.id}#language"
+          @article.language.build(lp)
+        end
+        #remove_blank_assertions for subject and build
+        @article.subject = nil
+        sp.each do |s|
+          if s[:subjectLabel].empty?
+             sp.delete(s)
+          end
+        end
+        sp.each_with_index do |s, s_index|
+          s.each do |k, v| 
+            s.delete(k) if v.empty?
+          end
+          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
+          @article.subject.build(s)
+        end
+        @article.save
+
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
