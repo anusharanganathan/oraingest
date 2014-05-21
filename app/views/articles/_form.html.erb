@@ -12,6 +12,7 @@
     </div>
   <% end %>
 
+  <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
   <div class="field">
     <%= f.label :title %><br>
     <%= f.text_field :title, :value=>@article.title.first, :required=>true %>

@@ -1,5 +1,16 @@
 <p id="notice"><%= notice %></p>
 
+<% if @article.worktype %>
+<p>
+  <strong>Type:</strong>
+   <% @article.worktype.each do |t|%>
+      <% if !t.typeLabel.empty? %>
+        <span><%= t.typeLabel.first %></span>
+      <% end %>
+   <% end %>
+</p>
+<% end %>
+
 <% if @article.title %>
 <p>
   <strong>Title:</strong>

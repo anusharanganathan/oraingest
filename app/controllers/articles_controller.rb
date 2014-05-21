@@ -75,6 +75,7 @@ class ArticlesController < ApplicationController
     @article = Article.new
     @article.language.build()
     @article.subject.build()
+    @article.worktype.build()
   end
 
   def edit
@@ -84,14 +85,18 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new
     @article.attributes = article_params
-    #remove_blank_assertions for language
+    #Copy language parameters
     lp = article_params['language']
     @article.language = nil
-    #@article.language.build(lp)
 
+    #Copy subject parameters
     sp = article_params['subject']
     @article.subject = nil
  
+    #Copy worktype parameters
+    tp = article_params['worktype'].except(:typeAuthority)
+    @article.worktype = nil
+
     @article.apply_permissions(current_user) 
 
     # Save article
@@ -99,6 +104,8 @@ class ArticlesController < ApplicationController
       if @article.save
         #TODO: This is a dirty way of adding language with the correct id. 
         #      Fix this double call of save. Generate ID when new?
+
+        # Remove blank assertions for language and build
         if !lp[:languageLabel].empty?
           lp.each do |k, v| 
             lp.delete(k) if v.empty?
@@ -106,13 +113,13 @@ class ArticlesController < ApplicationController
           lp['id'] = "info:fedora/#{@article.id}#language"
           @article.language.build(lp)
         end
-        # Remove blank subjects
+
+        #remove_blank_assertions for subject and build
         sp.each do |s|
           if s[:subjectLabel].empty?
              sp.delete(s)
           end
         end
-        #remove_blank_assertions for subject and build
         sp.each_with_index do |s, s_index|
           s.each do |k, v| 
             s.delete(k) if v.empty?
@@ -120,6 +127,21 @@ class ArticlesController < ApplicationController
           s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
           @article.subject.build(s)
         end
+
+        # Remove blank assertions for worktype and build
+        if !tp[:typeLabel].empty?
+          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
+            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
+          end
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        else
+          tp[:typeLabel] = 'Article'
+          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        end
+
         @article.save
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
@@ -140,6 +162,9 @@ class ArticlesController < ApplicationController
     sp = article_params['subject']
     article_params.delete('subject')
 
+    tp = article_params['worktype'].except(:typeAuthority)
+    article_params.delete('worktype')
+
     # Update article
     respond_to do |format|
       if @article.update(article_params)
@@ -156,6 +181,7 @@ class ArticlesController < ApplicationController
           lp['id'] = "info:fedora/#{@article.id}#language"
           @article.language.build(lp)
         end
+
         #remove_blank_assertions for subject and build
         @article.subject = nil
         sp.each do |s|
@@ -170,6 +196,22 @@ class ArticlesController < ApplicationController
           s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
           @article.subject.build(s)
         end
+
+        # Remove blank assertions for worktype and build
+        @article.worktype = nil
+        if !tp[:typeLabel].empty?
+          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
+            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
+          end
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        else
+          tp[:typeLabel] = 'Article'
+          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        end
+
         @article.save
 
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }

@@ -1,0 +1,8 @@
+<div id="type">
+  <%= f.fields_for :worktype do |t| %>
+    <div class="field">
+      <%= t.label :typeLabel, "Type" %><br>
+      <%= t.select :typeLabel, options_for_select(Sufia.config.article_types, :selected=>@article.worktype[0].typeLabel.first) %>
+    </div>
+  <% end %>
+</div>

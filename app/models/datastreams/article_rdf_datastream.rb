@@ -7,11 +7,12 @@ require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
 require 'fields/mads_language'
 require 'fields/mads_subject'
+require 'fields/work_type'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :type, :type_category, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :subject_attributes
+  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :subject_attributes
 
   #include MadsTopic
   map_predicates do |map|
@@ -41,15 +42,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       index.as :stored_searchable, :facetable
     end
     #-- type --
-    #TODO - needs to be a drop down list or auto complete
-    map.type(:in => RDF::DC) do |index|
-      index.as :stored_searchable, :facetable
-    end
-    #-- broader type (category) --
-    #TODO - needs to be a drop down list or auto complete
-    map.type_category(:to => "broader", :in => RDF::SKOS) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.worktype(:to=>"type", :in => RDF::DC, class_name:"WorkType")
     #-- medium --
     map.medium(:in => RDF::DC) do |index|
       index.as :stored_searchable, :facetable
@@ -97,7 +90,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes using Prov
 
   end
-  accepts_nested_attributes_for :language, :subject
+  accepts_nested_attributes_for :language, :subject, :worktype
 
   #TODO: Add FAST authority list later
   #begin

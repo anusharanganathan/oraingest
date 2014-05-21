@@ -1,7 +1,7 @@
 require 'vocabulary/mads_vocabulary'
 class MadsSubject
   include ActiveFedora::RdfObject
-  attr_accessor :subject, :subjectAuthority, :subjectScheme
+  attr_accessor :subjectLabel, :subjectAuthority, :subjectScheme
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>
   #  <mads:code>fre</mads:code>
