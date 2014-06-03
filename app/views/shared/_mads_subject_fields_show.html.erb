@@ -1,0 +1,17 @@
+<div id="subject">
+<% if @article.subject %>
+<p>
+  <strong>Subject:</strong>
+   <% @article.subject.each do |s|%>
+      <% if !s.subjectAuthority.empty? and !s.subjectLabel.empty? %>
+        <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>
+      <% elsif !s.subjectLabel.empty? %>
+        <span><%= s.subjectLabel.first %></span>
+      <% end %>
+      <% if !s.subjectScheme.empty? %>
+        <span>(<%= s.subjectScheme.first %>)</span>
+      <% end %>
+   <% end %>
+</p>
+<% end %>
+</div>

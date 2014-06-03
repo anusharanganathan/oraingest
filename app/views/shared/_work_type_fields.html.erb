@@ -1,3 +1,6 @@
+<% if @article.worktype.empty? %>
+  <% @article.worktype.build %>
+<% end %>
 <div id="type">
   <%= f.fields_for :worktype do |t| %>
     <div class="field">

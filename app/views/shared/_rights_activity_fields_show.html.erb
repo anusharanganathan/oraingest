@@ -1,0 +1,54 @@
+<div id="license">
+<% if @article.license %>
+  <% @article.license.each do |l|%>
+    <% if !l.licenseLabel.empty? or !l.licenseURI.empty? %>
+      <p>
+      <strong>License:</strong>
+      <% if !l.licenseLabel.empty? and !l.licenseURI.empty? %>
+        <span><%=link_to l.licenseLabel.first, l.licenseURI.first %></span>
+      <% elsif !l.licenseLabel.empty? %>
+        <span><%= l.licenseLabel.first %></span>
+      <% elsif !l.licenseURI.empty? %>
+        <span><%=link_to l.licenseURI.first, l.licenseURI.first %></span>
+      <% end %>
+    <% end %>
+    <% if !l.licenseStatement.empty? %>
+      <p>
+      <strong>License statement:</strong>
+      <span><%= l.licenseStatement.first %></span>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>
+</div>
+<div id="rights">
+<% if !@article.rightsHolder.empty? or !@article.rightsHolderGroup.empty? %>
+  <p>
+  <strong>Rights holder:</strong>
+  <% if !@article.rightsHolder.empty? %>
+    <% @article.rightsHolder.each do |rh| %>
+      <span><%= rh %></span>
+    <% end %>
+  <% end %>
+  <% if !@article.rightsHolderGroup.empty? %>
+    <span><%= @article.rightsHolderGroup.first %></span>
+  <% end %>
+  </p>
+<% end %>
+<% if !@article.dateCopyrighted.empty? %>
+  <p>
+    <strong>Copyright date:</strong>
+    <span><%= @article.dateCopyrighted.first %></span>
+  </p>
+<% end %>
+<% if @article.rights %>
+  <% @article.rights.each do |r|%>
+    <% if !r.rightsStatement.empty? %>
+      <p>
+      <strong>Rights statement:</strong>
+      <span><%= r.rightsStatement.first %></span>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>
+</div>

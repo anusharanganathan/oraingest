@@ -1,15 +1,16 @@
 class PROV < RDF::Vocabulary("http://www.w3.org/ns/prov#")
-  property :qualifiedAssociation
+  property :Activity
   property :Association
   property :agent
-  property :hadRole
-  property :Activity
-  property :generated
-  property :wasAssociatedWith
-  property :value
-  property :generatedAtTime
   property :atLocation
-  property :startedAtTime
   property :endedAtTime
+  property :generated
+  property :generatedAtTime
   property :hadActivity 
+  property :hadRole
+  property :qualifiedAssociation
+  property :startedAtTime
+  property :used
+  property :value
+  property :wasAssociatedWith
 end

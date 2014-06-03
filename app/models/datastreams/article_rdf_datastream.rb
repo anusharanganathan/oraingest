@@ -3,16 +3,19 @@ require 'rdf'
 #require 'datastreams/person_rdf_datastream'
 require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
+require 'vocabulary/ora_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
+require 'vocabulary/prov_vocabulary'
 require 'fields/mads_language'
 require 'fields/mads_subject'
 require 'fields/work_type'
+require 'fields/rights_activity'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :subject_attributes
+  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :license, :dateCopyrighted, :rightsHolder, :rights, :rightsActivity
 
   #include MadsTopic
   map_predicates do |map|
@@ -70,16 +73,28 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes using Prov
     # -- publication status --
     # TODO: Drop down list of values
-    map.publicationStatus(:in => CAMELOT) do |index|
+    map.publicationStatus(:in => ORA) do |index|
       index.as :stored_searchable, :facetable
     end
     # -- review status --
     # TODO: Drop down list of values
-    map.reviewStatus(:in => CAMELOT) do |index|
+    map.reviewStatus(:in => ORA) do |index|
       index.as :stored_searchable, :facetable
     end
     # -- rights activity --
-    # TODO: Nested attributes using Prov
+    map.license(:in => RDF::DC, class_name:"LicenseStatement")
+    map.dateCopyrighted(:in => RDF::DC) do |index|
+      index.as :stored_searchable
+    end
+    map.rightsHolder(:in => RDF::DC) do |index|
+      index.as :stored_searchable, :facetable
+    end
+    map.rightsHolderGroup(:in => ORA) do |index|
+      index.as :stored_searchable, :facetable
+    end
+    map.rights(:in => RDF::DC, class_name:"RightsStatement")
+    map.rightsActivity(:in => PROV, :to => "hadActivity", class_name:"RightsActivity")
+    
     # -- creation activity --
     # TODO: Nested attributes using Prov, Lookup CUD, Fedora person objects and funder objects
     # -- funding activity --
@@ -90,7 +105,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes using Prov
 
   end
-  accepts_nested_attributes_for :language, :subject, :worktype
+  accepts_nested_attributes_for :language, :subject, :worktype, :license, :rights, :rightsActivity
 
   #TODO: Add FAST authority list later
   #begin

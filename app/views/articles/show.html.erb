@@ -1,15 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<% if @article.worktype %>
-<p>
-  <strong>Type:</strong>
-   <% @article.worktype.each do |t|%>
-      <% if !t.typeLabel.empty? %>
-        <span><%= t.typeLabel.first %></span>
-      <% end %>
-   <% end %>
-</p>
-<% end %>
+<%= render partial: "shared/work_type_fields_show", as: :article %>
 
 <% if @article.title %>
 <p>
@@ -90,33 +81,12 @@
 </p>
 <% end %>
 
-<% if @article.language %>
-<p>
-  <strong>Language:</strong>
-   <% @article.language.each do |l|%>
-      <% if !l.languageAuthority.empty? and !l.languageLabel.empty? %>
-        <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
-      <% elsif !l.languageLabel.empty? %>
-        <span><%= l.languageLabel.first %></span>
-      <% end %>
-   <% end %>
-</p>
-<% end %>
-
-<% if @article.subject %>
-<p>
-  <strong>Subject:</strong>
-   <% @article.subject.each do |s|%>
-      <% if !s.subjectAuthority.empty? and !s.subjectLabel.empty? %>
-        <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>
-      <% elsif !s.subjectLabel.empty? %>
-        <span><%= s.subjectLabel.first %></span>
-      <% end %>
-   <% end %>
-</p>
-<% end %>
+<%= render partial: "shared/mads_language_fields_show", as: :article %>
+<%= render partial: "shared/mads_subject_fields_show", as: :article %>
+<%= render partial: "shared/rights_activity_fields_show", as: :article %>
 
 <%= link_to 'Edit', edit_article_path(@article) %> |
+<%= link_to 'Delete', @article, method: :delete, data: { confirm: 'Are you sure?' } %> | 
 <%= link_to 'Back', articles_path %>
 
 

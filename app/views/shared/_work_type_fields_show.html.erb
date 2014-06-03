@@ -1,0 +1,15 @@
+<div id="workType">
+<% if @article.worktype %>
+<p>
+  <strong>Type of work:</strong>
+   <% @article.worktype.each do |t|%>
+      <% if !t.typeLabel.empty? and !t.typeAuthority.empty? %>
+        <span><%=link_to t.typeLabel.first, t.typeAuthority.first.to_s %></span>
+      <% elsif !t.typeLabel.empty? %>
+        <span><%= t.typeLabel.first %></span>
+      <% end %>
+   <% end %>
+</p>
+<% end %>
+</div>
+

@@ -20,6 +20,10 @@ require 'blacklight_advanced_search'
 # bl_advanced_search 1.2.4 is doing unitialized constant on these because we're calling ParseBasicQ directly
 require 'parslet'  
 require 'parsing_nesting/tree'
+
+require "utils"
+require "vocabulary/prov_vocabulary"
+
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
   include Blacklight::Catalog
@@ -76,6 +80,9 @@ class ArticlesController < ApplicationController
     @article.language.build()
     @article.subject.build()
     @article.worktype.build()
+    @article.license.build()
+    @article.rights.build()
+    @article.rightsActivity.build()
   end
 
   def edit
@@ -96,6 +103,13 @@ class ArticlesController < ApplicationController
     #Copy worktype parameters
     tp = article_params['worktype'].except(:typeAuthority)
     @article.worktype = nil
+ 
+    #Copy parameters asscoiated with rights activity
+    lsp = article_params['license'].except(:licenseURI)
+    @article.license = nil
+    rp = article_params['rights'].except(:rightsType)
+    @article.rights = nil
+    @article.rightsActivity = nil
 
     @article.apply_permissions(current_user) 
 
@@ -142,6 +156,36 @@ class ArticlesController < ApplicationController
           @article.worktype.build(tp)
         end
 
+        # Remove blank assertions for rights activity and build
+        ag = []
+        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
+          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
+            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
+          elsif isURI(lsp[:licenseStatement])
+            lsp[:licenseURI] = lsp[:licenseStatement]
+            lsp.delete(:licenseStatement)
+          end
+          lsp['id'] = "info:fedora/#{@article.id}#license"
+          lsp.each do |k, v| 
+            lsp.delete(k) if v.empty?
+          end
+          @article.license.build(lsp)
+          ag.push("info:fedora/#{@article.id}#license")
+        end
+        if !rp[:rightsStatement].empty?
+          rp.each do |k, v| 
+            rp.delete(k) if v.empty?
+          end
+          rp[:rightsType] = RDF::DC.RightsStatement
+          rp['id'] = "info:fedora/#{@article.id}#rights"
+          @article.rights.build(rp)
+          ag.push("info:fedora/#{@article.id}#rights")
+        end
+        if !ag.empty?
+	  rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
+          @article.rightsActivity.build(rap)
+        end
+
         @article.save
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
@@ -156,14 +200,23 @@ class ArticlesController < ApplicationController
   end
 
   def update
+    #Copy parameters asscoiated with language
     lp = article_params['language']
     article_params.delete('language')
 
+    #Copy parameters asscoiated with subject
     sp = article_params['subject']
     article_params.delete('subject')
 
+    #Copy parameters asscoiated with type of work
     tp = article_params['worktype'].except(:typeAuthority)
     article_params.delete('worktype')
+
+    #Copy parameters asscoiated with rights activity
+    lsp = article_params['license'].except(:licenseURI)
+    article_params.delete('license')
+    rp = article_params['rights'].except(:rightsType)
+    article_params.delete('rights')
 
     # Update article
     respond_to do |format|
@@ -212,6 +265,39 @@ class ArticlesController < ApplicationController
           @article.worktype.build(tp)
         end
 
+        # Remove blank assertions for rights activity and build
+        @article.license = nil
+        @article.rights = nil
+        @article.rightsActivity = nil
+        ag = []
+        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
+          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
+            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
+          elsif isURI(lsp[:licenseStatement])
+            lsp[:licenseURI] = lsp[:licenseStatement]
+            lsp.delete(:licenseStatement)
+          end
+          lsp['id'] = "info:fedora/#{@article.id}#license"
+          lsp.each do |k, v|
+            lsp.delete(k) if v.empty?
+          end 
+          @article.license.build(lsp)
+          ag.push("info:fedora/#{@article.id}#license")
+        end
+        if !rp[:rightsStatement].empty?
+          rp.each do |k, v| 
+            rp.delete(k) if v.empty?
+          end
+          rp[:rightsType] = RDF::DC.RightsStatement
+          rp['id'] = "info:fedora/#{@article.id}#rights"
+          @article.rights.build(rp)
+          ag.push("info:fedora/#{@article.id}#rights")
+        end
+        if !ag.empty?
+          rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
+          @article.rightsActivity.build(rap)
+        end
+
         @article.save
 
         format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
@@ -236,17 +322,17 @@ class ArticlesController < ApplicationController
     if user_signed_in?
       # grab other people's documents
       (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>10)      
+                                        :sort=>sort_field, :rows=>5)
     else 
       # grab any documents we do not know who you are
-      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>4)
+      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>5)
     end
   end
 
   def recent_me
     if user_signed_in?
       (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
-                                        :sort=>sort_field, :rows=>20, :fields=>"*:*")
+                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
     end
   end
 

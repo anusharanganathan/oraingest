@@ -60,7 +60,10 @@ class Article < ActiveFedora::Base
  def remove_blank_assertions
    ArticleRdfDatastream.fields.each do |key|
      #puts "%s, %s"%(key, key.class)
-     #if key == 'language'
+     #if !key == 'language' and !key == 'license' and !key == 'rights'
+     #  self[key] = nil if self[key] == ['']
+     #end
+     #if key == 'language' or key == 'license' or key == 'rights'
      #  puts self.language.languageLabel
      #  puts self.language.languageCode
      #  puts self.language.languageAuthority

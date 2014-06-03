@@ -43,11 +43,11 @@
   </div>
   <div class="field">
     <%= f.label :publicationStatus %><br>
-    <%= f.text_field :publicationStatus, :value=>@article.publicationStatus.first %>
+    <%= f.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>@article.publicationStatus.first) %>
   </div>
   <div class="field">
     <%= f.label :reviewStatus %><br>
-    <%= f.text_field :reviewStatus, :value=>@article.reviewStatus.first %>
+    <%= f.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>@article.reviewStatus.first) %>
   </div>
   <div class="control-group">
     <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
@@ -67,8 +67,8 @@
   </div>
   <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
   <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
   <% if false %>
-  <%= render partial: "mads_topic_fields", as: :mads_topic %>
   <%= render partial: "permission_form", as: :article %>
   <% end %>
 
