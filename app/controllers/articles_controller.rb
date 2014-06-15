@@ -187,6 +187,7 @@ class ArticlesController < ApplicationController
         end
 
         @article.save
+        create_from_upload(params)
         #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
         #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
         format.html { redirect_to action: 'show', id: @article.id }
@@ -318,6 +319,15 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def datastream
+    # To delete a datastream 
+    @article.datasteams[dsid].delete
+    parts = @article.hasPart
+    @article.hasPart = nil
+    @article.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
+    @article.save
+  end
+
   def recent
     if user_signed_in?
       # grab other people's documents
@@ -343,6 +353,72 @@ class ArticlesController < ApplicationController
 
   def self.modified_field
     solr_name('desc_metadata__date_modified', :stored_sortable, type: :date)
+  end
+
+  def create_from_upload(params)
+    #puts "I am in create_from_upload"
+    # check error condition No files
+    return json_error("Error! No file to save") if !params.has_key?(:files)
+    #puts "len of files", params[:files].length
+    file = params[:files].detect {|f| f.respond_to?(:original_filename) }
+    if !file
+      #puts 'unknown file'
+      return json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
+    elsif (empty_file?(file))
+      #puts 'Zero length file'
+      return json_error "Error! Zero Length File!", file.original_filename
+    #elsif (!terms_accepted?)
+    #  puts 'Accept terms'
+    #  return json_error "You must accept the terms of service!", file.original_filename
+    else
+      process_file(file)
+    end
+  rescue => error
+    logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
+    json_error "Error occurred while creating file."
+  ensure
+    # remove the tempfile (only if it is a temp file)
+    file.tempfile.delete if file.respond_to?(:tempfile)
+  end
+
+  def process_file(file)
+    #puts "I am in process file"
+    #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
+    @article.add_file(file, datastream_id, file.original_filename)
+    save_tries = 0
+    begin
+      @article.save!
+    rescue RSolr::Error::Http => error
+      logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
+      save_tries+=1
+      # fail for good if the tries is greater than 3
+      raise error if save_tries >=3
+      sleep 0.01
+      retry
+    end
+
+    respond_to do |format|
+      format.html {
+        render :json => [@article.to_jq_upload],
+        :content_type => 'text/html',
+        :layout => false
+      }
+      format.json {
+        render :json => [@article.to_jq_upload]
+      }
+    end
+  rescue ActiveFedora::RecordInvalid => af
+    flash[:error] = af.message
+    json_error "Error creating generic file: #{af.message}"
+  end
+
+  def datastream_id
+    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
+    begin
+      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
+    rescue
+      "content01"
+    end
   end
 
   configure_blacklight do |config|
@@ -854,6 +930,16 @@ class ArticlesController < ApplicationController
 
   def has_access?
     true
+  end
+
+  def json_error(error, name=nil, additional_arguments={})
+    args = {:error => error}
+    args[:name] = name if name
+    #render additional_arguments.merge({:json => [args]})
+  end
+
+  def empty_file?(file)
+    (file.respond_to?(:tempfile) && file.tempfile.size == 0) || (file.respond_to?(:size) && file.size == 0)
   end
 
 end

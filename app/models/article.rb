@@ -1,5 +1,6 @@
 require "datastreams/workflow_rdf_datastream"
 require "datastreams/article_rdf_datastream"
+require "datastreams/relations_rdf_datastream"
 #require "person"
 require "oxford_terms"
 require "rdf"
@@ -7,10 +8,11 @@ require "rdf"
 class Article < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
   include Sufia::GenericFile::AccessibleAttributes
-  #include Sufia::GenericFile::WebForm
+  include Sufia::GenericFile::WebForm
+  include Hydra::ModelMethods
   #include ModelHelper
 
-  attr_accessible *(ArticleRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes])
+  attr_accessible *(ArticleRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes])
   
   before_create :initialize_submission_workflow
 
@@ -18,10 +20,17 @@ class Article < ActiveFedora::Base
 
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
+  has_metadata :name => "relationsMetadata", :type => RelationsRdfDatastream
+  #for i in 1..20
+  has_file_datastream "content01"
+  #end
 
-  delegate_to "workflowMetadata",  [:workflows, :workflows_attributes], multiple: true
-  delegate_to "descMetadata", ArticleRdfDatastream.fields, multiple: true
-
+  #delegate_to "workflowMetadata",  [:workflows, :workflows_attributes], multiple: true
+  #delegate_to "descMetadata", ArticleRdfDatastream.fields, multiple: true
+  #delegate_to "relationsMetadata", RelationsRdfDatastream.fields, multiple: true
+  has_attributes :workflows, :workflows_attributes, datastream: :workflowMetadata, multiple: true
+  has_attributes *ArticleRdfDatastream.fields, datastream: :descMetadata, multiple: true
+  has_attributes *RelationsRdfDatastream.fields, datastream: :relationsMetadata, multiple: true
   #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
   #has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
