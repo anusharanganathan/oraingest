@@ -8,9 +8,9 @@ require "rdf"
 class Article < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
   include Sufia::GenericFile::AccessibleAttributes
-  include Sufia::GenericFile::WebForm
+  #include Sufia::GenericFile::WebForm
+  include Sufia::Noid
   include Hydra::ModelMethods
-  #include ModelHelper
 
   attr_accessible *(ArticleRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes])
   
@@ -21,19 +21,13 @@ class Article < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => ArticleRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
   has_metadata :name => "relationsMetadata", :type => RelationsRdfDatastream
-  #for i in 1..20
   has_file_datastream "content01"
-  #end
 
-  #delegate_to "workflowMetadata",  [:workflows, :workflows_attributes], multiple: true
-  #delegate_to "descMetadata", ArticleRdfDatastream.fields, multiple: true
-  #delegate_to "relationsMetadata", RelationsRdfDatastream.fields, multiple: true
   has_attributes :workflows, :workflows_attributes, datastream: :workflowMetadata, multiple: true
   has_attributes *ArticleRdfDatastream.fields, datastream: :descMetadata, multiple: true
   has_attributes *RelationsRdfDatastream.fields, datastream: :relationsMetadata, multiple: true
   #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
-  #has_and_belongs_to_many :copyright_holders, :property=> :has_copyright_holder, :class_name=>"Person"
 
   def to_solr(solr_doc={}, opts={})
     super(solr_doc, opts)
@@ -47,9 +41,6 @@ class Article < ActiveFedora::Base
     rights_ds = self.datastreams["rightsMetadata"]
     depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
     if prop_ds
-      #puts "properties of workflow ds ---------------------START"
-      #puts prop_ds.methods
-      #puts "properties of workflow ds ---------------------END"
       prop_ds.depositor = depositor_id unless prop_ds.nil?
     end
     rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
@@ -57,6 +48,17 @@ class Article < ActiveFedora::Base
     return true
   end
   
+  def to_jq_upload(title, size, pid, dsid)
+    return {
+      "name" => title, #self.title,
+      "size" => size, #self.file_size,
+      "url" => "/articles/#{pid}/#{dsid}", #"/article/#{noid}",
+      "thumbnail_url" => thumbnail_url(title, '48'),#self.pid,
+      "delete_url" => "deleteme", # generic_file_path(:id => id),
+      "delete_type" => "DELETE"
+    }
+  end
+
   private
   
   def initialize_submission_workflow
@@ -66,31 +68,34 @@ class Article < ActiveFedora::Base
     end
   end
 
- def remove_blank_assertions
-   ArticleRdfDatastream.fields.each do |key|
-     #puts "%s, %s"%(key, key.class)
-     #if !key == 'language' and !key == 'license' and !key == 'rights'
-     #  self[key] = nil if self[key] == ['']
-     #end
-     #if key == 'language' or key == 'license' or key == 'rights'
-     #  puts self.language.languageLabel
-     #  puts self.language.languageCode
-     #  puts self.language.languageAuthority
-     #  puts self.language.languageScheme
-     #  #if self.language[0].languageLabel.empty?
-     #  #   self.language[0].delete(languageLabel)
-     #  #end
-     #  #if self.language[0].languageScheme.empty?
-     #  #   self.language[0].delete(languageScheme)
-     #  #end
-     #  #self[key].each do |k, v| 
-     #  #  self[key].delete(k) if v.empty?
-     #  #end
-     #else
-     #  self[key] = nil if self[key] == ['']
-     #end
-     self[key] = nil if self[key] == ['']
-   end
- end
+  def remove_blank_assertions
+    ArticleRdfDatastream.fields.each do |key|
+      self[key] = nil if self[key] == ['']
+    end
+  end
+
+  def self.find_or_create(pid)
+    begin
+      Article.find(pid)
+    rescue ActiveFedora::ObjectNotFoundError
+      Article.create({pid: pid})
+    end
+  end
+
+  def thumbnail_url(filename, size)
+    icon = "fileIcons/all-icon-#{size}x#{size}.png"
+    begin
+      mt = MIME::Types.of(filename)
+      extensions = mt[0].extensions
+    rescue
+      extensions = []
+    end
+    for ext in extensions
+      if Rails.application.assets.find_asset("fileIcons/#{ext}-icon-#{size}x#{size}.png")
+        icon = "fileIcons/#{ext}-icon-#{size}x#{size}.png"
+      end
+    end
+    icon
+  end
 
 end

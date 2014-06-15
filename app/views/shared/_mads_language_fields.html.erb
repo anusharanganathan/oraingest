@@ -1,4 +1,7 @@
 <div id="language">
+  <% if @article.language.empty? %>
+   <% @article.language.build %>
+  <% end %>
   <%= f.fields_for :language do |l| %>
     <div class="field">
       <%= l.label :languageLabel, "Language" %><br>

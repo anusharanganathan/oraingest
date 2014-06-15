@@ -26,6 +26,7 @@ require "vocabulary/prov_vocabulary"
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
+  #before_action :set_article, only: [:show, :destroy]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -72,241 +73,50 @@ class ArticlesController < ApplicationController
 
   def show
     authorize! :show, params[:id]
-    #puts @article.workflows
+    @pid = params[:id]
+    @files = contents
   end
 
   def new
+    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
-    @article.language.build()
-    @article.subject.build()
-    @article.worktype.build()
-    @article.license.build()
-    @article.rights.build()
-    @article.rightsActivity.build()
   end
 
   def edit
     authorize! :edit, params[:id]
+    @pid = params[:id]
+    @files = contents
   end
 
   def create
-    @article = Article.new
-    @article.attributes = article_params
-    #Copy language parameters
-    lp = article_params['language']
-    @article.language = nil
-
-    #Copy subject parameters
-    sp = article_params['subject']
-    @article.subject = nil
- 
-    #Copy worktype parameters
-    tp = article_params['worktype'].except(:typeAuthority)
-    @article.worktype = nil
- 
-    #Copy parameters asscoiated with rights activity
-    lsp = article_params['license'].except(:licenseURI)
-    @article.license = nil
-    rp = article_params['rights'].except(:rightsType)
-    @article.rights = nil
-    @article.rightsActivity = nil
-
+    @pid = params[:pid]
+    @article = Article.find_or_create(@pid)
     @article.apply_permissions(current_user) 
-
-    # Save article
-    respond_to do |format|
-      if @article.save
-        #TODO: This is a dirty way of adding language with the correct id. 
-        #      Fix this double call of save. Generate ID when new?
-
-        # Remove blank assertions for language and build
-        if !lp[:languageLabel].empty?
-          lp.each do |k, v| 
-            lp.delete(k) if v.empty?
-          end
-          lp['id'] = "info:fedora/#{@article.id}#language"
-          @article.language.build(lp)
-        end
-
-        #remove_blank_assertions for subject and build
-        sp.each do |s|
-          if s[:subjectLabel].empty?
-             sp.delete(s)
-          end
-        end
-        sp.each_with_index do |s, s_index|
-          s.each do |k, v| 
-            s.delete(k) if v.empty?
-          end
-          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
-          @article.subject.build(s)
-        end
-
-        # Remove blank assertions for worktype and build
-        if !tp[:typeLabel].empty?
-          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
-            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
-          end
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        else
-          tp[:typeLabel] = 'Article'
-          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        end
-
-        # Remove blank assertions for rights activity and build
-        ag = []
-        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
-          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
-            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
-          elsif isURI(lsp[:licenseStatement])
-            lsp[:licenseURI] = lsp[:licenseStatement]
-            lsp.delete(:licenseStatement)
-          end
-          lsp['id'] = "info:fedora/#{@article.id}#license"
-          lsp.each do |k, v| 
-            lsp.delete(k) if v.empty?
-          end
-          @article.license.build(lsp)
-          ag.push("info:fedora/#{@article.id}#license")
-        end
-        if !rp[:rightsStatement].empty?
-          rp.each do |k, v| 
-            rp.delete(k) if v.empty?
-          end
-          rp[:rightsType] = RDF::DC.RightsStatement
-          rp['id'] = "info:fedora/#{@article.id}#rights"
-          @article.rights.build(rp)
-          ag.push("info:fedora/#{@article.id}#rights")
-        end
-        if !ag.empty?
-	  rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
-          @article.rightsActivity.build(rap)
-        end
-
-        @article.save
-        create_from_upload(params)
-        #format.html { redirect_to article_path, notice: 'Article was successfully created.' }
-        #format.html { redirect_to action: 'show', id: @article.id, notice: 'Article was successfully created.'}
-        format.html { redirect_to action: 'show', id: @article.id }
-        #format.html { render action: 'show', notice: 'Article was successfully created.', location: @article }
-        format.json { render action: 'show', status: :created, location: @article }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
+    if params.has_key?(:files)
+      create_from_upload(params)
+    elsif params.has_key?(:article)
+      add_metadata(article_params)
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     end
+
+     #format.html { redirect_to action: 'show', id: @article.id }
+     #format.json { render action: 'show', status: :created, location: @article }
   end
 
   def update
-    #Copy parameters asscoiated with language
-    lp = article_params['language']
-    article_params.delete('language')
-
-    #Copy parameters asscoiated with subject
-    sp = article_params['subject']
-    article_params.delete('subject')
-
-    #Copy parameters asscoiated with type of work
-    tp = article_params['worktype'].except(:typeAuthority)
-    article_params.delete('worktype')
-
-    #Copy parameters asscoiated with rights activity
-    lsp = article_params['license'].except(:licenseURI)
-    article_params.delete('license')
-    rp = article_params['rights'].except(:rightsType)
-    article_params.delete('rights')
-
-    # Update article
-    respond_to do |format|
-      if @article.update(article_params)
-        # Save language and subject
-        #TODO: Fix this dirty double call of update and save.
-        #      Currently doing this to reset the length of subject to the new length.
-
-        #remove_blank_assertions for language and build
-        @article.language = nil
-        if !lp[:languageLabel].empty?
-          lp.each do |k, v| 
-            lp.delete(k) if v.empty?
-          end
-          lp['id'] = "info:fedora/#{@article.id}#language"
-          @article.language.build(lp)
-        end
-
-        #remove_blank_assertions for subject and build
-        @article.subject = nil
-        sp.each do |s|
-          if s[:subjectLabel].empty?
-             sp.delete(s)
-          end
-        end
-        sp.each_with_index do |s, s_index|
-          s.each do |k, v| 
-            s.delete(k) if v.empty?
-          end
-          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
-          @article.subject.build(s)
-        end
-
-        # Remove blank assertions for worktype and build
-        @article.worktype = nil
-        if !tp[:typeLabel].empty?
-          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
-            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
-          end
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        else
-          tp[:typeLabel] = 'Article'
-          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        end
-
-        # Remove blank assertions for rights activity and build
-        @article.license = nil
-        @article.rights = nil
-        @article.rightsActivity = nil
-        ag = []
-        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
-          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
-            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
-          elsif isURI(lsp[:licenseStatement])
-            lsp[:licenseURI] = lsp[:licenseStatement]
-            lsp.delete(:licenseStatement)
-          end
-          lsp['id'] = "info:fedora/#{@article.id}#license"
-          lsp.each do |k, v|
-            lsp.delete(k) if v.empty?
-          end 
-          @article.license.build(lsp)
-          ag.push("info:fedora/#{@article.id}#license")
-        end
-        if !rp[:rightsStatement].empty?
-          rp.each do |k, v| 
-            rp.delete(k) if v.empty?
-          end
-          rp[:rightsType] = RDF::DC.RightsStatement
-          rp['id'] = "info:fedora/#{@article.id}#rights"
-          @article.rights.build(rp)
-          ag.push("info:fedora/#{@article.id}#rights")
-        end
-        if !ag.empty?
-          rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
-          @article.rightsActivity.build(rap)
-        end
-
-        @article.save
-
-        format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
+    @pid = params[:pid]
+    #@article = Article.find_or_create(@pid)
+    if params.has_key?(:files)
+      create_from_upload(params)
+    elsif article_params
+      add_metadata(article_params)
+    else
+      puts "Throwing error - no appropriate params found"
+      format.html { render action: 'edit' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     end
   end
 
@@ -399,17 +209,130 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        render :json => [@article.to_jq_upload],
+        render :json => [@article.to_jq_upload(file.original_filename, file.size, @article.id, datastream_id)],
         :content_type => 'text/html',
         :layout => false
       }
       format.json {
-        render :json => [@article.to_jq_upload]
+        render :json => [@article.to_jq_upload(file.original_filename, file.size, @article.id, datastream_id)]
       }
     end
   rescue ActiveFedora::RecordInvalid => af
     flash[:error] = af.message
     json_error "Error creating generic file: #{af.message}"
+  end
+
+  def add_metadata(article_params)
+    puts "I am in add_metadata"
+    #Copy parameters asscoiated with language
+    lp = article_params['language']
+    article_params.delete('language')
+
+    #Copy parameters asscoiated with subject
+    sp = article_params['subject']
+    article_params.delete('subject')
+
+    #Copy parameters asscoiated with type of work
+    tp = article_params['worktype'].except(:typeAuthority)
+    article_params.delete('worktype')
+
+    #Copy parameters asscoiated with rights activity
+    lsp = article_params['license'].except(:licenseURI)
+    article_params.delete('license')
+    rp = article_params['rights'].except(:rightsType)
+    article_params.delete('rights')
+    @article.attributes = article_params
+        #remove_blank_assertions for language and build
+        @article.language = nil
+        if !lp[:languageLabel].empty?
+          lp.each do |k, v| 
+            lp.delete(k) if v.empty?
+          end
+          lp['id'] = "info:fedora/#{@article.id}#language"
+          @article.language.build(lp)
+        end
+
+        #remove_blank_assertions for subject and build
+        @article.subject = nil
+        sp.each do |s|
+          if s[:subjectLabel].empty?
+             sp.delete(s)
+          end
+        end
+        sp.each_with_index do |s, s_index|
+          s.each do |k, v| 
+            s.delete(k) if v.empty?
+          end
+          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
+          @article.subject.build(s)
+        end
+
+        # Remove blank assertions for worktype and build
+        @article.worktype = nil
+        if !tp[:typeLabel].empty?
+          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
+            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
+          end
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        else
+          tp[:typeLabel] = 'Article'
+          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
+          tp['id'] = "info:fedora/#{@article.id}#type"
+          @article.worktype.build(tp)
+        end
+
+        # Remove blank assertions for rights activity and build
+        @article.license = nil
+        @article.rights = nil
+        @article.rightsActivity = nil
+        ag = []
+        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
+          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
+            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
+          elsif isURI(lsp[:licenseStatement])
+            lsp[:licenseURI] = lsp[:licenseStatement]
+            lsp.delete(:licenseStatement)
+          end
+          lsp['id'] = "info:fedora/#{@article.id}#license"
+          lsp.each do |k, v|
+            lsp.delete(k) if v.empty?
+          end 
+          @article.license.build(lsp)
+          ag.push("info:fedora/#{@article.id}#license")
+        end
+        if !rp[:rightsStatement].empty?
+          rp.each do |k, v| 
+            rp.delete(k) if v.empty?
+          end
+          rp[:rightsType] = RDF::DC.RightsStatement
+          rp['id'] = "info:fedora/#{@article.id}#rights"
+          @article.rights.build(rp)
+          ag.push("info:fedora/#{@article.id}#rights")
+        end
+        if !ag.empty?
+          rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
+          @article.rightsActivity.build(rap)
+        end
+
+    respond_to do |format|
+      if @article.save
+        format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def contents
+    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
+    files = []
+    for dsid in choicesUsed
+      files.push(@article.to_jq_upload(@article.datastreams[dsid].label, @article.datastreams[dsid].size, @article.id, dsid))
+    end
+    files
   end
 
   def datastream_id

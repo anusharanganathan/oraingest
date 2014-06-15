@@ -1,0 +1,13 @@
+<div><table>
+<% @files.each do |file| %>
+    <tr class="template-download">
+        <td class="preview">
+           <% if file['thumbnail_url'] %>
+             <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt: "View file") %></span>
+            <% end %>
+          </td>
+          <td class="name"><span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span></td>
+          <td class="Delete"><span><%= link_to 'Delete', "#", method: :delete, data: { confirm: 'Are you sure?' } %>
+    </tr>
+<% end %>
+</table></div>

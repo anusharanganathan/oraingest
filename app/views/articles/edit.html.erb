@@ -1,6 +1,23 @@
-<h1>Editing article</h1>
+<h1>Update article</h1>
 
-<%= render 'form' %>
+<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#local" data-toggle="tab"><i class="icon-desktop"></i>Upload files</a></li>
+  <li><a href="#describe" data-toggle="tab"><i class="icon-metadata"></i>Describe</a></li>
+</ul>
 
-<%= link_to 'Show', @article %> |
+<div class="tab-content">
+  <div class="tab-pane active" id="local">
+    <%= render partial: 'shared/upload/agreement' %>
+    <%= render partial: 'shared/upload/alerts' %>
+    <%= render partial: 'shared/upload/upload_form' %>
+    <%= render partial: 'shared/upload/script_templates' %>
+    <%= render partial: 'shared/upload/list_files' %>
+  </div>
+  <div class="tab-pane" id="describe">
+    <%= render partial: 'form' %>
+  </div>
+</div>
+
 <%= link_to 'Back', articles_path %>
+
