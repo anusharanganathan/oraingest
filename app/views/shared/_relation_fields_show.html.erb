@@ -1,0 +1,27 @@
+<div id="relation">
+<% if @article.relation %>
+<p>
+  <strong>Related esources:</strong>
+   <% @article.relationship.each do |s|%>
+      <% if !r.title.empty? and r.identifier.empty? %>
+        <span><%=link_to r.title.first, r.identifier.first %></span>
+      <% elsif !r["id"].empty? %>
+        <span><%=link_to r["id"] %></span>
+      <% elsif !r.title.empty? %>
+        <span><%= r.title.first %></span>
+      <% end %>
+      <% if !r.type.empty? %>
+        <span><%= r.identifier.first %> <strong><%= r.type.first %></strong> <%= @article.title.first %></span>
+      <% end %>
+      
+      <% if !r.description.empty? %>
+        <span><%= r.description.first %></span>
+      <% end %>
+      <% if !r.citation.empty? %>
+        <span><%= r.citation.first %></span>
+      <% end %>
+      
+   <% end %>
+</p>
+<% end %>
+</div>

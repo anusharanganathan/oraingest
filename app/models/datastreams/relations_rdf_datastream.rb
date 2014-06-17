@@ -10,7 +10,7 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # For internal relations
     map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
     # For external relations
-    map.relation(:in => RDF::DC, class_name:"ExternalRelations")
+    map.relationship(:to =>"relation", :in => RDF::DC, class_name:"ExternalRelations")
   end
   accepts_nested_attributes_for :hasPart, :relation
 
@@ -60,10 +60,12 @@ class ExternalRelations
   attr_accessor :title, :description, :type, :citation
 
   map_predicates do |map|
+    #-- identifier --
+    map.identifier(:to=>"identifier", :in => RDF::DC)
     #-- title --
-    map.title(:in => RDF::DC)
+    map.title(:to=>"title", :in => RDF::DC)
     #-- description --
-    map.description(:in => RDF::DC)
+    map.description(:to=>"description", :in => RDF::DC)
     #-- type --
     map.type(:to=>"type", :in => RDF::DC)
     #-- citation --

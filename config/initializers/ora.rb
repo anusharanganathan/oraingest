@@ -84,6 +84,7 @@ Sufia.config do |config|
     }
 
     config.article_licenses = {
+      "" => "",
       "CC Attribution (CC BY 2.5)" => "CC Attribution (CC BY 2.5)",
       "CC Attribution-NoDerivs (CC BY-ND 2.5)" => "CC Attribution-NoDerivs (CC BY-ND 2.5)",
       "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)" => "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)",
@@ -92,8 +93,7 @@ Sufia.config do |config|
       "CC Attribution-ShareAlike (CC BY-SA 2.5)" => "CC Attribution-ShareAlike (CC BY-SA 2.5)",
       "GPL v2" => "GPL v2",
       "LGPL v2.1" => "LGPL v2.1",
-      "MIT licence" => "MIT licence",
-      "None (Not recommended)" => ""
+      "MIT licence" => "MIT licence"
     }
  
     config.article_license_urls = {
@@ -109,6 +109,7 @@ Sufia.config do |config|
     }
 
     config.data_licenses = {
+      "" => "",
       "ODC Attribution for data/databases (ODC-By)" => "ODC Attribution for data/databases (ODC-By)",
       "ODC Attribution Share-Alike for data/databases (ODC-ODbL)" => "ODC Attribution Share-Alike for data/databases (ODC-ODbL)",
       "ODC Public Domain for data/databases (PDDL)" => "ODC Public Domain for data/databases (PDDL)",
@@ -116,8 +117,7 @@ Sufia.config do |config|
       "OGL non commercial" => "OGL non commercial",
       "CC0 (CC Zero)" => "CC0 (CC Zero)",
       "Prepared licences" => "Prepared licences",
-      "Bespoke licence" => "Bespoke licence",
-      "None (Not recommended)" => ""
+      "Bespoke licence" => "Bespoke licence"
     }
  
     config.data_license_urls = {
@@ -128,7 +128,40 @@ Sufia.config do |config|
       "OGL non commercial" => "http://www.nationalarchives.gov.uk/doc/non-commercial-government-licence/",
       "CC0 (CC Zero)" => "http://creativecommons.org/choose/zero/"
     }
+
+    config.attachment_types = {
+      "Content" => "Content",
+      "License agreement" => "License agreement",
+      "Rights agreement with publisher" => "Rights agreement with publisher",
+      "Personal correspondence to serve as agreement" => "Personal correspondence to serve as agreement"
+    }
  
+    config.embargo_release_methods = {
+      "" => "",
+      "Automatically lift the embargo" => "Automatically lift the embargo",
+      "Consult me before lift of embargo" => "Consult me before lift of embargo"
+    }
+
+    config.relationship_types = {
+      "" => "",
+      "is a part of" => RDF::DC::isPartOf,
+      "has constituent part" => RDF::DC::hasPart,
+      "is a format of" => RDF::DC::isFormatOf, 
+      "is referenced by" => RDF::DC::isReferencedBy,
+      "references" => RDF::DC::references,
+      "is replaced by" => RDF::DC::isReplacedBy,
+      "replaces" => RDF::DC::replaces,
+      "is required by" => RDF::DC::isRequiredBy,
+      "requires" => RDF::DC::requires,
+      "is a version Of" => RDF::DC::isVersionOf
+    }
+
+    config.embargo_options = [
+      "Restricted until embargo end date",
+      "Not visible",
+      "Visible"  
+    ]
+
     # Map hostnames onto Google Analytics tracking IDs
     # config.google_analytics_id = 'UA-99999999-1'
    
