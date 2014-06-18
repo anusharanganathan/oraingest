@@ -83,7 +83,7 @@ class Article < ActiveFedora::Base
   end
 
   def thumbnail_url(filename, size)
-    icon = "fileIcons/all-icon-#{size}x#{size}.png"
+    icon = "fileIcons/default-icon-#{size}x#{size}.png"
     begin
       mt = MIME::Types.of(filename)
       extensions = mt[0].extensions

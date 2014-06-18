@@ -1,30 +1,22 @@
-<h1>Articles</h1>
+<h1>Recent articles</h1>
+
+<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
+<% display_thumbs = true %>
+<% display_access = false %>
 <%= render :partial => '/flash_msg' %>
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Subtitle</th>
-      <th>Review Status</th>
-      <th>&nbsp;</th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @articles.each do |article| %>
-      <tr>
-        <td><%= link_to article.title, article %></td>
-        <td><%= article.subtitle %></td> 
-        <td><%= article.reviewStatus %></td>
-        <td><%= link_to 'Delete', article, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Article', new_article_path %>
-
-
+<a href="<%= new_article_path %>"><button type="button" style="font-size:1.1em;margin:15px;"><h3>Add an article</h3></button></a>
+<div>
+  <% if @articles.blank? %>
+      <h3>  <%= msg %> </h3>
+  <% else %>
+    <div id="recent_docs">
+      <table class="table table-bordered table-striped">
+        <% @articles.each do |article| %>
+          <%= render :partial => "recent_article", as: :article, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :article => article} %>
+        <% end %>
+      </table>
+  <% end %>
+</div>
 

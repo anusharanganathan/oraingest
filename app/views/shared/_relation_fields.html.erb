@@ -34,6 +34,8 @@
       </div>
     <% else %>
       <div class="controls">
+        <fieldset>
+        <legend>Related item</legend>
         <%= label_tag "article[relationship][][identifier]", "What's the url" %><br>
         <%= text_field_tag "article[relationship][][identifier]", r.identifier.first %>
         <%= label_tag "article[relationship][][title]", "Title" %><br>
@@ -55,6 +57,7 @@
           <strong><%= @article.title.first %></strong>
         <% end %>
         <button class="remover btn" name="additional_relationship" id="additional_relationship_submit">-<span class="accessible-hidden">add another relation</span></button> 
+        </fieldset>
       </div>
     <% end %>
   <% end %>

@@ -1,13 +1,14 @@
 <p id="notice"><%= notice %></p>
 
+<h3><span class="label label-<%=@article.relationsMetadata.embargoLevel%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
 <%= render partial: "describe", as: :article %>
 <%= render partial: "shared/mads_language_fields_show", as: :article %>
 <%= render partial: "shared/mads_subject_fields_show", as: :article %>
 <%= render partial: "shared/rights_activity_fields_show", as: :article %>
 <%= render partial: "shared/files_with_details_show", as: :article %>
 
-<%= link_to 'Edit', edit_article_path(@article) %> |
-<%= link_to 'Delete', @article, method: :delete, data: { confirm: 'Are you sure?' } %> | 
-<%= link_to 'Back', articles_path %>
+<span class="label label-success"><%= link_to 'Edit', edit_article_path(@article) %> </span> &nbsp;
+<span class="label label-warning"><%= link_to 'Delete', @article, method: :delete, data: { confirm: 'Are you sure?' } %> </span> &nbsp;
+<span class="label label-info"><%= link_to 'Recent articles', articles_path %></span>
 
 
