@@ -18,6 +18,49 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     rdf_subject.kind_of? RDF::URI
   end
 
+  def embargoStatus
+    articleVisible = true
+    contentVisible = false
+    hasContent = false
+    self.hasPart.each do |hp|
+      if hp.identifier.first == 'descMetadata'
+        if hp.embargoStatus != 'Visible'
+          articleVisible = false
+        end
+      elsif hp.identifier.first.start_with?('content')
+        hasContent = true
+        if hp.embargoStatus == 'Visible'
+          contentVisible = true
+        end
+      end
+    end
+    if articleVisible
+      if hasContent
+        if contentVisible
+          "Open access"
+        else
+          "Under embargo"
+        end
+      else
+        "Reference record"
+      end
+    else
+      "Closed"
+    end
+  end
+
+  def embargoLevel
+    if self.embargoStatus == "Open access"
+      "success"
+    elsif self.embargoStatus == "Under embargo"
+      "info"
+    elsif self.embargoStatus == "Reference record"
+      "warning"
+    else
+      "error"
+    end
+  end
+
 end
 
 class InternalRelations
