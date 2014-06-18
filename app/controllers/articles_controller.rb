@@ -114,7 +114,6 @@ class ArticlesController < ApplicationController
     elsif article_params
       add_metadata(article_params)
     else
-      puts "Throwing error - no appropriate params found"
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
     end
@@ -166,19 +165,14 @@ class ArticlesController < ApplicationController
   end
 
   def create_from_upload(params)
-    #puts "I am in create_from_upload"
     # check error condition No files
     return json_error("Error! No file to save") if !params.has_key?(:files)
-    #puts "len of files", params[:files].length
     file = params[:files].detect {|f| f.respond_to?(:original_filename) }
     if !file
-      #puts 'unknown file'
       return json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
     elsif (empty_file?(file))
-      #puts 'Zero length file'
       return json_error "Error! Zero Length File!", file.original_filename
     #elsif (!terms_accepted?)
-    #  puts 'Accept terms'
     #  return json_error "You must accept the terms of service!", file.original_filename
     else
       process_file(file)
@@ -192,7 +186,6 @@ class ArticlesController < ApplicationController
   end
 
   def process_file(file)
-    #puts "I am in process file"
     #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
     @article.add_file(file, datastream_id, file.original_filename)
     save_tries = 0
@@ -223,97 +216,128 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
-    puts "I am in add_metadata"
-    #Copy parameters asscoiated with language
-    lp = article_params['language']
-    article_params.delete('language')
-
-    #Copy parameters asscoiated with subject
-    sp = article_params['subject']
-    article_params.delete('subject')
-
-    #Copy parameters asscoiated with type of work
-    tp = article_params['worktype'].except(:typeAuthority)
-    article_params.delete('worktype')
-
-    #Copy parameters asscoiated with rights activity
-    lsp = article_params['license'].except(:licenseURI)
-    article_params.delete('license')
-    rp = article_params['rights'].except(:rightsType)
-    article_params.delete('rights')
     @article.attributes = article_params
-        #remove_blank_assertions for language and build
-        @article.language = nil
-        if !lp[:languageLabel].empty?
-          lp.each do |k, v| 
-            lp.delete(k) if v.empty?
-          end
-          lp['id'] = "info:fedora/#{@article.id}#language"
-          @article.language.build(lp)
-        end
 
-        #remove_blank_assertions for subject and build
-        @article.subject = nil
-        sp.each do |s|
-          if s[:subjectLabel].empty?
-             sp.delete(s)
-          end
-        end
-        sp.each_with_index do |s, s_index|
-          s.each do |k, v| 
-            s.delete(k) if v.empty?
-          end
-          s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
-          @article.subject.build(s)
-        end
+    #remove_blank_assertions for language and build
+    lp = article_params['language']
+    @article.language = nil
+    if !lp[:languageLabel].empty?
+      lp.each do |k, v| 
+        lp[k] = nil if v.empty?
+      end
+      lp['id'] = "info:fedora/#{@article.id}#language"
+      @article.language.build(lp)
+    end
 
-        # Remove blank assertions for worktype and build
-        @article.worktype = nil
-        if !tp[:typeLabel].empty?
-          if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
-            tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
-          end
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        else
-          tp[:typeLabel] = 'Article'
-          tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
-          tp['id'] = "info:fedora/#{@article.id}#type"
-          @article.worktype.build(tp)
-        end
+    #remove_blank_assertions for subject and build
+    sp = article_params['subject']
+    @article.subject = nil
+    sp.each do |s|
+      if s[:subjectLabel].empty?
+         sp.delete(s)
+      end
+    end
+    sp.each_with_index do |s, s_index|
+      s.each do |k, v| 
+        s[k] = nil if v.empty?
+      end
+      s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
+      @article.subject.build(s)
+    end
 
-        # Remove blank assertions for rights activity and build
-        @article.license = nil
-        @article.rights = nil
-        @article.rightsActivity = nil
-        ag = []
-        if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
-          if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
-            lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
-          elsif isURI(lsp[:licenseStatement])
-            lsp[:licenseURI] = lsp[:licenseStatement]
-            lsp.delete(:licenseStatement)
-          end
-          lsp['id'] = "info:fedora/#{@article.id}#license"
-          lsp.each do |k, v|
-            lsp.delete(k) if v.empty?
-          end 
-          @article.license.build(lsp)
-          ag.push("info:fedora/#{@article.id}#license")
+    # Remove blank assertions for worktype and build
+    tp = article_params['worktype'].except(:typeAuthority)
+    @article.worktype = nil
+    if !tp[:typeLabel].empty?
+      if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
+        tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
+      end
+      tp['id'] = "info:fedora/#{@article.id}#type"
+      @article.worktype.build(tp)
+    else
+      tp[:typeLabel] = 'Article'
+      tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
+      tp['id'] = "info:fedora/#{@article.id}#type"
+      @article.worktype.build(tp)
+    end
+
+    # Remove blank assertions for rights activity and build
+    lsp = article_params['license'].except(:licenseURI)
+    rp = article_params['rights'].except(:rightsType)
+    @article.license = nil
+    @article.rights = nil
+    @article.rightsActivity = nil
+    ag = []
+    if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
+      if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
+        lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
+      elsif isURI(lsp[:licenseStatement])
+        lsp[:licenseURI] = lsp[:licenseStatement]
+        lsp[:licenseStatement] = nil
+      end
+      lsp['id'] = "info:fedora/#{@article.id}#license"
+      lsp.each do |k, v|
+        lsp[k] = nil if v.empty?
+      end 
+      @article.license.build(lsp)
+      ag.push("info:fedora/#{@article.id}#license")
+    end
+    if !rp[:rightsStatement].empty?
+      rp.each do |k, v| 
+        rp[k] = nil if v.empty?
+      end
+      rp[:rightsType] = RDF::DC.RightsStatement
+      rp['id'] = "info:fedora/#{@article.id}#rights"
+      @article.rights.build(rp)
+      ag.push("info:fedora/#{@article.id}#rights")
+    end
+    if !ag.empty?
+      rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
+      @article.rightsActivity.build(rap)
+    end
+    
+    # Remove blank assertions for internal relations and build
+    hp = article_params['hasPart']
+    @article.hasPart = nil
+    select = {}
+    for ds in contents
+      dsid = ds['url'].split("/")[-1]
+      hp.each do |k, h|
+        if h[:identifier] == dsid
+          select = h
+          select['id'] = "info:fedora/#{@article.id}/datastreams/#{ds['url']}"
         end
-        if !rp[:rightsStatement].empty?
-          rp.each do |k, v| 
-            rp.delete(k) if v.empty?
-          end
-          rp[:rightsType] = RDF::DC.RightsStatement
-          rp['id'] = "info:fedora/#{@article.id}#rights"
-          @article.rights.build(rp)
-          ag.push("info:fedora/#{@article.id}#rights")
-        end
-        if !ag.empty?
-          rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
-          @article.rightsActivity.build(rap)
-        end
+      end
+      select.each do |k, v| 
+        select[k] = nil if v.empty?
+      end
+      if select[:embargoStatus] == "Visible"
+        select[:embargoStart] = nil
+        select[:embargoEnd] = nil
+        select[:embargoRelease] = nil
+      elsif select[:embargoStatus] == "Not visible"
+        select[:embargoStart] = nil
+        select[:embargoEnd] = nil
+        select[:embargoRelease] = nil
+      end
+      @article.hasPart.build(select) 
+    end 
+
+    #remove_blank_assertions for external relations and build
+    er = article_params['relationship']
+    @article.relationship = nil
+    er.each do |r|
+      if r[:identifier].empty?
+         er.delete(r)
+      end
+    end
+    er.each do |r|
+      r.each do |k, v| 
+        r[k] = nil if v.empty?
+      end
+      r['id'] = r[:identifier]
+      @article.relationship.build(r)
+    end
 
     respond_to do |format|
       if @article.save
