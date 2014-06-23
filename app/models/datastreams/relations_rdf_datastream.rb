@@ -24,12 +24,12 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     hasContent = false
     self.hasPart.each do |hp|
       if hp.identifier.first == 'descMetadata'
-        if hp.embargoStatus != 'Visible'
+        if hp.embargoStatus.first != 'Visible'
           articleVisible = false
         end
       elsif hp.identifier.first.start_with?('content')
         hasContent = true
-        if hp.embargoStatus == 'Visible'
+        if hp.embargoStatus.first == 'Visible'
           contentVisible = true
         end
       end
