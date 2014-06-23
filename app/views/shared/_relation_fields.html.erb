@@ -16,14 +16,14 @@
         <%= label_tag "article[relationship][][citation]", "Citation text" %><br>
         <%= text_field_tag "article[relationship][][citation]", r.citation.first %>
         <%= label_tag "article[relationship][][type]", "Type of relationship" %><br>
-        <strong>related item</strong>
+        <strong>Related item</strong>
         <% if !r.type.nil? %>
           <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types, :selected=>r.type.first) %>
         <% else %>
           <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types) %>
         <% end %>
-        <% if @article.title.nil? %>
-          <strong>this article %></strong>
+        <% if @article.title.nil? or @article.title.empty? %>
+          <strong>this article</strong>
         <% else %>
           <strong><%= @article.title.first %></strong>
         <% end %>
