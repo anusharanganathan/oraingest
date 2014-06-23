@@ -1,16 +1,20 @@
 #require 'active_support/concern'
 require 'rdf'
 #require 'datastreams/person_rdf_datastream'
+#Vocabularies
 require 'vocabulary/bibo_vocabulary'
 require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/ora_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
 require 'vocabulary/prov_vocabulary'
+require 'vocabulary/prov_vocabulary'
+# Fields
 require 'fields/mads_language'
 require 'fields/mads_subject'
 require 'fields/work_type'
 require 'fields/rights_activity'
+require 'fields/funding_activity'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
@@ -102,10 +106,11 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     
     # -- creation activity --
     # TODO: Nested attributes using Prov, Lookup CUD, Fedora person objects and funder objects
+
     # -- funding activity --
-    # TODO: Nested attributes using Prov, Lookup funder objects
-    # -- thesis activity --
-    # TODO: Nested attributes using Prov
+    map.funding(:to => "isOutputOf", :in => FRAPO, class_name:"FundingActivity")
+    
+
     # -- Commissioning body --
     # TODO: Nested attributes using Prov
 

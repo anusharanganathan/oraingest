@@ -23,6 +23,7 @@ require 'parsing_nesting/tree'
 
 require "utils"
 require "vocabulary/prov_vocabulary"
+require "vocabulary/frapo_vocabulary"
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
@@ -339,9 +340,60 @@ class ArticlesController < ApplicationController
       @article.relationship.build(r)
     end
 
+    #remove_blank_assertions for funding activity and build
+    fp = article_params['funding']
+    @article.funding = nil
+    if fp[0]
+      # has to have name of funder and whom the funder funds
+      fp[0][:funder].each do |f|
+        if f[:name].empty? and f[:funds].empty?
+          fp[0][:funder].delete(f)
+        else
+          f.each do |k, v|
+            f[k] = nil if v.empty?
+          end
+        end
+      end
+      
+      id0 = "info:fedora/%s#fundingActivity" % @article.id
+      vals = {'id' => id0, 'wasAssociatedWith'=> []}
+      (0..fp[0]["funder"].length-1).each do |n|
+        b1 = "info:fedora/%s#funder%d" % [@article.id, n]
+        vals['wasAssociatedWith'].push(b1)
+      end
+      @article.funding.build(vals)
+      awardCount = 0
+      fp[0]["funder"].each_with_index do |f1, f1_index|
+        b1 = "info:fedora/%s#funder%d" % [@article.id, f1_index]
+        b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
+        f1['id'] = b2
+        f1[:agent] = b1
+        f1[:role] = FRAPO.FundingAgency
+        #TODO: Need to be more smart about these Ids. These assumptions are wrong
+        if f1[:funds] == "Author"
+          f1[:funds] = "info:fedora/#{params[:pid]}#creator1"
+        elsif f1[:funds] == "Publication"
+          funds = "info:fedora/#{params[:pid]}"
+        elsif f1[:funds] == "Project"
+          funds = "info:fedora/#{params[:pid]}#project1"
+        end
+        @article.funding[0].funder.build(f1)
+        @article.funding[0].funder[f1_index].awards = nil
+        if f1['awards']
+          f1['awards'].each do |aw|
+            if aw['grantNumber']
+              aw['id'] = "info:fedora/%s#fundingAward%d" % [@article.id, awardCount]
+              @article.funding[0].funder[f1_index].awards.build(aw)
+              awardCount += 1
+            end
+          end
+        end
+      end
+    end
+
     respond_to do |format|
       if @article.save
-        format.html { redirect_to article_path, notice: 'Article was successfully updated.' }
+        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

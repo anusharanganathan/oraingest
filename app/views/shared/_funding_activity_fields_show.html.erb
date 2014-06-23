@@ -1,0 +1,24 @@
+<div id="funding">
+  <% if @article.funding %>
+    <p><strong>Funding Information:</strong>
+    <% @article.funding[0].funder.each_with_index do |f, f_index| %>
+      <% if f.name and f.sameAs %>
+        <span><%=link_to f.name.first, f.sameAs.first %></span>
+      <% elsif f.name %>
+        <span><%= f.name.first %></span>
+      <% end %>
+      <% if f.funds %>
+        <span>funds <%= f.funds.first %></span>
+      <% end %>
+      <% if f.awards %>
+        <span>(Grant number: 
+        <% f.awards.each do |f3| %>
+          <%= f3.grantNumber.first %>
+        <% end %>
+        ) </span>
+      <% end %>
+      <br/>
+    <% end %>
+    </p>
+  <% end %>
+</div>
