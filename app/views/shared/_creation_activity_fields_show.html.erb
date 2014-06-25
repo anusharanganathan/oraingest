@@ -1,0 +1,25 @@
+<div id="creation">
+  <% if !@article.creation.empty? %>
+    <% @article.creation[0].creator.each_with_index do |c, c_index| %>
+      <div>
+      <% if !c.name.empty? and !c.sameAs.empty? %>
+        <strong><%=link_to c.name.first, c.sameAs.first %></strong><br/>
+      <% elsif c.name %>
+        <strong><%= c.name.first %></strong><br/>
+      <% end %>
+      <% if c.role %>
+        Role <%= c.role.first %><br/>
+      <% end %>
+      <% if c.affiliation %>
+        <% c.affiliation.each do |c2| %>
+          <% if !c2.name.empty? and !c2.sameAs.empty? %>
+            <%=link_to c2.name.first, c2.sameAs.first %><br/>
+          <% elsif c2.name %>
+            <%= c2.name.first %><br/>
+          <% end %>
+        <% end %>
+      <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

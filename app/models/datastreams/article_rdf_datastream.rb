@@ -15,6 +15,7 @@ require 'fields/mads_subject'
 require 'fields/work_type'
 require 'fields/rights_activity'
 require 'fields/funding_activity'
+require 'fields/creation_activity'
 
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
@@ -105,17 +106,18 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.rightsActivity(:in => PROV, :to => "hadActivity", class_name:"RightsActivity")
     
     # -- creation activity --
-    # TODO: Nested attributes using Prov, Lookup CUD, Fedora person objects and funder objects
+    # TODO: Lookup CUD and link with Fedora person objects
+    map.creation(:to => "contributor", :in => RDF::DC, class_name:"CreationActivity")
 
     # -- funding activity --
+    # TODO: Lookup and link with Fedora funder objects
     map.funding(:to => "isOutputOf", :in => FRAPO, class_name:"FundingActivity")
     
-
     # -- Commissioning body --
     # TODO: Nested attributes using Prov
 
   end
-  accepts_nested_attributes_for :language, :subject, :worktype, :license, :rights, :rightsActivity
+  accepts_nested_attributes_for :language, :subject, :worktype, :license, :rights, :rightsActivity, :creation, :funding
 
   #TODO: Add FAST authority list later
   #begin

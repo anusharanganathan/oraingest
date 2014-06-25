@@ -1,5 +1,7 @@
 # Returns an array containing the vhost 'CoSign service' value and URL
 require 'vocabulary/camelot_vocabulary'
+require 'vocabulary/ora_vocabulary'
+require 'vocabulary/bibo_vocabulary'
 
 Sufia.config do |config|
 
@@ -162,6 +164,18 @@ Sufia.config do |config|
       "Visible"  
     ]
 
+    config.article_role_types = {
+      "Author" => ORA.author,
+      "Editor" => BIBO.editor,
+      "Contributor" => RDF::DC::contributor
+    }
+
+    config.thesis_role_types = {
+      "Author" => ORA.author,
+      "Supervisor" => ORA.supervisor,
+      "Examiner" => ORA.examiner,
+      "Contributor" => RDF::DC::contributor
+    }
     # Map hostnames onto Google Analytics tracking IDs
     # config.google_analytics_id = 'UA-99999999-1'
    

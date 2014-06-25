@@ -1,0 +1,58 @@
+<div id="creation" class="control-group">
+  <% if @article.creation.empty? %>
+    <% @article.creation.build %>
+    <% @article.creation[0].creator.build %>
+    <% @article.creation[0].creator[0].affiliation.build %>
+  <% end %>
+  <% @article.creation[0].creator.each_with_index do |c, c_index| %>
+    <% if c.affiliation.empty? %>
+      <% c.affiliation.build %>
+    <% end %>
+    <% if c_index.to_s == "0" %>
+      <div class="controls" id="additional_creation_clone">
+        <fieldset>
+        <legend>Creator information</legend>
+        <%= label_tag "article[creation][][creator][][name]", "Name of creator" %>
+        <%= text_field_tag "article[creation][][creator][][name]", c.name.first %>
+        <%= label_tag "article[creation][][creator][][role]", "Role" %>
+        <% if !c.role.nil? %>
+          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first) %>
+        <% else %>
+          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types) %>
+        <% end %>
+        <% c.affiliation.each do |c2| %>
+          <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation" %>
+          <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first %>
+        <% end %>
+        <%= label_tag "article[creation][][creator][][email]", "Email" %>
+        <%= text_field_tag "article[creation][][creator][][email]", c.email.first %>
+        <button class="adder btn" name="additional_creation" id="additional_creation_submit">+<span class="accessible-hidden">add another creation</span></button>
+        &nbsp;
+        <small><%= help_icon(:creation) %></small>
+        </fieldset>
+      </div>
+    <% else %>
+      <div class="controls">
+        <fieldset>
+        <legend>Creator information</legend>
+        <%= label_tag "article[creation][][creator][][name]", "Name of creator" %>
+        <%= text_field_tag "article[creation][][creator][][name]", c.name.first %>
+        <%= label_tag "article[creation][][creator][][role]", "Role" %>
+        <% if !c.role.nil? %>
+          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first) %>
+        <% else %>
+          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types) %>
+        <% end %>
+        <% c.affiliation.each do |c2| %>
+          <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation" %>
+          <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first %>
+        <% end %>
+        <%= label_tag "article[creation][][creator][][email]", "Email" %>
+        <%= text_field_tag "article[creation][][creator][][email]", c.email.first %>
+        <button class="remover btn" name="additional_creation" id="additional_creation_submit">-<span class="accessible-hidden">add another creation</span></button> 
+        </fieldset>
+      </div>
+    <% end %>
+  <% end %>
+  <div id="additional_creation_elements"></div>
+</div>

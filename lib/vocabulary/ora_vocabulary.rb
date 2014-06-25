@@ -9,4 +9,8 @@ class ORA < RDF::Vocabulary("http://vocab.ox.ac.uk/ora#")
   property :embargoEnd
   property :embargoReason
   property :embargoRelease
+  property :affiliation
+  property :author
+  property :supervisor
+  property :examiner
 end

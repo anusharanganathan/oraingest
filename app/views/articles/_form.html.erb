@@ -44,6 +44,7 @@
     </div>
     <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
     <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
+    <%= render partial: 'shared/creation_activity_fields', as: :article, :locals => { :f => f } %>
     <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
     <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
     <div class="actions">

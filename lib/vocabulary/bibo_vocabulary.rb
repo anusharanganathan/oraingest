@@ -2,6 +2,7 @@ class BIBO < RDF::Vocabulary("http://purl.org/ontology/bibo/")
   property :abstract
   property :identifier
   property :edition
+  property :editor
   property :doi
   property :issn
   property :isbn

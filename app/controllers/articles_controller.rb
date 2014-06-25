@@ -220,7 +220,7 @@ class ArticlesController < ApplicationController
     @article.attributes = article_params
 
     #remove_blank_assertions for language and build
-    lp = article_params['language']
+    lp = article_params[:language]
     @article.language = nil
     if !lp[:languageLabel].empty?
       lp.each do |k, v| 
@@ -231,7 +231,7 @@ class ArticlesController < ApplicationController
     end
 
     #remove_blank_assertions for subject and build
-    sp = article_params['subject']
+    sp = article_params[:subject]
     @article.subject = nil
     sp.each do |s|
       if s[:subjectLabel].empty?
@@ -247,7 +247,7 @@ class ArticlesController < ApplicationController
     end
 
     # Remove blank assertions for worktype and build
-    tp = article_params['worktype'].except(:typeAuthority)
+    tp = article_params[:worktype].except(:typeAuthority)
     @article.worktype = nil
     if !tp[:typeLabel].empty?
       if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
@@ -263,8 +263,8 @@ class ArticlesController < ApplicationController
     end
 
     # Remove blank assertions for rights activity and build
-    lsp = article_params['license'].except(:licenseURI)
-    rp = article_params['rights'].except(:rightsType)
+    lsp = article_params[:license].except(:licenseURI)
+    rp = article_params[:rights].except(:rightsType)
     @article.license = nil
     @article.rights = nil
     @article.rightsActivity = nil
@@ -298,15 +298,15 @@ class ArticlesController < ApplicationController
     end
     
     # Remove blank assertions for internal relations and build
-    hp = article_params['hasPart']
+    hp = article_params[:hasPart]
     @article.hasPart = nil
     select = {}
     for ds in contents
-      dsid = ds['url'].split("/")[-1]
+      dsid = ds[:url].split("/")[-1]
       hp.each do |k, h|
         if h[:identifier] == dsid
           select = h
-          select['id'] = "info:fedora/#{@article.id}/datastreams/#{ds['url']}"
+          select['id'] = "info:fedora/#{@article.id}/datastreams/#{ds[:url]}"
         end
       end
       select.each do |k, v| 
@@ -325,7 +325,7 @@ class ArticlesController < ApplicationController
     end 
 
     #remove_blank_assertions for external relations and build
-    er = article_params['relationship']
+    er = article_params[:relationship]
     @article.relationship = nil
     er.each do |r|
       if r[:identifier].empty?
@@ -341,7 +341,7 @@ class ArticlesController < ApplicationController
     end
 
     #remove_blank_assertions for funding activity and build
-    fp = article_params['funding']
+    fp = article_params[:funding]
     @article.funding = nil
     if fp[0]
       # has to have name of funder and whom the funder funds
@@ -356,14 +356,14 @@ class ArticlesController < ApplicationController
       end
       
       id0 = "info:fedora/%s#fundingActivity" % @article.id
-      vals = {'id' => id0, 'wasAssociatedWith'=> []}
-      (0..fp[0]["funder"].length-1).each do |n|
+      vals = {'id' => id0, :wasAssociatedWith=> []}
+      (0..fp[0][:funder].length-1).each do |n|
         b1 = "info:fedora/%s#funder%d" % [@article.id, n]
-        vals['wasAssociatedWith'].push(b1)
+        vals[:wasAssociatedWith].push(b1)
       end
       @article.funding.build(vals)
       awardCount = 0
-      fp[0]["funder"].each_with_index do |f1, f1_index|
+      fp[0][:funder].each_with_index do |f1, f1_index|
         b1 = "info:fedora/%s#funder%d" % [@article.id, f1_index]
         b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
         f1['id'] = b2
@@ -379,12 +379,55 @@ class ArticlesController < ApplicationController
         end
         @article.funding[0].funder.build(f1)
         @article.funding[0].funder[f1_index].awards = nil
-        if f1['awards']
-          f1['awards'].each do |aw|
-            if aw['grantNumber']
+        if f1[:awards]
+          f1[:awards].each do |aw|
+            if aw[:grantNumber]
               aw['id'] = "info:fedora/%s#fundingAward%d" % [@article.id, awardCount]
               @article.funding[0].funder[f1_index].awards.build(aw)
               awardCount += 1
+            end
+          end
+        end
+      end
+    end
+
+    #remove_blank_assertions for creation activity and build
+    cp = article_params[:creation]
+    @article.creation = nil
+    if cp[0]
+      # has to have name of creator
+      cp[0][:creator].each do |c|
+        if c[:name].empty?
+          cp[0][:creator].delete(c)
+        else
+          c.each do |k, v|
+            c[k] = nil if v.empty?
+          end
+        end
+      end
+      
+      id0 = "info:fedora/%s#creationActivity" % @article.id
+      vals = {'id' => id0, :wasAssociatedWith=> [], :type => PROV.Activity}
+      (0..cp[0][:creator].length-1).each do |n|
+        b1 = "info:fedora/%s#creator%d" % [@article.id, n]
+        vals[:wasAssociatedWith].push(b1)
+      end
+      @article.creation.build(vals)
+      affiliationCount = 0
+      cp[0][:creator].each_with_index do |c1, c1_index|
+        b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
+        b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
+        c1['id'] = b2
+        c1[:agent] = b1
+        c1[:type] = PROV.Association
+        @article.creation[0].creator.build(c1)
+        @article.creation[0].creator[c1_index].affiliation = nil
+        if c1[:affiliation]
+          c1[:affiliation].each do |af|
+            if af[:name]
+              af['id'] = "info:fedora/%s#affiliation%d" % [@article.id, affiliationCount]
+              @article.creation[0].creator[c1_index].affiliation.build(af)
+              affiliationCount += 1
             end
           end
         end
