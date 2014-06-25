@@ -1,5 +1,5 @@
 <div id="funding">
-  <% if @article.funding %>
+  <% if !@article.funding.empty? %>
     <p><strong>Funding Information:</strong>
     <% @article.funding[0].funder.each_with_index do |f, f_index| %>
       <% if f.name and f.sameAs %>
