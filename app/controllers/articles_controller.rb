@@ -425,17 +425,20 @@ class ArticlesController < ApplicationController
       @article.creation[0].creator = nil
       cp[0][:creator].each_with_index do |c1, c1_index|
         b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
+        agent = { 'id'=> b1, :name => c1[:name], :email => c1[:email], :type => RDF::VCARD.Individual, :sameAs => c1[:sameAs] }
         b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
         c1['id'] = b2
-        c1[:agent] = b1
+        #c1[:agent] = b1
         c1[:type] = PROV.Association
         @article.creation[0].creator.build(c1)
-        @article.creation[0].creator[c1_index].affiliation = nil
+        @article.creation[0].creator[c1_index].agent = nil
+        @article.creation[0].creator[c1_index].agent.build(agent)
+        @article.creation[0].creator[c1_index].agent[0].affiliation = nil
         if c1[:affiliation]
           c1[:affiliation].each do |af|
             if af[:name]
               af['id'] = "info:fedora/%s#affiliation%d" % [@article.id, affiliationCount]
-              @article.creation[0].creator[c1_index].affiliation.build(af)
+              @article.creation[0].creator[c1_index].agent[0].affiliation.build(af)
               affiliationCount += 1
             end
           end

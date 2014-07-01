@@ -7,27 +7,34 @@
       <% c0.creator.build %>
     <% end %>
     <% c0.creator.each_with_index do |c, c_index| %>
-      <% if c.affiliation.empty? %>
-        <% c.affiliation.build %>
+      <% if c.agent.empty? %>
+        <% c.agent.build %>
+      <% end %>
+      <% if c.agent[0].affiliation.empty? %>
+        <% c.agent[0].affiliation.build %>
       <% end %>
       <% if c_index.to_s == "0" %>
         <div class="controls" id="additional_creation_clone">
           <fieldset>
           <legend>Creator information</legend>
           <%= label_tag "article[creation][][creator][][name]", "Name of creator" %>
-          <%= text_field_tag "article[creation][][creator][][name]", c.name.first %>
+          <%= text_field_tag "article[creation][][creator][][name]", c.agent[0].name.first %>
           <%= label_tag "article[creation][][creator][][role]", "Role" %>
           <% if !c.role.nil? %>
             <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first) %>
           <% else %>
             <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types) %>
           <% end %>
-          <% c.affiliation.each do |c2| %>
+          <%= label_tag "article[creation][][creator][][email]", "Email" %>
+          <%= text_field_tag "article[creation][][creator][][email]", c.agent[0].email.first %>
+          <% c.agent[0].affiliation.each do |c2| %>
             <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation" %>
             <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first %>
+            <%= label_tag "article[creation][][creator][][affiliation][][sameAs]", "Link to affiliation object" %>
+            <%= text_field_tag "article[creation][][creator][][affiliation][][sameAs]", c2.sameAs.first %>
           <% end %>
-          <%= label_tag "article[creation][][creator][][email]", "Email" %>
-          <%= text_field_tag "article[creation][][creator][][email]", c.email.first %>
+          <%= label_tag "article[creation][][creator][][sameAs", "Link to creator object" %>
+          <%= text_field_tag "article[creation][][creator][][sameAs]", c.agent[0].sameAs.first %>
           <button class="adder btn" name="additional_creation" id="additional_creation_submit">+<span class="accessible-hidden">add another creation</span></button>
           &nbsp;
           <small><%= help_icon(:creation) %></small>
@@ -38,19 +45,23 @@
           <fieldset>
           <legend>Creator information</legend>
           <%= label_tag "article[creation][][creator][][name]", "Name of creator" %>
-          <%= text_field_tag "article[creation][][creator][][name]", c.name.first %>
+          <%= text_field_tag "article[creation][][creator][][name]", c.agent[0].name.first %>
           <%= label_tag "article[creation][][creator][][role]", "Role" %>
           <% if !c.role.nil? %>
             <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first) %>
           <% else %>
             <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types) %>
           <% end %>
-          <% c.affiliation.each do |c2| %>
+          <%= label_tag "article[creation][][creator][][email]", "Email" %>
+          <%= text_field_tag "article[creation][][creator][][email]", c.agent[0].email.first %>
+          <% c.agent[0].affiliation.each do |c2| %>
             <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation" %>
             <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first %>
+            <%= label_tag "article[creation][][creator][][affiliation][][sameAs]", "Link to affiliation object" %>
+            <%= text_field_tag "article[creation][][creator][][affiliation][][sameAs]", c2.sameAs.first %>
           <% end %>
-          <%= label_tag "article[creation][][creator][][email]", "Email" %>
-          <%= text_field_tag "article[creation][][creator][][email]", c.email.first %>
+          <%= label_tag "article[creation][][creator][][sameAs", "Link to creator object" %>
+          <%= text_field_tag "article[creation][][creator][][sameAs]", c.agent[0].sameAs.first %>
           <button class="remover btn" name="additional_creation" id="additional_creation_submit">-<span class="accessible-hidden">add another creation</span></button> 
           </fieldset>
         </div>

@@ -32,7 +32,7 @@ end
 
 class QualifiedCreationAssociation
   include ActiveFedora::RdfObject
-  attr_accessor :type, :agent, :role, :name, :email, :affiliation, :sameAs
+  attr_accessor :type, :agent, :role
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -44,14 +44,35 @@ class QualifiedCreationAssociation
   #rdf_type rdf_type PROV.Association
   map_predicates do |map|
     map.type(:in => RDF::DC)
-    map.agent(:in => PROV)
+    map.agent(:in => PROV, class_name:"CreationAssociation")
     map.role(:to => "hadRole", :in => PROV)
+  end
+  accepts_nested_attributes_for :agent
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end 
+
+end
+
+class CreationAssociation
+  include ActiveFedora::RdfObject
+  attr_accessor :type, :name, :email, :affiliation, :sameAs
+
+  #rdf_type rdf_type PROV.Association
+  map_predicates do |map|
+    map.type(:in => RDF::DC)
     map.name(:to => "n", :in => RDF::VCARD)
     map.email(:to => "hasEmail", :in => RDF::VCARD)
     map.affiliation(:in => ORA, class_name:"Affiliation")
     map.sameAs(:in => RDF::OWL)
   end
   accepts_nested_attributes_for :affiliation
+
   def persisted?
     rdf_subject.kind_of? RDF::URI
   end

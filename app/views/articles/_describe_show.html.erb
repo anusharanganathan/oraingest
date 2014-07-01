@@ -1,13 +1,13 @@
 <p id="notice"><%= notice %></p>
 
 <h1>
-<% if @article.title %>
+<% if !@article.title.empty? %>
   <h1><%= @article.title.first %></h1>
 <% else %>
   <h1>Article</h1>
 <% end %>
 
-<% if @article.subtitle %>
+<% if !@article.subtitle.empty? %>
 <h2>
   <%= @article.subtitle.first %>
 </h2>
@@ -15,49 +15,21 @@
 
 <%= render partial: "shared/work_type_fields_show", as: :article %>
 
-<% if @article.description %>
-<p>
-  <strong>Description:</strong>
-  <%= @article.description.first %>
-</p>
-<% end %>
-
-<% if @article.abstract %>
+<% if !@article.abstract.empty? %>
 <p>
   <strong>Abstract:</strong>
   <%= @article.abstract.first %>
 </p>
 <% end %>
 
-<% if @article.medium %>
+<% if !@article.medium.empty? %>
 <p>
   <strong>Medium or material:</strong>
   <%= @article.medium.first %>
 </p>
 <% end %>
 
-<% if @article.edition %>
-<p>
-  <strong>Edition:</strong>
-  <%= @article.edition.first %>
-</p>
-<% end %>
-
-<% if @article.numPages %>
-<p>
-  <strong>Number of pages:</strong>
-  <%= @article.numPages.first %>
-</p>
-<% end %>
-
-<% if @article.pages %>
-<p>
-  <strong>Page numbers:</strong>
-  <%= @article.pages.first %>
-</p>
-<% end %>
-
-<% if @article.keyword %>
+<% if !@article.keyword.empty? %>
 <p>
   <strong>Keywords:</strong>
    <% @article.keyword.each do |tag|%>
@@ -66,14 +38,14 @@
 </p>
 <% end %>
 
-<% if @article.publicationStatus %>
+<% if !@article.publicationStatus.empty? %>
 <p>
   <strong>Publication status:</strong>
   <%= @article.publicationStatus.first %>
 </p>
 <% end %>
 
-<% if @article.reviewStatus %>
+<% if !@article.reviewStatus.empty? %>
 <p>
   <strong>reviewStatus:</strong>
   <%= @article.reviewStatus.first %>
