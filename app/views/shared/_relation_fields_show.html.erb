@@ -1,27 +1,25 @@
 <div id="relation">
-<% if @article.relation %>
-<p>
-  <strong>Related esources:</strong>
-   <% @article.relationship.each do |s|%>
-      <% if !r.title.empty? and r.identifier.empty? %>
-        <span><%=link_to r.title.first, r.identifier.first %></span>
-      <% elsif !r["id"].empty? %>
-        <span><%=link_to r["id"] %></span>
-      <% elsif !r.title.empty? %>
-        <span><%= r.title.first %></span>
+<% if !@article.qualifiedRelation.empty? %>
+  <strong>Related resources:</strong>
+  <% @article.qualifiedRelation.each do |r|%>
+    <div>
+    <% if !r.entity.empty? %>
+      <% if !r.entity[0].title.empty? %>
+        <span><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></span>
+      <% else %>
+        <span><%=link_to r.entity[0].id %></span>
+      <% end %><br/>
+      <% if !r.relation.empty? %>
+        <span><%= @article.title.first %> <strong><%= r.relation.first %></strong> <%= r.entity[0].rdf_subject.to_s %></span>
+      <% end %>      
+      <% if !r.entity[0].description.empty? %>
+        <span><%= r.entity[0].description.first %></span>
       <% end %>
-      <% if !r.type.empty? %>
-        <span><%= r.identifier.first %> <strong><%= r.type.first %></strong> <%= @article.title.first %></span>
+      <% if !r.entity[0].citation.empty? %>
+        <span><%= r.entity[0].citation.first %></span>
       <% end %>
-      
-      <% if !r.description.empty? %>
-        <span><%= r.description.first %></span>
-      <% end %>
-      <% if !r.citation.empty? %>
-        <span><%= r.citation.first %></span>
-      <% end %>
-      
-   <% end %>
-</p>
+    <% end %>
+    <br/><br/></div>
+  <% end %>
 <% end %>
 </div>

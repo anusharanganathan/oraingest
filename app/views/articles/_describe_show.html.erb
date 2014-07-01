@@ -1,0 +1,82 @@
+<p id="notice"><%= notice %></p>
+
+<h1>
+<% if @article.title %>
+  <h1><%= @article.title.first %></h1>
+<% else %>
+  <h1>Article</h1>
+<% end %>
+
+<% if @article.subtitle %>
+<h2>
+  <%= @article.subtitle.first %>
+</h2>
+<% end %>
+
+<%= render partial: "shared/work_type_fields_show", as: :article %>
+
+<% if @article.description %>
+<p>
+  <strong>Description:</strong>
+  <%= @article.description.first %>
+</p>
+<% end %>
+
+<% if @article.abstract %>
+<p>
+  <strong>Abstract:</strong>
+  <%= @article.abstract.first %>
+</p>
+<% end %>
+
+<% if @article.medium %>
+<p>
+  <strong>Medium or material:</strong>
+  <%= @article.medium.first %>
+</p>
+<% end %>
+
+<% if @article.edition %>
+<p>
+  <strong>Edition:</strong>
+  <%= @article.edition.first %>
+</p>
+<% end %>
+
+<% if @article.numPages %>
+<p>
+  <strong>Number of pages:</strong>
+  <%= @article.numPages.first %>
+</p>
+<% end %>
+
+<% if @article.pages %>
+<p>
+  <strong>Page numbers:</strong>
+  <%= @article.pages.first %>
+</p>
+<% end %>
+
+<% if @article.keyword %>
+<p>
+  <strong>Keywords:</strong>
+   <% @article.keyword.each do |tag|%>
+      <span><%=tag %></span>     
+   <% end %>
+</p>
+<% end %>
+
+<% if @article.publicationStatus %>
+<p>
+  <strong>Publication status:</strong>
+  <%= @article.publicationStatus.first %>
+</p>
+<% end %>
+
+<% if @article.reviewStatus %>
+<p>
+  <strong>reviewStatus:</strong>
+  <%= @article.reviewStatus.first %>
+</p>
+<% end %>
+

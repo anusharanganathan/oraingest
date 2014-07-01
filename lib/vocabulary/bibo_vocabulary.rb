@@ -21,5 +21,7 @@ class BIBO < RDF::Vocabulary("http://purl.org/ontology/bibo/")
   property :issue
   property :Series
   property :status
-  property :ThesisDegree 
+  property :DocumentStatus
+  property :Document
+  property :Periodical
 end

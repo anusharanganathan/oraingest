@@ -51,7 +51,7 @@ class RightsStatement
     }
   map_predicates do |map|
     map.rightsStatement(:to => "value", :in => RDFS)
-    map.rightsType(:to => "type", :in => RDF)
+    map.rightsType(:to => "type", :in => RDF::DC)
   end
 
   def persisted?
@@ -80,7 +80,7 @@ class RightsActivity
     end
     }
   map_predicates do |map|
-    map.activityType(:to => "type", :in => RDF)
+    map.activityType(:to => "type", :in => RDF::DC)
     map.activityUsed(:to => "used", :in => PROV)
     map.activityGenerated(:to => "generated", :in => PROV)
   end

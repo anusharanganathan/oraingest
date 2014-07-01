@@ -1,18 +1,32 @@
 #require 'active_support/concern'
 require 'rdf'
 require 'vocabulary/ora_vocabulary'
+require 'vocabulary/prov_vocabulary'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :hasPart, :relation
+  attr_accessor :hasPart, :relation, :qualifiedRelation
 
   map_predicates do |map|
     # For internal relations
     map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
     # For external relations
-    map.relationship(:to =>"relation", :in => RDF::DC, class_name:"ExternalRelations")
+    map.relation(:to => "wasInfluencedBy", :in => PROV)
+    map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
   end
-  accepts_nested_attributes_for :hasPart, :relation
+  accepts_nested_attributes_for :hasPart, :qualifiedRelation
+
+  def setRelation
+    # Not setting the values in relation
+    self.relation = []
+    self.qualifiedRelation.each do |qr|
+      if !qr.entity.empty?
+         qr.entity.each do |qre|
+           self.relation.push(qre.id)
+         end
+      end
+    end
+  end
 
   def persisted?
     rdf_subject.kind_of? RDF::URI
@@ -68,7 +82,6 @@ class InternalRelations
   attr_accessor :description, :type, :format, :embargoStatus, :embargoStart, :embargoEnd, :embargoReason, :embargoRelease
 
   map_predicates do |map|
-    #-- identifier --
     map.identifier(:in => RDF::DC)
     #-- description --
     map.description(:in => RDF::DC)
@@ -98,19 +111,40 @@ class InternalRelations
 
 end
 
+class ExternalRelationsQualified
+  include ActiveFedora::RdfObject
+  attr_accessor :relation, :entity
+
+  rdf_type rdf_type PROV.Influence
+  map_predicates do |map|
+    #-- qualifying entity --
+    map.entity(:to => "entity", :in => PROV, class_name:"ExternalRelations")
+    #-- relation --
+    map.relation(:to=>"relation", :in => RDF::DC)
+  end
+  accepts_nested_attributes_for :entity
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+end
+
 class ExternalRelations
   include ActiveFedora::RdfObject
-  attr_accessor :title, :description, :type, :citation
+  attr_accessor :identifier, :title, :description, :type, :citation
 
   map_predicates do |map|
-    #-- identifier --
-    map.identifier(:to=>"identifier", :in => RDF::DC)
     #-- title --
-    map.title(:to=>"title", :in => RDF::DC)
+    map.title(:in => RDF::DC)
     #-- description --
-    map.description(:to=>"description", :in => RDF::DC)
+    map.description(:in => RDF::DC)
     #-- type --
-    map.type(:to=>"type", :in => RDF::DC)
+    map.type(:in => RDF::DC)
     #-- citation --
     map.citation(:to => "bibliographicCitation", :in => RDF::DC)
   end
@@ -124,4 +158,3 @@ class ExternalRelations
   end
 
 end
-

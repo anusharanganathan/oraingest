@@ -302,11 +302,11 @@ class ArticlesController < ApplicationController
     @article.hasPart = nil
     select = {}
     for ds in contents
-      dsid = ds[:url].split("/")[-1]
+      dsid = ds['url'].split("/")[-1]
       hp.each do |k, h|
         if h[:identifier] == dsid
           select = h
-          select['id'] = "info:fedora/#{@article.id}/datastreams/#{ds[:url]}"
+          select['id'] = "info:fedora/#{@article.id}/datastreams/#{dsid}"
         end
       end
       select.each do |k, v| 
@@ -325,19 +325,35 @@ class ArticlesController < ApplicationController
     end 
 
     #remove_blank_assertions for external relations and build
-    er = article_params[:relationship]
-    @article.relationship = nil
-    er.each do |r|
-      if r[:identifier].empty?
-         er.delete(r)
+    qr = article_params[:qualifiedRelation]
+    @article.qualifiedRelation = nil
+    @article.relation = []
+    puts "qr as I got it "
+    puts qr
+    qr.each_with_index do |rel, rel_index|
+      rel.each do |k, v|
+        qr[rel_index][k] = nil if v.empty?
+      end
+      puts rel
+      tmp = rel.except(:relation)
+      qr[rel_index][:entity] = tmp
+    end
+    puts "qr after manipulation"
+    puts qr
+    qr.each_with_index do |rel, rel_index|
+      if !rel[:relation].nil? and !rel[:entity].empty?
+        rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [@article.id, rel_index]
+        @article.qualifiedRelation.build(rel)
+        @article.qualifiedRelation[rel_index].entity = nil
+        rel[:entity][:type] = PROV.Entity
+        @article.qualifiedRelation[rel_index].entity.build(rel[:entity])
+        puts rel[:entity]
+        @article.relation.push(qr[rel_index][:entity]['id'])
       end
     end
-    er.each do |r|
-      r.each do |k, v| 
-        r[k] = nil if v.empty?
-      end
-      r['id'] = r[:identifier]
-      @article.relationship.build(r)
+    #@article.relationsMetadata.setRelation
+    if @article.relation.empty?
+      @article.relation = nil
     end
 
     #remove_blank_assertions for funding activity and build
@@ -353,8 +369,7 @@ class ArticlesController < ApplicationController
             f[k] = nil if v.empty?
           end
         end
-      end
-      
+      end  
       id0 = "info:fedora/%s#fundingActivity" % @article.id
       vals = {'id' => id0, :wasAssociatedWith=> []}
       (0..fp[0][:funder].length-1).each do |n|
@@ -404,8 +419,7 @@ class ArticlesController < ApplicationController
             c[k] = nil if v.empty?
           end
         end
-      end
-      
+      end  
       id0 = "info:fedora/%s#creationActivity" % @article.id
       vals = {'id' => id0, :wasAssociatedWith=> [], :type => PROV.Activity}
       (0..cp[0][:creator].length-1).each do |n|
@@ -414,6 +428,7 @@ class ArticlesController < ApplicationController
       end
       @article.creation.build(vals)
       affiliationCount = 0
+      @article.creation[0].creator = nil
       cp[0][:creator].each_with_index do |c1, c1_index|
         b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
         b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
@@ -432,6 +447,88 @@ class ArticlesController < ApplicationController
           end
         end
       end
+    end
+
+    #remove_blank_assertions for publication activity and build
+    p = article_params[:publication]
+    @article.publication = nil
+    if !p.empty?
+      p[0].each do |k, v|
+        p[0][k] = nil if v.empty?
+      end
+      id0 = "info:fedora/%s#publicationActivity" % @article.id
+      p[0]['id'] = id0
+      p[0][:type] = PROV.Activity
+      if !p[0][:publisher][0][:name].empty?
+        p[0][:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
+      end
+      @article.publication.build(p[0])
+      @article.publication[0].hasDocument = nil
+      isEmpty = true
+      if !p[0][:hasDocument].empty?
+        tmp = p[0][:hasDocument][0]
+        if (tmp.except(:journal).nil? or tmp.except(:journal).empty?) and (tmp[:journal][0].except(:periodical).nil? or tmp[:journal][0].except(:periodical).empty? ) and (tmp[:journal][0][:periodical][0].nil or tmp[:journal][0][:periodical][0].empty?)
+          puts "It is empty --------------------"
+        else
+          puts "It is not empty -------------------"
+        end
+        #isEmpty = true
+        #p[0][:hasDocument][0].each do |k, v|
+        #  p[0][:hasDocument][0][k] = nil if v.empty?
+        #  if k == 'journal'
+        #    p[0][:hasDocument][0][k][0].each do |k1, v1|
+        #      p[0][:hasDocument][0][k][0][k1] = nil if v1.empty?
+        #      if k1 == 'periodical' and !v1[0][:title].empty?
+        #        isEmpty = false
+        #      elsif !v1.nil? and !v1.empty?
+        #        isEmpty = false 
+        #      end
+        #    end
+        #  elsif !v.nil? and !v.empty?
+        #    isEmpty = false
+        #  end
+        #end
+        if !isEmpty
+          p[0][:hasDocument][0]['id'] = "info:fedora/%s#publicationDocument" % @article.id
+          @article.publication[0].hasDocument.build(p[0][:hasDocument][0])
+          @article.publication[0].hasDocument[0].journal = nil
+          hasInfo = false
+          if !p[0][:hasDocument][0][:journal].empty?
+            p[0][:hasDocument][0][:journal][0].each do |k, v|
+              p[0][:hasDocument][0][:journal][0][k] = nil if v.empty?
+              if !p[0][:hasDocument][0][:journal][0][k].nil? and k != 'periodical'
+                hasInfo = true
+              end
+            end
+            
+            if hasInfo
+              p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
+              @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
+              @article.publication[0].hasDocument[0].journal[0].periodical = nil
+              p[0][:hasDocument][0][:journal][0][:periodical][0].each do |k, v|
+                p[0][:hasDocument][0][:journal][0][:periodical][0][k] = nil if v.empty?
+              end
+              if !p[0][:hasDocument][0][:journal][0][:periodical].empty? and !p[0][:hasDocument][0][:journal][0][:periodical][0][:title].nil?
+                p[0][:hasDocument][0][:journal][0][:periodical][0]['id'] = "info:fedora/%s#publicationPeriodical" % @article.id
+                @article.publication[0].hasDocument[0].journal[0].periodical.build(p[0][:hasDocument][0][:journal][0][:periodical][0])
+              end
+            end
+          end
+        end
+      end
+      @article.publication[0].publisher = nil
+      if !p[0][:publisher].empty?
+        p[0][:publisher][0].each do |k, v|
+          p[0][:publisher][0][k] = nil if v.empty?
+        end
+        if !p[0][:publisher][0][:name].nil?
+          p[0][:publisher][0]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
+          p[0][:publisher][0][:type] = PROV.Association
+          p[0][:publisher][0][:agent] = "info:fedora/%s#publisher" % @article.id
+          p[0][:publisher][0][:role] = RDF::DC.publisher
+          @article.publication[0].publisher.build(p[0][:publisher][0])
+        end
+      end  
     end
 
     respond_to do |format|

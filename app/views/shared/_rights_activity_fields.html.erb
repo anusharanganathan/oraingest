@@ -7,7 +7,7 @@
 <div id="rightsActivity">
   <%= f.fields_for :license do |l| %>
     <div class="field">
-      <%= l.label :licenseLabel, "License" %><br>
+      <%= l.label :licenseLabel, "License" %>
       <% if !@article.license[0].nil? %>
         <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses, :selected=>@article.license[0].licenseLabel.first) %>
       <% else %>
@@ -15,7 +15,7 @@
       <% end %>
     </div>
     <div class="field">
-      <%= l.label :licenseStatement, "License statement" %><br>
+      <%= l.label :licenseStatement, "License statement" %>
       <% if !@article.license[0].nil? %>
         <%= l.text_area :licenseStatement, :value=>@article.license[0].licenseStatement.first %>
       <% else %>
@@ -24,18 +24,18 @@
     </div>
   <% end %>
   <div class="field">
-    <%= f.label :dateCopyrighted, "Copyright date" %><br>
+    <%= f.label :dateCopyrighted, "Copyright date" %>
     <%= f.date_field :dateCopyrighted, :value=>@article.dateCopyrighted.first %>
   </div>
   <div class="field">
-    <%= f.label :rightsHolderGroup, "Who owns the copyright?" %><br>
+    <%= f.label :rightsHolderGroup, "Who owns the copyright?" %>
     <%= f.select :rightsHolderGroup, options_for_select(Sufia.config.rights_holder_group, :selected=>@article.rightsHolderGroup.first) %>
   </div>
   <div class="field">
   <% @article.rightsHolder.each_with_index do |r, r_index| %>
     <% if r_index.to_s == "0" %>
       <div class="controls" id="additional_rightsHolder_clone">
-        <%= label_tag "article[rightsHolder][]", "Rights holder" %><br>
+        <%= label_tag "article[rightsHolder][]", "Rights holder" %>
         <%= text_field_tag "article[rightsHolder][]", r %>
         <button class="adder btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">+<span class="accessible-hidden">add another rights holder</span></button>
         &nbsp;
@@ -43,7 +43,7 @@
       </div>
     <% else %>
       <div class="controls">
-        <%= label_tag "article[rightsHolder][]", "Rights holder" %><br>
+        <%= label_tag "article[rightsHolder][]", "Rights holder" %>
         <%= text_field_tag "article[rightsHolder][]", r %>
         <button class="remover btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">-<span class="accessible-hidden">add another rights holder</span></button>
       </div>
@@ -53,7 +53,7 @@
   </div>
   <%= f.fields_for :rights do |r| %>
     <div class="field">
-      <%= r.label :rightsStatement, "Rights statement (from publisher)" %><br>
+      <%= r.label :rightsStatement, "Rights statement (from publisher)" %>
       <% if !@article.rights[0].nil? %>
       <%= r.text_area :rightsStatement, :value=>@article.rights[0].rightsStatement.first%>
       <% else %>

@@ -1,32 +1,35 @@
-<div id="relationship" class="control-group">
-  <% if @article.relationship.empty? %>
-    <% @article.relationship.build %>
+<div id="qualifiedRelation" class="control-group">
+  <% if @article.qualifiedRelation.empty? %>
+    <% @article.qualifiedRelation.build %>
   <% end %>
-  <% @article.relationship.each_with_index do |r, r_index| %>
+  <% @article.qualifiedRelation.each_with_index do |r, r_index| %>
     <% if r_index.to_s == "0" %>
       <div class="controls" id="additional_relationship_clone">
         <fieldset>
         <legend>Related item</legend>
-        <%= label_tag "article[relationship][][identifier]", "What's the url" %>
-        <%= text_field_tag "article[relationship][][identifier]", r.identifier.first %>
-        <%= label_tag "article[relationship][][title]", "Title" %><br>
-        <%= text_field_tag "article[relationship][][title]", r.title.first %>
-        <%= label_tag "article[relationship][][description]", "Description" %><br>
-        <%= text_field_tag "article[relationship][][description]", r.description.first %>
-        <%= label_tag "article[relationship][][citation]", "Citation text" %><br>
-        <%= text_field_tag "article[relationship][][citation]", r.citation.first %>
-        <%= label_tag "article[relationship][][type]", "Type of relationship" %><br>
-        <strong>Related item</strong>
-        <% if !r.type.nil? %>
-          <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types, :selected=>r.type.first) %>
-        <% else %>
-          <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types) %>
+        <% if r.entity.empty? %>
+          <% r.entity.build %>
         <% end %>
-        <% if @article.title.nil? or @article.title.empty? %>
+        <%= label_tag 'article[qualifiedRelation][][id]', "URL of the related item" %>
+        <%= text_field_tag 'article[qualifiedRelation][][id]', r.entity[0].id %>
+        <%= label_tag "article[qualifiedRelation][][title]", "Title" %>
+        <%= text_field_tag "article[qualifiedRelation][][title]", r.entity[0].title.first %>
+        <%= label_tag "article[qualifiedRelation][][description]", "Description" %>
+        <%= text_field_tag "article[qualifiedRelation][][description]", r.entity[0].description.first %>
+        <%= label_tag "article[qualifiedRelation][][citation]", "Citation text" %>
+        <%= text_field_tag "article[qualifiedRelation][][citation]", r.entity[0].citation.first %>
+        <%= label_tag "article[qualifiedRelation][][relation]", "Type of relationship" %>
+        <% if @article.title.empty? %>
           <strong>this article</strong>
         <% else %>
           <strong><%= @article.title.first %></strong>
         <% end %>
+        <% if !r.relation.nil? %>
+          <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first) %>
+        <% else %>
+          <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types) %>
+        <% end %>
+        <strong>Related item</strong>
         <button class="adder btn" name="additional_relationship" id="additional_relationship_submit">+<span class="accessible-hidden">add another relation</span></button>
         &nbsp;
         <%= help_icon(:relationship) %>
@@ -36,26 +39,26 @@
       <div class="controls">
         <fieldset>
         <legend>Related item</legend>
-        <%= label_tag "article[relationship][][identifier]", "What's the url" %><br>
-        <%= text_field_tag "article[relationship][][identifier]", r.identifier.first %>
-        <%= label_tag "article[relationship][][title]", "Title" %><br>
-        <%= text_field_tag "article[relationship][][title]", r.title.first %>
-        <%= label_tag "article[relationship][][description]", "Description" %><br>
-        <%= text_field_tag "article[relationship][][description]", r.description.first %>
-        <%= label_tag "article[relationship][][citation]", "Citation text" %><br>
-        <%= text_field_tag "article[relationship][][citation]", r.citation.first %>
-        <%= label_tag "article[relationship][][type]", "Type of relationship" %><br>
-        <strong>related item</strong>
-        <% if !r.type.nil? %>
-          <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types, :selected=>r.type.first) %>
-        <% else %>
-          <%= select_tag "article[relationship][][type]", options_for_select(Sufia.config.relationship_types) %>
-        <% end %>
-        <% if @article.title.nil? %>
-          <strong>this article %></strong>
+        <%= label_tag 'article[qualifiedRelation][][entity][][id]', "URL of the related item" %>
+        <%= text_field_tag 'article[qualifiedRelation][][id]', r.entity[0].id %>
+        <%= label_tag "article[qualifiedRelation][][title]", "Title" %>
+        <%= text_field_tag "article[qualifiedRelation][][title]", r.entity[0].title.first %>
+        <%= label_tag "article[qualifiedRelation][][description]", "Description" %>
+        <%= text_field_tag "article[qualifiedRelation][][description]", r.entity[0].description.first %>
+        <%= label_tag "article[qualifiedRelation][][citation]", "Citation text" %>
+        <%= text_field_tag "article[qualifiedRelation][][citation]", r.entity[0].citation.first %>
+        <%= label_tag "article[qualifiedRelation][][relation]", "Type of relationship" %>
+        <% if @article.title.empty? %>
+          <strong>this article</strong>
         <% else %>
           <strong><%= @article.title.first %></strong>
         <% end %>
+        <% if !r.relation.nil? %>
+          <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first) %>
+        <% else %>
+          <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types) %>
+        <% end %>
+        <strong>Related item</strong>
         <button class="remover btn" name="additional_relationship" id="additional_relationship_submit">-<span class="accessible-hidden">add another relation</span></button> 
         </fieldset>
       </div>
