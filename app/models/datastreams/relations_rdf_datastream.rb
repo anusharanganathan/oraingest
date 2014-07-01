@@ -5,27 +5,28 @@ require 'vocabulary/prov_vocabulary'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :hasPart, :relation, :qualifiedRelation
+  attr_accessor :hasPart, :influence, :qualifiedRelation
 
   map_predicates do |map|
     # For internal relations
     map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
     # For external relations
-    map.relation(:to => "wasInfluencedBy", :in => PROV)
+    map.influence(:to => "wasInfluencedBy", :in => PROV)
     map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
   end
   accepts_nested_attributes_for :hasPart, :qualifiedRelation
 
-  def setRelation
-    # Not setting the values in relation
-    self.relation = []
+  def getInfluences
+    # Not Working
+    influence = []
     self.qualifiedRelation.each do |qr|
       if !qr.entity.empty?
          qr.entity.each do |qre|
-           self.relation.push(qre.id)
+           influence.push(qre.rdf_subject.to_s)
          end
       end
     end
+    influence
   end
 
   def persisted?

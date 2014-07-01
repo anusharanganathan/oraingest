@@ -39,6 +39,9 @@
       <div class="controls">
         <fieldset>
         <legend>Related item</legend>
+        <% if r.entity.empty? %>
+          <% r.entity.build %>
+        <% end %>
         <%= label_tag 'article[qualifiedRelation][][entity][][id]', "URL of the related item" %>
         <%= text_field_tag 'article[qualifiedRelation][][id]', r.entity[0].id %>
         <%= label_tag "article[qualifiedRelation][][title]", "Title" %>

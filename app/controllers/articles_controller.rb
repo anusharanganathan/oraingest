@@ -327,34 +327,27 @@ class ArticlesController < ApplicationController
     #remove_blank_assertions for external relations and build
     qr = article_params[:qualifiedRelation]
     @article.qualifiedRelation = nil
-    @article.relation = []
-    puts "qr as I got it "
-    puts qr
+    influences = []
+    @article.influence = nil
     qr.each_with_index do |rel, rel_index|
       rel.each do |k, v|
         qr[rel_index][k] = nil if v.empty?
       end
-      puts rel
       tmp = rel.except(:relation)
       qr[rel_index][:entity] = tmp
     end
-    puts "qr after manipulation"
-    puts qr
     qr.each_with_index do |rel, rel_index|
       if !rel[:relation].nil? and !rel[:entity].empty?
+        influences.push(rel[:entity]['id'])
         rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [@article.id, rel_index]
         @article.qualifiedRelation.build(rel)
         @article.qualifiedRelation[rel_index].entity = nil
         rel[:entity][:type] = PROV.Entity
         @article.qualifiedRelation[rel_index].entity.build(rel[:entity])
-        puts rel[:entity]
-        @article.relation.push(qr[rel_index][:entity]['id'])
       end
     end
-    #@article.relationsMetadata.setRelation
-    if @article.relation.empty?
-      @article.relation = nil
-    end
+    #influences = @article.relationsMetadata.getInfluences
+    @article.influence = influences
 
     #remove_blank_assertions for funding activity and build
     fp = article_params[:funding]
@@ -464,54 +457,24 @@ class ArticlesController < ApplicationController
       end
       @article.publication.build(p[0])
       @article.publication[0].hasDocument = nil
-      isEmpty = true
       if !p[0][:hasDocument].empty?
-        tmp = p[0][:hasDocument][0]
-        if (tmp.except(:journal).nil? or tmp.except(:journal).empty?) and (tmp[:journal][0].except(:periodical).nil? or tmp[:journal][0].except(:periodical).empty? ) and (tmp[:journal][0][:periodical][0].nil or tmp[:journal][0][:periodical][0].empty?)
-          puts "It is empty --------------------"
-        else
-          puts "It is not empty -------------------"
-        end
-        #isEmpty = true
-        #p[0][:hasDocument][0].each do |k, v|
-        #  p[0][:hasDocument][0][k] = nil if v.empty?
-        #  if k == 'journal'
-        #    p[0][:hasDocument][0][k][0].each do |k1, v1|
-        #      p[0][:hasDocument][0][k][0][k1] = nil if v1.empty?
-        #      if k1 == 'periodical' and !v1[0][:title].empty?
-        #        isEmpty = false
-        #      elsif !v1.nil? and !v1.empty?
-        #        isEmpty = false 
-        #      end
-        #    end
-        #  elsif !v.nil? and !v.empty?
-        #    isEmpty = false
-        #  end
-        #end
-        if !isEmpty
+        if (p[0]["hasDocument"][0].except("journal").any? {|k,v| !v.nil? && !v.empty?} or \
+            p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
+            p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
           p[0][:hasDocument][0]['id'] = "info:fedora/%s#publicationDocument" % @article.id
           @article.publication[0].hasDocument.build(p[0][:hasDocument][0])
           @article.publication[0].hasDocument[0].journal = nil
-          hasInfo = false
-          if !p[0][:hasDocument][0][:journal].empty?
-            p[0][:hasDocument][0][:journal][0].each do |k, v|
-              p[0][:hasDocument][0][:journal][0][k] = nil if v.empty?
-              if !p[0][:hasDocument][0][:journal][0][k].nil? and k != 'periodical'
-                hasInfo = true
-              end
+          if (p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
+             p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
+             p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
+            @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
+            @article.publication[0].hasDocument[0].journal[0].periodical = nil
+            p[0][:hasDocument][0][:journal][0][:periodical][0].each do |k, v|
+              p[0][:hasDocument][0][:journal][0][:periodical][0][k] = nil if v.empty?
             end
-            
-            if hasInfo
-              p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
-              @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
-              @article.publication[0].hasDocument[0].journal[0].periodical = nil
-              p[0][:hasDocument][0][:journal][0][:periodical][0].each do |k, v|
-                p[0][:hasDocument][0][:journal][0][:periodical][0][k] = nil if v.empty?
-              end
-              if !p[0][:hasDocument][0][:journal][0][:periodical].empty? and !p[0][:hasDocument][0][:journal][0][:periodical][0][:title].nil?
-                p[0][:hasDocument][0][:journal][0][:periodical][0]['id'] = "info:fedora/%s#publicationPeriodical" % @article.id
-                @article.publication[0].hasDocument[0].journal[0].periodical.build(p[0][:hasDocument][0][:journal][0][:periodical][0])
-              end
+            if p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?}
+              p[0][:hasDocument][0][:journal][0][:periodical][0]['id'] = "info:fedora/%s#publicationPeriodical" % @article.id
+              @article.publication[0].hasDocument[0].journal[0].periodical.build(p[0][:hasDocument][0][:journal][0][:periodical][0])
             end
           end
         end
