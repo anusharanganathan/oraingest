@@ -9,8 +9,14 @@
       <div class="controls" id="additional_funding_clone">
         <fieldset>
         <legend>Funding information</legend>
+        <% if f.agent.empty? %>
+          <% f.agent.build %>
+        <% end %>
+        <% if f.awards.empty? %>
+          <% f.awards.build %>
+        <% end %>
         <%= label_tag "article[funding][][funder][][name]", "Name of funder" %>
-        <%= text_field_tag "article[funding][][funder][][name]", f.name.first %>
+        <%= text_field_tag "article[funding][][funder][][name]", f.agent[0].name.first %>
         <%= label_tag "article[funding][][funder][][funds]", "Whom are they funding" %><br>
         <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
         <% if !f.funds.empty? %>
@@ -18,15 +24,14 @@
         <% else %>
           <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types) %>
         <% end %>
-        <% if f.awards.empty? %>
-          <% f.awards.build %>
-        <% end %>
         <% f.awards.each do |f3| %>
           <%= label_tag "article[funding][][funder][][awards][][grantNumber]", "Grant number" %>
           <%= text_field_tag "article[funding][][funder][][awards][][grantNumber]", f3.grantNumber.first %>
         <% end %>
+        <%= label_tag "article[funding][][funder][][annotation]", "Funder acknowledgment details?" %>
+        <%= text_field_tag "article[funding][][funder][][annotation]", f.annotation.first %>
         <%= label_tag "article[funding][][funder][][sameAs]", "Link to funder object" %>
-        <%= text_field_tag "article[funding][][funder][][sameAs]", f.sameAs.first %>
+        <%= text_field_tag "article[funding][][funder][][sameAs]", f.agent[0].sameAs.first %>
         <button class="adder btn" name="additional_funding" id="additional_funding_submit">+<span class="accessible-hidden">add another funding</span></button>
         &nbsp;
         <%= help_icon(:funding) %>
@@ -36,8 +41,14 @@
       <div class="controls">
         <fieldset>
         <legend>Funding information</legend>
+        <% if f.agent.empty? %>
+          <% f.agent.build %>
+        <% end %>
+        <% if f.awards.empty? %>
+          <% f.awards.build %>
+        <% end %>
         <%= label_tag "article[funding][][funder][][name]", "Name of funder" %>
-        <%= text_field_tag "article[funding][][funder][][name]", f.name.first %>
+        <%= text_field_tag "article[funding][][funder][][name]", f.agent[0].name.first %>
         <%= label_tag "article[funding][][funder][][funds]", "Whom are they funding" %><br>
         <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
         <% if !f.funds.empty? %>
@@ -45,15 +56,14 @@
         <% else %>
           <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types) %>
         <% end %>
-        <% if f.awards.empty? %>
-          <% f.awards.build %>
-        <% end %>
         <% f.awards.each do |f3| %>
           <%= label_tag "article[funding][][funder][][awards][][grantNumber]", "Grant number" %>
           <%= text_field_tag "article[funding][][funder][][awards][][grantNumber]", f3.grantNumber.first %>
         <% end %>
+        <%= label_tag "article[funding][][funder][][annotation]", "Funder acknowledgment details?" %>
+        <%= text_field_tag "article[funding][][funder][][annotation]", f.annotation.first %>
         <%= label_tag "article[funding][][funder][][sameAs]", "Link to funder object" %>
-        <%= text_field_tag "article[funding][][funder][][sameAs]", f.sameAs.first %>
+        <%= text_field_tag "article[funding][][funder][][sameAs]", f.agent[0].sameAs.first %>
         <button class="remover btn" name="additional_funding" id="additional_funding_submit">-<span class="accessible-hidden">add another funding</span></button>
         </fieldset>
       </div>

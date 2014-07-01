@@ -14,4 +14,5 @@ class ORA < RDF::Vocabulary("http://vocab.ox.ac.uk/ora#")
   property :examiner
   property :hadCreationActivity
   property :hadPublicationActivity
+  property :annotation
 end

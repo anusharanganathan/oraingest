@@ -12,7 +12,7 @@ class BIBO < RDF::Vocabulary("http://purl.org/ontology/bibo/")
   property :pages
   property :pageStart
   property :pageEnd
-  property :note
+  property :Note
   property :uri
   property :number
   property :Journal
@@ -24,4 +24,5 @@ class BIBO < RDF::Vocabulary("http://purl.org/ontology/bibo/")
   property :DocumentStatus
   property :Document
   property :Periodical
+  property :annotates
 end

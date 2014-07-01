@@ -372,10 +372,9 @@ class ArticlesController < ApplicationController
       @article.funding.build(vals)
       awardCount = 0
       fp[0][:funder].each_with_index do |f1, f1_index|
-        b1 = "info:fedora/%s#funder%d" % [@article.id, f1_index]
+        agent = { 'id' => "info:fedora/%s#funder%d" % [@article.id, f1_index], :name => f1[:name], :sameAs => f1[:sameAs], :type => FRAPO.FundingAgency }
         b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
         f1['id'] = b2
-        f1[:agent] = b1
         f1[:role] = FRAPO.FundingAgency
         #TODO: Need to be more smart about these Ids. These assumptions are wrong
         if f1[:funds] == "Author"
@@ -386,6 +385,8 @@ class ArticlesController < ApplicationController
           funds = "info:fedora/#{params[:pid]}#project1"
         end
         @article.funding[0].funder.build(f1)
+        @article.funding[0].funder[f1_index].agent = nil
+        @article.funding[0].funder[f1_index].agent.build(agent)
         @article.funding[0].funder[f1_index].awards = nil
         if f1[:awards]
           f1[:awards].each do |aw|

@@ -2,10 +2,10 @@
   <% if !@article.funding.empty? %>
     <p><strong>Funding Information:</strong>
     <% @article.funding[0].funder.each_with_index do |f, f_index| %>
-      <% if f.name and f.sameAs %>
-        <span><%=link_to f.name.first, f.sameAs.first %></span>
-      <% elsif f.name %>
-        <span><%= f.name.first %></span>
+      <% if f.agent[0].name and f.agent[0].sameAs %>
+        <span><%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></span>
+      <% elsif f.agent[0].name %>
+        <span><%= f.agent[0].name.first %></span>
       <% end %>
       <% if f.funds %>
         <span>funds <%= f.funds.first %></span>
@@ -16,6 +16,9 @@
           <%= f3.grantNumber.first %>
         <% end %>
         ) </span>
+      <% end %>
+      <% if f.annotation %>
+        <span>Acknowledgement note <%= f.annotation.first %></span>
       <% end %>
       <br/>
     <% end %>
