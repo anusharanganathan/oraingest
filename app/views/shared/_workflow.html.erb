@@ -13,22 +13,31 @@
         <% end %>
       
         <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" %>
-          <h3>History - <small>what's happened so far</small></h3>
-          This Article has never been submitted for review.
+          <% buttonText = 'Submit for Review' %>
           <input type="hidden" name="article[workflows_attributes][identifier]" value="MediatedSubmission" />
           <input type="hidden" name="article[workflows_attributes][entries_attributes][status]" value="Submitted" />
           <input type="hidden" name="article[workflows_attributes][entries_attributes][date]" value="<%= Time.now.to_s %>" />
           <input type="hidden" name="article[workflows_attributes][entires_attributes][creator]" value="<%= current_user.user_key %>" />
-          <div class="controls">
+          <div class="fields">
+            <%= label_tag "article[workflows_attributes][entries_attributes][description]", "Comment", :class=>"control-label" %>
+            <%= text_area_tag "article[workflows_attributes][entries_attributes][description]" %> 
+          </div>
+          
+        <% elsif @article.workflows.first.current_status == "Referred" %>
+          <% buttonText = 'Submit for Review' %>
+          <input type="hidden" name="article[workflows_attributes][entries_attributes][status]" value="Submitted" />
+          <input type="hidden" name="article[workflows_attributes][entries_attributes][date]" value="<%= Time.now.to_s %>" />
+          <input type="hidden" name="article[workflows_attributes][entires_attributes][creator]" value="<%= current_user.user_key %>" />
+          <div class="fields">
             <%= label_tag "article[workflows_attributes][entries_attributes][description]", "Comment", :class=>"control-label" %>
             <%= text_area_tag "article[workflows_attributes][entries_attributes][description]" %> 
           </div>
           
         <% else %>
-          
+          <% buttonText = 'Update workflow' %>
           <h3>Change Status</h3>
           <%# @article.workflows.each_with_index do |wf, wf_index| %>
-            <div class="controls">
+            <div class="fields">
               <%= label_tag "article[workflows_attributes][entries_attributes][status]", "Status", :class=>"control-label" %>
       
               <%= select_tag "article[workflows_attributes][entries_attributes][status]", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], wf.current_status), :class=>'span20 select_perm' %>   
@@ -36,7 +45,7 @@
               <input type="hidden" name="article[workflows_attributes][entries_attributes][creator]" value="<%= current_user.user_key %>" />
             
             </div>
-            <div class="controls">
+            <div class="fields">
               <%= label_tag "article[workflows_attributes][entries_attributes][reviewer_id]", "Reviewer", :class=>"control-label" %>
               <% if wf.current_reviewer.nil? %>
                 <%= text_field_tag "article[workflows_attributes][entries_attributes][reviewer_id]", wf.current_reviewer %>
@@ -44,7 +53,7 @@
                 <%= text_field_tag "article[workflows_attributes][entries_attributes][reviewer_id]", wf.current_reviewer.user_key %>
               <% end %>
             </div>
-            <div class="controls">
+            <div class="fields">
               <%= label_tag "article[workflows_attributes][entries_attributes][description]", "Comment", :class=>"control-label" %>
               <%= text_area_tag "article[workflows_attributes][entries_attributes][description]" %> 
             </div>
@@ -54,15 +63,11 @@
     </div><!-- /.row -->
   </div><!-- /.well -->
 
-    <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" %>
-     <div class="row form-actions" id="workflow_submit">
-      <%= button_tag '<i class="icon-save"></i> Submit for Review'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      </div>
-    <% else %>
-      <%= render partial: "shared/workflow_show", :locals => { :wf => wf } %>
-      <div class="row form-actions" id="workflow_submit">
-        <%= button_tag '<i class="icon-save"></i> Update Workflow'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      </div>
-    <% end %>
+  <%= render partial: "shared/workflow_show", as: :article, :locals => { :wf => wf } %>
+
+  <div class="row form-actions" id="workflow_submit">
+    <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+    <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+  </div>
 
 <% end %>

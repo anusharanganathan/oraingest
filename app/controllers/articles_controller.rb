@@ -39,6 +39,7 @@ class ArticlesController < ApplicationController
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]
   before_filter :has_access?, :except => [:show]
+  #before_filter :has_workflow_access?, :except => [:show]
   # This applies appropriate access controls to all solr queries
   ArticlesController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
@@ -1066,6 +1067,14 @@ class ArticlesController < ApplicationController
 
   def has_access?
     true
+  end
+
+  def has_workflow_access?
+    if can? :review, Article 
+      true
+    elsif @article.workflows.empty? || @article.workflows.first.current_status == "Draft" || @article.workflows.first.current_status == "Referred" 
+      true
+    end
   end
 
   def json_error(error, name=nil, additional_arguments={})

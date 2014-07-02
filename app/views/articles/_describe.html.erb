@@ -1,25 +1,25 @@
     <div class="field">
-      <%= f.label :title %><br>
+      <%= f.label :title %>
       <%= f.text_field :title, :value=>@article.title.first, :required=>true %>
     </div>
     <div class="field">
-      <%= f.label :subtitle %><br>
+      <%= f.label :subtitle %>
       <%= f.text_field :subtitle, :value=>@article.subtitle.first %>
     </div>
     <div class="field">
-      <%= f.label :abstract %><br>
+      <%= f.label :abstract %>
       <%= f.text_area :abstract, :value=>@article.abstract.first %>
     </div>
     <div class="field">
-      <%= f.label :medium %><br>
+      <%= f.label :medium %>
       <%= f.text_field :medium, :value=>@article.medium.first %>
     </div>
     <div class="field">
-      <%= f.label :publicationStatus %><br>
+      <%= f.label :publicationStatus %>
       <%= f.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>@article.publicationStatus.first) %>
     </div>
     <div class="field">
-      <%= f.label :reviewStatus %><br>
+      <%= f.label :reviewStatus %>
       <%= f.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>@article.reviewStatus.first) %>
     </div>
     <div class="control-group">

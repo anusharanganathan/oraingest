@@ -4,19 +4,19 @@
   <% end %>
   <%= f.fields_for :language do |l| %>
     <div class="field">
-      <%= l.label :languageLabel, "Language" %><br>
+      <%= l.label :languageLabel, "Language", :class=>"control-label" %>
       <%= l.text_field :languageLabel, :value=>@article.language[0].languageLabel.first %>
     </div>
     <div class="field">
-      <%= l.label :languageCode, "Language code" %><br>
+      <%= l.label :languageCode, "Language code", :class=>"control-label" %>
       <%= l.text_field :languageCode, :value=>@article.language[0].languageCode.first %>
     </div>
     <div class="field">
-      <%= l.label :languageAuthority, "Language authority" %><br>
+      <%= l.label :languageAuthority, "Language authority", :class=>"control-label" %>
       <%= l.text_field :languageAuthority, :value=>@article.language[0].languageAuthority.first %>
     </div>
     <div class="field">
-      <%= l.label :languageScheme, "Language Scheme" %><br>
+      <%= l.label :languageScheme, "Language Scheme", :class=>"control-label" %>
       <%= l.text_field :languageScheme, :value=>@article.language[0].languageScheme.first %>
     </div>
   <% end %>

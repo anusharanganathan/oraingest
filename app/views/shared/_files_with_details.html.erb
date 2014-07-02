@@ -13,7 +13,7 @@
       <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
       <span class="label label-warning"><%= link_to 'Delete', "#", method: :delete, data: { confirm: 'Are you sure?' } %></span>
     </legend>
-    <div>
+    <div class="field">
       <% dsid = file['url'].split("/")[-1] %>
       <% select = nil %>
       <% if !@article.hasPart.empty? %>
@@ -24,15 +24,15 @@
         <% end %>
       <% end %>
       <%= hidden_field_tag "article[hasPart][#{n}][identifier]", dsid %>
-      <%= label_tag "article[hasPart][#{n}][type]", "Type of file" %>
+      <%= label_tag "article[hasPart][#{n}][type]", "Type of file", :class=>"control-label" %>
       <% if !select.nil? and !select.type.empty? %>
         <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types, :selected=>select.type.first) %>
       <% else %>
         <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types) %>
       <% end %>
     </div>
-    <div>
-      <%= label_tag "article[hasPart][#{n}][description]", "Description of file"%>
+    <div class="field">
+      <%= label_tag "article[hasPart][#{n}][description]", "Description of file", :class=>"control-label" %>
       <% if !select.nil? and !select.description.empty? %>
         <%= text_field_tag "article[hasPart][#{n}][description]", select.description.first %>
       <% else %>
@@ -40,7 +40,7 @@
       <% end %> 
     </div>
     <div>
-      <%= label_tag "article[hasPart][#{n}][embargoStatus]", "Visibility of document"%>
+      <%= label_tag "article[hasPart][#{n}][embargoStatus]", "Visibility of document", :class=>"control-label" %>
       <% Sufia.config.embargo_options.each do |e| %>
         <% thisOne = false %>
         <% if !select.nil? and select.embargoStatus.first == e %>
@@ -50,7 +50,7 @@
       <% end %>
     </div>
     <div>
-      <%= label_tag "article[hasPart][#{n}][embargoStart]", "Embargo start date"%>
+      <%= label_tag "article[hasPart][#{n}][embargoStart]", "Embargo start date", :class=>"control-label" %>
       <% if !select.nil? and !select.embargoStart.empty? %>
         <%= text_field_tag "article[hasPart][#{n}][embargoStart]", select.embargoStart.first %>
       <% else %>
@@ -58,7 +58,7 @@
       <% end %>
     </div>
     <div>
-      <%= label_tag "article[hasPart][#{n}][embargoEnd]", "Embargo end date"%>
+      <%= label_tag "article[hasPart][#{n}][embargoEnd]", "Embargo end date", :class=>"control-label" %>
       <% if !select.nil? and !select.embargoEnd.empty? %>
         <%= text_field_tag "article[hasPart][#{n}][embargoEnd]", select.embargoEnd.first %>
       <% else %>
@@ -66,7 +66,7 @@
       <% end %>
     </div>
     <div>
-      <%= label_tag "article[hasPart][#{n}][embargoReason]", "Reason for embargo"%>
+      <%= label_tag "article[hasPart][#{n}][embargoReason]", "Reason for embargo", :class=>"control-label" %>
       <% if !select.nil? and !select.embargoReason.empty? %>
         <%= text_field_tag "article[hasPart][#{n}][embargoReason]", select.embargoReason.first %>
       <% else %>
@@ -74,7 +74,7 @@
       <% end %>
     </div>
     <div>
-      <%= label_tag "article[hasPart][#{n}][embargoRelease]", "Embargo release method"%>
+      <%= label_tag "article[hasPart][#{n}][embargoRelease]", "Embargo release method", :class=>"control-label" %>
       <% if !select.nil? and !select.embargoRelease.empty? %>
         <%= select_tag "article[hasPart][#{n}][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods, :selected=>select.embargoRelease.first) %>
       <% else %>

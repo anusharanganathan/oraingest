@@ -5,11 +5,11 @@
   <% @article.subject.each_with_index do |s, s_index| %>
     <% if s_index.to_s == "0" %>
       <div class="controls" id="additional_subject_clone">
-        <%= label_tag "article[subject][][subjectLabel]", "Subject" %><br>
+        <%= label_tag "article[subject][][subjectLabel]", "Subject", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectLabel]", s.subjectLabel.first %>
-        <%= label_tag "article[subject][][subjectAuthority]", "Subject authority" %><br>
+        <%= label_tag "article[subject][][subjectAuthority]", "Subject authority", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectAuthority]", s.subjectAuthority.first %>
-        <%= label_tag "article[subject][][subjectScheme]", "Subject Scheme" %><br>
+        <%= label_tag "article[subject][][subjectScheme]", "Subject Scheme", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectScheme]", s.subjectScheme.first %>
         <button class="adder btn" name="additional_subject" id="additional_subject_submit">+<span class="accessible-hidden">add another subject</span></button>
         &nbsp;
@@ -17,11 +17,11 @@
       </div>
     <% else %>
       <div class="controls">
-        <%= label_tag "article[subject][][subjectLabel]", "Subject" %><br>
+        <%= label_tag "article[subject][][subjectLabel]", "Subject", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectLabel]", s.subjectLabel.first %>
-        <%= label_tag "article[subject][][subjectAuthority]", "Subject authority" %><br>
+        <%= label_tag "article[subject][][subjectAuthority]", "Subject authority", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectAuthority]", s.subjectAuthority.first %>
-        <%= label_tag "article[subject][][subjectScheme]", "Subject Scheme" %><br>
+        <%= label_tag "article[subject][][subjectScheme]", "Subject Scheme", :class=>"control-label" %>
         <%= text_field_tag "article[subject][][subjectScheme]", s.subjectScheme.first %>
         <button class="remover btn" name="additional_subject" id="additional_subject_submit">-<span class="accessible-hidden">add another subject</span></button> 
       </div>

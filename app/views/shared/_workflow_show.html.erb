@@ -1,35 +1,46 @@
-<div class="row">
-  <div class="control-group">
-    <h3>History - <small>what's happened so far</small></h3>
-    <table class="table table-bordered">
-      <tr>
-        <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th><th>Comment</th>
-      </tr>
-      <% wf.entries.each do |entry| %>
-        <tr>
-          <td><%= format_date(entry.date.first) %></td>
-          <td><%= entry.creator.first %></td>
-          <td><%= entry.status.first %></td>
-          <td><%= entry.reviewer_id.first %></td>
-          <td><%= entry.description.first %></td>
-        </tr>
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <% unless @article.workflows.first.nil? %>
+        <% wf = @article.workflows.first %>
       <% end %>
-    </table>
-    <% if false %>
-      <!-- Hiding this as I am not sure we need seperate comments? -->
-      <h3>Comments</h3>
-      <table class="table table-bordered">
-        <tr>
-          <th>Date</th><th>Comment Author</th><th>Comment</th>
-        </tr>
-        <% wf.comments.each do |comment| %>
+
+      <h3>History - <small>what's happened so far</small></h3>
+      <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" %>
+        This Article has never been submitted for review.
+
+      <% else %>
+        <table class="table table-bordered">
           <tr>
-            <td><%= format_date(comment.date.first) %></td>
-            <td><%= comment.creator.first %></td>
-            <td><%= comment.description.first %></td>
+            <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th><th>Comment</th>
           </tr>
+          <% wf.entries.each do |entry| %>
+            <tr>
+              <td><%= format_date(entry.date.first) %></td>
+              <td><%= entry.creator.first %></td>
+              <td><%= entry.status.first %></td>
+              <td><%= entry.reviewer_id.first %></td>
+              <td><%= entry.description.first %></td>
+            </tr>
+          <% end %>
+        </table>
+        <% if false %>
+          <!-- Hiding this as I am not sure we need seperate comments? -->
+          <h3>Comments</h3>
+          <table class="table table-bordered">
+            <tr>
+              <th>Date</th><th>Comment Author</th><th>Comment</th>
+            </tr>
+            <% wf.comments.each do |comment| %>
+              <tr>
+                <td><%= format_date(comment.date.first) %></td>
+                <td><%= comment.creator.first %></td>
+                <td><%= comment.description.first %></td>
+              </tr>
+            <% end %>
+          </table>
         <% end %>
-      </table>
-    <% end %>
-  </div><!-- /.control-group -->
-</div><!-- /.row -->
+      <% end %>
+    </div><!-- /.control-group -->
+  </div><!-- /.row -->
+</div>
