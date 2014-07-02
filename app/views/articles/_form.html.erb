@@ -27,9 +27,12 @@
     <%= f.submit "Save rights and access" %>
   </div>
 </div>
-
 <% if false %>
   <%= render partial: "permission_form", as: :article %>
 <% end %>
 
 <% end %>
+
+<div class="tab-pane" id="workflow_display">
+  <%= render partial: 'shared/workflow' %>
+</div>

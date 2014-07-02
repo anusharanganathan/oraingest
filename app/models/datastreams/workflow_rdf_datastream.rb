@@ -118,6 +118,7 @@ class WorkflowEntry
     map.status(in: OxfordWorkflow)
     map.reviewer_id(in: OxfordWorkflow)
     map.creator(in: RDF::DC)
+    map.description(in: RDF::DC)
   end
   
   # Returns the User matching the reviewer id on the entry

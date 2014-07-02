@@ -97,7 +97,11 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:article)
-      add_metadata(article_params)
+      if params[:article].has_key?(:workflows_attributes)
+        add_workflow(article_params)
+      else
+        add_metadata(article_params)
+      end
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -113,7 +117,11 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
-      add_metadata(article_params)
+      if params[:article].has_key?(:workflows_attributes)
+        add_workflow(article_params)
+      else
+        add_metadata(article_params)
+      end
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -214,6 +222,28 @@ class ArticlesController < ApplicationController
   rescue ActiveFedora::RecordInvalid => af
     flash[:error] = af.message
     json_error "Error creating generic file: #{af.message}"
+  end
+
+  def add_workflow(article_params)
+    article_params[:workflows_attributes] = [article_params[:workflows_attributes]]
+    if article_params[:workflows_attributes][0].has_key?(:entries_attributes)
+      article_params[:workflows_attributes][0][:entries_attributes] = [article_params[:workflows_attributes][0][:entries_attributes]]
+    end
+    if article_params[:workflows_attributes][0].has_key?(:comments_attributes)
+      article_params[:workflows_attributes][0][:comments_attributes] = [article_params[:workflows_attributes][0][:comments_attributes]]
+    end
+    @article.attributes = article_params
+
+    respond_to do |format|
+      if @article.save
+        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
+
   end
 
   def add_metadata(article_params)
