@@ -7,8 +7,9 @@ class Ability
     alias_action :apply, :to => :update
     
     if @user.reviewer?
-      can :review, GenericFile    # grant permission to review submissions
+      can :review, :all # grant permission to review submissions
     end
 
   end
 end
+
