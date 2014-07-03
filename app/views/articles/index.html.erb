@@ -4,19 +4,32 @@
 <% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
 <% display_thumbs = true %>
 <% display_access = false %>
-<%= render :partial => '/flash_msg' %>
 
 <a href="<%= new_article_path %>"><button type="button" style="font-size:1.1em;margin:15px;"><h3>Add an article</h3></button></a>
 <div>
-  <% if @articles.blank? %>
+  <% if @articles.blank? && @submitted_articles.blank? %>
       <h3>  <%= msg %> </h3>
   <% else %>
-    <div id="recent_docs">
-      <table class="table table-bordered table-striped">
-        <% @articles.each do |article| %>
-          <%= render :partial => "recent_article", as: :article, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :article => article} %>
-        <% end %>
-      </table>
+    <% if !@articles.blank? %>
+      <h3>Articles being worked on</h3>
+      <div id="recent_docs">
+        <table class="table table-bordered table-striped">
+          <% @articles.each do |article| %>
+            <%= render :partial => "draft_article", as: :article, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :article => article} %>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+    <% if !@submitted_articles.blank? %>
+      <h3>Articles submitted</h3>
+      <div id="recent_docs">
+        <table class="table table-bordered table-striped">
+          <% @submitted_articles.each do |article| %>
+            <%= render :partial => "recent_article", as: :article, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :article => article} %>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
   <% end %>
 </div>
 

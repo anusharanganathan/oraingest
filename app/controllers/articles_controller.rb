@@ -37,7 +37,6 @@ class ArticlesController < ApplicationController
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]
-  #before_filter :has_access?, :except => [:show]
   before_filter :has_access?
   # This applies appropriate access controls to all solr queries
   ArticlesController.solr_search_params_logic += [:add_access_controls_to_solr_params]
@@ -45,7 +44,6 @@ class ArticlesController < ApplicationController
   ArticlesController.solr_search_params_logic += [:exclude_unwanted_models]
 
   skip_before_filter :default_html_head
-
 
   # Catch permission errors
   rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
@@ -64,12 +62,9 @@ class ArticlesController < ApplicationController
 
   def index
     #@articles = Article.all
-    #Grab the recent public documents
-    #recent
-    #@articles = @recent_documents
-    #grab my recent docs
-    recent_me
-    @articles = @recent_user_documents
+    #Grab users recent documents
+    recent_me_not_draft
+    recent_me_draft
   end
 
   def show
@@ -166,6 +161,20 @@ class ArticlesController < ApplicationController
   def recent_me
     if user_signed_in?
       (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
+                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
+    end
+  end
+
+  def recent_me_draft
+    if user_signed_in?
+      (_, @articles) = get_search_results(:q =>filter_mine_draft,
+                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
+    end
+  end
+
+  def recent_me_not_draft
+    if user_signed_in?
+      (_, @submitted_articles) = get_search_results(:q =>filter_mine_not_draft,
                                         :sort=>sort_field, :rows=>50, :fields=>"*:*")
     end
   end
@@ -1058,12 +1067,25 @@ class ArticlesController < ApplicationController
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 
+  def workflow_status
+  #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+    Solrizer.solr_name('all_workflow_statuses', :stored_searchable, type: :symbol)
+  end
+
   def filter_not_mine 
     "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
   end
 
   def filter_mine
     "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
+  end
+
+  def filter_mine_draft
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft"
+  end
+
+  def filter_mine_not_draft
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft"
   end
 
   def sort_field
