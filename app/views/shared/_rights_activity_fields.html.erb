@@ -1,64 +1,74 @@
-<% if @article.license.empty? %>
-  <% @article.license.build %>
-<% end %>
-<% if @article.rights.empty? %>
-  <% @article.rights.build %>
-<% end %>
-<div id="rightsActivity">
-  <%= f.fields_for :license do |l| %>
-    <div class="field">
-      <%= l.label :licenseLabel, "License", :class=>"control-label" %>
-      <% if !@article.license[0].nil? %>
-        <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses, :selected=>@article.license[0].licenseLabel.first) %>
-      <% else %>
-        <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses) %>
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+
+      <% if @article.license.empty? %>
+        <% @article.license.build %>
       <% end %>
-    </div>
-    <div class="field">
-      <%= l.label :licenseStatement, "License statement", :class=>"control-label" %>
-      <% if !@article.license[0].nil? %>
-        <%= l.text_area :licenseStatement, :value=>@article.license[0].licenseStatement.first %>
-      <% else %>
-        <%= l.text_area :licenseStatement, :value=>"" %>
+      <% if @article.rights.empty? %>
+        <% @article.rights.build %>
       <% end %>
-    </div>
-  <% end %>
-  <div class="field">
-    <%= f.label :dateCopyrighted, "Copyright date", :class=>"control-label" %>
-    <%= f.date_field :dateCopyrighted, :value=>@article.dateCopyrighted.first %>
-  </div>
-  <div class="field">
-    <%= f.label :rightsHolderGroup, "Who owns the copyright?", :class=>"control-label" %>
-    <%= f.select :rightsHolderGroup, options_for_select(Sufia.config.rights_holder_group, :selected=>@article.rightsHolderGroup.first) %>
-  </div>
-  <div class="field">
-  <% @article.rightsHolder.each_with_index do |r, r_index| %>
-    <% if r_index.to_s == "0" %>
-      <div class="controls" id="additional_rightsHolder_clone">
-        <%= label_tag "article[rightsHolder][]", "Rights holder", :class=>"control-label" %>
-        <%= text_field_tag "article[rightsHolder][]", r %>
-        <button class="adder btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">+<span class="accessible-hidden">add another rights holder</span></button>
-        &nbsp;
-        <%= help_icon(:rightsHolder) %>
+      <div id="rightsActivity">
+        <%= f.fields_for :license do |l| %>
+          <div class="field">
+            <%= l.label :licenseLabel, "License", :class=>"control-label" %>
+            <% if !@article.license[0].nil? %>
+              <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses, :selected=>@article.license[0].licenseLabel.first) %>
+            <% else %>
+              <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses) %>
+            <% end %>
+          </div>
+          <div class="field">
+            <%= l.label :licenseStatement, "License statement", :class=>"control-label" %>
+            <% if !@article.license[0].nil? %>
+              <%= l.text_area :licenseStatement, :value=>@article.license[0].licenseStatement.first %>
+            <% else %>
+              <%= l.text_area :licenseStatement, :value=>"" %>
+            <% end %>
+          </div>
+        <% end %>
+        <div class="field">
+          <%= f.label :dateCopyrighted, "Copyright date", :class=>"control-label" %>
+          <%= f.date_field :dateCopyrighted, :value=>@article.dateCopyrighted.first %>
+        </div>
+        <div class="field">
+          <%= f.label :rightsHolderGroup, "Who owns the copyright?", :class=>"control-label" %>
+          <%= f.select :rightsHolderGroup, options_for_select(Sufia.config.rights_holder_group, :selected=>@article.rightsHolderGroup.first) %>
+        </div>
+        <div class="field">
+        <% @article.rightsHolder.each_with_index do |r, r_index| %>
+          <% if r_index.to_s == "0" %>
+            <div class="controls" id="additional_rightsHolder_clone">
+              <%= label_tag "article[rightsHolder][]", "Rights holder", :class=>"control-label" %>
+              <%= text_field_tag "article[rightsHolder][]", r %>
+              <button class="adder btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">+<span class="accessible-hidden">add another rights holder</span></button>
+              &nbsp;
+              <%= help_icon(:rightsHolder) %>
+            </div>
+          <% else %>
+            <div class="controls">
+              <%= label_tag "article[rightsHolder][]", "Rights holder", :class=>"control-label" %>
+              <%= text_field_tag "article[rightsHolder][]", r %>
+              <button class="remover btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">-<span class="accessible-hidden">add another rights holder</span></button>
+            </div>
+          <% end %>
+        <% end %>
+        <div id="additional_rightsHolder_elements"></div>
+        </div>
+
+    </div><!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->
+
+        <%= f.fields_for :rights do |r| %>
+          <div class="field">
+            <%= r.label :rightsStatement, "Rights statement (from publisher)", :class=>"control-label" %>
+            <% if !@article.rights[0].nil? %>
+            <%= r.text_area :rightsStatement, :value=>@article.rights[0].rightsStatement.first%>
+            <% else %>
+            <%= r.text_area :rightsStatement, :value=>"" %>
+           <% end %>
+          </div>
+        <% end %>
       </div>
-    <% else %>
-      <div class="controls">
-        <%= label_tag "article[rightsHolder][]", "Rights holder", :class=>"control-label" %>
-        <%= text_field_tag "article[rightsHolder][]", r %>
-        <button class="remover btn" name="additional_rightsHolder" id="additional_rightsHolder_submit">-<span class="accessible-hidden">add another rights holder</span></button>
-      </div>
-    <% end %>
-  <% end %>
-  <div id="additional_rightsHolder_elements"></div>
-  </div>
-  <%= f.fields_for :rights do |r| %>
-    <div class="field">
-      <%= r.label :rightsStatement, "Rights statement (from publisher)", :class=>"control-label" %>
-      <% if !@article.rights[0].nil? %>
-      <%= r.text_area :rightsStatement, :value=>@article.rights[0].rightsStatement.first%>
-      <% else %>
-      <%= r.text_area :rightsStatement, :value=>"" %>
-     <% end %>
-    </div>
-  <% end %>
-</div>
+
