@@ -135,7 +135,8 @@ Sufia.config do |config|
       "Content" => "Content",
       "License agreement" => "License agreement",
       "Rights agreement with publisher" => "Rights agreement with publisher",
-      "Personal correspondence to serve as agreement" => "Personal correspondence to serve as agreement"
+      "Personal correspondence to serve as agreement" => "Personal correspondence to serve as agreement",
+      "Publisher's APC or article charge request form" => "Publisher's APC or article charge request form"
     }
  
     config.embargo_release_methods = {
@@ -176,6 +177,24 @@ Sufia.config do |config|
       "Examiner" => ORA.examiner,
       "Contributor" => RDF::DC::contributor
     }
+
+    config.oa_types = {
+      "" => "",
+      "Article available freely on the publisher's website" => "Article available freely on the publisher's website",
+      "Article should be made available freely in ORA" => "Article should be made available freely in ORA",
+      "Article available freely on the subject repository (like pubMed / arXiv)" => "Article available freely on a subject repository (like pubMed / arXiv)",
+      "Article is not available for free and needs a subscription" => "Article is not available for free and needs a subscription",
+      "I don't know" => "I don't know"
+    }
+
+    config.oa_reason = {
+      "" => "",
+      "To publish in an open access journal which requires a charge" => "To publish in an open access journal which requires a charge",
+      "To forgo the embargo period and make my article available as open access immediately" => "To forgo the embargo period and make my article available as open access immediately",
+      "To make a special case for the article to be open access" => "To make a special case for the article to be open access",
+      "To support payment of other article charges" => "To support payment of other article charges"
+    }
+
     # Map hostnames onto Google Analytics tracking IDs
     # config.google_analytics_id = 'UA-99999999-1'
    

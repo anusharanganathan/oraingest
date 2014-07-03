@@ -22,6 +22,7 @@
 
 <div class="tab-pane" id="rights">
   <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
   <%= render partial: 'shared/files_with_details', as: :article, :locals => { :f => f } %>
   <div class="actions">
     <%= f.submit "Save rights and access" %>
