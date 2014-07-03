@@ -27,7 +27,6 @@ require "vocabulary/frapo_vocabulary"
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
-  #before_action :set_article, only: [:show, :destroy]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -39,7 +38,6 @@ class ArticlesController < ApplicationController
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]
   before_filter :has_access?, :except => [:show]
-  #before_filter :has_workflow_access?, :except => [:show]
   # This applies appropriate access controls to all solr queries
   ArticlesController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
@@ -87,6 +85,7 @@ class ArticlesController < ApplicationController
 
   def edit
     authorize! :edit, params[:id]
+    #authorize! :has_workflow_access?, params[:id]
     @pid = params[:id]
     @files = contents
   end
@@ -1074,6 +1073,10 @@ class ArticlesController < ApplicationController
       true
     elsif @article.workflows.empty? || @article.workflows.first.current_status == "Draft" || @article.workflows.first.current_status == "Referred" 
       true
+    else
+      msg = "You do not have sufficient privileges to edit this document. If you would like to make modifications, contact ora."
+      flash[:error] = msg
+      json_error msg
     end
   end
 
