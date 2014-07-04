@@ -1,8 +1,8 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <div id="creation">
-        <% if !@article.creation.empty? %>
+<% if !@article.creation.empty? && !@article.creation[0].creator.empty? %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <div id="creation">
           <% @article.creation[0].creator.each_with_index do |c, c_index| %>
             <div>
             <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
@@ -24,8 +24,9 @@
             <% end %>
             </div>
           <% end %>
-        <% end %>
-      </div><!-- /.creation -->
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+        </div><!-- /.creation -->
+      </div><!-- /.control-group -->
+    </div> <!-- /.row -->
+  </div> <!-- /.well -->
+<% end %>
+

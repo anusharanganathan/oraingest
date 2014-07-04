@@ -1,27 +1,33 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <div id="language">
-      <% if @article.language %>
-      <p>
-        <strong>Language:</strong>
-         <% @article.language.each do |l|%>
-            <% if !l.languageAuthority.empty? and !l.languageLabel.empty? %>
-              <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
-            <% elsif !l.languageLabel.empty? %>
-              <span><%= l.languageLabel.first %></span>
-            <% end %>
-            <% if !l.languageCode.empty? and !l.languageScheme.empty? %>
-              <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
-            <% elsif !l.languageCode.empty? %>
-              <span>(<%= l.languageCode.first %>)</span>
-            <% elsif !l.languageScheme.empty? %>
-              <span>(<%= l.languageScheme.first %>)</span>
-            <% end %>
-         <% end %>
-      </p>
-      <% end %>
-      </div><!-- /language -->
-    </div><!-- /.control-group -->
-  </div><!-- /.row -->
-</div><!-- /.well -->
+<% hasData = false %>
+<% @article.language.each do |l| %>
+  <% if !l.languageLabel.empty? %>
+    <% hasData = true %>
+  <% end %>
+<% end %>
+<% if hasData %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <div id="language">
+          <p><strong>Language:</strong></p>
+          <% @article.language.each do |l|%>
+            <div>
+              <% if !l.languageAuthority.empty? and !l.languageLabel.empty? %>
+                <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
+              <% elsif !l.languageLabel.empty? %>
+                <span><%= l.languageLabel.first %></span>
+              <% end %>
+              <% if !l.languageCode.empty? and !l.languageScheme.empty? %>
+                <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
+              <% elsif !l.languageCode.empty? %>
+                <span>(<%= l.languageCode.first %>)</span>
+              <% elsif !l.languageScheme.empty? %>
+                <span>(<%= l.languageScheme.first %>)</span>
+              <% end %>
+            </div>
+          <% end %>
+        </div><!-- /language -->
+      </div><!-- /.control-group -->
+    </div><!-- /.row -->
+  </div><!-- /.well -->
+<% end %>

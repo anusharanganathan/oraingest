@@ -1,10 +1,11 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <div id="funding">
-        <% if !@article.funding.empty? %>
-          <p><strong>Funding Information:</strong>
+<% if !@article.funding.empty? %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <div id="funding">
+          <p><strong>Funding Information:</strong></p>
           <% @article.funding[0].funder.each_with_index do |f, f_index| %>
+            <div>
             <% if f.agent[0].name and f.agent[0].sameAs %>
               <span><%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></span>
             <% elsif f.agent[0].name %>
@@ -13,22 +14,21 @@
             <% if f.funds %>
               <span>funds <%= f.funds.first %></span>
             <% end %>
-            <% if f.awards %>
-              <span>(Grant number: 
+            <% if !f.awards.empty? && !f.awards[0].grantNumber.empty? && !f.awards[0].grantNumber.first.empty? %>
+              <span>(grant number:
               <% f.awards.each do |f3| %>
                 <%= f3.grantNumber.first %>
               <% end %>
               ) </span>
             <% end %>
-            <% if f.annotation %>
+            <% if !f.annotation.empty? %>
               <span>Acknowledgement note <%= f.annotation.first %></span>
             <% end %>
-            <br/>
+            </div>
           <% end %>
-          </p>
-        <% end %>
-      </div> <!--/funding -->
-    </div> <!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+        </div> <!--/funding -->
+      </div> <!-- /.control-group -->
+    </div> <!-- /.row -->
+  </div> <!-- /.well -->
+<% end %>
 

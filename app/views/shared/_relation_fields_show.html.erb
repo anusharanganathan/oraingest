@@ -1,32 +1,32 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <div id="relation">
-      <% if !@article.qualifiedRelation.empty? %>
-        <strong>Related resources:</strong>
-        <% @article.qualifiedRelation.each do |r|%>
-          <div>
-          <% if !r.entity.empty? %>
-            <% if !r.entity[0].title.empty? %>
-              <span><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></span>
-            <% else %>
-              <span><%=link_to r.entity[0].id %></span>
-            <% end %><br/>
-            <% if !r.relation.empty? %>
-              <span><%= @article.title.first %> <strong><%= r.relation.first %></strong> <%= r.entity[0].rdf_subject.to_s %></span>
-            <% end %>      
-            <% if !r.entity[0].description.empty? %>
-              <span><%= r.entity[0].description.first %></span>
+<% if !@article.qualifiedRelation.empty? %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <div id="relation">
+          <p><strong>Related resources:</strong></p>
+          <% @article.qualifiedRelation.each do |r|%>
+            <div>
+            <% if !r.entity.empty? %>
+              <% if !r.entity[0].title.empty? %>
+                <span><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></span>
+              <% else %>
+                <span><%=link_to r.entity[0].id %></span>
+              <% end %><br/>
+              <% if !r.relation.empty? %>
+                <span><%= @article.title.first %> <strong><%= r.relation.first %></strong> <%= r.entity[0].rdf_subject.to_s %></span>
+              <% end %>      
+              <% if !r.entity[0].description.empty? %>
+                <span><%= r.entity[0].description.first %></span>
+              <% end %>
+              <% if !r.entity[0].citation.empty? %>
+                <span><%= r.entity[0].citation.first %></span>
+              <% end %>
             <% end %>
-            <% if !r.entity[0].citation.empty? %>
-              <span><%= r.entity[0].citation.first %></span>
-            <% end %>
+            <br/><br/></div>
           <% end %>
-          <br/><br/></div>
-        <% end %>
-      <% end %>
-      </div>
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+        </div>
+      </div><!-- /.control-group -->
+    </div> <!-- /.row -->
+  </div> <!-- /.well -->
+<% end %>
 

@@ -1,4 +1,4 @@
-<% if @files %>
+<% if !@files.empty? %>
 <div class="well">
   <div class="row">
     <div class="control-group">
@@ -11,17 +11,17 @@
             <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
             <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
           </legend>
-          <div>
-            <% dsid = file['url'].split("/")[-1] %>
-            <% select = nil %>
-            <% if !@article.hasPart.empty? %>
-              <% @article.hasPart.each do |hp| %>
-                <% if hp.identifier.first == dsid %>
-                  <% select = hp %>
-                <% end %>
+          <% dsid = file['url'].split("/")[-1] %>
+          <% select = nil %>
+          <% if !@article.hasPart.empty? %>
+            <% @article.hasPart.each do |hp| %>
+              <% if hp.identifier.first == dsid %>
+                <% select = hp %>
               <% end %>
             <% end %>
-            <% if !select.nil? %>
+          <% end %>
+          <% if !select.nil? %>
+            <div>
               <% if !select.description.empty? %>
                 <div><%= select.description.first %></div>
               <% end %>
@@ -39,8 +39,8 @@
               <% if !select.embargoRelease.empty? %>
                  <div>Embargo release method: <%= select.embargoRelease.first %></div>
               <% end %>
-             <% end %>
-          </div>
+            </div>
+          <% end %>
         </fieldset>
         <br/>
       <% end %>

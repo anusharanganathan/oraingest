@@ -8,6 +8,8 @@
 <% if !@article.subtitle.empty? %>
   <h2><%= @article.subtitle.first %></h2>
 <% end %>
+
+<br/><%= render partial: "shared/actions_show", as: :article %><br/>
       
 <div class="well">
   <div class="row">

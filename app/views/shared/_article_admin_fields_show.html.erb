@@ -1,3 +1,4 @@
+<% if !@article..oaStatus.empty? || !@article.apcPaid.empty? || !@article.oaReason.empty? || !@article.refException.empty? %>
 <div class="well">
   <div class="row">
     <div class="control-group">
@@ -21,3 +22,4 @@
     </div><!-- /.control-group -->
   </div><!-- /.row -->
 </div>
+<% end %>
