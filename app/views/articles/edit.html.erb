@@ -28,7 +28,5 @@
 </div>
 <br/>
 
-<h3>View: <span class="label label-success"><%= link_to 'Article', @article %></span> 
-<span class="label label-info"><%= link_to 'Recent Articles', articles_path %></span>
-</h3>
+<%= render partial: "shared/actions_edit", as: :article %>
 

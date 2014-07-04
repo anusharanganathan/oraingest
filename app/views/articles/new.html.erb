@@ -26,6 +26,6 @@
   <%= render partial: 'files_form' %>
   <%= render partial: 'form' %>
 </div>
-<br/>
-<h3><span class="label label-info"><%= link_to 'Recent Articles', articles_path %></span></h3>
+
+<br/><%= render partial: "shared/actions_new", as: :article %>
 

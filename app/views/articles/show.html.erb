@@ -13,8 +13,5 @@
 <%= render partial: "shared/article_admin_fields_show", as: :article %>
 <%= render partial: "shared/workflow_show", as: :article %>
 
-<span class="label label-success"><%= link_to 'Edit', edit_article_path(@article) %> </span> &nbsp;
-<span class="label label-warning"><%= link_to 'Delete', @article, method: :delete, data: { confirm: 'Are you sure?' } %> </span> &nbsp;
-<span class="label label-info"><%= link_to 'Recent articles', articles_path %></span>
-
+<%= render partial: "shared/actions_show", as: :article %>
 

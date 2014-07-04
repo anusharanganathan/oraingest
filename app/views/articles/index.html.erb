@@ -5,7 +5,8 @@
 <% display_thumbs = true %>
 <% display_access = false %>
 
-<a href="<%= new_article_path %>"><button type="button" style="font-size:1.1em;margin:15px;"><h3>Add an article</h3></button></a>
+<br/><%= render partial: "shared/actions_list", as: :article %>
+
 <div>
   <% if @articles.blank? && @submitted_articles.blank? %>
       <h3>  <%= msg %> </h3>
