@@ -93,4 +93,6 @@ limitations under the License.
 	<%  end %>
 
   <%= render 'dashboard/results_pagination' %>
-  <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+  <% if false %> 
+    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
+  <% end %>

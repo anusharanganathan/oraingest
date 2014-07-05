@@ -1,23 +1,27 @@
-<% noid = document.noid %>
+<% noid = document.id %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
-  <% gf = GenericFile.load_instance_from_solr(document.id) %>
-  <td width="6%"><%= batch_edit_select(document) %>&nbsp;</td>
-  <td width="1%">
-  <%# This block is for adding/removing the magic wand while batch updates are processing %>
-  <% if gf.processing? %>
-     <i class="icon-magic icon-large <%= 'ss-'+gf.batch.noid%>"/>
-  <% elsif gf.depositor != @user.user_key %>
-     <i class="icon-gift icon-large"/>
+  <% puts '-'*80 %>
+  <%= puts document.keys %>
+  <% if document['active_fedora_model_ssi'] == 'Article' %>
+    <% path = article_path(noid) %>
+    <% edit_path = edit_article_path(noid) %>
+  <% else %>
+    <% path = "" %>
+    <% editPath = "" %>
   <% end %>
+  <td width="1%">
+     <a href="<%= edit_path %>"<i class="icon-edit icon-large"></i></a>
   </td>
   <td width="37%">
     <a href="" title="Click for more details"><i id="expand_<%= noid %>" class="icon-plus icon-large fleft"></i></a>&nbsp;
-    <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document} %>
-    <span class=center><%= link_to document.title_or_label, sufia.edit_generic_file_path(noid), :id => "src_copy_link#{noid}" %> <br /></span>
+    <span class=center><%= link_to document.title_or_label, path, :id => "src_copy_link#{noid}" %> <br /></span>
   </td>
   <td width="5%"><%= format_date(document.submission_workflow_date_submitted) %> </td>
   <td>
     <%= workflow_status_indicator(document) %>
+  </td>
+  <td width="5%">
+    <%= document['active_fedora_model_ssi'] %>
   </td>
   <td width="5%" align="center">
     <%= document.depositor %>
@@ -28,19 +32,13 @@
       <button class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down"></span></button>
       <ul class="dropdown-menu">
        <li>
-         <%= link_to raw('<i class="icon-link over"></i> Single-Use Link to File'), '#', :class => "copypaste itemicon itemcode", :title => "Single-Use Link to File", :id => "copy_link_#{noid}" %>
+         <%= link_to raw('<i class="icon-check"></i> View record'), path, :class=> 'itemicon itemshow', :title => 'View Record'  %>
        </li>
        <li>
-         <%= link_to raw('<i class="icon-pencil"></i> Edit File'), sufia.edit_generic_file_path(noid), :class=> 'itemicon itemedit', :title => 'Edit File'  %>
+         <%= link_to raw('<i class="icon-pencil"></i> Edit record'), edit_path, :class=> 'itemicon itemedit', :title => 'Edit Record'  %>
        </li>
        <li>
-         <%= link_to raw('<i class="icon-download-alt"></i> Download File'), sufia.download_path(noid), :class=> 'itemicon itemdownload', :title => 'Download File', :target => '_new' %>
-       </li>
-       <li>
-         <%= link_to raw('<i class="icon-trash"></i> Delete File'), sufia.generic_file_path(noid), :class=> 'itemicon itemtrash', :title => 'Delete File', :method => :delete, :data => { :confirm => "Deleting a file from #{t('sufia.product_name')} is permanent. Click OK to delete this file from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>
-       </li>
-       <li>
-         <%= display_trophy_link(@user, noid) %>
+         <%= link_to raw('<i class="icon-trash"></i> Delete record'), path, :class=> 'itemicon itemtrash', :title => 'Delete record', :method => :delete, :data => { :confirm => "Deleting a record from #{t('sufia.product_name')} is permanent. Click OK to delete this record from #{t('sufia.product_name')}, or Cancel to cancel this operation"} %>
        </li>
       </ul>
     </div>

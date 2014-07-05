@@ -36,7 +36,8 @@ class ReviewerDashboardController < ApplicationController
   def exclude_unwanted_models solr_parameters, user_parameters
     solr_parameters[:fq] ||= []
     # Only include GenericFile and Collection objects
-    solr_parameters[:fq] << "active_fedora_model_ssi:GenericFile OR active_fedora_model_ssi:Collection"
+    #solr_parameters[:fq] << "active_fedora_model_ssi:GenericFile OR active_fedora_model_ssi:Collection"
+    solr_parameters[:fq] << "active_fedora_model_ssi:Article"
   end
   
   # Limits search results to exclude items whose Workflow status is "Draft" or "Approved"
