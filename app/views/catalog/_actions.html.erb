@@ -1,0 +1,33 @@
+<div class="actions">
+
+ <% if can? :review, :all %>
+   <div class="row">
+     <div class="control-group">
+       <a href="<%= reviewer_dashboard_index_path %>"><button class="btn btn-large"><h2><i class="icon-dashboard icon-large"></i>&nbsp;&nbsp; Review submissions</h2></button></a>
+     </div>
+   </div>
+ <% end %>
+
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <h2><i class="icon-list icon-large"></i>&nbsp;&nbsp; Article</h2><hr/>
+        <a href="<%= new_article_path %>"><button class="btn btn-primary btn-large"><i class="icon-edit"></i>&nbsp; Add an article</button></a>
+        <a href="<%= articles_path %>"><button class="btn btn-inverse btn-large"><i class="icon-list"></i>&nbsp; My recent articles</button></a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <h2><i class="icon-hdd icon-large"></i>&nbsp;&nbsp; Data</h2><hr/>
+        <a href="#"><button class="btn btn-primary btn-large"><i class="icon-cloud-upload"></i>&nbsp; Upload your data</button></a>
+        <a href="#"><button class="btn btn-inverse btn-large"><i class="icon-hdd"></i>&nbsp; All my data</button></a>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
