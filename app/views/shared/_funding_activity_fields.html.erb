@@ -2,78 +2,47 @@
   <div class="row">
     <div class="control-group">
 
-      <div id="funding" class="control-group">
+      <div id="funder" class="control-group">
         <% if @article.funding.empty? %>
           <% @article.funding.build %>
           <% @article.funding[0].funder.build %>
           <% @article.funding[0].funder[0].awards.build %>
         <% end %>
         <% @article.funding[0].funder.each_with_index do |f, f_index| %>
-          <% if f_index.to_s == "0" %>
-            <div class="controls" id="additional_funding_clone">
-              <fieldset>
-              <legend>Funding information</legend>
-              <% if f.agent.empty? %>
-                <% f.agent.build %>
-              <% end %>
-              <% if f.awards.empty? %>
-                <% f.awards.build %>
-              <% end %>
-              <%= label_tag "article[funding][][funder][][name]", "Name of funder", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][name]", f.agent[0].name.first %>
-              <%= label_tag "article[funding][][funder][][funds]", "Whom are they funding", :class=>"control-label" %>
-              <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
-              <% if !f.funds.empty? %>
-                <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types, :selected=>f.funds.first) %>
-              <% else %>
-                <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types) %>
-              <% end %>
-              <% f.awards.each do |f3| %>
-                <%= label_tag "article[funding][][funder][][awards][][grantNumber]", "Grant number", :class=>"control-label" %>
-                <%= text_field_tag "article[funding][][funder][][awards][][grantNumber]", f3.grantNumber.first %>
-              <% end %>
-              <%= label_tag "article[funding][][funder][][annotation]", "Funder acknowledgment details?", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][annotation]", f.annotation.first %>
-              <%= label_tag "article[funding][][funder][][sameAs]", "Link to funder object", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][sameAs]", f.agent[0].sameAs.first %>
-              <button class="adder btn" name="additional_funding" id="additional_funding_submit">+<span class="accessible-hidden">add another funding</span></button>
+          <div class="controls" id="funder_clone_<%=f_index%>">
+            <legend>Funding information</legend>
+            <% if f.agent.empty? %>
+              <% f.agent.build %>
+            <% end %>
+            <% if f.awards.empty? %>
+              <% f.awards.build %>
+            <% end %>
+            <%= label_tag "article[funding][][funder][][name]", "Name of funder", :class=>"control-label" %>
+            <%= text_field_tag "article[funding][][funder][][name]", f.agent[0].name.first, id: "funderName%d"% f_index %>
+            <%= label_tag "article[funding][][funder][][funds]", "Whom are they funding", :class=>"control-label" %>
+            <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
+            <% if !f.funds.empty? %>
+              <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types, :selected=>f.funds.first), id: "funderFunds%d"% f_index %>
+            <% else %>
+              <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types), id: "funderFunds%d"% f_index %>
+            <% end %>
+            <% f.awards.each_with_index do |f3, f3_index| %>
+              <%= label_tag "article[funding][][funder][][awards][][grantNumber]", "Grant number", :class=>"control-label" %>
+              <%= text_field_tag "article[funding][][funder][][awards][][grantNumber]", f3.grantNumber.first, id: "funder%dgrantNumber%d"% [f_index, f3_index] %>
+            <% end %>
+            <%= label_tag "article[funding][][funder][][annotation]", "Funder acknowledgment details?", :class=>"control-label" %>
+            <%= text_field_tag "article[funding][][funder][][annotation]", f.annotation.first, id: "funderAnnotation%d"% f_index %>
+            <%= label_tag "article[funding][][funder][][sameAs]", "Link to funder object", :class=>"control-label" %>
+            <%= text_field_tag "article[funding][][funder][][sameAs]", f.agent[0].sameAs.first, id: "funderSameAs%d"% f_index %>
+            <% if f_index.to_s == "0" %>
+              <button class="adder btn" name="additional_funder" id="funder_button_<%=f_index%>" onclick="addField(this)" type="button">+<span class="accessible-hidden">add another funder</span></button>
               &nbsp;
-              <%= help_icon(:funding) %>
-              </fieldset>
-            </div>
-          <% else %>
-            <div class="controls">
-              <fieldset>
-              <legend>Funding information</legend>
-              <% if f.agent.empty? %>
-                <% f.agent.build %>
-              <% end %>
-              <% if f.awards.empty? %>
-                <% f.awards.build %>
-              <% end %>
-              <%= label_tag "article[funding][][funder][][name]", "Name of funder", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][name]", f.agent[0].name.first %>
-              <%= label_tag "article[funding][][funder][][funds]", "Whom are they funding", :class=>"control-label" %>
-              <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
-              <% if !f.funds.empty? %>
-                <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types, :selected=>f.funds.first) %>
-              <% else %>
-                <%= select_tag "article[funding][][funder][][funds]", options_for_select(funding_types) %>
-              <% end %>
-              <% f.awards.each do |f3| %>
-                <%= label_tag "article[funding][][funder][][awards][][grantNumber]", "Grant number", :class=>"control-label" %>
-                <%= text_field_tag "article[funding][][funder][][awards][][grantNumber]", f3.grantNumber.first %>
-              <% end %>
-              <%= label_tag "article[funding][][funder][][annotation]", "Funder acknowledgment details?", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][annotation]", f.annotation.first %>
-              <%= label_tag "article[funding][][funder][][sameAs]", "Link to funder object", :class=>"control-label" %>
-              <%= text_field_tag "article[funding][][funder][][sameAs]", f.agent[0].sameAs.first %>
-              <button class="remover btn" name="additional_funding" id="additional_funding_submit">-<span class="accessible-hidden">add another funding</span></button>
-              </fieldset>
-            </div>
-          <% end %>
+              <%= help_icon(:funder) %>
+            <% else %>
+              <button class="remover btn" name="additional_funder" id="funder_button_<%c_index%>" onclick="removeField(this)" type="button">-<span class="accessible-hidden">remove funder</span></button>
+            <% end %>
+          </div>
         <% end %>
-        <div id="additional_funding_elements"></div>
       </div>
 
     </div><!-- /.control-group -->
