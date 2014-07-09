@@ -63,6 +63,8 @@ gem "devise-guests", "~> 0.3"
 
 gem "unicode", :platforms => [:mri_18, :mri_19]
 
+gem 'qa'
+
 group :development, :test do
   gem "rspec-rails"
   gem 'jettywrapper', "~> 1.5.0"

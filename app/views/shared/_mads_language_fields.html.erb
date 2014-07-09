@@ -1,32 +1,23 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-
-      <div id="language">
+      <div id="language" class="field">
         <% if @article.language.empty? %>
          <% @article.language.build %>
         <% end %>
         <%= f.fields_for :language do |l| %>
-          <div class="field">
             <%= l.label :languageLabel, "Language", :class=>"control-label" %>
-            <%= l.text_field :languageLabel, :value=>@article.language[0].languageLabel.first %>
-          </div>
-          <div class="field">
-            <%= l.label :languageCode, "Language code", :class=>"control-label" %>
-            <%= l.text_field :languageCode, :value=>@article.language[0].languageCode.first %>
-          </div>
-          <div class="field">
-            <%= l.label :languageAuthority, "Language authority", :class=>"control-label" %>
-            <%= l.text_field :languageAuthority, :value=>@article.language[0].languageAuthority.first %>
-          </div>
-          <div class="field">
-            <%= l.label :languageScheme, "Language Scheme", :class=>"control-label" %>
-            <%= l.text_field :languageScheme, :value=>@article.language[0].languageScheme.first %>
-          </div>
+            <%= l.text_field :languageLabel, :value=>@article.language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel" %>
+            <% if can? :review, :all %>
+              <%= l.label :languageCode, "Language code", :class=>"control-label" %>
+              <%= l.text_field :languageCode, :value=>@article.language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+              <%= l.label :languageAuthority, "Language authority", :class=>"control-label" %>
+              <%= l.text_field :languageAuthority, :value=>@article.language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+              <%= l.label :languageScheme, "Language scheme", :class=>"control-label" %>
+              <%= l.text_field :languageScheme, :value=>@article.language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+            <% else %>
+              <%= l.hidden_field :languageCode, :value=>@article.language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+              <%= l.hidden_field :languageAuthority, :value=>@article.language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+              <%= l.hidden_field :languageScheme, :value=>@article.language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+            <% end %>
+     
         <% end %>
       </div>
-
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
 

@@ -1,4 +1,6 @@
 OraHydra::Application.routes.draw do
+  mount Qa::Engine => '/qa'
+
   root :to => "catalog#index"
 
   Blacklight.add_routes(self)

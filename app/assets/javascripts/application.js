@@ -17,3 +17,8 @@
 //= require blacklight/blacklight
 //= require_tree .
 //= require sufia
+//
+// ORA custom
+//= require autocomplete
+//= require sufia/edit_metadata
+//= require sufia/multiForm
