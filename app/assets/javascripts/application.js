@@ -20,5 +20,5 @@
 //
 // ORA custom
 //= require autocomplete
-//= require sufia/edit_metadata
 //= require sufia/multiForm
+

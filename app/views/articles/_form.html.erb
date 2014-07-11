@@ -1,51 +1,26 @@
-<div class="tab-pane" id="describetab">
+<div class="tab-pane" id="describe">
 <%= form_for(@article) do |f| %>
   <%= hidden_field_tag(:pid, @pid) %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <legend>Descriptive information</legend>
-        <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
-        <%= render partial: "describe", as: :article, :locals => { :f => f } %>
-        <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
-        <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
-        <div class="actions">
-          <%= f.submit "Save article description" %>
-        </div>
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
-</div>
-
-<div class="tab-pane" id="creatorstab">
+  <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
+  <%= render partial: "describe", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
   <%= render partial: 'shared/creation_activity_fields', as: :article, :locals => { :f => f } %>
+  <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
+  <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
   <div class="actions">
-    <%= f.submit "Save creators information" %>
+    <%= f.submit "Save article description" %>
   </div>
 </div>
 
-<div class="tab-pane" id="publicationtab">
+<div class="tab-pane" id="publication">
   <%= render partial: 'shared/publication_activity_fields', as: :article, :locals => { :f => f } %>
   <div class="actions">
     <%= f.submit "Save publication information" %>
   </div>
 </div>
 
-<div class="tab-pane" id="funderstab">
-  <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
-  <div class="actions">
-    <%= f.submit "Save funder information" %>
-  </div>
-</div>
-
-<div class="tab-pane" id="moreinfotab">
-  <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
-  <div class="actions">
-    <%= f.submit "Save information" %>
-  </div>
-</div>
-
-<div class="tab-pane" id="rightstab">
+<div class="tab-pane" id="rights">
   <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
   <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
   <%= render partial: 'shared/files_with_details', as: :article, :locals => { :f => f } %>
@@ -59,6 +34,6 @@
 
 <% end %>
 
-<div class="tab-pane" id="workflowtab">
+<div class="tab-pane" id="workflow_display">
   <%= render partial: 'shared/workflow' %>
 </div>

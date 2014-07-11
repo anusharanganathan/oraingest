@@ -1,7 +1,13 @@
 <h1>Update article</h1>
 
 <%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
-<%= render partial: 'tabs' %>
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#local" data-toggle="tab"><i class="icon-desktop"></i>Upload files</a></li>
+  <li><a href="#describe" data-toggle="tab"><i class="icon-metadata"></i>Describe</a></li>
+  <li><a href="#publication" data-toggle="tab"><i class="icon-metadata"></i>Publication</a></li>
+  <li><a href="#rights" data-toggle="tab"><i class="icon-metadata"></i>Rights & Access</a></li>
+  <li><a href="#workflow_display" data-toggle="tab"><i class="icon-metadata"></i>Workflow</a></li>
+</ul>
 
 <div>
     <% if @article.errors.any? %>

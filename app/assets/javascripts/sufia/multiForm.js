@@ -1,70 +1,73 @@
-function addField(item) {
-  var parentId = item.id.replace("button", "clone");
-  var groupId = item.id.split("_",1)
-  var count = $("#" + groupId + " div").size();
-  var newId = groupId + "_clone_" + count;
-  var cloneElem = $('#'+ parentId).clone();
-  cloneElem.attr('id', newId);
+(function( $ ){
 
-  // change the add button to a remove button
-  var plusbttn = cloneElem.find('#'+item.id);
-  plusbttn.className = "remover btn";
-  plusbttn.attr('id', groupId + "_button_" + count);   
-  plusbttn.attr('onclick', '');
-  plusbttn.html('-<span class="accessible-hidden">remove this '+ item.name.replace("_", " ") +'</span>');
-  plusbttn.on('click',removeFieldthis);
+  $.fn.multiForm = function( options ) {  
 
-  // remove the help tag on subsequent added fields
-  cloneElem.find('.formHelp').remove();
-  cloneElem.find('i').remove();
-  cloneElem.find('.modal-div').remove();
+    // Create some defaults, extending them with any options that were provided
+    var settings = $.extend( { }, options);
 
-  //clear out the value for the element being appended
-  //so the new element has a blank value
-  inputFields = cloneElem.find('input')
-  $.each(inputFields, function(n, tf) {
-    newName = $(tf).attr('id').replace('0', count);
-    $(tf).val("");
-    $(tf).attr('id', newName).attr("required", false);
-  })
-  selectFields = cloneElem.find('select')
-  $.each(selectFields, function(n, tf) {
-    newName = $(tf).attr('id').replace('0', count);
-    $(tf).val("");
-    $(tf).attr('id', newName).attr("required", false);
-  })
+    function addField() {
+      
+      count = $(this).closest('.control-group').find('.controls').size();
+      var cloneId = this.id.replace("submit", "clone");
+      var newId = this.id.replace("submit", "elements");
+      var cloneElem = $('#'+cloneId).clone();
+      // change the add button to a remove button
+      var plusbttn = cloneElem.find('#'+this.id);
+      plusbttn.html('-<span class="accessible-hidden">remove this '+ this.name.replace("_", " ") +'</span>');
+      plusbttn.on('click',removeField);
 
-  // Add the cloned element to the page
-  $("#"+groupId).append(cloneElem);
 
-  //add autocomplete option
-  if (groupId == "subject") {
-    inputId = "subjectLabel"+count;
-    console.log(inputId);
-    $( "#"+inputId ).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
-  } else if (groupId == "language") {
-    inputId = "languageLabel"+count;
-    console.log(inputId);
-    $( "#"+inputId ).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
-  }
+      // remove the help tag on subsequent added fields
+      cloneElem.find('.formHelp').remove();
+      cloneElem.find('i').remove();
+      cloneElem.find('.modal-div').remove();
 
-  // Focus on the cloned element 
-  cloneElem.find('input[type=text]').focus();
-  return false;
+      //clear out the value for the element being appended
+      //so the new element has a blank value
+      // Note: there may be more than one input field. Example:
+      //   creator_name
+      //   creator_role
+      inputFields = cloneElem.find('input')
+      $.each(inputFields, function(n, tf) {
+        newName = $(tf).attr('name').replace('[0]', '['+count+']');
+        $(tf).attr('name', newName).attr("value", "").attr("required", false);
+        $(tf).val("");
+      })
+      cloneElem.attr("autocomplete", "");
 
-}
+      if (settings.afterAdd) {
+        settings.afterAdd(this, cloneElem)
+      }
 
-function removeField(item) {
-  console.log("I am in remove field");
-  // get parent and remove it
-  $(item).parent().remove();
-  return false;
-}
+      $('#'+newId).append(cloneElem);
+       
+      if (this.id.toLowerCase().indexOf("subject") >= 0) {
+        $( cloneElem ).find( 'input.subjectLabel' ).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
+      }
 
-function removeFieldthis() {
-  console.log("I am in remove field");
-  // get parent and remove it
-  $(this).parent().remove();
-  return false;
-}
+      // Focus on the first inout element
+      cloneElem.find('input[type=text]').first().focus();
+      return false;
+    }
+
+    function removeField () {
+      // get parent and remove it
+      $(this).parent().remove();
+      return false;
+    }
+
+    return this.each(function() {        
+
+      // Tooltip plugin code here
+      /*
+       * adds additional metadata elements
+       */
+      $('.adder', this).click(addField);
+
+      $('.remover', this).click(removeField);
+      
+    });
+
+  };
+})( jQuery );  
 

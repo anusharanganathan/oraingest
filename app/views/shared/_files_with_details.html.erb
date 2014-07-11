@@ -1,91 +1,87 @@
 <% if @files %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <legend>Access information</legend>
-        <% if @article.hasPart.empty? %>
-          <% @article.hasPart.build %>
+  <div>
+  <% if @article.hasPart.empty? %>
+    <% @article.hasPart.build %>
+  <% end %>
+  <% @files.each_with_index do |file, n| %>
+  <fieldset>
+    <legend>
+      <% if file['thumbnail_url'] %>
+        <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt="View file" /></span>
+      <% end %>
+      <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
+      <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
+      <span class="label label-warning"><%= link_to 'Delete', "#", method: :delete, data: { confirm: 'Are you sure?' } %></span>
+    </legend>
+    <div class="field">
+      <% dsid = file['url'].split("/")[-1] %>
+      <% select = nil %>
+      <% if !@article.hasPart.empty? %>
+        <% @article.hasPart.each do |hp| %>
+          <% if hp.identifier.first == dsid %>
+            <% select = hp %>
+          <% end %>
         <% end %>
-        <% @files.each_with_index do |file, n| %>
-          <h4>
-            <% if file['thumbnail_url'] %>
-              <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt="View file" /></span>
-            <% end %>
-            <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
-            <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
-            <span class="label label-warning"><%= link_to 'Delete', "#", method: :delete, data: { confirm: 'Are you sure?' } %></span>
-          </h4>
-          <div class="field">
-            <% dsid = file['url'].split("/")[-1] %>
-            <% select = nil %>
-            <% if !@article.hasPart.empty? %>
-              <% @article.hasPart.each do |hp| %>
-                <% if hp.identifier.first == dsid %>
-                  <% select = hp %>
-                <% end %>
-              <% end %>
-            <% end %>
-            <%= hidden_field_tag "article[hasPart][#{n}][identifier]", dsid %>
-            <%= label_tag "article[hasPart][#{n}][type]", "Type of file", :class=>"control-label" %>
-            <% if !select.nil? and !select.type.empty? %>
-              <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types, :selected=>select.type.first) %>
-            <% else %>
-              <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types) %>
-            <% end %>
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][description]", "Description of file", :class=>"control-label" %>
-            <% if !select.nil? and !select.description.empty? %>
-              <%= text_field_tag "article[hasPart][#{n}][description]", select.description.first %>
-            <% else %>
-              <%= text_field_tag "article[hasPart][#{n}][description]" %>
-            <% end %> 
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][embargoStatus]", "Visibility of document", :class=>"control-label" %>
-            <% Sufia.config.embargo_options.each do |e| %>
-              <% thisOne = false %>
-              <% if !select.nil? and select.embargoStatus.first == e %>
-                <% thisOne = true %>
-              <% end %>
-              <span><%= radio_button_tag "article[hasPart][#{n}][embargoStatus]", e, thisOne %><%= e %></span>
-            <% end %>
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][embargoStart]", "Embargo start date", :class=>"control-label" %>
-            <% if !select.nil? and !select.embargoStart.empty? %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoStart]", select.embargoStart.first %>
-            <% else %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoStart]" %>
-            <% end %>
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][embargoEnd]", "Embargo end date", :class=>"control-label" %>
-            <% if !select.nil? and !select.embargoEnd.empty? %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoEnd]", select.embargoEnd.first %>
-            <% else %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoEnd]" %>
-            <% end %>
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][embargoReason]", "Reason for embargo", :class=>"control-label" %>
-            <% if !select.nil? and !select.embargoReason.empty? %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoReason]", select.embargoReason.first %>
-            <% else %>
-              <%= text_field_tag "article[hasPart][#{n}][embargoReason]" %>
-            <% end %>
-          </div>
-          <div class="field">
-            <%= label_tag "article[hasPart][#{n}][embargoRelease]", "Embargo release method", :class=>"control-label" %>
-            <% if !select.nil? and !select.embargoRelease.empty? %>
-              <%= select_tag "article[hasPart][#{n}][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods, :selected=>select.embargoRelease.first) %>
-            <% else %>
-              <%= select_tag "article[hasPart][#{n}][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods) %>
-            <% end %>
-          </div>
+      <% end %>
+      <%= hidden_field_tag "article[hasPart][#{n}][identifier]", dsid %>
+      <%= label_tag "article[hasPart][#{n}][type]", "Type of file", :class=>"control-label" %>
+      <% if !select.nil? and !select.type.empty? %>
+        <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types, :selected=>select.type.first) %>
+      <% else %>
+        <%= select_tag "article[hasPart][#{n}][type]", options_for_select(Sufia.config.attachment_types) %>
+      <% end %>
+    </div>
+    <div class="field">
+      <%= label_tag "article[hasPart][#{n}][description]", "Description of file", :class=>"control-label" %>
+      <% if !select.nil? and !select.description.empty? %>
+        <%= text_field_tag "article[hasPart][#{n}][description]", select.description.first %>
+      <% else %>
+        <%= text_field_tag "article[hasPart][#{n}][description]" %>
+      <% end %> 
+    </div>
+    <div>
+      <%= label_tag "article[hasPart][#{n}][embargoStatus]", "Visibility of document", :class=>"control-label" %>
+      <% Sufia.config.embargo_options.each do |e| %>
+        <% thisOne = false %>
+        <% if !select.nil? and select.embargoStatus.first == e %>
+          <% thisOne = true %>
         <% end %>
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+        <span><%= radio_button_tag "article[hasPart][#{n}][embargoStatus]", e, thisOne %><%= e %></span>
+      <% end %>
+    </div>
+    <div>
+      <%= label_tag "article[hasPart][#{n}][embargoStart]", "Embargo start date", :class=>"control-label" %>
+      <% if !select.nil? and !select.embargoStart.empty? %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoStart]", select.embargoStart.first %>
+      <% else %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoStart]" %>
+      <% end %>
+    </div>
+    <div>
+      <%= label_tag "article[hasPart][#{n}][embargoEnd]", "Embargo end date", :class=>"control-label" %>
+      <% if !select.nil? and !select.embargoEnd.empty? %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoEnd]", select.embargoEnd.first %>
+      <% else %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoEnd]" %>
+      <% end %>
+    </div>
+    <div>
+      <%= label_tag "article[hasPart][#{n}][embargoReason]", "Reason for embargo", :class=>"control-label" %>
+      <% if !select.nil? and !select.embargoReason.empty? %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoReason]", select.embargoReason.first %>
+      <% else %>
+        <%= text_field_tag "article[hasPart][#{n}][embargoReason]" %>
+      <% end %>
+    </div>
+    <div>
+      <%= label_tag "article[hasPart][#{n}][embargoRelease]", "Embargo release method", :class=>"control-label" %>
+      <% if !select.nil? and !select.embargoRelease.empty? %>
+        <%= select_tag "article[hasPart][#{n}][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods, :selected=>select.embargoRelease.first) %>
+      <% else %>
+        <%= select_tag "article[hasPart][#{n}][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods) %>
+      <% end %>
+    </div>
+  </fieldset>
+  <% end %>
+  </div>
 <% end %>
-
