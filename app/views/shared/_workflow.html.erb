@@ -1,11 +1,11 @@
 <%= form_for @article, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
 
   <%= hidden_field_tag('redirect_tab', 'workflow') %>
-  <h2>Workflow Status</h2>
 
   <div class="well">
     <div class="row">
       <div class="control-group">
+        <legend>Workflow Status</legend>
       
         <% unless @article.workflows.first.nil? %>
           <% wf = @article.workflows.first %>

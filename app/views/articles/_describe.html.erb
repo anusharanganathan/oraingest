@@ -1,7 +1,3 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-
       <div class="field">
         <%= f.label :title %>
         <%= f.text_field :title, :value=>@article.title.first, :required=>true %>
@@ -32,25 +28,21 @@
         <%= f.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>@article.reviewStatus.first) %>
       </div>
 
-      <div class="control-group">
+      <div class="control-group" id="keyword">
         <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
-        <div class="controls" id="additional_keyword_clone">
-          <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>@article.keyword.first %>
-          <button class="adder btn" name="additional_keyword" id="additional_keyword_submit">+<span class="accessible-hidden">add another keyword</span></button>
-            &nbsp;
-            <%= help_icon(:keyword) %>
+        <div class="controls" id="keyword_clone_0">
+          <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>@article.keyword.first, id: "keyword0" %>
+          <button class="adder btn" name="additional_keyword" id="keyword_button_0" type="button">+<span class="accessible-hidden">add another keyword</span></button>
+          &nbsp;
+          <%= help_icon(:keyword) %>
         </div>
-
+        <% kcount = 1 %>
         <% for k in @article.keyword.from(1) %>
-          <div class="controls">
-            <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>k %>
-            <button id="additional_keyword_submit" class="remover btn" name="additional_keyword">-<span class="accessible-hidden">add another keyword</span></button>
+          <div class="controls" id="keyword_clone_<%=kcount%>">
+            <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>k, id: "keyword%d"% kcount %>
+            <button class="remover btn" name="additional_keyword" id="keyword_button_<%=kcount%>" type="button">-<span class="accessible-hidden">remove this keyword</span></button>
+            <% kcount += 1 %>
           </div>
         <% end %>
-        <div id="additional_keyword_elements"></div>
       </div>
-
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
 

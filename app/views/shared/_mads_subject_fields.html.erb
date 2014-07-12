@@ -3,7 +3,7 @@
          <% @article.subject.build %>
         <% end %>
         <% @article.subject.each_with_index do |s, s_index| %>
-          <div class="controls" id="additional_subject_clone">
+          <div class="controls" id="subject_clone_<%=s_index%>">
             <%= label_tag "article[subject][][subjectLabel]", "Subject", :class=>"control-label" %>
             <%= text_field_tag "article[subject][][subjectLabel]", s.subjectLabel.first, :class=>"subjectLabel", id: "subjectLabel%d"% s_index %>
             <% if can? :review, :all %>
@@ -16,14 +16,13 @@
               <%= hidden_field_tag "article[subject][][subjectScheme]", s.subjectScheme.first, :class=>"subjectScheme", id: "subjectScheme%d"% s_index %>
             <% end %>
             <% if s_index.to_s == "0" %>
-              <button class="adder btn" name="additional_subject" id="additional_subject_submit" onclick="addField(this)" type="button">+<span class="accessible-hidden">add another subject</span></button>
+              <button class="adder btn" name="additional_subject" id="subject_button_<%=s_index%>" type="button">+<span class="accessible-hidden">add another subject</span></button>
               &nbsp;
               <%= help_icon(:subject) %>
           <% else %>
-              <button class="remover btn" name="additional_subject" id="additional_subject_submit" onclick="removeField(this)" type="button">-<span class="accessible-hidden">remove this subject</span></button>
+              <button class="remover btn" name="additional_subject" id="subject_button_<%=s_index%>" type="button">-<span class="accessible-hidden">remove this subject</span></button>
           <% end %>
           </div>
         <% end %>
-        <div id="additional_subject_elements"></div>
       </div>
 
