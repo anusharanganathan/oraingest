@@ -4,6 +4,7 @@ module Qa::Authorities
   autoload :Base
   autoload :Loc
   autoload :Fast
+  autoload :Cud
   autoload :Local
   autoload :Subauthority, 'qa/authorities/local/subauthority'
   autoload :Mesh
