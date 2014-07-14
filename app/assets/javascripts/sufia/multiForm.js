@@ -56,12 +56,13 @@
     //add autocomplete option
     if (groupId == "subject") {
       inputId = "subjectLabel"+count;
-      console.log(inputId);
       $( "#"+inputId ).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
     } else if (groupId == "language") {
       inputId = "languageLabel"+count;
-      console.log(inputId);
       $( "#"+inputId ).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
+    } else if (groupId == "creator") {
+      inputId = "creatorName"+count;
+      $( "#"+inputId ).autocomplete(autocompletePerson).data("autocomplete")._renderItem = renderPerson;
     }
   
     // Focus on the cloned element 

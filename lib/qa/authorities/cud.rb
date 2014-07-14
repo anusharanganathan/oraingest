@@ -23,7 +23,8 @@ module Qa::Authorities
       search_field = Cud.sub_authority_table[sub_authority]
       query = '%s:%s AND cud\:cas\:oxford_email_text:*'% [search_field, q]
       query = URI.escape(query)
-      return_fields="cud:cas:fullname,cud:cas:oxford_email,cud:cas:sso_username"
+      return_fields="cud:cas:fullname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
+      rows = 10 #This is not working
       query_url =  "http://10.0.0.203/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
       @raw_response = get_json(query_url)
       @response = parse_authority_response(@raw_response)
@@ -135,6 +136,9 @@ module Qa::Authorities
       ans = []
       raw_response['cudSubjects'].each do |doc|
         ans.push(cud_response_to_qa(doc))
+        if ans.length == 10 then
+          break
+        end
       end
       ans
       #raw_responses.select {|response| response[0] == "atom:entry"}.map do |response|
@@ -171,7 +175,23 @@ module Qa::Authorities
       resp = {}
       data['attributes'].each do |field|
         if Cud.fields.has_key?(field["name"])
-          resp[Cud.fields[field["name"]]] = field["value"]
+          if (field["name"] == "cud:cas:current_affiliation")
+            #TODO: Need a better way of getting the affiliation data. CUD data is bad
+            aff = []
+            field["value"].each do |val|
+              if val.length > 2 && val.downcase != 'dars'
+                aff.push(val)
+              end
+            end
+            if !aff.empty?
+              val = aff.max_by(&:length)
+              resp[Cud.fields[field["name"]]] = val
+            else
+              resp[Cud.fields[field["name"]]] = ""
+            end
+          else
+            resp[Cud.fields[field["name"]]] = field["value"]
+          end
         end
       end
       resp

@@ -15,8 +15,9 @@
       <% end %>
       <div class="controls" id="creator_clone_<%=c_index%>">
         <legend>Creator information</legend>
+        <%= check_box_tag "oxfordPerson%d"%c_index, "Yes", false %> This creator is an Oxford person
         <%= label_tag "article[creation][][creator][][name]", "Name of creator", :class=>"control-label" %>
-        <%= text_field_tag "article[creation][][creator][][name]", c.agent[0].name.first, id: "creatorName%d"%c_index %>
+        <%= text_field_tag "article[creation][][creator][][name]", c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
         <%= label_tag "article[creation][][creator][][role]", "Role", :class=>"control-label" %>
         <% if !c.role.nil? %>
           <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first), id: "creatorRole%d"%c_index %>
@@ -24,10 +25,10 @@
           <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types), id: "creatorRole%d"%c_index %>
         <% end %>
         <%= label_tag "article[creation][][creator][][email]", "Email", :class=>"control-label" %>
-        <%= text_field_tag "article[creation][][creator][][email]", c.agent[0].email.first, id: "creatorEmail%d"%c_index  %>
+        <%= text_field_tag "article[creation][][creator][][email]", c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
         <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
           <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation", :class=>"control-label" %>
-          <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index] %>
+          <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
           <%= label_tag "article[creation][][creator][][affiliation][][sameAs]", "Link to affiliation object", :class=>"control-label" %>
           <%= text_field_tag "article[creation][][creator][][affiliation][][sameAs]", c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
         <% end %>
