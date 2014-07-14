@@ -52,6 +52,10 @@
         <%= @article.reviewStatus.first %>
       </p>
       <% end %>
+
+      <%= render partial: "shared/mads_language_fields_show", as: :article %>
+      <%= render partial: "shared/mads_subject_fields_show", as: :article %>
+
     </div><!-- /.control-group -->
   </div> <!-- /.row -->
 </div> <!-- /.well -->

@@ -1,39 +1,101 @@
-<div class="tab-pane" id="describe">
+<div class="tab-pane" id="describetab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
-    <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
-    <%= render partial: "describe", as: :article, :locals => { :f => f } %>
-    <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
-    <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/creation_activity_fields', as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
-    <div class="actions">
-      <%= f.submit "Save article description" %>
-    </div>
-  </div>
-
-  <div class="tab-pane" id="publication">
-    <%= render partial: 'shared/publication_activity_fields', as: :article, :locals => { :f => f } %>
-    <div class="actions">
-      <%= f.submit "Save publication information" %>
-    </div>
-  </div>
-
-  <div class="tab-pane" id="rights">
-    <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
-    <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/files_with_details', as: :article, :locals => { :f => f } %>
-    <div class="actions">
-      <%= f.submit "Save rights and access" %>
-    </div>
-  </div>
-  <% if false %>
-    <%= render partial: "permission_form", as: :article %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
+          <%= render partial: "describe", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
+          <div class="actions">
+            <%= f.submit "Save article description", class: "btn btn-success" %>
+          </div>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
   <% end %>
+</div>
 
-<% end %>
+<div class="tab-pane" id="creatorstab">
+  <%= form_for(@article) do |f| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/creation_activity_fields', as: :article, :locals => { :f => f } %>
+          <%= f.submit "Save creators information", class: "btn btn-success" %>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
 
-<div class="tab-pane" id="workflow_display">
+<div class="tab-pane" id="publicationtab">
+  <%= form_for(@article) do |f| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/publication_activity_fields', as: :article, :locals => { :f => f } %>
+          <div class="actions">
+            <%= f.submit "Save publication information", class: "btn btn-success" %>
+          </div>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="funderstab">
+  <%= form_for(@article) do |f| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
+          <div class="actions">
+            <%= f.submit "Save funder information", class: "btn btn-success" %>
+          </div>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="moreinfotab">
+  <%= form_for(@article) do |f| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
+          <div class="actions">
+            <%= f.submit "Save information", class: "btn btn-success" %>
+          </div>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="rightstab">
+  <%= form_for(@article) do |f| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/files_with_details', as: :article, :locals => { :f => f } %>
+          <% if false %>
+            <!-- Not displaying permissions for now, but is very useful -->
+            <%= render partial: "permission_form", as: :article %>
+          <% end %>
+          <div class="actions">
+            <%= f.submit "Save rights and access", class: "btn btn-success" %>
+          </div>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="workflowtab">
   <%= render partial: 'shared/workflow' %>
 </div>

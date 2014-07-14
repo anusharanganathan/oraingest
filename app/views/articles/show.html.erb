@@ -2,8 +2,6 @@
 
 <h3><span class="label label-<%=@article.relationsMetadata.embargoLevel%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
 <%= render partial: "describe_show", as: :article %>
-<%= render partial: "shared/mads_language_fields_show", as: :article %>
-<%= render partial: "shared/mads_subject_fields_show", as: :article %>
 <%= render partial: "shared/creation_activity_fields_show", as: :article %>
 <%= render partial: "shared/publication_activity_fields_show", as: :article %>
 <%= render partial: "shared/funding_activity_fields_show", as: :article %>

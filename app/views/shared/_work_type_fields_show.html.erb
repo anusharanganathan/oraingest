@@ -1,6 +1,5 @@
 <% if @article.worktype %>
-  <div id="workType">
-    <strong>Type of work:</strong>
+  <div id="workType"><p><strong>Type of work:</strong>
     <% @article.worktype.each do |t|%>
       <% if !t.typeLabel.empty? and !t.typeAuthority.empty? %>
         <span><%=link_to t.typeLabel.first, t.typeAuthority.first.to_s %></span>
@@ -8,6 +7,6 @@
         <span><%= t.typeLabel.first %></span>
       <% end %>
     <% end %>
-  </div>
+  </p></div>
 <% end %>
 
