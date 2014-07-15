@@ -5,11 +5,12 @@ require 'vocabulary/prov_vocabulary'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :hasPart, :influence, :qualifiedRelation
+  attr_accessor :hasPart, :accessRights, :influence, :qualifiedRelation
 
   map_predicates do |map|
     # For internal relations
     map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
+    map.accessRights(:in => RDF::DC, class_name:"EmbargoInfo")
     # For external relations
     map.influence(:to => "wasInfluencedBy", :in => PROV)
     map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
@@ -37,15 +38,18 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     articleVisible = true
     contentVisible = false
     hasContent = false
+    self.accessRights.each do |ar|
+      if ar.embargoStatus.first != 'Visible'
+        articleVisible = false
+      end
+    end
     self.hasPart.each do |hp|
-      if hp.identifier.first == 'descMetadata'
-        if hp.embargoStatus.first != 'Visible'
-          articleVisible = false
-        end
-      elsif hp.identifier.first.start_with?('content')
+      if hp.identifier.first.start_with?('content')
         hasContent = true
-        if hp.embargoStatus.first == 'Visible'
-          contentVisible = true
+        hp.accessRights.each do |ar|
+          if ar.embargoStatus.first == 'Visible'
+            contentVisible = true
+          end
         end
       end
     end
@@ -80,7 +84,7 @@ end
 
 class InternalRelations
   include ActiveFedora::RdfObject
-  attr_accessor :description, :type, :format, :embargoStatus, :embargoStart, :embargoEnd, :embargoReason, :embargoRelease
+  attr_accessor :identifier, :description, :type, :format, :accessRights
 
   map_predicates do |map|
     map.identifier(:in => RDF::DC)
@@ -90,16 +94,8 @@ class InternalRelations
     map.type(:to=>"type", :in => RDF::DC)
     #-- format --
     map.format(:in => RDF::DC)
-    #-- embargoStatus --
-    map.embargoStatus(:in => ORA)
-    #-- embargoStart --
-    map.embargoStart(:in => ORA)
-    #-- embargoEnd --
-    map.embargoEnd(:in => ORA)
-    #-- embargoReason --
-    map.embargoReason(:in => ORA)
-    #-- embargoRelease --
-    map.embargoRelease(:in => ORA)
+    #-- embargo info --
+    map.accessRights(:in => RDF::DC, class_name:"EmbargoInfo")
   end
 
   def persisted?
@@ -137,7 +133,7 @@ end
 
 class ExternalRelations
   include ActiveFedora::RdfObject
-  attr_accessor :identifier, :title, :description, :type, :citation
+  attr_accessor :title, :description, :type, :citation
 
   map_predicates do |map|
     #-- title --
@@ -159,3 +155,31 @@ class ExternalRelations
   end
 
 end
+
+class EmbargoInfo
+  include ActiveFedora::RdfObject
+  attr_accessor :embargoStatus, :embargoStart, :embargoEnd, :embargoReason, :embargoRelease
+
+  map_predicates do |map|
+    #-- embargoStatus --
+    map.embargoStatus(:in => ORA)
+    #-- embargoStart --
+    map.embargoStart(:in => ORA)
+    #-- embargoEnd --
+    map.embargoEnd(:in => ORA)
+    #-- embargoReason --
+    map.embargoReason(:in => ORA)
+    #-- embargoRelease --
+    map.embargoRelease(:in => ORA)
+  end
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+end
+

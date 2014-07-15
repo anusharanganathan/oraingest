@@ -19,6 +19,7 @@
 
 <div class="tab-pane" id="creatorstab">
   <%= form_for(@article) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -32,6 +33,7 @@
 
 <div class="tab-pane" id="publicationtab">
   <%= form_for(@article) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -47,6 +49,7 @@
 
 <div class="tab-pane" id="funderstab">
   <%= form_for(@article) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -62,6 +65,7 @@
 
 <div class="tab-pane" id="moreinfotab">
   <%= form_for(@article) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -77,12 +81,13 @@
 
 <div class="tab-pane" id="rightstab">
   <%= form_for(@article) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
           <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
           <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
-          <%= render partial: 'shared/files_with_details', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/files_and_embargo_fields', as: :article, :locals => { :f => f } %>
           <% if false %>
             <!-- Not displaying permissions for now, but is very useful -->
             <%= render partial: "permission_form", as: :article %>

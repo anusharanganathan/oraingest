@@ -1,0 +1,69 @@
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <legend>Access rights for article</legend>
+      <% if !@article.accessRights.empty? %>
+        <% if !@article.accessRights[0].embargoStatus.empty? %>
+          <div>Embargo status: <%= @article.accessRights[0].embargoStatus.first %></div>
+        <% end %>
+        <% if !@article.accessRights[0].embargoStart.empty? and !@article.accessRights[0].embargoEnd.empty? %>
+          <div>Embargo dates: <%= @article.accessRights[0].embargoStart.first %> to <%= @article.accessRights[0].embargoEnd.first %></div>
+        <% elsif !@article.accessRights[0].embargoEnd.empty? %>
+          <div>Embargo rleease date: <%= @article.accessRights[0].embargoEnd.first %></div>
+        <% end %>  
+        <% if !@article.accessRights[0].embargoReason.empty? %>
+          <div>Embargo reason: <%= @article.accessRights[0].embargoReason.first %></div>
+        <% end %>
+        <% if !@article.accessRights[0].embargoRelease.empty? %>
+           <div>Embargo release method: <%= @article.accessRights[0].embargoRelease.first %></div>
+        <% end %>
+        <br/>
+      <% end %>
+
+      <% if !@files.empty? %>
+        <% @files.each do |file| %>
+          <legend>
+            <% if file['thumbnail_url'] %>
+              <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt="View file" /></span>
+            <% end %>
+            <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
+            <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
+          </legend>
+          <% dsid = file['url'].split("/")[-1] %>
+          <% select = nil %>
+          <% if !@article.hasPart.empty? %>
+            <% @article.hasPart.each do |hp| %>
+              <% if hp.identifier.first == dsid %>
+                <% select = hp %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if !select.nil? %>
+            <div>
+              <% if !select.description.empty? %>
+                <div><%= select.description.first %></div>
+              <% end %>
+              <% if !select.accessRights.empty? %>
+                <% if !select.accessRights[0].embargoStatus.empty? %>
+                  <div>Embargo status: <%= select.accessRights[0].embargoStatus.first %></div>
+                <% end %>
+                <% if !select.accessRights[0].embargoStart.empty? and !select.accessRights[0].embargoEnd.empty? %>
+                  <div>Embargo dates: <%= select.accessRights[0].embargoStart.first %> to <%= select.accessRights[0].embargoEnd.first %></div>
+                <% elsif !select.accessRights[0].embargoEnd.empty? %>
+                  <div>Embargo rleease date: <%= select.accessRights[0].embargoEnd.first %></div>
+                <% end %>  
+                <% if !select.accessRights[0].embargoReason.empty? %>
+                  <div>Embargo reason: <%= select.accessRights[0].embargoReason.first %></div>
+                <% end %>
+                <% if !select.accessRights[0].embargoRelease.empty? %>
+                   <div>Embargo release method: <%= select.accessRights[0].embargoRelease.first %></div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+          <br/>
+        <% end %>
+      <% end %>
+    </div> <!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->

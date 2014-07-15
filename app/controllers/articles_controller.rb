@@ -353,11 +353,32 @@ class ArticlesController < ApplicationController
       @article.rightsActivity.build(rap)
     end
     
+    # Remove blank assertions for article access rights and build
+    if article_params.has_key?(:accessRights)
+      ar = article_params[:accessRights][0]
+      @article.accessRights = nil
+      ar['id'] = "info:fedora/#{@article.id}#accessRights"
+      ar.each do |k, v| 
+        ar[k] = nil if v.empty?
+      end
+      if ar[:embargoStatus] == "Visible"
+        ar[:embargoStart] = nil
+        ar[:embargoEnd] = nil
+        ar[:embargoRelease] = nil
+      elsif ar[:embargoStatus] == "Not visible"
+        ar[:embargoStart] = nil
+        ar[:embargoEnd] = nil
+        ar[:embargoRelease] = nil
+      end
+      @article.accessRights.build(ar)
+    end
+
     # Remove blank assertions for internal relations and build
     if article_params.has_key?(:hasPart)
       hp = article_params[:hasPart]
       @article.hasPart = nil
       select = {}
+      count = 0
       for ds in contents
         dsid = ds['url'].split("/")[-1]
         hp.each do |k, h|
@@ -369,16 +390,22 @@ class ArticlesController < ApplicationController
         select.each do |k, v| 
           select[k] = nil if v.empty?
         end
-        if select[:embargoStatus] == "Visible"
-          select[:embargoStart] = nil
-          select[:embargoEnd] = nil
-          select[:embargoRelease] = nil
-        elsif select[:embargoStatus] == "Not visible"
-          select[:embargoStart] = nil
-          select[:embargoEnd] = nil
-          select[:embargoRelease] = nil
-        end
         @article.hasPart.build(select) 
+        @article.hasPart[count].accessRights = nil
+        if select.has_key?(:accessRights)
+          select[:accessRights][0]['id'] = "info:fedora/#{@article.id}/datastreams/#{dsid}#accessRights"
+          if select[:accessRights][0][:embargoStatus] == "Visible"
+            select[:accessRights][0][:embargoStart] = nil
+            select[:accessRights][0][:embargoEnd] = nil
+            select[:accessRights][0][:embargoRelease] = nil
+          elsif select[:accessRights][0][:embargoStatus] == "Not visible"
+            select[:accessRights][0][:embargoStart] = nil
+            select[:accessRights][0][:embargoEnd] = nil
+            select[:accessRights][0][:embargoRelease] = nil
+          end
+          @article.hasPart[count].accessRights.build(select[:accessRights][0])
+        end
+        count += 1
       end 
     end
 
@@ -566,7 +593,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.save
-        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
+        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
