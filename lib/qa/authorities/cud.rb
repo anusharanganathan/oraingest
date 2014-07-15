@@ -15,17 +15,26 @@ module Qa::Authorities
         return
       end
 
+      # Build the query term
+      # AND on each word in search term
+      # Only get current people from CUD (with oxford email address)
       q = URI.unescape(q)
       if q.split('').last != '*'
         q = q + '*'
       end
-      # Only get current people from CUD (with oxford email address)
+      query = []
       search_field = Cud.sub_authority_table[sub_authority]
-      query = '%s:%s AND cud\:cas\:oxford_email_text:*'% [search_field, q]
+      q.split(" ").each do |word|
+        query.push('%s:%s'% [search_field, word])
+      end
+      query.push('cud\:cas\:oxford_email_text:*')
+      query = query.join(" AND ")
       query = URI.escape(query)
+      puts query
       return_fields="cud:cas:fullname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
       rows = 10 #This is not working
       query_url =  "http://10.0.0.203/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
+      puts query_url
       @raw_response = get_json(query_url)
       @response = parse_authority_response(@raw_response)
     end
