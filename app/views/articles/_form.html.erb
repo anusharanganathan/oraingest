@@ -4,10 +4,10 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: "shared/work_type_fields", as: :article, :locals => { :f => f } %>
-          <%= render partial: "describe", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_language_fields", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_subject_fields", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/work_type_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "describe_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_language_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_subject_fields_edit", as: :article, :locals => { :f => f } %>
           <div class="actions">
             <%= f.submit "Save article description", class: "btn btn-success" %>
           </div>
@@ -23,7 +23,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/creation_activity_fields_edit', as: :article, :locals => { :f => f } %>
           <%= f.submit "Save creators information", class: "btn btn-success" %>
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
@@ -37,7 +37,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/publication_activity_fields', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/publication_activity_fields_edit', as: :article, :locals => { :f => f } %>
           <div class="actions">
             <%= f.submit "Save publication information", class: "btn btn-success" %>
           </div>
@@ -53,7 +53,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/funding_activity_fields', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/funding_activity_fields_edit', as: :article, :locals => { :f => f } %>
           <div class="actions">
             <%= f.submit "Save funder information", class: "btn btn-success" %>
           </div>
@@ -69,7 +69,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/relation_fields', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/relation_fields_edit', as: :article, :locals => { :f => f } %>
           <div class="actions">
             <%= f.submit "Save information", class: "btn btn-success" %>
           </div>
@@ -85,12 +85,12 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: "shared/rights_activity_fields", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/article_admin_fields", as: :article, :locals => { :f => f } %>
-          <%= render partial: 'shared/files_and_embargo_fields', as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/rights_activity_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/article_admin_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/files_and_embargo_fields_edit', as: :article, :locals => { :f => f } %>
           <% if false %>
             <!-- Not displaying permissions for now, but is very useful -->
-            <%= render partial: "permission_form", as: :article %>
+            <%= render partial: "permission_form_edit", as: :article %>
           <% end %>
           <div class="actions">
             <%= f.submit "Save rights and access", class: "btn btn-success" %>
@@ -102,5 +102,5 @@
 </div>
 
 <div class="tab-pane" id="workflowtab">
-  <%= render partial: 'shared/workflow' %>
+  <%= render partial: 'shared/workflow_edit' %>
 </div>
