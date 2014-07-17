@@ -26,7 +26,7 @@ require "vocabulary/prov_vocabulary"
 require "vocabulary/frapo_vocabulary"
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy]
+  before_action :set_article, only: [:show, :edit, :update, :destroy, :revokePermissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -111,7 +111,6 @@ class ArticlesController < ApplicationController
 
   def update
     @pid = params[:pid]
-    #@article = Article.find_or_create(@pid)
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
@@ -259,6 +258,32 @@ class ArticlesController < ApplicationController
       end
     end
 
+  end
+
+  def revokePermissions
+    if article_params.has_key? 'permissions_attributes'
+      article_params['permissions_attributes'].each do |p|
+        if p["type"].downcase != "group" && p["name"] != @article.workflowMetadata.depositor[0]
+          if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
+            p["type"] = "user"
+            p["_destroy"] = true
+          else
+            article_params['permissions_attributes'].delete(p)
+          end #check name and access exists
+        else
+          article_params['permissions_attributes'].delete(p)
+        end # check not type = group and not depositor
+      end # loop each permission
+    end #has permission attributes
+    respond_to do |format|
+      if @article.update(article_params)
+        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def add_metadata(article_params)

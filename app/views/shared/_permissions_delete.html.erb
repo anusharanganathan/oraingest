@@ -1,0 +1,29 @@
+<% hasPerms = false %>
+<% @article.permissions.each do |p| %>
+  <% if p.type.downcase != "group" && p.name != @article.workflowMetadata.depositor[0] %>
+    <% hasPerms = true %>
+  <% end %>
+<% end %>
+<% if hasPerms %>
+  <legend>Permissions</legend>
+  <div class="controls">
+    <div style="width:220px; padding-left:5px; float:left;">Person / Group</div>
+    <div style="width:220px; padding-left:5px; float:left;">Access level</div><br/>
+  </div>
+  <% @article.permissions.each do |p| %>
+    <% if p.type.downcase != "group" && p.name != @article.workflowMetadata.depositor[0] %>
+      <div class="controls">
+        <div class="uneditable-input" style="width:210px;"><%= p.name %></div>
+        <div class="uneditable-input" style="width:210px;"><%= p.access %></div>
+        <div class="uneditable-input label label-warning">
+          <%= form_tag('/articles/%s/permissions'% @article.id, method:"delete") do %>
+            <%= hidden_field_tag "article[permissions_attributes][][type]", p.type, id: nil %>
+            <%= hidden_field_tag "article[permissions_attributes][][name]", p.name, id: nil %>
+            <%= hidden_field_tag "article[permissions_attributes][][access]", p.access, id: nil %>
+            <button class="btn btn-warning" name="revoke_permission" type="submit">X<span class="accessible-hidden">Revoke permission</span></button>
+          <% end %>
+        </div>
+      </div>
+    <% end #if not group and not depositor %>
+  <% end #each permission %>
+<% end #if permissions %>

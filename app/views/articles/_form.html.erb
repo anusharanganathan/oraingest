@@ -1,6 +1,7 @@
 <div class="tab-pane" id="describetab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'describetab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -20,6 +21,7 @@
 <div class="tab-pane" id="creatorstab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'creatorstab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -34,6 +36,7 @@
 <div class="tab-pane" id="publicationtab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'publicationtab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -50,6 +53,7 @@
 <div class="tab-pane" id="funderstab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'funderstab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -66,6 +70,7 @@
 <div class="tab-pane" id="moreinfotab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
@@ -82,12 +87,14 @@
 <div class="tab-pane" id="rightstab">
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'rightstab') %>
     <div class="well">
       <div class="row">
         <div class="control-group">
           <%= render partial: "shared/rights_activity_fields_edit", as: :article, :locals => { :f => f } %>
           <%= render partial: "shared/article_admin_fields_edit", as: :article, :locals => { :f => f } %>
           <%= render partial: 'shared/files_and_embargo_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/permissions_edit", as: :article %>
           <% if false %>
             <!-- Not displaying permissions for now, but is very useful -->
             <%= render partial: "permission_form_edit", as: :article %>
@@ -99,6 +106,7 @@
       </div> <!-- /.row -->
     </div> <!-- /.well -->
   <% end %>
+  <%= render partial: 'shared/permissions_delete' %>
 </div>
 
 <div class="tab-pane" id="workflowtab">

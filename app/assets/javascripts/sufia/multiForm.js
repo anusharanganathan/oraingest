@@ -7,9 +7,10 @@
 
   function addField() {
     var parentId = this.id.replace("button", "clone");
-    var groupId = this.id.split("_",1)
+    var groupId = this.id.split("_",1);
     var count = $("#" + groupId + " div").size();
     var lastId = $("#" + groupId + " div").last().attr("id");
+    var currentId = this.id.replace(groupId+"_button_", "");
     lastId = lastId.replace(groupId+"_clone_", "");
     if ($.isNumeric(lastId)) {
       count = parseInt(lastId) + 1;
@@ -35,14 +36,18 @@
     //so the new element has a blank value
     inputFields = cloneElem.find('input')
     $.each(inputFields, function(n, tf) {
-      newName = $(tf).attr('id').replace('0', count);
-      $(tf).val("");
-      $(tf).attr('id', newName).attr("required", false);
+      if ($(tf).attr('type') != "hidden") {
+        newName = $(tf).attr('id').replace(currentId, count);
+        $(tf).val("");
+        $(tf).attr('value', "");
+        $(tf).attr('id', newName).attr("required", false);
+      }
     })
     selectFields = cloneElem.find('select')
     $.each(selectFields, function(n, tf) {
-      newName = $(tf).attr('id').replace('0', count);
+      newName = $(tf).attr('id').replace(currentId, count);
       $(tf).val("");
+      $(tf).attr('value', "");
       $(tf).attr('id', newName).attr("required", false);
     })
   
@@ -84,7 +89,7 @@
        * adds additional metadata elements
        */
       $('.adder', this).click(addField);
-
+      
       $('.remover', this).click(removeField);
       
     });
