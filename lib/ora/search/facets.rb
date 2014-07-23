@@ -9,6 +9,7 @@ module Ora
           config.add_facet_field solr_name("desc_metadata__resource_type", :facetable), :label => "Resource Type", :limit => 10
           config.add_facet_field solr_name("desc_metadata__type", :facetable), :label => "Resource Type", :limit => 10
           config.add_facet_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status", :limit => 10
+          config.add_index_field solr_name("MediatedSubmission_date_submitted", :dateable), :label => "Date Submitted"
           config.add_facet_field solr_name("desc_metadata__creator", :facetable), :label => "Creator", :limit => 10
           config.add_facet_field solr_name("desc_metadata__keyword", :facetable), :label => "Keyword", :limit => 10
           config.add_facet_field solr_name("desc_metadata__subject", :facetable), :label => "Subject", :limit => 10

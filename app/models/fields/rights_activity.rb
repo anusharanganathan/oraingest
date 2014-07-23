@@ -27,8 +27,11 @@ class LicenseStatement
   end 
 
   def to_solr(solr_doc={})
-    super
-    solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseLabel.first
+    if !licenseLabel.first.empty?
+      solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseLabel.first
+    elsif !licenseURI.first.empty?
+      solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseURI.first
+    end
     solr_doc
   end
 

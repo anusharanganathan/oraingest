@@ -28,6 +28,13 @@ class FundingActivity
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
 
+  def to_solr(solr_doc={})
+    self.funder.each do |f|
+      f.to_solr(solr_doc)
+    end
+    solr_doc
+  end
+
 end
 
 class QualifiedFundingAssociation
@@ -57,6 +64,34 @@ class QualifiedFundingAssociation
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__funder", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__funder", :facetable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__funderSameAs", :symbol)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__funderRole", :symbol)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__funderFunds", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__funderAnnotation", :displayable)] ||= []
+
+    solr_doc[Solrizer.solr_name("desc_metadata__funder", :stored_searchable)] << self.agent.first.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__funder", :facetable)] << self.agent.first.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__funderSameAs", :symbol)] << self.agent.first.sameAs.first
+    solr_doc[Solrizer.solr_name("desc_metadata__funderRole", :symbol)] << self.role.first
+    solr_doc[Solrizer.solr_name("desc_metadata__funderAnnotation", :displayable)] << self.annotation.first
+    # Index each entity funded
+    if self.funds.kind_of?(Array)
+      self.funds.each do |f|
+        solr_doc[Solrizer.solr_name("desc_metadata__funderFunds", :stored_searchable)] << f
+      end
+    else
+        solr_doc[Solrizer.solr_name("desc_metadata__funderFunds", :stored_searchable)] << self.funds
+    end
+    # Index each award
+    self.awards.each do |a|
+      a.to_solr(solr_doc)
+    end
+    solr_doc
+  end
 
 end
 
@@ -103,5 +138,17 @@ class FundingAward
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__funderGrantNumber", :stored_searchable)] ||= []
+    if self.grantNumber.kind_of?(Array)
+      self.grantNumber.each do |gn|
+        solr_doc[Solrizer.solr_name("desc_metadata__funderGrantNumber", :stored_searchable)] << gn
+      end
+    else
+        solr_doc[Solrizer.solr_name("desc_metadata__funderGrantNumber", :stored_searchable)] << self.grantNumber
+    end
+    solr_doc
+  end
 
 end

@@ -15,13 +15,13 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.influence(:to => "wasInfluencedBy", :in => PROV)
     map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
   end
-  accepts_nested_attributes_for :hasPart, :qualifiedRelation
+  accepts_nested_attributes_for :hasPart, :accessRights, :qualifiedRelation
 
   def getInfluences
     # Not Working
     influence = []
     self.qualifiedRelation.each do |qr|
-      if !qr.entity.empty?
+      if !qr.entity.nil?
          qr.entity.each do |qre|
            influence.push(qre.rdf_subject.to_s)
          end
@@ -64,7 +64,7 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
         "Reference record"
       end
     else
-      "Closed"
+      "Closed access"
     end
   end
 
@@ -78,6 +78,27 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     else
       "error"
     end
+  end
+
+  def to_solr(solr_doc={})
+    super 
+    # Index embargo info
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoStatus", :symbol)] = self.embargoStatus
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
+    if !self.accessRights.nil? && !self.accessRights.first.nil?
+      self.accessRights.first.to_solr(solr_doc)
+    end
+    self.hasPart.each do |hp|
+      if hp.identifier.first.start_with?('content') && !hp.accessRights.nil?
+        hp.accessRights.first.to_solr(solr_doc)
+      end #if content and accessRights
+    end #each hasPart
+    # index external relation
+    self.qualifiedRelation.each do |qr|
+      qr.to_solr(solr_doc)
+    end
+    solr_doc
   end
 
 end
@@ -127,6 +148,22 @@ class ExternalRelationsQualified
 
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] ||= []
+    riHash = {}
+    riHash['url'] = self.entity.first.rdf_subject.to_s
+    riHash['title'] = self.entity.first.title.first 
+    riHash['description'] = self.entity.first.description.first
+    riHash['citation'] = self.entity.first.citation.first
+    riHash['typeOfRelation'] = self.relation.first
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] << riHash.to_json
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] << self.entity.first.rdf_subject.to_s
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] << self.relation.first
+    solr_doc
   end
 
 end
@@ -179,6 +216,29 @@ class EmbargoInfo
 
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
+    embargoHash = {}
+    embargoHash['identifier'] = rdf_subject.to_s
+    embargoHash['embargoStatus'] = self.embargoStatus.first 
+    embargoHash['embargoStart'] = self.embargoStart.first 
+    embargoHash['embargoEnd'] = self.embargoEnd.first 
+    embargoHash['embargoReason'] = self.embargoReason.first 
+    embargoHash['embargoRelease'] = self.embargoRelease.first 
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] << embargoHash.to_json
+    if self.embargoEnd.first
+      solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] << self.embargoEnd.first
+      begin
+        solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] << Time.parse(self.embargoEnd.first).utc.iso8601
+      rescue ArgumentError
+        # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+      end
+    end
+    solr_doc
   end
 
 end

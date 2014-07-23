@@ -38,9 +38,9 @@ class ArticlesController < ApplicationController
   include Ora::Search::ViewConfiguration
   include Ora::Search::Facets
   include Ora::Search::IndexFields
-  include Ora::Search::ShowFields
+  #include Ora::Search::ShowFields
   include Ora::Search::SearchFields
-  include Ora::Search::RequestHandlerDefaults
+  #include Ora::Search::RequestHandlerDefaults
   include Ora::Search::SortFields
 
   # These before_filters apply the hydra access controls
@@ -296,6 +296,15 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
+    if article_params.has_key?(:permissions_attributes)
+      article_params[:permissions_attributes].each do |p|
+        if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
+          p["type"] = "user"
+        else
+          article_params['permissions_attributes'].delete(p)
+        end #check name and access exists
+      end 
+    end
     @article.attributes = article_params
 
     #remove_blank_assertions for language and build

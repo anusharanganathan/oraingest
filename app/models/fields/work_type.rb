@@ -29,7 +29,6 @@ class WorkType
   end 
 
   def to_solr(solr_doc={})
-    super
     solr_doc[Solrizer.solr_name("desc_metadata__type", :stored_searchable)] = typeLabel.first
     solr_doc[Solrizer.solr_name("desc_metadata__typeAuthority", :stored_searchable)] = typeAuthority.first
     solr_doc

@@ -31,11 +31,10 @@ class MadsLanguage
   end 
 
   def to_solr(solr_doc={})
-    super
-    solr_doc[Solrizer.solr_name("desc_metadata__language", :stored_searchable)] = languageLabel.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageCode", :stored_searchable)] = languageCode.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageAuthority", :stored_searchable)] = languageAuthority.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageAcheme", :stored_searchable)] = languageScheme.first
+    solr_doc[Solrizer.solr_name("desc_metadata__language", :stored_searchable)] = self.languageLabel.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageCode", :stored_searchable)] = self.languageCode.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageAuthority", :stored_searchable)] = self.languageAuthority.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageScheme", :stored_searchable)] = self.languageScheme.first
     solr_doc
   end
 

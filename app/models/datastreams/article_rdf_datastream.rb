@@ -21,7 +21,7 @@ require 'fields/publication_activity'
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :license, :dateCopyrighted, :rightsHolder, :rights, :rightsActivity, :creation, :funding, :publication
+  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :license, :dateCopyrighted, :rightsHolder, :rightsHolderGroup, :rights, :rightsActivity, :creation, :funding, :publication
 
   #rdf_subject { |ds|
   #  if ds.identifier
@@ -31,79 +31,34 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   rdf_type rdf_type PROV.Entity
   map_predicates do |map|
     #-- title --
-    map.title(:in => RDF::DC) do |index|
-      index.as :stored_searchable
-    end
+    map.title(:in => RDF::DC)
     #-- subtitle --
-    map.subtitle(:in => DAMS) do |index|
-      index.as :stored_searchable
-    end
-    #-- description --
-    map.description(:in => RDF::DC) do |index|
-      index.type :text
-      index.as :stored_searchable
-    end
+    map.subtitle(:in => DAMS)
     #-- abstract --
-    map.abstract(:in => RDF::DC) do |index|
-      index.type :text
-      index.as :stored_searchable
-    end
+    map.abstract(:in => RDF::DC)
     #-- subject --
-    #TODO: Need to include QA lookup for subject
     map.subject(:in => RDF::DC, class_name:"MadsSubject")
     #-- keyword --
-    map.keyword(:in => CAMELOT) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.keyword(:in => CAMELOT)
     #-- type --
     map.worktype(:to=>"type", :in => RDF::DC, class_name:"WorkType")
     #-- medium --
-    map.medium(:in => RDF::DC) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.medium(:in => RDF::DC)
     #-- language --
-    #TODO: Need to include QA lookup for language
     map.language(:in => RDF::DC, class_name:"MadsLanguage")
-    #-- edition --
-    map.edition(:in => BIBO) do |index|
-      index.as :stored_searchable
-    end
-    #-- numPages --    
-    map.numPages(:in => BIBO) do |index|
-      index.as :stored_searchable
-    end
-    #-- page numbers --
-    map.pages(:in => BIBO) do |index|
-      index.as :stored_searchable
-    end    
-    #-- note --
-    # TODO: Nested attributes of value and label - one to many
-    #-- source --
-    # TODO: Nested attributes of name, homepage and uri - one to many
     # -- publication status --
-    map.publicationStatus(:to => "DocumentStatus", :in => BIBO) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.publicationStatus(:to => "DocumentStatus", :in => BIBO)
     # -- review status --
-    # TODO: Drop down list of values
-    map.reviewStatus(:in => ORA) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.reviewStatus(:in => ORA)
     # -- rights activity --
     map.license(:in => RDF::DC, class_name:"LicenseStatement")
-    map.dateCopyrighted(:in => RDF::DC) do |index|
-      index.as :stored_searchable
-    end
-    map.rightsHolder(:in => RDF::DC) do |index|
-      index.as :stored_searchable, :facetable
-    end
-    map.rightsHolderGroup(:in => ORA) do |index|
-      index.as :stored_searchable, :facetable
-    end
+    map.dateCopyrighted(:in => RDF::DC)
+    map.rightsHolder(:in => RDF::DC)
+    map.rightsHolderGroup(:in => ORA)
     map.rights(:in => RDF::DC, class_name:"RightsStatement")
     map.rightsActivity(:in => PROV, :to => "hadActivity", class_name:"RightsActivity")
     # -- creation activity --
-    # TODO: Lookup CUD and link with Fedora person objects
+    # TODO: link with Fedora person objects
     map.creation(:to => "hadCreationActivity", :in => ORA, class_name:"CreationActivity")
     # -- funding activity --
     # TODO: Lookup and link with Fedora funder objects
@@ -112,9 +67,67 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.publication(:to => "hadPublicationActivity", :in => ORA, class_name:"PublicationActivity")
     # -- Commissioning body --
     # TODO: Nested attributes using Prov
+    #-- source --
+    # TODO: Nested attributes of name, homepage and uri - one to many
 
   end
   accepts_nested_attributes_for :language, :subject, :worktype, :license, :rights, :rightsActivity, :creation, :funding, :publication
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__title", :stored_searchable)] = self.title
+    solr_doc[Solrizer.solr_name("desc_metadata__subtitle", :stored_searchable)] = self.subtitle
+    solr_doc[Solrizer.solr_name("desc_metadata__abstract", :stored_searchable)] = self.abstract
+    solr_doc[Solrizer.solr_name("desc_metadata__keyword", :stored_searchable)] = self.keyword
+    solr_doc[Solrizer.solr_name("desc_metadata__medium", :stored_searchable)] = self.medium
+    solr_doc[Solrizer.solr_name("desc_metadata__publicationStatus", :stored_searchable)] = self.publicationStatus
+    solr_doc[Solrizer.solr_name("desc_metadata__reviewStatus", :stored_searchable)] = self.reviewStatus
+    #solr_doc[Solrizer.solr_name("dateCopyrighted", :stored_searchable, type: :date)] = self.dateCopyrighted
+    # Need to validate data and convert it to proper date format before indexing as date
+    solr_doc[Solrizer.solr_name("desc_metadata__dateCopyrighted", :stored_searchable)] = self.dateCopyrighted
+    solr_doc[Solrizer.solr_name("desc_metadata__rightsHolder", :stored_searchable)] = self.rightsHolder
+    solr_doc[Solrizer.solr_name("desc_metadata__rightsHolderGroup", :stored_searchable)] = self.rightsHolderGroup
+    # Index the type of work
+    self.worktype.each do |w|
+      already_indexed = []
+      unless w.typeLabel.empty? || already_indexed.include?(w.typeLabel.first)
+        w.to_solr(solr_doc)
+        already_indexed << w.typeLabel.first
+      end
+    end
+    # Index each language individually
+    self.language.each do |l|
+      already_indexed = []
+      unless l.languageLabel.empty? || already_indexed.include?(l.languageLabel.first)
+        l.to_solr(solr_doc)
+        already_indexed << l.languageLabel.first
+      end
+    end
+    # Index each subject individually
+    self.subject.each do |s|
+      already_indexed = []
+      unless s.subjectLabel.empty? || already_indexed.include?(s.subjectLabel.first)
+        s.to_solr(solr_doc)
+        already_indexed << s.subjectLabel.first
+      end
+    end
+    # Index each creator individually
+    self.creation.each do |c|
+      c.to_solr(solr_doc)
+    end
+    # Index each license individually
+    self.license.each do |l|
+        l.to_solr(solr_doc)
+    end
+    # Index each publication individually
+    self.publication.each do |p|
+        p.to_solr(solr_doc)
+    end
+    # Index each publication individually
+    self.funding.each do |f|
+        f.to_solr(solr_doc)
+    end
+    solr_doc
+  end
 
   #TODO: Add FAST authority list later
   #begin

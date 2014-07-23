@@ -13,18 +13,21 @@
   <%= f.text_area :abstract, :value=>@article.abstract.first %>
 </div>
 
-<div class="field">
-  <%= f.label :medium %>
-  <%= f.text_field :medium, :value=>@article.medium.first %>
-</div>
+<% if !@article.medium.nil? && !@article.medium.empty? && !@article.medium.first.empty? %>
+  <!-- Only display if information exists i.e. imported records -->
+  <div class="field">
+    <%= f.label :medium %>
+    <%= f.text_field :medium, :value=>@article.medium.first %>
+  </div>
+<% end %>
 
 <div class="field">
-  <%= f.label :publicationStatus %>
+  <%= f.label :publicationStatus, "Publication status" %>
   <%= f.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>@article.publicationStatus.first) %>
 </div>
 
 <div class="field">
-  <%= f.label :reviewStatus %>
+  <%= f.label :reviewStatus, "Review status" %>
   <%= f.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>@article.reviewStatus.first) %>
 </div>
 

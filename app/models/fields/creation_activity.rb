@@ -28,6 +28,13 @@ class CreationActivity
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
 
+  def to_solr(solr_doc={})
+    self.creator.each do |c|
+      c.to_solr(solr_doc)
+    end
+    solr_doc
+  end
+
 end
 
 class QualifiedCreationAssociation
@@ -55,7 +62,25 @@ class QualifiedCreationAssociation
 
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
-  end 
+  end
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorRole", :symbol)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creator", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorRole", :symbol)] << self.role.first
+    # Indexes each creator individually
+    self.agent.each do |a|
+      a.to_solr(solr_doc)
+      creatorHash = { 'role' => self.role.first }
+      creatorHash['name'] = a.name.first
+      creatorHash['email'] = a.email.first
+      creatorHash['sameAs'] = a.sameAs.first
+      creatorHash['affiliationName'] = a.affiliation.first.name.first
+      creatorHash['affiliationSameAs'] = a.affiliation.first.sameAs.first
+      solr_doc[Solrizer.solr_name("desc_metadata__creator", :displayable)] << creatorHash.to_json
+    end
+    solr_doc
+  end
 
 end
 
@@ -80,6 +105,28 @@ class CreationAssociation
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    # Initialize fields as array
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorName", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorName", :facetable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorEmail", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :facetable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :facetable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliationUrl", :symbol)] ||= []
+    # Append values
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorName", :stored_searchable)] << self.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorName", :facetable)] << self.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorEmail", :displayable)] << self.email.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :stored_searchable)] << self.sameAs.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :facetable)] << self.sameAs.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :stored_searchable)] << self.affiliation.first.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :facetable)] << self.affiliation.first.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliationUrl", :symbol)] << self.affiliation.first.sameAs.first
+    solr_doc
+  end
 
 end
 

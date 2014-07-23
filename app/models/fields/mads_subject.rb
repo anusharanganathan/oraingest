@@ -29,10 +29,16 @@ class MadsSubject
   end 
 
   def to_solr(solr_doc={})
-    super
-    solr_doc[Solrizer.solr_name("desc_metadata__subject", :stored_searchable)] = subjectLabel.first
-    solr_doc[Solrizer.solr_name("desc_metadata__subjectAuthority", :stored_searchable)] = subjectAuthority.first
-    solr_doc[Solrizer.solr_name("desc_metadata__subjectAcheme", :stored_searchable)] = subjectScheme.first
+    #Initialize as array
+    solr_doc[Solrizer.solr_name("desc_metadata__subject", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__subject", :facetable)] ||= [] 
+    solr_doc[Solrizer.solr_name("desc_metadata__subjectAuthority", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__subjectScheme", :stored_searchable)] ||= []
+    # Index
+    solr_doc[Solrizer.solr_name("desc_metadata__subject", :stored_searchable)] << subjectLabel.first
+    solr_doc[Solrizer.solr_name("desc_metadata__subject", :facetable)] << subjectLabel.first
+    solr_doc[Solrizer.solr_name("desc_metadata__subjectAuthority", :stored_searchable)] << subjectAuthority.first
+    solr_doc[Solrizer.solr_name("desc_metadata__subjectScheme", :stored_searchable)] << subjectScheme.first
     solr_doc
   end
 

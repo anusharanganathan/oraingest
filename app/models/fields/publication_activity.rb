@@ -32,6 +32,27 @@ class PublicationActivity
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
 
+  def to_solr(solr_doc={})
+    begin
+      solr_doc[Solrizer.solr_name("desc_metadata__datePublished", :dateable, type: :date)] = Time.parse(self.datePublished.first).utc.iso8601
+    rescue ArgumentError
+      # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+    end
+    begin
+      solr_doc[Solrizer.solr_name("desc_metadata__dateAccepted", :dateable, type: :date)] = Time.parse(self.dateAccepted.first).utc.iso8601
+    rescue ArgumentError
+      # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+    end
+    solr_doc[Solrizer.solr_name("desc_metadata__datePublished", :stored_searchable)] = self.datePublished.first
+    solr_doc[Solrizer.solr_name("desc_metadata__location", :symbol)] = self.location.first
+    solr_doc[Solrizer.solr_name("desc_metadata__dateAccepted", :stored_searchable)] = self.dateAccepted.first
+    # Index publication document information
+    self.hasDocument.first.to_solr(solr_doc)
+    # Index publisher information
+    self.publisher.first.to_solr(solr_doc)
+    solr_doc
+  end
+
 end
 
 class PublicationDocument
@@ -61,6 +82,22 @@ class PublicationDocument
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] ||= []
+    if self.identifier.kind_of?(Array)
+      self.identifier.each do |i|
+        solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] << i
+      end
+    else
+        solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] << self.identifier
+    end
+    solr_doc[Solrizer.solr_name("desc_metadata__doi", :symbol)] = self.doi.first
+    solr_doc[Solrizer.solr_name("desc_metadata__publicationUri", :displayable)] = self.uri.first
+    # Index journal information 
+    self.journal.first.to_solr(solr_doc)
+    solr_doc
+  end
 
 end
 
@@ -94,6 +131,17 @@ class PublicationJournal
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__journalTitle", :stored_searchable)] = self.title.first
+    solr_doc[Solrizer.solr_name("desc_metadata__issn", :symbol)] = self.issn.first
+    solr_doc[Solrizer.solr_name("desc_metadata__eissn", :symbol)] = self.eissn.first
+    solr_doc[Solrizer.solr_name("desc_metadata__periodicalTitle", :stored_searchable)] = self.periodical.first.title.first
+    solr_doc[Solrizer.solr_name("desc_metadata__volume", :displayable)] = self.volume.first
+    solr_doc[Solrizer.solr_name("desc_metadata__issue", :displayable)] = self.issue.first
+    solr_doc[Solrizer.solr_name("desc_metadata__pages", :displayable)] = self.pages.first
+    solr_doc
+  end
 
 end
 
@@ -150,5 +198,11 @@ class QualifiedPublicationAssociation
   def id
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end 
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("desc_metadata__publisher", :stored_searchable)] = self.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__publisherWebsite", :displayable)] = self.website.first
+    solr_doc
+  end
 
 end

@@ -25,7 +25,7 @@
 <div class="fields">
   <%= label_tag "article[oaReason]", "What is the basis of the APC?", :class=>"control-label" %>
   <% if !@article.oaReason.empty? %>
-    <%= select_tag "article[oaReason]", options_for_select(Sufia.config.oa_reason, :selected=>@article.oaReason.first), :style=>"width: 550 px;" %>
+    <%= select_tag "article[oaReason]", options_for_select(Sufia.config.oa_reason, :selected=>@article.oaReason.first), :style=>"width: 550px;" %>
   <% else %>
     <%= select_tag "article[oaReason]", options_for_select(Sufia.config.oa_reason), :style=>"width: 550px;" %>
   <% end %>
