@@ -1,7 +1,7 @@
 # Returns an array containing the vhost 'CoSign service' value and URL
-require 'vocabulary/camelot_vocabulary'
-require 'vocabulary/ora_vocabulary'
-require 'vocabulary/bibo_vocabulary'
+require 'vocabulary/camelot'
+require 'vocabulary/ora'
+require 'vocabulary/bibo'
 
 Sufia.config do |config|
 
@@ -44,20 +44,20 @@ Sufia.config do |config|
     }
 
     config.article_type_authorities = {
-      "Article" => CAMELOT::article,
-      "Discussion paper" => CAMELOT::discussionPaper,
-      "Journal article" => CAMELOT::journalArticle,
-      "Newsletter" => CAMELOT::newsletter,
-      "Policy briefing" => CAMELOT::policyBriefing,
-      "Press article" => CAMELOT::pressArticle,
-      "Pamphlet" => CAMELOT::pamphlet,
-      "Patent" => CAMELOT::patent,
-      "Report" => CAMELOT::report,
-      "Research Paper" => CAMELOT::researchPaper,
-      "Review" => CAMELOT::review,
-      "Technical report" => CAMELOT::technicalReport,
-      "Working paper" => CAMELOT::workingPaper,
-      "Other" => CAMELOT::article
+      "Article" => RDF::CAMELOT::article,
+      "Discussion paper" => RDF::CAMELOT::discussionPaper,
+      "Journal article" => RDF::CAMELOT::journalArticle,
+      "Newsletter" => RDF::CAMELOT::newsletter,
+      "Policy briefing" => RDF::CAMELOT::policyBriefing,
+      "Press article" => RDF::CAMELOT::pressArticle,
+      "Pamphlet" => RDF::CAMELOT::pamphlet,
+      "Patent" => RDF::CAMELOT::patent,
+      "Report" => RDF::CAMELOT::report,
+      "Research Paper" => RDF::CAMELOT::researchPaper,
+      "Review" => RDF::CAMELOT::review,
+      "Technical report" => RDF::CAMELOT::technicalReport,
+      "Working paper" => RDF::CAMELOT::workingPaper,
+      "Other" => RDF::CAMELOT::article
     }
 
     config.publication_status = {
@@ -166,15 +166,15 @@ Sufia.config do |config|
     ]
 
     config.article_role_types = {
-      "Author" => ORA.author,
-      "Editor" => BIBO.editor,
+      "Author" => RDF::ORA.author,
+      "Editor" => RDF::BIBO.editor,
       "Contributor" => RDF::DC::contributor
     }
 
     config.thesis_role_types = {
-      "Author" => ORA.author,
-      "Supervisor" => ORA.supervisor,
-      "Examiner" => ORA.examiner,
+      "Author" => RDF::ORA.author,
+      "Supervisor" => RDF::ORA.supervisor,
+      "Examiner" => RDF::ORA.examiner,
       "Contributor" => RDF::DC::contributor
     }
 

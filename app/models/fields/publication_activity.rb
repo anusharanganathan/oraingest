@@ -1,4 +1,4 @@
-require 'vocabulary/ora_vocabulary'
+require 'vocabulary/bibo'
 
 class PublicationActivity
   include ActiveFedora::RdfObject
@@ -65,12 +65,12 @@ class PublicationDocument
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationDocument")
     end
     }
-  rdf_type rdf_type BIBO.Document
+  rdf_type rdf_type RDF::BIBO.Document
   map_predicates do |map|
-    map.identifier(:in => BIBO)
-    map.doi(:in => BIBO)
+    map.identifier(:in => RDF::BIBO)
+    map.doi(:in => RDF::BIBO)
     map.journal(:to => 'isPartOf', :in => RDF::DC, class_name:"PublicationJournal")
-    map.uri(:in => BIBO)
+    map.uri(:in => RDF::BIBO)
   end
   accepts_nested_attributes_for :journal
 
@@ -111,15 +111,15 @@ class PublicationJournal
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationJournal")
     end
     }
-  rdf_type rdf_type BIBO.Journal
+  rdf_type rdf_type RDF::BIBO.Journal
   map_predicates do |map|
     map.title(:in => RDF::DC)
-    map.issn(:in => BIBO)
-    map.eissn(:in => BIBO)
+    map.issn(:in => RDF::BIBO)
+    map.eissn(:in => RDF::BIBO)
     map.periodical(:to => 'isPartOf', :in => RDF::DC, class_name:"PublicationPeriodical")
-    map.volume(:in => BIBO)
-    map.issue(:in => BIBO)
-    map.pages(:in => BIBO)
+    map.volume(:in => RDF::BIBO)
+    map.issue(:in => RDF::BIBO)
+    map.pages(:in => RDF::BIBO)
   end
   accepts_nested_attributes_for :periodical
 
@@ -155,7 +155,7 @@ class PublicationPeriodical
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationPeriodcial")
     end
     }
-  rdf_type rdf_type BIBO.Periodical
+  rdf_type rdf_type RDF::BIBO.Periodical
   map_predicates do |map|
     map.title(:in => RDF::DC)
   end

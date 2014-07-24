@@ -1,4 +1,4 @@
-require 'vocabulary/mads_vocabulary'
+require 'vocabulary/mads'
 class MadsSubject
   include ActiveFedora::RdfObject
   attr_accessor :subjectLabel, :subjectAuthority, :subjectScheme
@@ -15,9 +15,9 @@ class MadsSubject
     end
     }
   map_predicates do |map|
-    map.subjectLabel(:to => "authoritativeLabel", :in => MADS)
-    map.subjectAuthority(:to => "hasExactExternalAuthority", :in => MADS)
-    map.subjectScheme(:to => "isMemberOfMADSScheme", :in => MADS)
+    map.subjectLabel(:to => "authoritativeLabel", :in => RDF::MADS)
+    map.subjectAuthority(:to => "hasExactExternalAuthority", :in => RDF::MADS)
+    map.subjectScheme(:to => "isMemberOfMADSScheme", :in => RDF::MADS)
   end
 
   def persisted?

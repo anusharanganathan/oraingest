@@ -1,6 +1,6 @@
 #require 'active_support/concern'
 require 'rdf'
-require 'vocabulary/ora_vocabulary'
+require 'vocabulary/ora'
 
 class ArticleAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
@@ -8,10 +8,10 @@ class ArticleAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
   map_predicates do |map|
     # For internal relations
-    map.oaStatus(:in => ORA)
-    map.apcPaid(:in => ORA)
-    map.oaReason(:in => ORA)
-    map.refException(:in => ORA)
+    map.oaStatus(:in => RDF::ORA)
+    map.apcPaid(:in => RDF::ORA)
+    map.oaReason(:in => RDF::ORA)
+    map.refException(:in => RDF::ORA)
   end
 
   def persisted?

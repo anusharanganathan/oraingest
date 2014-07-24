@@ -1,5 +1,5 @@
-require 'vocabulary/frapo_vocabulary'
-require 'vocabulary/ora_vocabulary'
+require 'vocabulary/frapo'
+require 'vocabulary/ora'
 
 class FundingActivity
   include ActiveFedora::RdfObject
@@ -51,9 +51,9 @@ class QualifiedFundingAssociation
   map_predicates do |map|
     map.agent(:in => RDF::PROV, class_name:"FundingAssociation")
     map.role(:to => "hadRole", :in => RDF::PROV)
-    map.funds(:to => "isFundingAgencyFor", :in => FRAPO)
-    map.awards(:to => "awards", :in => FRAPO, class_name:"FundingAward")
-    map.annotation(:in => ORA)
+    map.funds(:to => "isFundingAgencyFor", :in => RDF::FRAPO)
+    map.awards(:to => "awards", :in => RDF::FRAPO, class_name:"FundingAward")
+    map.annotation(:in => RDF::ORA)
   end
   accepts_nested_attributes_for :awards, :agent
   def persisted?
@@ -125,9 +125,9 @@ class FundingAward
       RDF::URI.new("info:fedora/" + ds.pid + "#fundingAward")
     end
     }
-  rdf_type rdf_type FRAPO.Grant
+  rdf_type rdf_type RDF::FRAPO.Grant
   map_predicates do |map|
-    map.grantNumber(:to => "hasGrantNumber", :in => FRAPO)
+    map.grantNumber(:to => "hasGrantNumber", :in => RDF::FRAPO)
   end
 
   def persisted?

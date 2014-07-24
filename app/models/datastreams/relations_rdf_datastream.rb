@@ -1,7 +1,7 @@
 #require 'active_support/concern'
 require 'rdf'
-require 'vocabulary/ora_vocabulary'
-require 'vocabulary/prov_vocabulary'
+require 'vocabulary/ora'
+require 'vocabulary/time'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
@@ -12,8 +12,8 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
     map.accessRights(:in => RDF::DC, class_name:"EmbargoInfo")
     # For external relations
-    map.influence(:to => "wasInfluencedBy", :in => PROV)
-    map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
+    map.influence(:to => "wasInfluencedBy", :in => RDF::PROV)
+    map.qualifiedRelation(:to => "qualifiedInfluence", :in => RDF::PROV, class_name:"ExternalRelationsQualified")
   end
   accepts_nested_attributes_for :hasPart, :accessRights, :qualifiedRelation
 
@@ -133,10 +133,10 @@ class ExternalRelationsQualified
   include ActiveFedora::RdfObject
   attr_accessor :relation, :entity
 
-  rdf_type rdf_type PROV.Influence
+  rdf_type rdf_type RDF::PROV.Influence
   map_predicates do |map|
     #-- qualifying entity --
-    map.entity(:to => "entity", :in => PROV, class_name:"ExternalRelations")
+    map.entity(:to => "entity", :in => RDF::PROV, class_name:"ExternalRelations")
     #-- relation --
     map.relation(:to=>"relation", :in => RDF::DC)
   end
@@ -199,15 +199,15 @@ class EmbargoInfo
 
   map_predicates do |map|
     #-- embargoStatus --
-    map.embargoStatus(:in => ORA)
+    map.embargoStatus(:in => RDF::ORA)
     #-- embargoStart --
-    map.embargoStart(:in => ORA)
+    map.embargoStart(:in => RDF::ORA)
     #-- embargoEnd --
-    map.embargoEnd(:in => ORA)
+    map.embargoEnd(:in => RDF::ORA)
     #-- embargoReason --
-    map.embargoReason(:in => ORA)
+    map.embargoReason(:in => RDF::ORA)
     #-- embargoRelease --
-    map.embargoRelease(:in => ORA)
+    map.embargoRelease(:in => RDF::ORA)
   end
 
   def persisted?

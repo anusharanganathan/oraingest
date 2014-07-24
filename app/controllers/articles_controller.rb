@@ -22,7 +22,7 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require "vocabulary/frapo_vocabulary"
+require "vocabulary/frapo"
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy, :revokePermissions]

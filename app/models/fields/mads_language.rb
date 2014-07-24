@@ -1,4 +1,4 @@
-require 'vocabulary/mads_vocabulary'
+require 'vocabulary/mads'
 class MadsLanguage
   include ActiveFedora::RdfObject
   attr_accessor :languageLabel, :languageCode, :languageAuthority, :languageScheme
@@ -14,12 +14,12 @@ class MadsLanguage
       RDF::URI.new("info:fedora/" + ds.pid + "#language")
     end
     }
-  rdf_type MADS.Language
+  rdf_type RDF::MADS.Language
   map_predicates do |map|
-    map.languageLabel(:to => "authoritativeLabel", :in => MADS)
-    map.languageCode(:to => "code", :in => MADS)
-    map.languageAuthority(:to => "hasExactExternalAuthority", :in => MADS)
-    map.languageScheme(:to => "isMemberOfMADSScheme", :in => MADS)
+    map.languageLabel(:to => "authoritativeLabel", :in => RDF::MADS)
+    map.languageCode(:to => "code", :in => RDF::MADS)
+    map.languageAuthority(:to => "hasExactExternalAuthority", :in => RDF::MADS)
+    map.languageScheme(:to => "isMemberOfMADSScheme", :in => RDF::MADS)
   end
 
   def persisted?

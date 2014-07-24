@@ -2,11 +2,11 @@
 require 'rdf'
 #require 'datastreams/person_rdf_datastream'
 #Vocabularies
-require 'vocabulary/bibo_vocabulary'
-require 'vocabulary/camelot_vocabulary'
-require 'vocabulary/ora_vocabulary'
-require 'vocabulary/dams_vocabulary'
-require 'vocabulary/mads_vocabulary'
+require 'vocabulary/bibo'
+require 'vocabulary/camelot'
+require 'vocabulary/ora'
+require 'vocabulary/dams'
+require 'vocabulary/frapo'
 # Fields
 require 'fields/mads_language'
 require 'fields/mads_subject'
@@ -31,13 +31,13 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     #-- title --
     map.title(:in => RDF::DC)
     #-- subtitle --
-    map.subtitle(:in => DAMS)
+    map.subtitle(:in => RDF::DAMS)
     #-- abstract --
     map.abstract(:in => RDF::DC)
     #-- subject --
     map.subject(:in => RDF::DC, class_name:"MadsSubject")
     #-- keyword --
-    map.keyword(:in => CAMELOT)
+    map.keyword(:in => RDF::CAMELOT)
     #-- type --
     map.worktype(:to=>"type", :in => RDF::DC, class_name:"WorkType")
     #-- medium --
@@ -45,24 +45,24 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     #-- language --
     map.language(:in => RDF::DC, class_name:"MadsLanguage")
     # -- publication status --
-    map.publicationStatus(:to => "DocumentStatus", :in => BIBO)
+    map.publicationStatus(:to => "DocumentStatus", :in => RDF::BIBO)
     # -- review status --
-    map.reviewStatus(:in => ORA)
+    map.reviewStatus(:in => RDF::ORA)
     # -- rights activity --
     map.license(:in => RDF::DC, class_name:"LicenseStatement")
     map.dateCopyrighted(:in => RDF::DC)
     map.rightsHolder(:in => RDF::DC)
-    map.rightsHolderGroup(:in => ORA)
+    map.rightsHolderGroup(:in => RDF::ORA)
     map.rights(:in => RDF::DC, class_name:"RightsStatement")
     map.rightsActivity(:in => RDF::PROV, :to => "hadActivity", class_name:"RightsActivity")
     # -- creation activity --
     # TODO: link with Fedora person objects
-    map.creation(:to => "hadCreationActivity", :in => ORA, class_name:"CreationActivity")
+    map.creation(:to => "hadCreationActivity", :in => RDF::ORA, class_name:"CreationActivity")
     # -- funding activity --
     # TODO: Lookup and link with Fedora funder objects
-    map.funding(:to => "isOutputOf", :in => FRAPO, class_name:"FundingActivity")
+    map.funding(:to => "isOutputOf", :in => RDF::FRAPO, class_name:"FundingActivity")
     #-- publication activity --
-    map.publication(:to => "hadPublicationActivity", :in => ORA, class_name:"PublicationActivity")
+    map.publication(:to => "hadPublicationActivity", :in => RDF::ORA, class_name:"PublicationActivity")
     # -- Commissioning body --
     # TODO: Nested attributes using Prov
     #-- source --
