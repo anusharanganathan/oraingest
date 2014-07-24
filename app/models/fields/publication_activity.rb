@@ -1,4 +1,3 @@
-require 'vocabulary/prov_vocabulary'
 require 'vocabulary/ora_vocabulary'
 
 class PublicationActivity
@@ -12,15 +11,15 @@ class PublicationActivity
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationActivity")
     end
     }
-  #rdf_type rdf_type PROV.Activity
+  #rdf_type rdf_type RDF::PROV.Activity
   map_predicates do |map|
     map.type(:in => RDF::DC)
-    map.hasDocument(:to => "generated", :in => PROV, class_name:"PublicationDocument")
-    map.datePublished(:to => "generatedAtTime", :in => PROV)
-    map.location(:to => "atLocation", :in => PROV)
+    map.hasDocument(:to => "generated", :in => RDF::PROV, class_name:"PublicationDocument")
+    map.datePublished(:to => "generatedAtTime", :in => RDF::PROV)
+    map.location(:to => "atLocation", :in => RDF::PROV)
     map.dateAccepted(:in => RDF::DC)
-    map.wasAssociatedWith(:in => PROV)
-    map.publisher(:to => "qualifiedAssociation", :in => PROV, class_name:"QualifiedPublicationAssociation")
+    map.wasAssociatedWith(:in => RDF::PROV)
+    map.publisher(:to => "qualifiedAssociation", :in => RDF::PROV, class_name:"QualifiedPublicationAssociation")
   end
   accepts_nested_attributes_for :hasDocument, :publisher
 
@@ -182,11 +181,11 @@ class QualifiedPublicationAssociation
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationAssociation")
     end
     }
-  #rdf_type rdf_type PROV.Association
+  #rdf_type rdf_type RDF::PROV.Association
   map_predicates do |map|
     map.type(:in => RDF::DC)
-    map.agent(:in => PROV)
-    map.role(:to => "hadRole", :in => PROV)
+    map.agent(:in => RDF::PROV)
+    map.role(:to => "hadRole", :in => RDF::PROV)
     map.name(:to => "n", :in => RDF::VCARD)
     map.website(:to => "hasURL", :in => RDF::VCARD)
   end

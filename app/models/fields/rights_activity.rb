@@ -1,6 +1,3 @@
-require 'vocabulary/rdfs_vocabulary'
-require 'vocabulary/prov_vocabulary'
-
 class LicenseStatement
   include ActiveFedora::RdfObject
   attr_accessor :licenseLabel, :licenseStatement, :licenseURI
@@ -13,9 +10,9 @@ class LicenseStatement
     end
     }
   map_predicates do |map|
-    map.licenseLabel(:to => "label", :in => RDFS)
-    map.licenseStatement(:to => "value", :in => RDFS)
-    map.licenseURI(:to => "isDefinedBy", :in => RDFS)
+    map.licenseLabel(:to => "label", :in => RDF::RDFS)
+    map.licenseStatement(:to => "value", :in => RDF)
+    map.licenseURI(:to => "isDefinedBy", :in => RDF::RDFS)
   end
 
   def persisted?
@@ -53,7 +50,7 @@ class RightsStatement
     end
     }
   map_predicates do |map|
-    map.rightsStatement(:to => "value", :in => RDFS)
+    map.rightsStatement(:to => "value", :in => RDF)
     map.rightsType(:to => "type", :in => RDF::DC)
   end
 
@@ -84,8 +81,8 @@ class RightsActivity
     }
   map_predicates do |map|
     map.activityType(:to => "type", :in => RDF::DC)
-    map.activityUsed(:to => "used", :in => PROV)
-    map.activityGenerated(:to => "generated", :in => PROV)
+    map.activityUsed(:to => "used", :in => RDF::PROV)
+    map.activityGenerated(:to => "generated", :in => RDF::PROV)
   end
 
   def persisted?

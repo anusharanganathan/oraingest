@@ -1,5 +1,3 @@
-require 'vocabulary/rdfs_vocabulary'
-
 class WorkType
   include ActiveFedora::RdfObject
   attr_accessor :typelabel, :typeAuthority
@@ -16,7 +14,7 @@ class WorkType
     end
     }
   map_predicates do |map|
-    map.typeLabel(:to => "label", :in => RDFS)
+    map.typeLabel(:to => "label", :in => RDF::RDFS)
     map.typeAuthority(:to => "type", :in => RDF)
   end
 

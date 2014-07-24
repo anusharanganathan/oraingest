@@ -7,8 +7,6 @@ require 'vocabulary/camelot_vocabulary'
 require 'vocabulary/ora_vocabulary'
 require 'vocabulary/dams_vocabulary'
 require 'vocabulary/mads_vocabulary'
-require 'vocabulary/prov_vocabulary'
-require 'vocabulary/prov_vocabulary'
 # Fields
 require 'fields/mads_language'
 require 'fields/mads_subject'
@@ -28,7 +26,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #    RDF::URI.new("info:fedora/" + ds.identifier)
   #  end
   #  }
-  rdf_type rdf_type PROV.Entity
+  rdf_type rdf_type RDF::PROV.Entity
   map_predicates do |map|
     #-- title --
     map.title(:in => RDF::DC)
@@ -56,7 +54,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.rightsHolder(:in => RDF::DC)
     map.rightsHolderGroup(:in => ORA)
     map.rights(:in => RDF::DC, class_name:"RightsStatement")
-    map.rightsActivity(:in => PROV, :to => "hadActivity", class_name:"RightsActivity")
+    map.rightsActivity(:in => RDF::PROV, :to => "hadActivity", class_name:"RightsActivity")
     # -- creation activity --
     # TODO: link with Fedora person objects
     map.creation(:to => "hadCreationActivity", :in => ORA, class_name:"CreationActivity")

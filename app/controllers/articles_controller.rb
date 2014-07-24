@@ -22,7 +22,6 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require "vocabulary/prov_vocabulary"
 require "vocabulary/frapo_vocabulary"
 
 class ArticlesController < ApplicationController
@@ -392,7 +391,7 @@ class ArticlesController < ApplicationController
       ag.push("info:fedora/#{@article.id}#rights")
     end
     if !ag.empty?
-      rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
+      rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: RDF::PROV.Activity, activityGenerated: ag}
       @article.rightsActivity.build(rap)
     end
     
@@ -471,7 +470,7 @@ class ArticlesController < ApplicationController
           rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [@article.id, rel_index]
           @article.qualifiedRelation.build(rel)
           @article.qualifiedRelation[rel_index].entity = nil
-          rel[:entity][:type] = PROV.Entity
+          rel[:entity][:type] = RDF::PROV.Entity
           @article.qualifiedRelation[rel_index].entity.build(rel[:entity])
         end
       end
@@ -548,7 +547,7 @@ class ArticlesController < ApplicationController
           end
         end  
         id0 = "info:fedora/%s#creationActivity" % @article.id
-        vals = {'id' => id0, :wasAssociatedWith=> [], :type => PROV.Activity}
+        vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
         (0..cp[0][:creator].length-1).each do |n|
           b1 = "info:fedora/%s#creator%d" % [@article.id, n]
           vals[:wasAssociatedWith].push(b1)
@@ -562,7 +561,7 @@ class ArticlesController < ApplicationController
           b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
           c1['id'] = b2
           #c1[:agent] = b1
-          c1[:type] = PROV.Association
+          c1[:type] = RDF::PROV.Association
           @article.creation[0].creator.build(c1)
           @article.creation[0].creator[c1_index].agent = nil
           @article.creation[0].creator[c1_index].agent.build(agent)
@@ -590,7 +589,7 @@ class ArticlesController < ApplicationController
         end
         id0 = "info:fedora/%s#publicationActivity" % @article.id
         p[0]['id'] = id0
-        p[0][:type] = PROV.Activity
+        p[0][:type] = RDF::PROV.Activity
         if !p[0][:publisher][0][:name].empty?
           p[0][:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
         end
@@ -625,7 +624,7 @@ class ArticlesController < ApplicationController
           end
           if !p[0][:publisher][0][:name].nil?
             p[0][:publisher][0]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
-            p[0][:publisher][0][:type] = PROV.Association
+            p[0][:publisher][0][:type] = RDF::PROV.Association
             p[0][:publisher][0][:agent] = "info:fedora/%s#publisher" % @article.id
             p[0][:publisher][0][:role] = RDF::DC.publisher
             @article.publication[0].publisher.build(p[0][:publisher][0])

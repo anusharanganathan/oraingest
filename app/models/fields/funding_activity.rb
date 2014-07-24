@@ -1,4 +1,3 @@
-require 'vocabulary/prov_vocabulary'
 require 'vocabulary/frapo_vocabulary'
 require 'vocabulary/ora_vocabulary'
 
@@ -13,10 +12,10 @@ class FundingActivity
       RDF::URI.new("info:fedora/" + ds.pid + "#fundingActivity")
     end
     }
-  rdf_type rdf_type PROV.Activity
+  rdf_type rdf_type RDF::PROV.Activity
   map_predicates do |map|
-    map.wasAssociatedWith(:in => PROV)
-    map.funder(:to => "qualifiedAssociation", :in => PROV, class_name:"QualifiedFundingAssociation")
+    map.wasAssociatedWith(:in => RDF::PROV)
+    map.funder(:to => "qualifiedAssociation", :in => RDF::PROV, class_name:"QualifiedFundingAssociation")
   end
   accepts_nested_attributes_for :funder
 
@@ -48,10 +47,10 @@ class QualifiedFundingAssociation
       RDF::URI.new("info:fedora/" + ds.pid + "#fundingAssociation")
     end
     }
-  rdf_type rdf_type PROV.Association
+  rdf_type rdf_type RDF::PROV.Association
   map_predicates do |map|
-    map.agent(:in => PROV, class_name:"FundingAssociation")
-    map.role(:to => "hadRole", :in => PROV)
+    map.agent(:in => RDF::PROV, class_name:"FundingAssociation")
+    map.role(:to => "hadRole", :in => RDF::PROV)
     map.funds(:to => "isFundingAgencyFor", :in => FRAPO)
     map.awards(:to => "awards", :in => FRAPO, class_name:"FundingAward")
     map.annotation(:in => ORA)
