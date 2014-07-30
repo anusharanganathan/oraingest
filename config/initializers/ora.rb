@@ -2,6 +2,7 @@
 require 'vocabulary/camelot'
 require 'vocabulary/ora'
 require 'vocabulary/bibo'
+require 'vocabulary/pso'
 
 Sufia.config do |config|
 
@@ -160,9 +161,9 @@ Sufia.config do |config|
     }
 
     config.embargo_options = [
-      "Restricted until embargo end date",
-      "Not visible",
-      "Visible"  
+      "Open access",
+      "Access restricted until embargo end date",
+      "Closed access",
     ]
 
     config.article_role_types = {

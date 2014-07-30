@@ -93,12 +93,9 @@
         <div class="control-group">
           <%= render partial: "shared/rights_activity_fields_edit", as: :article, :locals => { :f => f } %>
           <%= render partial: "shared/article_admin_fields_edit", as: :article, :locals => { :f => f } %>
-          <%= render partial: 'shared/files_and_embargo_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/catalogue_embargo_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/file_info_fields_edit', as: :article, :locals => { :f => f } %>
           <%= render partial: "shared/permissions_edit", as: :article %>
-          <% if false %>
-            <!-- Not displaying permissions for now, but is very useful -->
-            <%= render partial: "permission_form_edit", as: :article %>
-          <% end %>
           <div class="actions">
             <%= f.submit "Save rights and access", class: "btn btn-success" %>
           </div>

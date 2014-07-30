@@ -2,6 +2,7 @@ module RDF
   class TIME < RDF::Vocabulary("http://www.w3.org/2006/time#")
     property :TemporalEntity
     property :hasBeginning
+    property :hasEnd
     property :DurationDescription
     property :hasDurationDescription
     property :years

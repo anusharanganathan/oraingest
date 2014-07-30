@@ -23,6 +23,7 @@ require 'parsing_nesting/tree'
 
 require "utils"
 require "vocabulary/frapo"
+require 'ora/embargo_date'
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy, :revokePermissions]
@@ -395,24 +396,38 @@ class ArticlesController < ApplicationController
       @article.rightsActivity.build(rap)
     end
     
+    # get the publication date to calculate embargo dates for access rights
+    datePublished = nil
+    if article_params.has_key?(:publication) && !article_params[:publication].nil? && !article_params[:publication][0].nil? && article_params[:publication][0].has_key?(:datePublished)
+      datePublished = article_params[:publication][0][:datePublished]
+    end
+    if datePublished.nil? || datePublished.empty?
+      if !@article.publication[0].nil? && !@article.publication[0].datePublished.nil?
+        datePublished = @article.publication[0].datePublished.first
+      end
+    end
+
     # Remove blank assertions for article access rights and build
     if article_params.has_key?(:accessRights)
-      ar = article_params[:accessRights][0]
       @article.accessRights = nil
-      ar['id'] = "info:fedora/#{@article.id}#accessRights"
-      ar.each do |k, v| 
-        ar[k] = nil if v.empty?
-      end
-      if ar[:embargoStatus] == "Visible"
-        ar[:embargoStart] = nil
-        ar[:embargoEnd] = nil
-        ar[:embargoRelease] = nil
-      elsif ar[:embargoStatus] == "Not visible"
-        ar[:embargoStart] = nil
-        ar[:embargoEnd] = nil
-        ar[:embargoRelease] = nil
-      end
+      ar = Ora.validateEmbargoDates(article_params[:accessRights][0], "info:fedora/#{@article.id}", datePublished)
       @article.accessRights.build(ar)
+      @article.accessRights[0].embargoDate = nil
+      if ar[:embargoStatus] == "Embargoed"
+        @article.accessRights[0].embargoDate.build(ar[:embargoDate][0])
+        @article.accessRights[0].embargoDate[0].start = nil
+        @article.accessRights[0].embargoDate[0].duration = nil
+        @article.accessRights[0].embargoDate[0].end = nil
+        if !ar[:embargoDate][0][:start][0].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
+          @article.accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
+        end
+        if !ar[:embargoDate][0][:duration][0].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)         
+          @article.accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
+        end
+        if !ar[:embargoDate][0][:end][0].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
+          @article.accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
+        end
+      end
     end
 
     # Remove blank assertions for internal relations and build
@@ -434,18 +449,26 @@ class ArticlesController < ApplicationController
         end
         @article.hasPart.build(select) 
         @article.hasPart[count].accessRights = nil
+        endDate = nil
         if select.has_key?(:accessRights)
-          select[:accessRights][0]['id'] = "info:fedora/#{@article.id}/datastreams/#{dsid}#accessRights"
-          if select[:accessRights][0][:embargoStatus] == "Visible"
-            select[:accessRights][0][:embargoStart] = nil
-            select[:accessRights][0][:embargoEnd] = nil
-            select[:accessRights][0][:embargoRelease] = nil
-          elsif select[:accessRights][0][:embargoStatus] == "Not visible"
-            select[:accessRights][0][:embargoStart] = nil
-            select[:accessRights][0][:embargoEnd] = nil
-            select[:accessRights][0][:embargoRelease] = nil
+          ar = Ora.validateEmbargoDates(select[:accessRights][0], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
+          @article.hasPart[count].accessRights.build(ar)
+          @article.hasPart[count].accessRights[0].embargoDate = nil
+          if ar[:embargoStatus] == "Embargoed"
+            @article.hasPart[count].accessRights[0].embargoDate.build(ar[:embargoDate][0])
+            @article.hasPart[count].accessRights[0].embargoDate[0].start = nil
+            @article.hasPart[count].accessRights[0].embargoDate[0].duration = nil
+            @article.hasPart[count].accessRights[0].embargoDate[0].end = nil
+            if !ar[:embargoDate][0][:start][0].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
+              @article.hasPart[count].accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
+            end
+            if !ar[:embargoDate][0][:duration][0].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)
+              @article.hasPart[count].accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
+            end
+            if !ar[:embargoDate][0][:end][0].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
+              @article.hasPart[count].accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
+            end
           end
-          @article.hasPart[count].accessRights.build(select[:accessRights][0])
         end
         count += 1
       end 
