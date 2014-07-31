@@ -619,24 +619,20 @@ class ArticlesController < ApplicationController
         @article.publication.build(p[0])
         @article.publication[0].hasDocument = nil
         if !p[0][:hasDocument].empty?
-          if (p[0]["hasDocument"][0].except("journal").any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
+          if (p[0]["hasDocument"][0].except("journal", "series").any? {|k,v| !v.nil? && !v.empty?} or \
+              p[0]["hasDocument"][0]["journal"][0].any? {|k,v| !v.nil? && !v.empty?} or \
+              p[0]["hasDocument"][0]["series"][0].any? {|k,v| !v.nil? && !v.empty?})
             p[0][:hasDocument][0]['id'] = "info:fedora/%s#publicationDocument" % @article.id
             @article.publication[0].hasDocument.build(p[0][:hasDocument][0])
             @article.publication[0].hasDocument[0].journal = nil
-            if (p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
-               p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
-               p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
+            if (p[0]["hasDocument"][0]["journal"][0].any? {|k,v| !v.nil? && !v.empty?})
+              p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
               @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
-              @article.publication[0].hasDocument[0].journal[0].periodical = nil
-              p[0][:hasDocument][0][:journal][0][:periodical][0].each do |k, v|
-                p[0][:hasDocument][0][:journal][0][:periodical][0][k] = nil if v.empty?
-              end
-              if p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?}
-                p[0][:hasDocument][0][:journal][0][:periodical][0]['id'] = "info:fedora/%s#publicationPeriodical" % @article.id
-                @article.publication[0].hasDocument[0].journal[0].periodical.build(p[0][:hasDocument][0][:journal][0][:periodical][0])
-              end
+            end
+            @article.publication[0].hasDocument[0].series = nil
+            if (p[0]["hasDocument"][0]["series"][0].any? {|k,v| !v.nil? && !v.empty?})
+              p[0][:hasDocument][0][:series][0]['id'] = "info:fedora/%s#publicationSeries" % @article.id
+              @article.publication[0].hasDocument[0].series.build(p[0][:hasDocument][0][:series][0])
             end
           end
         end

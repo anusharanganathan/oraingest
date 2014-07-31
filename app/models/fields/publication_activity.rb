@@ -1,8 +1,10 @@
 require 'vocabulary/bibo'
+require 'vocabulary/fabio'
+require 'vocabulary/ora'
 
 class PublicationActivity
   include ActiveFedora::RdfObject
-  attr_accessor :generated, :datePublished, :location, :dateAccepted, :wasAssociatedWith, :publisher
+  attr_accessor :publicationStatus, :reviewStatus, :hasDocument, :datePublished, :location, :dateAccepted, :wasAssociatedWith, :publisher
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -14,6 +16,8 @@ class PublicationActivity
   #rdf_type rdf_type RDF::PROV.Activity
   map_predicates do |map|
     map.type(:in => RDF::DC)
+    map.publicationStatus(:to => "DocumentStatus", :in => RDF::BIBO)
+    map.reviewStatus(:in => RDF::ORA)
     map.hasDocument(:to => "generated", :in => RDF::PROV, class_name:"PublicationDocument")
     map.datePublished(:to => "generatedAtTime", :in => RDF::PROV)
     map.location(:to => "atLocation", :in => RDF::PROV)
@@ -21,7 +25,8 @@ class PublicationActivity
     map.wasAssociatedWith(:in => RDF::PROV)
     map.publisher(:to => "qualifiedAssociation", :in => RDF::PROV, class_name:"QualifiedPublicationAssociation")
   end
-  accepts_nested_attributes_for :hasDocument, :publisher
+  accepts_nested_attributes_for :hasDocument
+  accepts_nested_attributes_for :publisher
 
   def persisted?
     rdf_subject.kind_of? RDF::URI
@@ -56,7 +61,7 @@ end
 
 class PublicationDocument
   include ActiveFedora::RdfObject
-  attr_accessor :identifier, :doi, :journal, :uri
+  attr_accessor :identifier, :doi, :journal, :series, :uri
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -65,14 +70,16 @@ class PublicationDocument
       RDF::URI.new("info:fedora/" + ds.pid + "#publicationDocument")
     end
     }
-  rdf_type rdf_type RDF::BIBO.Document
+  rdf_type rdf_type RDF::FABIO.Work
   map_predicates do |map|
     map.identifier(:in => RDF::BIBO)
     map.doi(:in => RDF::BIBO)
     map.journal(:to => 'isPartOf', :in => RDF::DC, class_name:"PublicationJournal")
+    map.series(:to => 'isPartOfSeries', :in => RDF::ORA, class_name:"PublicationSeries")
     map.uri(:in => RDF::BIBO)
   end
   accepts_nested_attributes_for :journal
+  accepts_nested_attributes_for :series
 
   def persisted?
     rdf_subject.kind_of? RDF::URI
@@ -93,8 +100,11 @@ class PublicationDocument
     end
     solr_doc[Solrizer.solr_name("desc_metadata__doi", :symbol)] = self.doi.first
     solr_doc[Solrizer.solr_name("desc_metadata__publicationUri", :displayable)] = self.uri.first
+    solr_doc[Solrizer.solr_name("desc_metadata__seriesTitle", :stored_searchable)] = self.series.first.title.first
     # Index journal information 
-    self.journal.first.to_solr(solr_doc)
+    if !self.journal.nil? && !self.journal.first.nil?
+      self.journal.first.to_solr(solr_doc)
+    end
     solr_doc
   end
 
@@ -102,7 +112,7 @@ end
 
 class PublicationJournal
   include ActiveFedora::RdfObject
-  attr_accessor :title, :issn, :eissn, :periodical, :volume, :issue, :pages
+  attr_accessor :title, :issn, :eissn, :volume, :issue, :pages
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -116,12 +126,10 @@ class PublicationJournal
     map.title(:in => RDF::DC)
     map.issn(:in => RDF::BIBO)
     map.eissn(:in => RDF::BIBO)
-    map.periodical(:to => 'isPartOf', :in => RDF::DC, class_name:"PublicationPeriodical")
     map.volume(:in => RDF::BIBO)
     map.issue(:in => RDF::BIBO)
     map.pages(:in => RDF::BIBO)
   end
-  accepts_nested_attributes_for :periodical
 
   def persisted?
     rdf_subject.kind_of? RDF::URI
@@ -135,7 +143,6 @@ class PublicationJournal
     solr_doc[Solrizer.solr_name("desc_metadata__journalTitle", :stored_searchable)] = self.title.first
     solr_doc[Solrizer.solr_name("desc_metadata__issn", :symbol)] = self.issn.first
     solr_doc[Solrizer.solr_name("desc_metadata__eissn", :symbol)] = self.eissn.first
-    solr_doc[Solrizer.solr_name("desc_metadata__periodicalTitle", :stored_searchable)] = self.periodical.first.title.first
     solr_doc[Solrizer.solr_name("desc_metadata__volume", :displayable)] = self.volume.first
     solr_doc[Solrizer.solr_name("desc_metadata__issue", :displayable)] = self.issue.first
     solr_doc[Solrizer.solr_name("desc_metadata__pages", :displayable)] = self.pages.first
@@ -144,7 +151,7 @@ class PublicationJournal
 
 end
 
-class PublicationPeriodical
+class PublicationSeries
   include ActiveFedora::RdfObject
   attr_accessor :title
 
@@ -152,10 +159,10 @@ class PublicationPeriodical
     if ds.pid.nil?
       RDF::URI.new
     else
-      RDF::URI.new("info:fedora/" + ds.pid + "#publicationPeriodcial")
+      RDF::URI.new("info:fedora/" + ds.pid + "#publicationSeries")
     end
     }
-  rdf_type rdf_type RDF::BIBO.Periodical
+  rdf_type rdf_type RDF::BIBO.Series
   map_predicates do |map|
     map.title(:in => RDF::DC)
   end

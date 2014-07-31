@@ -21,11 +21,6 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
   attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :license, :dateCopyrighted, :rightsHolder, :rightsHolderGroup, :rights, :rightsActivity, :creation, :funding, :publication
 
-  #rdf_subject { |ds|
-  #  if ds.identifier
-  #    RDF::URI.new("info:fedora/" + ds.identifier)
-  #  end
-  #  }
   rdf_type rdf_type RDF::PROV.Entity
   map_predicates do |map|
     #-- title --

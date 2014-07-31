@@ -20,5 +20,6 @@ module RDF
     property :oaStatus
     property :apcPaid
     property :refException
+    property :isPartOfSeries
   end
 end

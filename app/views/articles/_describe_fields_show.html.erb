@@ -39,20 +39,6 @@
       </p>
       <% end %>
       
-      <% if !@article.publicationStatus.empty? %>
-      <p>
-        <strong>Publication status:</strong>
-        <%= @article.publicationStatus.first %>
-      </p>
-      <% end %>
-      
-      <% if !@article.reviewStatus.empty? %>
-      <p>
-        <strong>reviewStatus:</strong>
-        <%= @article.reviewStatus.first %>
-      </p>
-      <% end %>
-
       <%= render partial: "shared/mads_language_fields_show", as: :article %>
       <%= render partial: "shared/mads_subject_fields_show", as: :article %>
 

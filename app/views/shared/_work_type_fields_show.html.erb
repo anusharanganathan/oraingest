@@ -1,4 +1,4 @@
-<% if @article.worktype %>
+<% if !@article.worktype.nil? && !@article.worktype.first.nil? %>
   <div id="workType"><p><strong>Type of work:</strong>
     <% @article.worktype.each do |t|%>
       <% if !t.typeLabel.empty? and !t.typeAuthority.empty? %>

@@ -9,6 +9,14 @@
   <% if p.publisher.empty? %>
     <% p.publisher.build %>
   <% end %>
+  <div class="field">
+    <%= label_tag "article[publication][][publicationStatus]", "Publication status", :class=>"control-label" %>
+    <%= select_tag "article[publication][][publicationStatus]", options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first) %>
+  </div>
+  <div class="field">
+    <%= label_tag "article[publication][][reviewStatus]", "Review status", :class=>"control-label" %>
+    <%= select_tag "article[publication][][reviewStatus]", options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first) %>
+  </div>
   <% p.publisher.each do |p2| %>
     <div class="field">
       <%= label_tag "article[publication][][publisher][][name]", "Publisher name", :class=>"control-label" %>
@@ -35,6 +43,9 @@
     <% if p2.journal.empty? %>
       <% p2.journal.build %>
     <% end %>
+    <% if p2.series.empty? %>
+      <% p2.series.build %>
+    <% end %>
     <div class="field">
       <%= label_tag "article[publication][][hasDocument][][doi]", "DOI", :class=>"control-label" %>
       <%= text_field_tag "article[publication][][hasDocument][][doi]", p2.doi.first %>
@@ -47,10 +58,13 @@
       <%= label_tag "article[publication][][hasDocument][][identifier]", "Article number", :class=>"control-label" %>
       <%= text_field_tag "article[publication][][hasDocument][][identifier]", p2.identifier.first %>
     </div>
+    <% p2.series.each do |p4| %>
+      <div class="field">
+        <%= label_tag "article[publication][][hasDocument][][series][][title]", "Name of series" %>
+        <%= text_field_tag "article[publication][][hasDocument][][series][][title]", p4.title.first %>      
+      </div>
+    <% end %>
     <% p2.journal.each do |p3| %>
-      <% if p3.periodical.empty? %>
-        <% p3.periodical.build %>
-      <% end %>
       <div class="field">
         <%= label_tag "article[publication][][hasDocument][][journal][][title]", "Journal title", :class=>"control-label" %>
         <%= text_field_tag "article[publication][][hasDocument][][journal][][title]", p3.title.first %>
@@ -75,12 +89,6 @@
         <%= label_tag "article[publication][][hasDocument][][journal][][pages]", "Page range", :class=>"control-label" %>
         <%= text_field_tag "article[publication][][hasDocument][][journal][][pages]", p3.pages.first %>
       </div>
-      <% p3.periodical.each do |p4| %>
-        <div class="field">
-          <%= label_tag "article[publication][][hasDocument][][journal][][periodical][][title]", "Name of periodical" %>
-          <%= text_field_tag "article[publication][][hasDocument][][journal][][periodical][][title]", p4.title.first %>      
-        </div>
-      <% end %>
     <% end %>
   <% end %>
 <% end %>

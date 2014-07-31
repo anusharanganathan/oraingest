@@ -21,16 +21,6 @@
   </div>
 <% end %>
 
-<div class="field">
-  <%= f.label :publicationStatus, "Publication status" %>
-  <%= f.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>@article.publicationStatus.first) %>
-</div>
-
-<div class="field">
-  <%= f.label :reviewStatus, "Review status" %>
-  <%= f.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>@article.reviewStatus.first) %>
-</div>
-
 <div class="control-group" id="keyword">
   <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
   <div class="controls" id="keyword_clone_0">
