@@ -1,0 +1,47 @@
+<% if @files %>
+  <% puts "======== has part length %d" % @article.hasPart.length %>
+
+  <% @files.each_with_index do |file, n| %>
+    <!-- get the file details -->
+    <% dsid = file['url'].split("/")[-1] %>
+    <% select = nil %>
+    <% if !@article.hasPart.empty? %>
+      <% @article.hasPart.each do |hp| %>
+        <% if hp.identifier.first == dsid %>
+          <% select = hp %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if select.nil? %>
+      <% @article.hasPart.build %>
+      <% @article.hasPart[n].identifier = [dsid] %>
+    <% end %>
+  <% end %>
+
+  <% puts "======== has part length %d" % @article.hasPart.length %>
+
+  <% @article.hasPart.each_with_index do |hp, n| %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <legend><%= hp.identifier.first %>: description and rights</legend>
+          <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
+            <div class="field">
+              <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
+              <%= f_hp.label :type, "Type of file", :class=>"control-label" %>
+              <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types, :selected => hp.type.first) %>
+            </div>
+            <div class="field">
+              <%= f_hp.label :description, "Description of file", :class=>"control-label" %>
+              <%= f_hp.text_field :description, :value => hp.description.first %>
+            </div>
+            <%= f_hp.fields_for :accessRights do |f_a| %>
+              <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights } %>
+            <% end %>
+          <% end %>
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+<% end %>
+

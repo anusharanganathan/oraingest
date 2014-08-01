@@ -108,6 +108,8 @@ end
 
 class InternalRelations
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :identifier, :description, :type, :format, :accessRights
 
   map_predicates do |map|
@@ -134,6 +136,8 @@ end
 
 class ExternalRelationsQualified
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :relation, :entity
 
   rdf_type rdf_type RDF::PROV.Influence

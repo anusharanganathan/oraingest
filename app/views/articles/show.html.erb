@@ -5,15 +5,15 @@
 <% end %>
 <%= render partial: "describe_fields_show", as: :article %>
 <%= render partial: "shared/creation_activity_fields_show", as: :article %>
-<%= render partial: "shared/publication_activity_fields_show", as: :article %>
+<%= render partial: "shared/publication_activity/article_fields_show", as: :article %>
 <%= render partial: "shared/funding_activity_fields_show", as: :article %>
 <%= render partial: "shared/relation_fields_show", as: :article %>
 <%= render partial: "shared/rights_activity_fields_show", as: :article %>
-<%= render partial: "shared/catalogue_embargo_fields_show", as: :article %>
+<%= render partial: "shared/embargo/catalogue_fields_show", as: :article %>
 <%= render partial: "shared/file_info_fields_show", as: :article %>
 <%= render partial: "shared/article_admin_fields_show", as: :article %>
 <%= render partial: "shared/workflow_show", as: :article %>
 <%= render partial: "shared/permissions_show", as: :article %>
 
-<%= render partial: "shared/actions_show", as: :article %>
+<%= render partial: "actions_show", as: :article %>
 

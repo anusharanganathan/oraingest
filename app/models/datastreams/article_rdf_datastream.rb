@@ -19,7 +19,7 @@ require 'fields/publication_activity'
 class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :description, :abstract, :keyword, :worktype, :medium, :language, :language_attributes, :numPages, :pages, :publicationStatus, :reviewStatus, :subject, :license, :dateCopyrighted, :rightsHolder, :rightsHolderGroup, :rights, :rightsActivity, :creation, :funding, :publication
+  attr_accessor :title, :subtitle, :abstract, :subject, :keyword, :worktype, :medium, :language, :publicationStatus, :reviewStatus, :license, :dateCopyrighted, :rightsHolder, :rightsHolderGroup, :rights, :rightsActivity, :creation, :funding, :publication
 
   rdf_type rdf_type RDF::PROV.Entity
   map_predicates do |map|
@@ -64,7 +64,15 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes of name, homepage and uri - one to many
 
   end
-  accepts_nested_attributes_for :language, :subject, :worktype, :license, :rights, :rightsActivity, :creation, :funding, :publication
+  accepts_nested_attributes_for :language
+  accepts_nested_attributes_for :subject
+  accepts_nested_attributes_for :worktype
+  accepts_nested_attributes_for :license
+  accepts_nested_attributes_for :rights
+  accepts_nested_attributes_for :rightsActivity
+  accepts_nested_attributes_for :creation
+  accepts_nested_attributes_for :funding
+  accepts_nested_attributes_for :publication
 
   def to_solr(solr_doc={})
     solr_doc[Solrizer.solr_name("desc_metadata__title", :stored_searchable)] = self.title
@@ -115,7 +123,7 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     self.publication.each do |p|
         p.to_solr(solr_doc)
     end
-    # Index each publication individually
+    # Index each funding individually
     self.funding.each do |f|
         f.to_solr(solr_doc)
     end

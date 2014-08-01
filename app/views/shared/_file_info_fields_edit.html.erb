@@ -42,7 +42,7 @@
           <%= text_field_tag "article[hasPart][#{n}][description]" %>
         <% end %> 
       </div>
-      <%= render partial: 'shared/file_embargo_fields_edit', as: :article, :locals => { :f => f, :hp => select, :n => n } %>
+      <%= render partial: 'shared/embargo/file_fields_edit', as: :article, :locals => { :f => f, :hp => select, :n => n } %>
     </div><!-- /.fileInfo -->
   <% end %>
 <% end %>

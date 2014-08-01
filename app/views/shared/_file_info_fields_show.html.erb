@@ -24,7 +24,7 @@
               <div><%= select.description.first %></div>
             <% end %>
             <% if !select.accessRights.empty? %>
-              <%= render partial: 'shared/file_embargo_fields_show', as: :article, :locals => { :hp => select } %>
+              <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
             <% end %>
           <% end %>
         <% end %>

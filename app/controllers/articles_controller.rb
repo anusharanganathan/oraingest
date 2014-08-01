@@ -410,7 +410,8 @@ class ArticlesController < ApplicationController
     # Remove blank assertions for article access rights and build
     if article_params.has_key?(:accessRights)
       @article.accessRights = nil
-      ar = Ora.validateEmbargoDates(article_params[:accessRights][0], "info:fedora/#{@article.id}", datePublished)
+      #ar = Ora.validateEmbargoDates(article_params[:accessRights][0], "info:fedora/#{@article.id}", datePublished)
+      ar = Ora.validateEmbargoDates2(article_params[:accessRights], "info:fedora/#{@article.id}", datePublished)
       @article.accessRights.build(ar)
       @article.accessRights[0].embargoDate = nil
       if ar[:embargoStatus] == "Embargoed"
@@ -418,13 +419,13 @@ class ArticlesController < ApplicationController
         @article.accessRights[0].embargoDate[0].start = nil
         @article.accessRights[0].embargoDate[0].duration = nil
         @article.accessRights[0].embargoDate[0].end = nil
-        if !ar[:embargoDate][0][:start][0].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
+        if !ar[:embargoDate][0][:start].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
           @article.accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
         end
-        if !ar[:embargoDate][0][:duration][0].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)         
+        if !ar[:embargoDate][0][:duration].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)         
           @article.accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
         end
-        if !ar[:embargoDate][0][:end][0].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
+        if !ar[:embargoDate][0][:end].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
           @article.accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
         end
       end
@@ -451,7 +452,8 @@ class ArticlesController < ApplicationController
         @article.hasPart[count].accessRights = nil
         endDate = nil
         if select.has_key?(:accessRights)
-          ar = Ora.validateEmbargoDates(select[:accessRights][0], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
+          #ar = Ora.validateEmbargoDates(select[:accessRights][0], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
+          ar = Ora.validateEmbargoDates2(select[:accessRights], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
           @article.hasPart[count].accessRights.build(ar)
           @article.hasPart[count].accessRights[0].embargoDate = nil
           if ar[:embargoStatus] == "Embargoed"
@@ -459,13 +461,13 @@ class ArticlesController < ApplicationController
             @article.hasPart[count].accessRights[0].embargoDate[0].start = nil
             @article.hasPart[count].accessRights[0].embargoDate[0].duration = nil
             @article.hasPart[count].accessRights[0].embargoDate[0].end = nil
-            if !ar[:embargoDate][0][:start][0].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
+            if !ar[:embargoDate][0][:start].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
               @article.hasPart[count].accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
             end
-            if !ar[:embargoDate][0][:duration][0].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)
+            if !ar[:embargoDate][0][:duration].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)
               @article.hasPart[count].accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
             end
-            if !ar[:embargoDate][0][:end][0].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
+            if !ar[:embargoDate][0][:end].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
               @article.hasPart[count].accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
             end
           end
