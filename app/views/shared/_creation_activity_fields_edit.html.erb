@@ -1,47 +1,48 @@
 <div id="creator" class="control-group">
-  <% if @article.creation.empty? %>
-    <% @article.creation.build %>
+  <% if creation.empty? %>
+    <% creation.build %>
   <% end %>
-  <% @article.creation.each do |c0| %>
-    <% if c0.creator.empty? %>
-      <% c0.creator.build %>
-    <% end %>
-    <% c0.creator.each_with_index do |c, c_index| %>
-      <% if c.agent.empty? %>
-        <% c.agent.build %>
+  <% creation.each do |c0| %>
+    <%= f.fields_for :creation, c0 do |f_c0| %>
+      <% if c0.creator.empty? %>
+        <% c0.creator.build %>
       <% end %>
-      <% if c.agent[0].affiliation.empty? %>
-        <% c.agent[0].affiliation.build %>
+      <% c0.creator.each_with_index do |c, c_index| %>
+        <%= f_c0.fields_for "creator][", c do |f_c| %>
+          <% if c.agent.empty? %>
+            <% c.agent.build %>
+          <% end %>
+          <% if c.agent[0].affiliation.empty? %>
+            <% c.agent[0].affiliation.build %>
+          <% end %>
+          <div class="controls" id="creator_clone_<%=c_index%>">
+            <legend>Creator information</legend>
+            <%= f_c.label :name, "Name of creator", :class=>"control-label" %>
+            <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
+            <%= f_c.label :email, "Email", :class=>"control-label" %>
+            <%= f_c.text_field :email, :value => c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
+            <%= f_c.label :sameAs, "Link to creator object", :class=>"control-label" %>
+            <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
+            <%= f_c.label :role, "Role", :class=>"control-label" %>
+            <%= f_c.select :role, options_for_select(Sufia.config.article_role_types, :selected=>c.role.first), id: "creatorRole%d"%c_index %>
+            <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
+              <%= f_c.fields_for "][affiliation][", c2 do |f_c2| %>
+                <%= f_c2.label :name, "Affiliation", :class=>"control-label" %>
+                <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
+                <%= f_c2.label :sameAs, "Link to affiliation object", :class=>"control-label" %>
+                <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+              <% end %>
+            <% end %>
+            <% if c_index.to_s == "0" %>
+              <button class="adder btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">+<span class="accessible-hidden">add another creator</span></button>
+              &nbsp;
+              <%= help_icon(:creator) %>
+            <% else %>
+              <button class="remover btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">-<span class="accessible-hidden">remove creator</span></button>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
-      <div class="controls" id="creator_clone_<%=c_index%>">
-        <legend>Creator information</legend>
-        <%= check_box_tag "oxfordPerson%d"%c_index, "Yes", false %> This creator is an Oxford person
-        <%= label_tag "article[creation][][creator][][name]", "Name of creator", :class=>"control-label" %>
-        <%= text_field_tag "article[creation][][creator][][name]", c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
-        <%= label_tag "article[creation][][creator][][role]", "Role", :class=>"control-label" %>
-        <% if !c.role.nil? %>
-          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.article_role_types, :selected=>c.role.first), id: "creatorRole%d"%c_index %>
-        <% else %>
-          <%= select_tag "article[creation][][creator][][role]", options_for_select(Sufia.config.artivle_role_types), id: "creatorRole%d"%c_index %>
-        <% end %>
-        <%= label_tag "article[creation][][creator][][email]", "Email", :class=>"control-label" %>
-        <%= text_field_tag "article[creation][][creator][][email]", c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
-        <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
-          <%= label_tag "article[creation][][creator][][affiliation][][name]", "Affiliation", :class=>"control-label" %>
-          <%= text_field_tag "article[creation][][creator][][affiliation][][name]", c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
-          <%= label_tag "article[creation][][creator][][affiliation][][sameAs]", "Link to affiliation object", :class=>"control-label" %>
-          <%= text_field_tag "article[creation][][creator][][affiliation][][sameAs]", c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
-        <% end %>
-        <%= label_tag "article[creation][][creator][][sameAs", "Link to creator object", :class=>"control-label" %>
-        <%= text_field_tag "article[creation][][creator][][sameAs]", c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
-        <% if c_index.to_s == "0" %>
-          <button class="adder btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">+<span class="accessible-hidden">add another creator</span></button>
-          &nbsp;
-          <%= help_icon(:creator) %>
-        <% else %>
-          <button class="remover btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">-<span class="accessible-hidden">remove creator</span></button>
-        <% end %>
-      </div>
     <% end %>
   <% end %>
 </div>

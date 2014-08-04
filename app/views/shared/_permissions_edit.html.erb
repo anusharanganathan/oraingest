@@ -11,8 +11,8 @@
         <% added = false %>
         <% access_types = {"Access level"=>"", "Read and download"=>"read", "Edit" => "edit"} %>
         <% p_index = 0 %>
-        <% @article.permissions.each do |p| %>
-          <% if p.type.downcase == "group" || p.name == @article.workflowMetadata.depositor[0] %>
+        <% permissions.each do |p| %>
+          <% if p.type.downcase == "group" || p.name == depositor %>
             <div class="controls" id="permissions_clone_<%=p_index%>">
               <div class="uneditable-input" style="width:210px;"><%= p.name %></div>
               <div class="uneditable-input" style="width:210px;"><%= p.access %></div>
@@ -20,32 +20,36 @@
             <% p_index += 1 %>
           <% end %>
         <% end %>
-        <% @article.permissions.each do |p| %>
-          <% if p.type.downcase != "group" && p.name != @article.workflowMetadata.depositor[0] %>
-            <div class="controls" id="permissions_clone_<%=p_index%>">
-              <%= hidden_field_tag "article[permissions_attributes][][type]", p.type, id: nil %>
-              <%= text_field_tag "article[permissions_attributes][][name]", p.name, :class=>"permissionName", id: "permissionName%d"% p_index %>
-              <%= select_tag "article[permissions_attributes][][access]", options_for_select(access_types, :selected=>p.access), id: "permissionAccess%d"% p_index %>
-              <% if added == false %> 
-                <button class="adder btn" name="additional_permissions" id="permissions_button_<%=p_index%>" type="button">+<span class="accessible-hidden">Grant permissions to another</span></button>
-                &nbsp;
-                <%= help_icon(:permissions) %>
-                <% added = true %>
-              <% end %>
-            </div>
-            <% p_index += 1 %>
+        <% permissions.each do |p| %>
+          <%= f.fields_for :permissions, p do |f_p| %>
+            <% if p.type.downcase != "group" && p.name != depositor %>
+              <div class="controls" id="permissions_clone_<%=p_index%>">
+                <%= f_p.hidden_field :type, :value => p.type, id: nil %>
+                <%= f_p.text_field :name, :value => p.name, :class=>"permissionName", id: "permissionName%d"% p_index %>
+                <%= f_p.select :access, options_for_select(access_types, :selected=>p.access), id: "permissionAccess%d"% p_index %>
+                <% if added == false %> 
+                  <button class="adder btn" name="additional_permissions" id="permissions_button_<%=p_index%>" type="button">+<span class="accessible-hidden">Grant permissions to another</span></button>
+                  &nbsp;
+                  <%= help_icon(:permissions) %>
+                  <% added = true %>
+                <% end %>
+              </div>
+              <% p_index += 1 %>
+            <% end %>
           <% end %>
         <% end %>
         <% if added == false %>
-          <div class="controls" id="permissions_clone_<%=p_index%>">
-            <%= hidden_field_tag "article[permissions_attributes][][type]", "user", id: nil %>
-            <%= text_field_tag "article[permissions_attributes][][name]", "", :class=>"permissionName", id: "permissionName%d"% p_index %>
-            <%= select_tag "article[permissions_attributes][][access]", options_for_select(access_types), id: "permissionAccess%d"% p_index %>
-            <button class="adder btn" name="additional_permissions" id="permissions_button_<%=p_index%>" type="button">+<span class="accessible-hidden">Grant permissions to another</span></button>
-            &nbsp;
-            <%= help_icon(:permissions) %>
-            <% added = true %>
-          </div>
+          <%= f.fields_for :permissions, p do |f_p| %>
+            <div class="controls" id="permissions_clone_<%=p_index%>">
+              <%= f_p.hidden_field :type, :value => "user", id: nil %>
+              <%= f_p.text_field :name, :value => "", :class=>"permissionName", id: "permissionName%d"% p_index %>
+              <%= f_p.select :access, options_for_select(access_types), id: "permissionAccess%d"% p_index %>
+              <button class="adder btn" name="additional_permissions" id="permissions_button_<%=p_index%>" type="button">+<span class="accessible-hidden">Grant permissions to another</span></button>
+              &nbsp;
+              <%= help_icon(:permissions) %>
+              <% added = true %>
+            </div>
+          <% end %>
         <% end %>
       </div>
 

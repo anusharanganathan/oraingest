@@ -5,13 +5,13 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: "shared/work_type_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
           <%= render partial: "describe_fields_edit", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_language_fields_edit", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_subject_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
+          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
           <div class="actions">
             <%= f.submit "Save article description", class: "btn btn-success" %>
-          </div>
+          </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
     </div> <!-- /.well -->
@@ -25,8 +25,10 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields_edit', as: :article, :locals => { :f => f } %>
-          <%= f.submit "Save creators information", class: "btn btn-success" %>
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation } %>
+          <div class="actions">
+            <%= f.submit "Save creators information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
     </div> <!-- /.well -->
@@ -40,10 +42,10 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/publication_activity/article_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
           <div class="actions">
             <%= f.submit "Save publication information", class: "btn btn-success" %>
-          </div>
+          </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
     </div> <!-- /.well -->
@@ -57,10 +59,10 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/funding_activity_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
           <div class="actions">
             <%= f.submit "Save funder information", class: "btn btn-success" %>
-          </div>
+          </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
     </div> <!-- /.well -->
@@ -74,10 +76,10 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/relation_fields_edit', as: :article, :locals => { :f => f } %>
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
           <div class="actions">
             <%= f.submit "Save information", class: "btn btn-success" %>
-          </div>
+          </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
     </div> <!-- /.well -->
@@ -89,15 +91,15 @@
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'rightstab') %>
     <%= render partial: "shared/rights_activity_fields_edit", as: :article, :locals => { :f => f } %>
-    <%= render partial: "shared/article_admin_fields_edit", as: :article, :locals => { :f => f } %>
+    <%= render partial: "admin_fields_edit", as: :article, :locals => { :f => f } %>
     <%= render partial: 'shared/embargo/catalogue_fields_edit', as: :article, :locals => { :f => f } %>
     <%= render partial: 'shared/file_info_fields_edit2', as: :article, :locals => { :f => f } %>
-    <%= render partial: "shared/permissions_edit", as: :article %>
+    <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
     <div class="actions">
       <%= f.submit "Save rights and access", class: "btn btn-success" %>
-    </div>
+    </div><!-- /.actions -->
   <% end %>
-  <%= render partial: 'shared/permissions_delete' %>
+  <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0], :pid => @pid, :model => "article"} %>
 </div>
 
 <div class="tab-pane" id="workflowtab">

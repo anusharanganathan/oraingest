@@ -1,8 +1,13 @@
 <div class="tab-pane active" id="local">
+  <% editpath = edit_article_path(@pid) %>
   <%= render partial: 'shared/upload/agreement' %>
-  <%= render partial: 'shared/upload/alerts' %>
-  <%= render partial: 'shared/upload/upload_form' %>
-  <%= render partial: 'shared/upload/script_templates' %>
+  <%= render partial: 'shared/upload/alerts', :locals => { :editpath => editpath } %>
+  <%= form_for(@article, :html => {:multipart => true, :id => 'fileupload'}) do |f| %>
+    <div class="well">
+      <%= render partial: 'shared/upload/file_upload_fields' %>
+    </div>
+  <% end %>
+  <%= render partial: 'shared/upload/script_templates', :locals => { :editpath => editpath } %>
   <%= render partial: 'shared/upload/list_files' %>
 </div>
 

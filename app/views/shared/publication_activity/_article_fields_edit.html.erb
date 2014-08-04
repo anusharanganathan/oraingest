@@ -1,95 +1,105 @@
 <legend>Publication information</legend>
-<% if @article.publication.empty? %>
-  <% @article.publication.build %>
+<% if publication.empty? %>
+  <% publication.build %>
 <% end %>
-<% @article.publication.each do |p| %>
-  <% if p.hasDocument.empty? %>
-    <% p.hasDocument.build %>
-  <% end %>
-  <% if p.publisher.empty? %>
-    <% p.publisher.build %>
-  <% end %>
-  <div class="field">
-    <%= label_tag "article[publication][][publicationStatus]", "Publication status", :class=>"control-label" %>
-    <%= select_tag "article[publication][][publicationStatus]", options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first) %>
-  </div>
-  <div class="field">
-    <%= label_tag "article[publication][][reviewStatus]", "Review status", :class=>"control-label" %>
-    <%= select_tag "article[publication][][reviewStatus]", options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first) %>
-  </div>
-  <% p.publisher.each do |p2| %>
-    <div class="field">
-      <%= label_tag "article[publication][][publisher][][name]", "Publisher name", :class=>"control-label" %>
-      <%= text_field_tag "article[publication][][publisher][][name]", p2.name.first %>
-    </div>
-    <div class="field">
-      <%= label_tag "article[publication][][publisher][][website]", "Publisher website", :class=>"control-label" %>
-      <%= text_field_tag "article[publication][][publisher][][website]", p2.website.first %>
-    </div>
-  <% end %> 
-  <div class="field">
-    <%= label_tag "article[publication][][dateAccepted]", "Date of acceptance", :class=>"control-label" %>
-    <%= date_field_tag "article[publication][][dateAccepted]", p.dateAccepted.first %>
-  </div>
-  <div class="field">
-    <%= label_tag "article[publication][][datePublished]", "Date published", :class=>"control-label" %>
-    <%= date_field_tag "article[publication][][datePublished]", p.datePublished.first %>
-  </div>
-  <div class="field">
-    <%= label_tag "article[publication][][location]", "Place of publication", :class=>"control-label" %>
-    <%= text_field_tag "article[publication][][location]", p.location.first %>
-  </div>
-  <% p.hasDocument.each do |p2| %>
-    <% if p2.journal.empty? %>
-      <% p2.journal.build %>
+<% publication.each do |p| %>
+  <%= f.fields_for :publication, p do |f_p| %>
+    <% if p.hasDocument.empty? %>
+      <% p.hasDocument.build %>
     <% end %>
-    <% if p2.series.empty? %>
-      <% p2.series.build %>
+    <% if p.publisher.empty? %>
+      <% p.publisher.build %>
     <% end %>
     <div class="field">
-      <%= label_tag "article[publication][][hasDocument][][doi]", "DOI", :class=>"control-label" %>
-      <%= text_field_tag "article[publication][][hasDocument][][doi]", p2.doi.first %>
+      <%= f_p.label :publicationStatus, "Publication status", :class=>"control-label" %>
+      <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first) %>
     </div>
     <div class="field">
-      <%= label_tag "article[publication][][hasDocument][][uri]", "URL for publisher copy of the document", :class=>"control-label" %>
-      <%= text_field_tag "article[publication][][hasDocument][][uri]", p2.uri.first %>
+      <%= f_p.label :reviewStatus, "Review status", :class=>"control-label" %>
+      <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first) %>
+    </div>
+    <% p.publisher.each do |p2| %>
+      <%= f_p.fields_for :publisher, p2 do |f_p2| %>
+        <div class="field">
+          <%= f_p2.label :name, "Publisher name", :class=>"control-label" %>
+          <%= f_p2.text_field :name, :value => p2.name.first %>
+        </div>
+        <div class="field">
+          <%= f_p2.label :website, "Publisher website", :class=>"control-label" %>
+          <%= f_p2.text_field :website, :value => p2.website.first %>
+        </div>
+      <% end %> 
+    <% end %> 
+    <div class="field">
+      <%= f_p.label :dateAccepted, "Date of acceptance", :class=>"control-label" %>
+      <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
     </div>
     <div class="field">
-      <%= label_tag "article[publication][][hasDocument][][identifier]", "Article number", :class=>"control-label" %>
-      <%= text_field_tag "article[publication][][hasDocument][][identifier]", p2.identifier.first %>
+      <%= f_p.label :datePublished, "Date published", :class=>"control-label" %>
+      <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
     </div>
-    <% p2.series.each do |p4| %>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][series][][title]", "Name of series" %>
-        <%= text_field_tag "article[publication][][hasDocument][][series][][title]", p4.title.first %>      
-      </div>
-    <% end %>
-    <% p2.journal.each do |p3| %>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][title]", "Journal title", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][title]", p3.title.first %>
-      </div>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][issn]", "Journal ISSN", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][issn]", p3.issn.first %>
-      </div>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][eissn]", "Journal eISSN", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][eissn]", p3.eissn.first %>
-      </div>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][volume]", "Journal volume", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][volume]", p3.volume.first %>
-      </div>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][issue]", "Journal issue", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][issue]", p3.issue.first %>
-      </div>
-      <div class="field">
-        <%= label_tag "article[publication][][hasDocument][][journal][][pages]", "Page range", :class=>"control-label" %>
-        <%= text_field_tag "article[publication][][hasDocument][][journal][][pages]", p3.pages.first %>
-      </div>
-    <% end %>
-  <% end %>
-<% end %>
+    <div class="field">
+      <%= f_p.label :location, "Place of publication", :class=>"control-label" %>
+      <%= f_p.text_field :location, :value => p.location.first %>
+    </div>
+    <% p.hasDocument.each do |p2| %>
+      <% if p2.journal.empty? %>
+        <% p2.journal.build %>
+      <% end %>
+      <% if p2.series.empty? %>
+        <% p2.series.build %>
+      <% end %>
+      <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
+        <div class="field">
+          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
+          <%= f_p2.text_field :doi, :value => p2.doi.first %>
+        </div>
+        <div class="field">
+          <%= f_p2.label :uri, "URL for publisher copy of the document", :class=>"control-label" %>
+          <%= f_p2.text_field :uri, :value => p2.uri.first %>
+        </div>
+        <div class="field">
+          <%= f_p2.label :identifier, "Article number", :class=>"control-label" %>
+          <%= f_p2.text_field :identifier, :value => p2.identifier.first %>
+        </div>
+        <% p2.series.each do |p3| %>
+          <%= f_p2.fields_for :series, p3 do |f_p3| %>
+            <div class="field">
+              <%= f_p3.label :title, "Name of series" %>
+              <%= f_p3.text_field :title, :value => p3.title.first %>
+            </div>
+          <% end #fields for each series %>
+        <% end #each series %>
+        <% p2.journal.each do |p3| %>
+          <%= f_p2.fields_for :journal, p3 do |f_p3| %>
+            <div class="field">
+              <%= f_p3.label :title, "Journal title", :class=>"control-label" %>
+              <%= f_p3.text_field :title, :value => p3.title.first %>
+            </div>
+            <div class="field">
+              <%= f_p3.label :issn, "Journal ISSN", :class=>"control-label" %>
+              <%= f_p3.text_field :issn, :value => p3.issn.first %>
+            </div>
+            <div class="field">
+              <%= f_p3.label :eissn, "Journal eISSN", :class=>"control-label" %>
+              <%= f_p3.text_field :eissn, :value => p3.eissn.first %>
+            </div>
+            <div class="field">
+              <%= f_p3.label :volume, "Journal volume", :class=>"control-label" %>
+              <%= f_p3.text_field :volume, :value => p3.volume.first %>
+            </div>
+            <div class="field">
+              <%= f_p3.label :issue, "Journal issue", :class=>"control-label" %>
+              <%= f_p3.text_field :issue, :value => p3.issue.first %>
+            </div>
+            <div class="field">
+              <%= f_p3.label :pages, "Page range", :class=>"control-label" %>
+              <%= f_p3.text_field :pages, :value => p3.pages.first %>
+            </div>
+          <% end #fields for each journal %>
+        <% end #each journal %>
+      <% end #fields for each document %>
+    <% end #each document %>
+  <% end #fields for each publication %>
+<% end #each publication %>
 

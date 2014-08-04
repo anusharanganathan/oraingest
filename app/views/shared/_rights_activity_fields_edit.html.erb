@@ -13,11 +13,7 @@
         <%= f.fields_for :license do |l| %>
           <div class="field">
             <%= l.label :licenseLabel, "License", :class=>"control-label" %>
-            <% if !@article.license[0].nil? %>
-              <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses, :selected=>@article.license[0].licenseLabel.first) %>
-            <% else %>
-              <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses) %>
-            <% end %>
+            <%= l.select :licenseLabel, options_for_select(Sufia.config.article_licenses, :selected=>@article.license[0].licenseLabel.first) %>
           </div>
           <div class="field">
             <%= l.label :licenseStatement, "License statement", :class=>"control-label" %>
@@ -38,8 +34,8 @@
         </div>
         <div id="rightsHolder" class="field">
           <div class="controls" id="rightsHolder_clone_0">
-            <%= label_tag "article[rightsHolder][]", "Rights holder", :class=>"control-label" %>
-            <%= text_field_tag "article[rightsHolder][]", @article.rightsHolder.first %>
+            <%= f.label "rightsHolder][", "Rights holder", :class=>"control-label" %>
+            <%= f.text_field "rightsHolder][", :value => @article.rightsHolder.first %>
             <button class="adder btn" name="additional_rightsHolder" id="rightsHolder_button_0" type="button">+<span class="accessible-hidden">add another rights holder</span></button>
             &nbsp;
             <%= help_icon(:rightsHolder) %>
@@ -47,7 +43,7 @@
           <% rhcount = 1 %>
           <% for rh in @article.rightsHolder.from(1) %>
             <div class="controls" id="rightsHolder_clone_<%=rhcount%>">
-              <%= f.text_field :rightsHolder, :name=>"article[rightsHolder][]", :value=>rh, id: "rightsHolder%d"% rhcount %>
+              <%= f.text_field "rightsHolder][", :value=>rh, id: "rightsHolder%d"% rhcount %>
               <button class="remover btn" name="additional_rightsHolder" id="rightsHolder_button_<%=rhcount%>" type="button">-<span class="accessible-hidden">remove this rights holder</span></button>
               <% rhcount += 1 %>
             </div>
@@ -56,11 +52,7 @@
         <%= f.fields_for :rights do |r| %>
           <div class="field">
             <%= r.label :rightsStatement, "Rights statement (from publisher)", :class=>"control-label" %>
-            <% if !@article.rights[0].nil? %>
             <%= r.text_area :rightsStatement, :value=>@article.rights[0].rightsStatement.first%>
-            <% else %>
-            <%= r.text_area :rightsStatement, :value=>"" %>
-           <% end %>
           </div>
         <% end %>
       </div>

@@ -297,6 +297,9 @@ class ArticlesController < ApplicationController
 
   def add_metadata(article_params)
     if article_params.has_key?(:permissions_attributes)
+      if article_params[:permissions_attributes].is_a?(Hash)
+        article_params[:permissions_attributes] = article_params[:permissions_attributes].values()
+      end
       article_params[:permissions_attributes].each do |p|
         if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
           p["type"] = "user"
@@ -322,8 +325,12 @@ class ArticlesController < ApplicationController
 
     #remove_blank_assertions for subject and build
     if article_params.has_key?(:subject)
-      sp = article_params[:subject]
       @article.subject = nil
+      if article_params[:subject].is_a?(Hash)
+        sp = article_params[:subject].values()
+      else
+        sp = article_params[:subject]
+      end
       sp.each do |s|
         if s[:subjectLabel].empty?
            sp.delete(s)
@@ -398,8 +405,8 @@ class ArticlesController < ApplicationController
     
     # get the publication date to calculate embargo dates for access rights
     datePublished = nil
-    if article_params.has_key?(:publication) && !article_params[:publication].nil? && !article_params[:publication][0].nil? && article_params[:publication][0].has_key?(:datePublished)
-      datePublished = article_params[:publication][0][:datePublished]
+    if article_params.has_key?(:publication) && !article_params[:publication].nil? && article_params[:publication].has_key?(:datePublished)
+      datePublished = article_params[:publication][:datePublished]
     end
     if datePublished.nil? || datePublished.empty?
       if !@article.publication[0].nil? && !@article.publication[0].datePublished.nil?
@@ -527,10 +534,10 @@ class ArticlesController < ApplicationController
         @article.funding.build(vals)
         awardCount = 0
         fp[0][:funder].each_with_index do |f1, f1_index|
-          agent = { 'id' => "info:fedora/%s#funder%d" % [@article.id, f1_index], :name => f1[:name], :sameAs => f1[:sameAs], :type => FRAPO.FundingAgency }
+          agent = { 'id' => "info:fedora/%s#funder%d" % [@article.id, f1_index], :name => f1[:name], :sameAs => f1[:sameAs], :type => RDF::FRAPO.FundingAgency }
           b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
           f1['id'] = b2
-          f1[:role] = FRAPO.FundingAgency
+          f1[:role] = RDF::FRAPO.FundingAgency
           #TODO: Need to be more smart about these Ids. These assumptions are wrong
           if f1[:funds] == "Author"
             f1[:funds] = "info:fedora/#{params[:pid]}#creator1"
@@ -560,11 +567,12 @@ class ArticlesController < ApplicationController
     if article_params.has_key?(:creation)
       cp = article_params[:creation]
       @article.creation = nil
-      if cp[0]
+      #cp = cp[0]
+      if cp
         # has to have name of creator
-        cp[0][:creator].each do |c|
+        cp[:creator].each do |c|
           if c[:name].empty?
-            cp[0][:creator].delete(c)
+            cp[:creator].delete(c)
           else
             c.each do |k, v|
               c[k] = nil if v.empty?
@@ -573,14 +581,14 @@ class ArticlesController < ApplicationController
         end  
         id0 = "info:fedora/%s#creationActivity" % @article.id
         vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
-        (0..cp[0][:creator].length-1).each do |n|
+        (0..cp[:creator].length-1).each do |n|
           b1 = "info:fedora/%s#creator%d" % [@article.id, n]
           vals[:wasAssociatedWith].push(b1)
         end
         @article.creation.build(vals)
         affiliationCount = 0
         @article.creation[0].creator = nil
-        cp[0][:creator].each_with_index do |c1, c1_index|
+        cp[:creator].each_with_index do |c1, c1_index|
           b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
           agent = { 'id'=> b1, :name => c1[:name], :email => c1[:email], :type => RDF::VCARD.Individual, :sameAs => c1[:sameAs] }
           b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
@@ -597,61 +605,60 @@ class ArticlesController < ApplicationController
                 af['id'] = "info:fedora/%s#affiliation%d" % [@article.id, affiliationCount]
                 @article.creation[0].creator[c1_index].agent[0].affiliation.build(af)
                 affiliationCount += 1
-              end
-            end
-          end
-        end
-      end
-    end
+              end # if name
+            end # for each affiliation
+          end # if affiliation
+        end #for each creator
+      end #if creation activity
+    end # if creation in params
 
     #remove_blank_assertions for publication activity and build
     if article_params.has_key?(:publication)
       p = article_params[:publication]
       @article.publication = nil
-      if !p.empty?
-        p[0].each do |k, v|
-          p[0][k] = nil if v.empty?
-        end
-        id0 = "info:fedora/%s#publicationActivity" % @article.id
-        p[0]['id'] = id0
-        p[0][:type] = RDF::PROV.Activity
-        if !p[0][:publisher][0][:name].empty?
-          p[0][:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
-        end
-        @article.publication.build(p[0])
-        @article.publication[0].hasDocument = nil
-        if !p[0][:hasDocument].empty?
-          if (p[0]["hasDocument"][0].except("journal", "series").any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["journal"][0].any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["series"][0].any? {|k,v| !v.nil? && !v.empty?})
-            p[0][:hasDocument][0]['id'] = "info:fedora/%s#publicationDocument" % @article.id
-            @article.publication[0].hasDocument.build(p[0][:hasDocument][0])
-            @article.publication[0].hasDocument[0].journal = nil
-            if (p[0]["hasDocument"][0]["journal"][0].any? {|k,v| !v.nil? && !v.empty?})
-              p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
-              @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
-            end
-            @article.publication[0].hasDocument[0].series = nil
-            if (p[0]["hasDocument"][0]["series"][0].any? {|k,v| !v.nil? && !v.empty?})
-              p[0][:hasDocument][0][:series][0]['id'] = "info:fedora/%s#publicationSeries" % @article.id
-              @article.publication[0].hasDocument[0].series.build(p[0][:hasDocument][0][:series][0])
-            end
-          end
-        end
-        @article.publication[0].publisher = nil
-        if !p[0][:publisher].empty?
-          p[0][:publisher][0].each do |k, v|
-            p[0][:publisher][0][k] = nil if v.empty?
-          end
-          if !p[0][:publisher][0][:name].nil?
-            p[0][:publisher][0]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
-            p[0][:publisher][0][:type] = RDF::PROV.Association
-            p[0][:publisher][0][:agent] = "info:fedora/%s#publisher" % @article.id
-            p[0][:publisher][0][:role] = RDF::DC.publisher
-            @article.publication[0].publisher.build(p[0][:publisher][0])
-          end
-        end  
+      #p = p[0]
+      p.each do |k, v|
+        p[k] = nil if v.empty?
       end
+      id0 = "info:fedora/%s#publicationActivity" % @article.id
+      p['id'] = id0
+      p[:type] = RDF::PROV.Activity
+      if !p[:publisher_attributes]["0"][:name].empty?
+        p[:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
+      end
+      @article.publication.build(p)
+      @article.publication[0].hasDocument = nil
+      if !p[:hasDocument_attributes].empty?
+        if (p[:hasDocument_attributes]["0"].except(:journal_attributes, :series_attributes).any? {|k,v| !v.nil? && !v.empty?} or \
+            p[:hasDocument_attributes]["0"][:journal_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?} or \
+            p[:hasDocument_attributes]["0"][:series_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
+          p[:hasDocument_attributes]["0"]['id'] = "info:fedora/%s#publicationDocument" % @article.id
+          @article.publication[0].hasDocument.build(p[:hasDocument_attributes]["0"])
+          @article.publication[0].hasDocument[0].journal = nil
+          if (p[:hasDocument_attributes]["0"][:journal_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
+            p[:hasDocument_attributes]["0"][:journal_attributes]["0"]['id'] = "info:fedora/%s#publicationJournal" % @article.id
+            @article.publication[0].hasDocument[0].journal.build(p[:hasDocument_attributes]["0"][:journal_attributes]["0"])
+          end
+          @article.publication[0].hasDocument[0].series = nil
+          if (p[:hasDocument_attributes]["0"][:series_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
+            p[:hasDocument_attributes]["0"][:series_attributes]["0"]['id'] = "info:fedora/%s#publicationSeries" % @article.id
+            @article.publication[0].hasDocument[0].series.build(p[:hasDocument_attributes]["0"][:series_attributes]["0"])
+          end
+        end
+      end
+      @article.publication[0].publisher = nil
+      if !p[:publisher_attributes].empty?
+        p[:publisher_attributes]["0"].each do |k, v|
+          p[:publisher_attributes]["0"][k] = nil if v.empty?
+        end
+        if !p[:publisher_attributes]["0"][:name].nil?
+          p[:publisher_attributes]["0"]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
+          p[:publisher_attributes]["0"][:type] = RDF::PROV.Association
+          p[:publisher_attributes]["0"][:agent] = "info:fedora/%s#publisher" % @article.id
+          p[:publisher_attributes]["0"][:role] = RDF::DC.publisher
+          @article.publication[0].publisher.build(p[:publisher_attributes]["0"])
+        end
+      end  
     end
 
     respond_to do |format|

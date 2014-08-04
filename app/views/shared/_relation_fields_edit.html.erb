@@ -1,37 +1,35 @@
 <div id="relation" class="control-group">
-  <% if @article.qualifiedRelation.empty? %>
-    <% @article.qualifiedRelation.build %>
+  <% if qualifiedRelation.empty? %>
+    <% qualifiedRelation.build %>
   <% end %>
-  <% @article.qualifiedRelation.each_with_index do |r, r_index| %>
-    <div class="controls" id="relation_clone_<%=r_index%>">
-      <legend>Related item</legend>
-      <% if r.entity.empty? %>
-        <% r.entity.build %>
-      <% end %>
-      <%= label_tag 'article[qualifiedRelation][][id]', "URL of the related item", :class=>"control-label" %>
-      <%= text_field_tag 'article[qualifiedRelation][][id]', r.entity[0].id, id: "relationId%d"% r_index %>
-      <%= label_tag "article[qualifiedRelation][][title]", "Title", :class=>"control-label" %>
-      <%= text_field_tag "article[qualifiedRelation][][title]", r.entity[0].title.first, id: "relationTitle%d"% r_index %>
-      <%= label_tag "article[qualifiedRelation][][description]", "Description", :class=>"control-label" %>
-      <%= text_field_tag "article[qualifiedRelation][][description]", r.entity[0].description.first, id: "relationDescription%d"% r_index %>
-      <%= label_tag "article[qualifiedRelation][][citation]", "Citation text", :class=>"control-label" %>
-      <%= text_field_tag "article[qualifiedRelation][][citation]", r.entity[0].citation.first, id: "relationCitation%d"% r_index %>
-      <%= label_tag "article[qualifiedRelation][][relation]", "Type of relationship", :class=>"control-label" %>
-      <strong>this article</strong>
-      <% if !r.relation.nil? %>
-        <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
-      <% else %>
-        <%= select_tag "article[qualifiedRelation][][relation]", options_for_select(Sufia.config.relationship_types), id: "relationType%d"% r_index %>
-      <% end %>
-      <strong>Related item</strong>
-      <% if r_index.to_s == "0" %>
-        <button class="adder btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">+<span class="accessible-hidden">add another relation</span></button>
-        &nbsp;
-        <%= help_icon(:relation) %>
-      <% else %>
-        <button class="remover btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">-<span class="accessible-hidden">add another relation</span></button>
-      <% end %>
-    </div>
+  <% qualifiedRelation.each_with_index do |r, r_index| %>
+    <% if r.entity.empty? %>
+      <% r.entity.build %>
+    <% end %>
+    <%= f.fields_for "qualifiedRelation][", r do |f_r| %>
+      <div class="controls" id="relation_clone_<%=r_index%>">
+        <legend>Related item</legend>
+        <%= f_r.label 'id', "URL of the related item", :class=>"control-label" %>
+        <%= f_r.text_field 'id', :value => r.entity[0].id, id: "relationId%d"% r_index %>
+        <%= f_r.label :title, "Title", :class=>"control-label" %>
+        <%= f_r.text_field :title, :value => r.entity[0].title.first, id: "relationTitle%d"% r_index %>
+        <%= f_r.label :description, "Description", :class=>"control-label" %>
+        <%= f_r.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
+        <%= f_r.label :citation, "Citation text", :class=>"control-label" %>
+        <%= f_r.text_field :citation, :value => r.entity[0].citation.first, id: "relationCitation%d"% r_index %>
+        <%= f_r.label :relation, "Type of relationship", :class=>"control-label" %>
+        <strong>this article</strong>
+        <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
+        <strong>Related item</strong>
+        <% if r_index.to_s == "0" %>
+          <button class="adder btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">+<span class="accessible-hidden">add another relation</span></button>
+          &nbsp;
+          <%= help_icon(:relation) %>
+        <% else %>
+          <button class="remover btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">-<span class="accessible-hidden">add another relation</span></button>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </div>
 
