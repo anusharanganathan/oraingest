@@ -2,6 +2,8 @@ require 'vocabulary/ora'
 
 class CreationActivity
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :wasAssociatedWith, :creator
 
   rdf_subject { |ds|
@@ -38,6 +40,8 @@ end
 
 class QualifiedCreationAssociation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :type, :agent, :role
 
   rdf_subject { |ds|
@@ -85,6 +89,8 @@ end
 
 class CreationAssociation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :type, :name, :email, :affiliation, :sameAs
 
   #rdf_type rdf_type RDF::PROV.Association
@@ -131,6 +137,8 @@ end
 
 class Affiliation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :name, :sameAs
 
   rdf_subject { |ds|

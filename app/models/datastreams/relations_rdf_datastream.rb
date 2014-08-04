@@ -6,7 +6,8 @@ require 'vocabulary/time'
 require 'vocabulary/fabio'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
-
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :hasPart, :accessRights, :influence, :qualifiedRelation
 
   map_predicates do |map|
@@ -150,7 +151,7 @@ class ExternalRelationsQualified
   accepts_nested_attributes_for :entity
 
   def persisted?
-    Grdf_subject.kind_of? RDF::URI
+    rdf_subject.kind_of? RDF::URI
   end
 
   def id
@@ -177,6 +178,8 @@ end
 
 class ExternalRelations
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :title, :description, :type, :citation
 
   map_predicates do |map|
@@ -302,6 +305,8 @@ end
 
 class LabelledDate
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :date, :label
 
   map_predicates do |map|
@@ -323,6 +328,8 @@ end
 
 class EmbargoDuration
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :years, :months
 
   map_predicates do |map|

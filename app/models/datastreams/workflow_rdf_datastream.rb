@@ -44,6 +44,8 @@ end
 
 class Workflow
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   rdf_type rdf_type OxfordWorkflow.Workflow
   map_predicates do |map|
     map.identifier(:in => RDF::DC)
@@ -113,6 +115,8 @@ end
 
 class WorkflowEntry
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   map_predicates do |map|
     map.date(in: RDF::DC) 
     map.status(in: OxfordWorkflow)
@@ -135,6 +139,8 @@ end
 
 class WorkflowComment
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   map_predicates do |map|
     map.date(in: RDF::DC) 
     map.creator(in: RDF::DC)

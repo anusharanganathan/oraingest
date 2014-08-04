@@ -1,5 +1,7 @@
 class WorkType
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :typelabel, :typeAuthority
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>

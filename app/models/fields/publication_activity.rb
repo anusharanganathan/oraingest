@@ -4,6 +4,8 @@ require 'vocabulary/ora'
 
 class PublicationActivity
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :publicationStatus, :reviewStatus, :hasDocument, :datePublished, :location, :dateAccepted, :wasAssociatedWith, :publisher
 
   rdf_subject { |ds|
@@ -61,6 +63,8 @@ end
 
 class PublicationDocument
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :identifier, :doi, :journal, :series, :uri
 
   rdf_subject { |ds|
@@ -112,6 +116,8 @@ end
 
 class PublicationJournal
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :title, :issn, :eissn, :volume, :issue, :pages
 
   rdf_subject { |ds|
@@ -153,6 +159,8 @@ end
 
 class PublicationSeries
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :title
 
   rdf_subject { |ds|
@@ -179,6 +187,8 @@ end
 
 class QualifiedPublicationAssociation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :type, :agent, :role, :name, :website
 
   rdf_subject { |ds|

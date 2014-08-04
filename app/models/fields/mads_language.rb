@@ -1,6 +1,8 @@
 require 'vocabulary/mads'
 class MadsLanguage
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :languageLabel, :languageCode, :languageAuthority, :languageScheme
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>

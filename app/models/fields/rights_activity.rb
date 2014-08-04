@@ -1,5 +1,7 @@
 class LicenseStatement
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :licenseLabel, :licenseStatement, :licenseURI
 
   rdf_subject { |ds|
@@ -40,6 +42,8 @@ end
 
 class RightsStatement
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :rightsStatement, :rightsType
 
   rdf_subject { |ds|
@@ -70,6 +74,8 @@ end
 
 class RightsActivity
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :activityType, :activityUsed, :activityGenerated
 
   rdf_subject { |ds|

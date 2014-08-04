@@ -3,6 +3,8 @@ require 'vocabulary/ora'
 
 class FundingActivity
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :wasAssociatedWith, :funder
 
   rdf_subject { |ds|
@@ -38,6 +40,8 @@ end
 
 class QualifiedFundingAssociation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :agent, :role, :funds, :awards, :annotates
 
   rdf_subject { |ds|
@@ -96,6 +100,8 @@ end
 
 class FundingAssociation
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :type, :name, :sameAs
 
   map_predicates do |map|
@@ -116,6 +122,8 @@ end
 
 class FundingAward
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :grantNumber
 
   rdf_subject { |ds|
