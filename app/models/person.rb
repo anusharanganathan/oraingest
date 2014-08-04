@@ -1,5 +1,4 @@
 require "datastreams/person_rdf_datastream"
-require "oxford_terms"
 require "rdf"
 
 class Person < ActiveFedora::Base

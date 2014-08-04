@@ -1,7 +1,6 @@
 require "datastreams/workflow_rdf_datastream"
 require "datastreams/generic_file_rdf_datastream"
 require "person"
-require "oxford_terms"
 require "rdf"
 
 class GenericFile < ActiveFedora::Base
