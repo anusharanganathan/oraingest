@@ -21,5 +21,18 @@ module RDF
     property :apcPaid
     property :refException
     property :isPartOfSeries
+    property :dataStorageDetails
+    property :DataStorageAgreement
+    property :locator
+    property :hasAgreement
+    property :digitalSize
+    property :digitalSizeAllocated
+    property :digitalStorageSilo
+    property :dataSteward
+    property :dataContributor
+    property :dataStorageInvoice
+    property :monetaryValue
+    property :monetaryStatus
+    property :dateCollected
   end
 end

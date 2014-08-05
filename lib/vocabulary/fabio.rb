@@ -3,5 +3,8 @@ module RDF
     property :hasEmbargoDate
     property :hasEmbargoDuration
     property :Work
+    property :isStoredOn
+    property :AnalogStorageMedium
+    property :DigitalStorageMedium
   end
 end
