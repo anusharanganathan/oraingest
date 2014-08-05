@@ -15,5 +15,6 @@
 <%= render partial: "shared/workflow_show", as: :article %>
 <%= render partial: "shared/permissions_show", as: :article %>
 
-<%= render partial: "actions_show", as: :article %>
+<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
+<%= render partial: "shared/actions/show", :locals => { :path => path } %>
 

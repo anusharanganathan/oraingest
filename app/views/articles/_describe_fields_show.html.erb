@@ -9,7 +9,8 @@
   <h2><%= @article.subtitle.first %></h2>
 <% end %>
 
-<br/><%= render partial: "actions_show", as: :article %><br/>
+<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
+<br/><%= render partial: "shared/actions/show", :locals => { :path => path } %><br/>
       
 <div class="well">
   <div class="row">
@@ -45,4 +46,3 @@
     </div><!-- /.control-group -->
   </div> <!-- /.row -->
 </div> <!-- /.well -->
-      

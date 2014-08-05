@@ -5,7 +5,8 @@
 <% display_thumbs = true %>
 <% display_access = false %>
 
-<br/><%= render partial: "actions_list", as: :article %>
+<% path = { :new => new_article_path, :list => articles_path } %>
+<br/><%= render partial: "shared/actions/list", :locals => { :path => path } %>
 
 <div>
   <% if @articles.blank? && @submitted_articles.blank? %>

@@ -22,5 +22,6 @@
 </div>
 <br/>
 
-<%= render partial: "actions_edit", as: :article %>
+<% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => articles_path } %>
+<%= render partial: "shared/actions/edit", :locals => { :path => path } %>
 
