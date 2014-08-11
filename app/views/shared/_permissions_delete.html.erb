@@ -16,10 +16,10 @@
         <div class="uneditable-input" style="width:210px;"><%= p.name %></div>
         <div class="uneditable-input" style="width:210px;"><%= p.access %></div>
         <div class="uneditable-input label label-warning">
-          <%= form_tag('/%ss/%s/permissions'% [model, pid], method:"delete") do %>
-            <%= hidden_field_tag "%s[permissions_attributes][][type]"% model, p.type, id: nil %>
-            <%= hidden_field_tag "%s[permissions_attributes][][name]"% model, p.name, id: nil %>
-            <%= hidden_field_tag "%s[permissions_attributes][][access]"% model, p.access, id: nil %>
+          <%= form_tag('/%ss/%s/permissions'% [@model, pid], method:"delete") do %>
+            <%= hidden_field_tag "%s[permissions_attributes][][type]"% @model, p.type, id: nil %>
+            <%= hidden_field_tag "%s[permissions_attributes][][name]"% @model, p.name, id: nil %>
+            <%= hidden_field_tag "%s[permissions_attributes][][access]"% @model, p.access, id: nil %>
             <button class="btn btn-warning" name="revoke_permission" type="submit">X<span class="accessible-hidden">Revoke permission</span></button>
           <% end %>
         </div>
