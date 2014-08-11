@@ -6,21 +6,23 @@
     <% if r.entity.empty? %>
       <% r.entity.build %>
     <% end %>
-    <%= f.fields_for "qualifiedRelation][", r do |f_r| %>
+    <%= f.fields_for "qualifiedRelation][#{r_index}", r do |f_r| %>
       <div class="controls" id="relation_clone_<%=r_index%>">
         <legend>Related item</legend>
-        <%= f_r.label 'id', "URL of the related item", :class=>"control-label" %>
-        <%= f_r.text_field 'id', :value => r.entity[0].id, id: "relationId%d"% r_index %>
-        <%= f_r.label :title, "Title", :class=>"control-label" %>
-        <%= f_r.text_field :title, :value => r.entity[0].title.first, id: "relationTitle%d"% r_index %>
-        <%= f_r.label :description, "Description", :class=>"control-label" %>
-        <%= f_r.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
-        <%= f_r.label :citation, "Citation text", :class=>"control-label" %>
-        <%= f_r.text_field :citation, :value => r.entity[0].citation.first, id: "relationCitation%d"% r_index %>
-        <%= f_r.label :relation, "Type of relationship", :class=>"control-label" %>
-        <strong>this article</strong>
-        <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
-        <strong>Related item</strong>
+        <%= f_r.fields_for :entity, r.entity[0] do |f_e| %>
+          <%= f_e.label 'id', "URL of the related item", :class=>"control-label" %>
+          <%= f_e.text_field 'id', :value => r.entity[0].id, id: "relationId%d"% r_index %>
+          <%= f_e.label :title, "Title", :class=>"control-label" %>
+          <%= f_e.text_field :title, :value => r.entity[0].title.first, id: "relationTitle%d"% r_index %>
+          <%= f_e.label :description, "Description", :class=>"control-label" %>
+          <%= f_e.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
+          <%= f_e.label :citation, "Citation text", :class=>"control-label" %>
+          <%= f_e.text_field :citation, :value => r.entity[0].citation.first, id: "relationCitation%d"% r_index %>
+          <%= f_r.label :relation, "Type of relationship", :class=>"control-label" %>
+          <strong>this article</strong>
+          <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
+          <strong>Related item</strong>
+        <% end %>
         <% if r_index.to_s == "0" %>
           <button class="adder btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">+<span class="accessible-hidden">add another relation</span></button>
           &nbsp;

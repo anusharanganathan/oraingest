@@ -1,40 +1,51 @@
 <div id="funder" class="control-group">
   <% if funding.empty? %>
     <% funding.build %>
-    <% funding[0].funder.build %>
-    <% funding[0].funder[0].awards.build %>
   <% end %>
   <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
-  <% funding[0].funder.each_with_index do |f1, f1_index| %>
-    <%= f.fields_for "funding][][funder][", f1 do |f_1| %>
-      <div class="controls" id="funder_clone_<%=f1_index%>">
-        <legend>Funding information</legend>
+  <% funding.each do |f0| %>
+    <% if f0.funder.empty? %>
+      <% f0.funder.build %>
+    <% end %>
+    <%= f.fields_for :funding, f0 do |f_f0| %>
+      <% f0.funder.each_with_index do |f1, f1_index| %>
         <% if f1.agent.empty? %>
           <% f1.agent.build %>
         <% end %>
         <% if f1.awards.empty? %>
           <% f1.awards.build %>
         <% end %>
-        <%= f_1.label :name, "Name of funder", :class=>"control-label" %>
-        <%= f_1.text_field :name, :value => f1.agent[0].name.first, id: "funderName%d"% f1_index %>
-        <%= f_1.label :sameAs, "Link to funder object", :class=>"control-label" %>
-        <%= f_1.text_field :sameAs, :value => f1.agent[0].sameAs.first, id: "funderSameAs%d"% f1_index %>
-        <%= f_1.label :funds, "Whom are they funding", :class=>"control-label" %>
-        <%= f_1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), id: "funderFunds%d"% f1_index %>
-        <% f1.awards.each_with_index do |f2, f2_index| %>
-          <%= f_1.label "awards__grantNumber", "Grant number", :class=>"control-label" %>
-          <%= f_1.text_field "awards][][grantNumber", :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index] %>
+        <%= f_f0.fields_for :funder, f1 do |f_f1| %>
+          <div class="controls" id="funder_clone_<%=f1_index%>">
+            <legend>Funding information</legend>
+            <% f1.agent.each do |f2| %>
+              <%= f_f1.fields_for :agent, f2 do |f_f2| %>
+                <%= f_f2.label :name, "Name of funder", :class=>"control-label" %>
+                <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index %>
+                <%= f_f2.label :sameAs, "Link to funder object", :class=>"control-label" %>
+                <%= f_f2.text_field :sameAs, :value => f2.sameAs.first, id: "funderSameAs%d"% f1_index %>
+              <% end %>
+            <% end %>
+            <%= f_f1.label :funds, "Whom are they funding", :class=>"control-label" %>
+            <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), id: "funderFunds%d"% f1_index %>
+            <% f1.awards.each_with_index do |f2, f2_index| %>
+              <%= f_f1.fields_for :awards, f2 do |f_f2| %>
+                <%= f_f2.label :grantNumber, "Grant number", :class=>"control-label" %>
+                <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index] %>
+              <% end %>
+            <% end %>
+            <%= f_f1.label :annotation, "Funder acknowledgment details?", :class=>"control-label" %>
+            <%= f_f1.text_field :annotation, :value => f1.annotation.first, id: "funderAnnotation%d"% f1_index %>
+            <% if f1_index.to_s == "0" %>
+              <button class="adder btn" name="additional_funder" id="funder_button_<%=f1_index%>" type="button">+<span class="accessible-hidden">add another funder</span></button>
+              &nbsp;
+              <%= help_icon(:funder) %>
+            <% else %>
+              <button class="remover btn" name="additional_funder" id="funder_button_<%=f1_index%>" type="button">-<span class="accessible-hidden">remove funder</span></button>
+            <% end %>
+          </div>
         <% end %>
-        <%= f_1.label :annotation, "Funder acknowledgment details?", :class=>"control-label" %>
-        <%= f_1.text_field :annotation, :value => f1.annotation.first, id: "funderAnnotation%d"% f1_index %>
-        <% if f1_index.to_s == "0" %>
-          <button class="adder btn" name="additional_funder" id="funder_button_<%=f1_index%>" type="button">+<span class="accessible-hidden">add another funder</span></button>
-          &nbsp;
-          <%= help_icon(:funder) %>
-        <% else %>
-          <button class="remover btn" name="additional_funder" id="funder_button_<%=f1_index%>" type="button">-<span class="accessible-hidden">remove funder</span></button>
-        <% end %>
-      </div>
+      <% end %>
     <% end %>
   <% end %>
 </div>
