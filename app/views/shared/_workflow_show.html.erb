@@ -1,13 +1,13 @@
 <div class="well">
   <div class="row">
     <div class="control-group">
-      <% unless @article.workflows.first.nil? %>
-        <% wf = @article.workflows.first %>
+      <% unless article.workflows.first.nil? %>
+        <% wf = article.workflows.first %>
       <% end %>
 
       <h3>History - <small>what's happened so far</small></h3>
-      <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" %>
-        This Article has never been submitted for review.
+      <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" %>
+        This <%=@model.capitalize()%> has never been submitted for review.
 
       <% else %>
         <table class="table table-bordered">

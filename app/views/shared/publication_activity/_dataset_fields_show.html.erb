@@ -1,12 +1,12 @@
-<% if !@article.publication.empty? %>
-  <% if (!@article.publication[0].publisher.empty? || !@article.publication[0].datePublished.empty? || \
-    @article.publication[0]["hasDocument"][0].except("journal", "series").any? {|k,v| !v.nil? && !v.empty?}) %>
+<% if !article.publication.empty? %>
+  <% if (!article.publication[0].publisher.empty? || !article.publication[0].datePublished.empty? || \
+    article.publication[0]["hasDocument"][0].except("journal", "series").any? {|k,v| !v.nil? && !v.empty?}) %>
     <div class="well">
       <div class="row">
         <div class="control-group">
           <div id="publication">
             <div><strong>Publication details</strong></div>
-              <% @article.publication.each do |p| %>
+              <% article.publication.each do |p| %>
                 <div>
                 <% if !p.datePublished.empty? %>
                   <p>Date published: <%= p.datePublished.first %></p>

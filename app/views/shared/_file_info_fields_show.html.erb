@@ -12,8 +12,8 @@
           </legend>
           <% dsid = file['url'].split("/")[-1] %>
           <% select = nil %>
-          <% if !@article.hasPart.empty? %>
-            <% @article.hasPart.each do |hp| %>
+          <% if !article.hasPart.empty? %>
+            <% article.hasPart.each do |hp| %>
               <% if hp.identifier.first == dsid %>
                 <% select = hp %>
               <% end %>

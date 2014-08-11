@@ -1,9 +1,9 @@
-<% if !@article.creation.empty? && !@article.creation[0].creator.empty? %>
+<% if !article.creation.empty? && !article.creation[0].creator.empty? %>
   <div class="well">
     <div class="row">
       <div class="control-group">
         <div id="creation">
-          <% @article.creation[0].creator.each_with_index do |c, c_index| %>
+          <% article.creation[0].creator.each_with_index do |c, c_index| %>
             <div>
             <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
               <strong><%=link_to c.agent[0].name.first, c.agent[0].sameAs.first %></strong><br/>

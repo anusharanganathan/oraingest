@@ -1,6 +1,6 @@
-<% if !@article.worktype.nil? && !@article.worktype.first.nil? %>
+<% if !article.worktype.nil? && !article.worktype.first.nil? %>
   <div id="workType"><p><strong>Type of work:</strong>
-    <% @article.worktype.each do |t|%>
+    <% article.worktype.each do |t|%>
       <% if !t.typeLabel.empty? and !t.typeAuthority.empty? %>
         <span><%=link_to t.typeLabel.first, t.typeAuthority.first.to_s %></span>
       <% elsif !t.typeLabel.empty? %>
