@@ -37,18 +37,22 @@
     inputFields = cloneElem.find('input')
     $.each(inputFields, function(n, tf) {
       if ($(tf).attr('type') != "hidden") {
-        newName = $(tf).attr('id').replace(currentId, count);
+        newId = $(tf).attr('id').replace(currentId, count);
+        newName = $(tf).attr('name').replace("0", count);
         $(tf).val("");
         $(tf).attr('value', "");
-        $(tf).attr('id', newName).attr("required", false);
+        $(tf).attr('name', newName);
+        $(tf).attr('id', newId).attr("required", false);
       }
     })
     selectFields = cloneElem.find('select')
     $.each(selectFields, function(n, tf) {
-      newName = $(tf).attr('id').replace(currentId, count);
+      newId = $(tf).attr('id').replace(currentId, count);
+      newName = $(tf).attr('name').replace("0", count);
       $(tf).val("");
       $(tf).attr('value', "");
-      $(tf).attr('id', newName).attr("required", false);
+      $(tf).attr('name', newName);
+      $(tf).attr('id', newId).attr("required", false);
     })
   
     if (settings.afterAdd) {
