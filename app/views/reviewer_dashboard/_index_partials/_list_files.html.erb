@@ -1,8 +1,6 @@
 <% noid = document.id %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
-  <% puts '-'*80 %>
-  <%= puts document.keys %>
-  <% if document['active_fedora_model_ssi'] == 'Article' %>
+  <% if document['active_fedora_model_ssi'] == 'Article' OR document['active_fedora_model_ssi'] == 'Dataset'  %>
     <% path = article_path(noid) %>
     <% edit_path = edit_article_path(noid) %>
   <% else %>
