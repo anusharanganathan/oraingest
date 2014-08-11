@@ -1,0 +1,91 @@
+<div class="field">
+  <%= f.label :title %>
+  <%= f.text_field :title, :value=>@dataset.title.first, :required=>true %>
+</div>
+
+<div class="field">
+  <%= f.label :subtitle %>
+  <%= f.text_field :subtitle, :value=>@dataset.subtitle.first %>
+</div>
+
+<div class="field">
+  <%= f.label :abstract %>
+  <%= f.text_area :abstract, :value=>@dataset.abstract.first %>
+</div>
+
+<div class="control-group" id="keyword">
+  <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
+  <div class="controls" id="keyword_clone_0">
+    <%= f.text_field :keyword, :name=>"dataset[keyword][]", :value=>@dataset.keyword.first, id: "keyword0" %>
+    <button class="adder btn" name="additional_keyword" id="keyword_button_0" type="button">+<span class="accessible-hidden">add another keyword</span></button>
+    &nbsp;
+    <%= help_icon(:keyword) %>
+  </div>
+  <% kcount = 1 %>
+  <% for k in @dataset.keyword.from(1) %>
+    <div class="controls" id="keyword_clone_<%=kcount%>">
+      <%= f.text_field :keyword, :name=>"dataset[keyword][]", :value=>k, id: "keyword%d"% kcount %>
+      <button class="remover btn" name="additional_keyword" id="keyword_button_<%=kcount%>" type="button">-<span class="accessible-hidden">remove this keyword</span></button>
+      <% kcount += 1 %>
+    </div>
+  <% end %>
+</div>
+
+<div class="field">
+  <%= f.label :isDocumentedBy, "Documentation about your dataset and processes" %>
+  <%= f.text_area :isDocumentedBy, :value=>@dataset.isDocumentedBy.first %>
+</div>
+
+<div class="field">
+  <% if @dataset.temporal.empty? %>
+    <% @dataset.temporal.build %>
+  <% end %>
+  <%= f.label :temporal, "Temporal coverage of the data" %>
+  <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first %> to 
+  <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first %>
+</div>
+
+<div class="field">
+  <% if @dataset.dateCollected.empty? %>
+    <% @dataset.dateCollected.build %>
+  <% end %>
+  <%= f.label :dateCollected, "When was the data collected" %>
+  <%= f.text_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first %> to 
+  <%= f.text_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first %>
+</div>
+
+<div class="field">
+  <% if @dataset.spatial.empty? %>
+    <% @dataset.spatial.build %>
+  <% end %>
+  <%= f.label :spatial, "Geographical location or coverage of the data" %>
+  <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first %> 
+</div>
+
+<div class="field">
+  <%= f.label :medium, "In which medium is your data stored" %>
+  <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]) %> Analog
+  <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]) %> Digital
+</div>
+
+<div class="field">
+  <%= f.label :locator, "Where is your data located?" %>
+  <%= f.text_field :locator, :value=>@dataset.locator.first %>
+</div>
+
+<div class="field">
+  <%= f.label :digitalSize, "Approximate size of the data" %>
+  <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first %>
+</div>
+
+<div class="field">
+  <%= f.label :format, "Data format" %>
+  <%= f.text_field :format, :value=>@dataset.format.first %>
+</div>
+
+<div class="field">
+  <%= f.label :version, "Version number" %>
+  <%= f.text_field :version, :value=>@dataset.version.first %>
+</div>
+
+

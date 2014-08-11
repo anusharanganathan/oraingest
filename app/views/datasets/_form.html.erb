@@ -1,0 +1,109 @@
+<div class="tab-pane" id="describetab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'describetab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
+          <%= render partial: "describe_fields_edit", as: :dataset, :locals => { :f => f } %>
+          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
+          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
+          <div class="actions">
+            <%= f.submit "Save dataset description", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="creatorstab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'creatorstab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation } %>
+          <div class="actions">
+            <%= f.submit "Save creator information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="publicationtab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'publicationtab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
+          <div class="actions">
+            <%= f.submit "Save publication information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="funderstab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'funderstab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
+          <div class="actions">
+            <%= f.submit "Save funder information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="moreinfotab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
+          <div class="actions">
+            <%= f.submit "Save information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="rightstab">
+  <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'rightstab') %>
+    <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
+    <% if false %>
+      <%= render partial: "admin_fields_edit", as: :dataset, :locals => { :f => f } %>
+    <% end %>
+    <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
+    <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
+    <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
+    <div class="actions">
+      <%= f.submit "Save rights and access", class: "btn btn-success" %>
+    </div><!-- /.actions -->
+  <% end %>
+  <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0], :pid => @pid} %>
+</div>
+
+<div class="tab-pane" id="workflowtab">
+  <%= render partial: 'shared/workflow_edit', :locals => { :article => @dataset } %>
+</div>

@@ -1,0 +1,37 @@
+<h1>Recent datasets</h1>
+
+<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
+<% display_thumbs = true %>
+<% display_access = false %>
+
+<% path = { :new => new_dataset_path, :list => datasets_path } %>
+<br/><%= render partial: "shared/actions/list", :locals => { :path => path } %>
+
+<div>
+  <% if @datasets.blank? && @submitted_datasets.blank? %>
+      <h3>  <%= msg %> </h3>
+  <% else %>
+    <% if !@datasets.blank? %>
+      <h3>Datasets being worked on</h3>
+      <div id="recent_docs">
+        <table class="table table-bordered table-striped">
+          <% @datasets.each do |dataset| %>
+            <%= render :partial => "draft_dataset", as: :dataset, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :dataset => dataset} %>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+    <% if !@submitted_datasets.blank? %>
+      <h3>Datasets submitted</h3>
+      <div id="recent_docs">
+        <table class="table table-bordered table-striped">
+          <% @submitted_datasets.each do |dataset| %>
+            <%= render :partial => "recent_dataset", as: :dataset, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :dataset => dataset} %>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
