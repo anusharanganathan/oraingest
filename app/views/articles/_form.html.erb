@@ -27,7 +27,7 @@
         <div class="control-group">
           <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation } %>
           <div class="actions">
-            <%= f.submit "Save creators information", class: "btn btn-success" %>
+            <%= f.submit "Save creator information", class: "btn btn-success" %>
           </div><!-- /.actions -->
         </div><!-- /.control-group -->
       </div> <!-- /.row -->
@@ -90,18 +90,18 @@
   <%= form_for(@article) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'rightstab') %>
-    <%= render partial: "shared/rights_activity_fields_edit", as: :article, :locals => { :f => f } %>
-    <%= render partial: "admin_fields_edit", as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/embargo/catalogue_fields_edit', as: :article, :locals => { :f => f } %>
-    <%= render partial: 'shared/file_info_fields_edit2', as: :article, :locals => { :f => f } %>
+    <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
+    <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @article } %>
+    <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @article } %>
+    <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
     <div class="actions">
       <%= f.submit "Save rights and access", class: "btn btn-success" %>
     </div><!-- /.actions -->
   <% end %>
-  <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0], :pid => @pid, :model => "article"} %>
+  <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0], :pid => @pid} %>
 </div>
 
 <div class="tab-pane" id="workflowtab">
-  <%= render partial: 'shared/workflow_edit' %>
+  <%= render partial: 'shared/workflow_edit', :locals => { :article => @article } %>
 </div>
