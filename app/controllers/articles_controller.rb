@@ -22,8 +22,7 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require "vocabulary/frapo"
-require 'ora/embargo_date'
+require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy, :revokePermissions]
@@ -74,18 +73,21 @@ class ArticlesController < ApplicationController
     #Grab users recent documents
     recent_me_not_draft
     recent_me_draft
+    @model = 'article'
   end
 
   def show
     authorize! :show, params[:id]
     @pid = params[:id]
     @files = contents
+    @model = 'article'
   end
 
   def new
     @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
+    @model = 'article'
   end
 
   def edit
@@ -95,6 +97,7 @@ class ArticlesController < ApplicationController
     end
     @pid = params[:id]
     @files = contents
+    @model = 'article'
   end
 
   def create
@@ -296,371 +299,7 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
-    if article_params.has_key?(:permissions_attributes)
-      if article_params[:permissions_attributes].is_a?(Hash)
-        article_params[:permissions_attributes] = article_params[:permissions_attributes].values()
-      end
-      article_params[:permissions_attributes].each do |p|
-        if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
-          p["type"] = "user"
-        else
-          article_params['permissions_attributes'].delete(p)
-        end #check name and access exists
-      end 
-    end
-    @article.attributes = article_params
-
-    #remove_blank_assertions for language and build
-    if article_params.has_key?(:language)
-      lp = article_params[:language]
-      @article.language = nil
-      if !lp[:languageLabel].empty?
-        lp.each do |k, v| 
-          lp[k] = nil if v.empty?
-        end
-        lp['id'] = "info:fedora/#{@article.id}#language"
-        @article.language.build(lp)
-      end
-    end
-
-    #remove_blank_assertions for subject and build
-    if article_params.has_key?(:subject)
-      @article.subject = nil
-      if article_params[:subject].is_a?(Hash)
-        sp = article_params[:subject].values()
-      else
-        sp = article_params[:subject]
-      end
-      sp.each do |s|
-        if s[:subjectLabel].empty?
-           sp.delete(s)
-        end
-      end
-      sp.each_with_index do |s, s_index|
-        s.each do |k, v| 
-          s[k] = nil if v.empty?
-        end
-        s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
-        @article.subject.build(s)
-      end
-    end
-
-    # Remove blank assertions for worktype and build
-    if article_params.has_key?(:worktype)
-      tp = article_params[:worktype].except(:typeAuthority)
-      @article.worktype = nil
-      if !tp[:typeLabel].empty?
-        if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
-          tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
-        end
-        tp['id'] = "info:fedora/#{@article.id}#type"
-        @article.worktype.build(tp)
-      else
-        tp[:typeLabel] = 'Article'
-        tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
-        tp['id'] = "info:fedora/#{@article.id}#type"
-        @article.worktype.build(tp)
-      end
-    end
-
-    # Remove blank assertions for rights activity and build
-    ag = []
-    if article_params.has_key?(:license)
-      lsp = article_params[:license].except(:licenseURI)
-      @article.license = nil
-      @article.rightsActivity = nil
-      if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
-        if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
-          lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
-        elsif isURI(lsp[:licenseStatement])
-          lsp[:licenseURI] = lsp[:licenseStatement]
-          lsp[:licenseStatement] = nil
-        end
-        lsp['id'] = "info:fedora/#{@article.id}#license"
-        lsp.each do |k, v|
-          lsp[k] = nil if v.empty?
-        end 
-        @article.license.build(lsp)
-        ag.push("info:fedora/#{@article.id}#license")
-      end
-    end
-    if article_params.has_key?(:rights)
-      rp = article_params[:rights].except(:rightsType)
-      @article.rights = nil
-      @article.rightsActivity = nil
-      if !rp[:rightsStatement].empty?
-        rp.each do |k, v| 
-          rp[k] = nil if v.empty?
-        end
-      end
-      rp[:rightsType] = RDF::DC.RightsStatement
-      rp['id'] = "info:fedora/#{@article.id}#rights"
-      @article.rights.build(rp)
-      ag.push("info:fedora/#{@article.id}#rights")
-    end
-    if !ag.empty?
-      rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: RDF::PROV.Activity, activityGenerated: ag}
-      @article.rightsActivity.build(rap)
-    end
-    
-    # get the publication date to calculate embargo dates for access rights
-    datePublished = nil
-    if article_params.has_key?(:publication) && !article_params[:publication].nil? && article_params[:publication].has_key?(:datePublished)
-      datePublished = article_params[:publication][:datePublished]
-    end
-    if datePublished.nil? || datePublished.empty?
-      if !@article.publication[0].nil? && !@article.publication[0].datePublished.nil?
-        datePublished = @article.publication[0].datePublished.first
-      end
-    end
-
-    # Remove blank assertions for article access rights and build
-    if article_params.has_key?(:accessRights)
-      @article.accessRights = nil
-      #ar = Ora.validateEmbargoDates(article_params[:accessRights][0], "info:fedora/#{@article.id}", datePublished)
-      ar = Ora.validateEmbargoDates2(article_params[:accessRights], "info:fedora/#{@article.id}", datePublished)
-      @article.accessRights.build(ar)
-      @article.accessRights[0].embargoDate = nil
-      if ar[:embargoStatus] == "Embargoed"
-        @article.accessRights[0].embargoDate.build(ar[:embargoDate][0])
-        @article.accessRights[0].embargoDate[0].start = nil
-        @article.accessRights[0].embargoDate[0].duration = nil
-        @article.accessRights[0].embargoDate[0].end = nil
-        if !ar[:embargoDate][0][:start].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
-          @article.accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
-        end
-        if !ar[:embargoDate][0][:duration].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)         
-          @article.accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
-        end
-        if !ar[:embargoDate][0][:end].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
-          @article.accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
-        end
-      end
-    end
-
-    # Remove blank assertions for internal relations and build
-    if article_params.has_key?(:hasPart)
-      hp = article_params[:hasPart]
-      @article.hasPart = nil
-      select = {}
-      count = 0
-      for ds in contents
-        dsid = ds['url'].split("/")[-1]
-        hp.each do |k, h|
-          if h[:identifier] == dsid
-            select = h
-            select['id'] = "info:fedora/#{@article.id}/datastreams/#{dsid}"
-          end
-        end
-        select.each do |k, v| 
-          select[k] = nil if v.empty?
-        end
-        @article.hasPart.build(select) 
-        @article.hasPart[count].accessRights = nil
-        endDate = nil
-        if select.has_key?(:accessRights)
-          #ar = Ora.validateEmbargoDates(select[:accessRights][0], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
-          ar = Ora.validateEmbargoDates2(select[:accessRights], "info:fedora/#{@article.id}/datastreams/#{dsid}", datePublished)
-          @article.hasPart[count].accessRights.build(ar)
-          @article.hasPart[count].accessRights[0].embargoDate = nil
-          if ar[:embargoStatus] == "Embargoed"
-            @article.hasPart[count].accessRights[0].embargoDate.build(ar[:embargoDate][0])
-            @article.hasPart[count].accessRights[0].embargoDate[0].start = nil
-            @article.hasPart[count].accessRights[0].embargoDate[0].duration = nil
-            @article.hasPart[count].accessRights[0].embargoDate[0].end = nil
-            if !ar[:embargoDate][0][:start].nil? && (!ar[:embargoDate][0][:start][0][:label].nil? || !ar[:embargoDate][0][:start][0][:date].nil?)
-              @article.hasPart[count].accessRights[0].embargoDate[0].start.build(ar[:embargoDate][0][:start][0])
-            end
-            if !ar[:embargoDate][0][:duration].nil? && (!ar[:embargoDate][0][:duration][0][:years].nil? || !ar[:embargoDate][0][:duration][0][:months].nil?)
-              @article.hasPart[count].accessRights[0].embargoDate[0].duration.build(ar[:embargoDate][0][:duration][0])
-            end
-            if !ar[:embargoDate][0][:end].nil? && (!ar[:embargoDate][0][:end][0][:label].nil? || !ar[:embargoDate][0][:end][0][:date].nil?)
-              @article.hasPart[count].accessRights[0].embargoDate[0].end.build(ar[:embargoDate][0][:end][0])
-            end
-          end
-        end
-        count += 1
-      end 
-    end
-
-    #remove_blank_assertions for external relations and build
-    if article_params.has_key?(:qualifiedRelation)
-      qr = article_params[:qualifiedRelation]
-      @article.qualifiedRelation = nil
-      influences = []
-      @article.influence = nil
-      qr.each_with_index do |rel, rel_index|
-        rel.each do |k, v|
-          qr[rel_index][k] = nil if v.empty?
-        end
-        tmp = rel.except(:relation)
-        qr[rel_index][:entity] = tmp
-      end
-      qr.each_with_index do |rel, rel_index|
-        if !rel[:relation].nil? and !rel[:entity].empty?
-          influences.push(rel[:entity]['id'])
-          rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [@article.id, rel_index]
-          @article.qualifiedRelation.build(rel)
-          @article.qualifiedRelation[rel_index].entity = nil
-          rel[:entity][:type] = RDF::PROV.Entity
-          @article.qualifiedRelation[rel_index].entity.build(rel[:entity])
-        end
-      end
-      #influences = @article.relationsMetadata.getInfluences
-      @article.influence = influences
-    end
-
-    #remove_blank_assertions for funding activity and build
-    if article_params.has_key?(:funding)
-      fp = article_params[:funding]
-      @article.funding = nil
-      if fp[0]
-        # has to have name of funder and whom the funder funds
-        fp[0][:funder].each do |f|
-          if f[:name].empty? and f[:funds].empty?
-            fp[0][:funder].delete(f)
-          else
-            f.each do |k, v|
-              f[k] = nil if v.empty?
-            end
-          end
-        end  
-        id0 = "info:fedora/%s#fundingActivity" % @article.id
-        vals = {'id' => id0, :wasAssociatedWith=> []}
-        (0..fp[0][:funder].length-1).each do |n|
-          b1 = "info:fedora/%s#funder%d" % [@article.id, n]
-          vals[:wasAssociatedWith].push(b1)
-        end
-        @article.funding.build(vals)
-        awardCount = 0
-        fp[0][:funder].each_with_index do |f1, f1_index|
-          agent = { 'id' => "info:fedora/%s#funder%d" % [@article.id, f1_index], :name => f1[:name], :sameAs => f1[:sameAs], :type => RDF::FRAPO.FundingAgency }
-          b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
-          f1['id'] = b2
-          f1[:role] = RDF::FRAPO.FundingAgency
-          #TODO: Need to be more smart about these Ids. These assumptions are wrong
-          if f1[:funds] == "Author"
-            f1[:funds] = "info:fedora/#{params[:pid]}#creator1"
-          elsif f1[:funds] == "Publication"
-            funds = "info:fedora/#{params[:pid]}"
-          elsif f1[:funds] == "Project"
-            funds = "info:fedora/#{params[:pid]}#project1"
-          end
-          @article.funding[0].funder.build(f1)
-          @article.funding[0].funder[f1_index].agent = nil
-          @article.funding[0].funder[f1_index].agent.build(agent)
-          @article.funding[0].funder[f1_index].awards = nil
-          if f1[:awards]
-            f1[:awards].each do |aw|
-              if aw[:grantNumber]
-                aw['id'] = "info:fedora/%s#fundingAward%d" % [@article.id, awardCount]
-                @article.funding[0].funder[f1_index].awards.build(aw)
-                awardCount += 1
-              end
-            end
-          end
-        end
-      end
-    end
-
-    #remove_blank_assertions for creation activity and build
-    if article_params.has_key?(:creation)
-      cp = article_params[:creation]
-      @article.creation = nil
-      #cp = cp[0]
-      if cp
-        # has to have name of creator
-        cp[:creator].each do |c|
-          if c[:name].empty?
-            cp[:creator].delete(c)
-          else
-            c.each do |k, v|
-              c[k] = nil if v.empty?
-            end
-          end
-        end  
-        id0 = "info:fedora/%s#creationActivity" % @article.id
-        vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
-        (0..cp[:creator].length-1).each do |n|
-          b1 = "info:fedora/%s#creator%d" % [@article.id, n]
-          vals[:wasAssociatedWith].push(b1)
-        end
-        @article.creation.build(vals)
-        affiliationCount = 0
-        @article.creation[0].creator = nil
-        cp[:creator].each_with_index do |c1, c1_index|
-          b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
-          agent = { 'id'=> b1, :name => c1[:name], :email => c1[:email], :type => RDF::VCARD.Individual, :sameAs => c1[:sameAs] }
-          b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
-          c1['id'] = b2
-          #c1[:agent] = b1
-          c1[:type] = RDF::PROV.Association
-          @article.creation[0].creator.build(c1)
-          @article.creation[0].creator[c1_index].agent = nil
-          @article.creation[0].creator[c1_index].agent.build(agent)
-          @article.creation[0].creator[c1_index].agent[0].affiliation = nil
-          if c1[:affiliation]
-            c1[:affiliation].each do |af|
-              if af[:name]
-                af['id'] = "info:fedora/%s#affiliation%d" % [@article.id, affiliationCount]
-                @article.creation[0].creator[c1_index].agent[0].affiliation.build(af)
-                affiliationCount += 1
-              end # if name
-            end # for each affiliation
-          end # if affiliation
-        end #for each creator
-      end #if creation activity
-    end # if creation in params
-
-    #remove_blank_assertions for publication activity and build
-    if article_params.has_key?(:publication)
-      p = article_params[:publication]
-      @article.publication = nil
-      #p = p[0]
-      p.each do |k, v|
-        p[k] = nil if v.empty?
-      end
-      id0 = "info:fedora/%s#publicationActivity" % @article.id
-      p['id'] = id0
-      p[:type] = RDF::PROV.Activity
-      if !p[:publisher_attributes]["0"][:name].empty?
-        p[:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
-      end
-      @article.publication.build(p)
-      @article.publication[0].hasDocument = nil
-      if !p[:hasDocument_attributes].empty?
-        if (p[:hasDocument_attributes]["0"].except(:journal_attributes, :series_attributes).any? {|k,v| !v.nil? && !v.empty?} or \
-            p[:hasDocument_attributes]["0"][:journal_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?} or \
-            p[:hasDocument_attributes]["0"][:series_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
-          p[:hasDocument_attributes]["0"]['id'] = "info:fedora/%s#publicationDocument" % @article.id
-          @article.publication[0].hasDocument.build(p[:hasDocument_attributes]["0"])
-          @article.publication[0].hasDocument[0].journal = nil
-          if (p[:hasDocument_attributes]["0"][:journal_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
-            p[:hasDocument_attributes]["0"][:journal_attributes]["0"]['id'] = "info:fedora/%s#publicationJournal" % @article.id
-            @article.publication[0].hasDocument[0].journal.build(p[:hasDocument_attributes]["0"][:journal_attributes]["0"])
-          end
-          @article.publication[0].hasDocument[0].series = nil
-          if (p[:hasDocument_attributes]["0"][:series_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?})
-            p[:hasDocument_attributes]["0"][:series_attributes]["0"]['id'] = "info:fedora/%s#publicationSeries" % @article.id
-            @article.publication[0].hasDocument[0].series.build(p[:hasDocument_attributes]["0"][:series_attributes]["0"])
-          end
-        end
-      end
-      @article.publication[0].publisher = nil
-      if !p[:publisher_attributes].empty?
-        p[:publisher_attributes]["0"].each do |k, v|
-          p[:publisher_attributes]["0"][k] = nil if v.empty?
-        end
-        if !p[:publisher_attributes]["0"][:name].nil?
-          p[:publisher_attributes]["0"]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
-          p[:publisher_attributes]["0"][:type] = RDF::PROV.Association
-          p[:publisher_attributes]["0"][:agent] = "info:fedora/%s#publisher" % @article.id
-          p[:publisher_attributes]["0"][:role] = RDF::DC.publisher
-          @article.publication[0].publisher.build(p[:publisher_attributes]["0"])
-        end
-      end  
-    end
-
+    @article = Ora.buildMetadata(article_params, @article, contents)
     respond_to do |format|
       if @article.save
         format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
