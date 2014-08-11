@@ -26,5 +26,6 @@ module RDF
     property :Document  
     property :Periodical  
     property :annotates  
+    property :owner
   end
 end
