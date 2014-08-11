@@ -39,23 +39,31 @@ class PublicationActivity
   end 
 
   def to_solr(solr_doc={})
-    begin
-      solr_doc[Solrizer.solr_name("desc_metadata__datePublished", :dateable, type: :date)] = Time.parse(self.datePublished.first).utc.iso8601
-    rescue ArgumentError
-      # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+    if !self.datePublished.nil? && !self.datePublished.first.nil?
+      begin
+        solr_doc[Solrizer.solr_name("desc_metadata__datePublished", :dateable, type: :date)] = Time.parse(self.datePublished.first).utc.iso8601
+      rescue ArgumentError
+        # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+      end
     end
-    begin
-      solr_doc[Solrizer.solr_name("desc_metadata__dateAccepted", :dateable, type: :date)] = Time.parse(self.dateAccepted.first).utc.iso8601
-    rescue ArgumentError
-      # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+    if !self.dateAccepted.nil? && !self.dateAccepted.first.nil?
+      begin
+        solr_doc[Solrizer.solr_name("desc_metadata__dateAccepted", :dateable, type: :date)] = Time.parse(self.dateAccepted.first).utc.iso8601
+      rescue ArgumentError
+        # Not a valid date.  Don't put it into the solr doc, or solr will choke.
+      end
     end
     solr_doc[Solrizer.solr_name("desc_metadata__datePublished", :stored_searchable)] = self.datePublished.first
     solr_doc[Solrizer.solr_name("desc_metadata__location", :symbol)] = self.location.first
     solr_doc[Solrizer.solr_name("desc_metadata__dateAccepted", :stored_searchable)] = self.dateAccepted.first
     # Index publication document information
-    self.hasDocument.first.to_solr(solr_doc)
+    if !self.hasDocument.nil? && !self.hasDocument.first.nil?
+      self.hasDocument.first.to_solr(solr_doc)
+    end
     # Index publisher information
-    self.publisher.first.to_solr(solr_doc)
+    if !self.publisher.nil? && !self.publisher.first.nil?
+      self.publisher.first.to_solr(solr_doc)
+    end
     solr_doc
   end
 
@@ -100,11 +108,13 @@ class PublicationDocument
         solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] << i
       end
     else
-        solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] << self.identifier
+      solr_doc[Solrizer.solr_name("desc_metadata__publicationIdentifier", :symbol)] << self.identifier
     end
     solr_doc[Solrizer.solr_name("desc_metadata__doi", :symbol)] = self.doi.first
     solr_doc[Solrizer.solr_name("desc_metadata__publicationUri", :displayable)] = self.uri.first
-    solr_doc[Solrizer.solr_name("desc_metadata__seriesTitle", :stored_searchable)] = self.series.first.title.first
+    if !self.series.nil? && !self.series.first.nil?
+      solr_doc[Solrizer.solr_name("desc_metadata__seriesTitle", :stored_searchable)] = self.series.first.title.first
+    end
     # Index journal information 
     if !self.journal.nil? && !self.journal.first.nil?
       self.journal.first.to_solr(solr_doc)

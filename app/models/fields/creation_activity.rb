@@ -78,8 +78,10 @@ class QualifiedCreationAssociation
       creatorHash['name'] = a.name.first
       creatorHash['email'] = a.email.first
       creatorHash['sameAs'] = a.sameAs.first
-      creatorHash['affiliationName'] = a.affiliation.first.name.first
-      creatorHash['affiliationSameAs'] = a.affiliation.first.sameAs.first
+      if !a.affiliation.nil? && !a.affiliation.first.nil?
+        creatorHash['affiliationName'] = a.affiliation.first.name.first
+        creatorHash['affiliationSameAs'] = a.affiliation.first.sameAs.first
+      end
       solr_doc[Solrizer.solr_name("desc_metadata__creator", :displayable)] << creatorHash.to_json
     end
     solr_doc
@@ -127,9 +129,11 @@ class CreationAssociation
     solr_doc[Solrizer.solr_name("desc_metadata__creatorEmail", :displayable)] << self.email.first
     solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :stored_searchable)] << self.sameAs.first
     solr_doc[Solrizer.solr_name("desc_metadata__creatorSameAs", :facetable)] << self.sameAs.first
-    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :stored_searchable)] << self.affiliation.first.name.first
-    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :facetable)] << self.affiliation.first.name.first
-    solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliationUrl", :symbol)] << self.affiliation.first.sameAs.first
+    if !self.affiliation.nil? && !self.affiliation.first.nil?
+      solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :stored_searchable)] << self.affiliation.first.name.first
+      solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliation", :facetable)] << self.affiliation.first.name.first
+      solr_doc[Solrizer.solr_name("desc_metadata__creatorAffiliationUrl", :symbol)] << self.affiliation.first.sameAs.first
+    end
     solr_doc
   end
 

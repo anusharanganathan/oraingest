@@ -163,14 +163,16 @@ class ExternalRelationsQualified
     solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] ||= []
     solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] ||= []
     riHash = {}
-    riHash['url'] = self.entity.first.rdf_subject.to_s
-    riHash['title'] = self.entity.first.title.first 
-    riHash['description'] = self.entity.first.description.first
-    riHash['citation'] = self.entity.first.citation.first
-    riHash['typeOfRelation'] = self.relation.first
-    solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] << riHash.to_json
-    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] << self.entity.first.rdf_subject.to_s
-    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] << self.relation.first
+    if !self.entity.nil? && !self.entity.first.nil?
+      riHash['url'] = self.entity.first.rdf_subject.to_s
+      riHash['title'] = self.entity.first.title.first 
+      riHash['description'] = self.entity.first.description.first
+      riHash['citation'] = self.entity.first.citation.first
+      riHash['typeOfRelation'] = self.relation.first
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] << riHash.to_json
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] << self.entity.first.rdf_subject.to_s
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] << self.relation.first
+    end
     solr_doc
   end
 

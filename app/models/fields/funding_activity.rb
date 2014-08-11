@@ -31,7 +31,9 @@ class FundingActivity
 
   def to_solr(solr_doc={})
     self.funder.each do |f|
-      f.to_solr(solr_doc)
+      if !f.nil?
+        f.to_solr(solr_doc)
+      end
     end
     solr_doc
   end
@@ -75,10 +77,11 @@ class QualifiedFundingAssociation
     solr_doc[Solrizer.solr_name("desc_metadata__funderRole", :symbol)] ||= []
     solr_doc[Solrizer.solr_name("desc_metadata__funderFunds", :stored_searchable)] ||= []
     solr_doc[Solrizer.solr_name("desc_metadata__funderAnnotation", :displayable)] ||= []
-
-    solr_doc[Solrizer.solr_name("desc_metadata__funder", :stored_searchable)] << self.agent.first.name.first
-    solr_doc[Solrizer.solr_name("desc_metadata__funder", :facetable)] << self.agent.first.name.first
-    solr_doc[Solrizer.solr_name("desc_metadata__funderSameAs", :symbol)] << self.agent.first.sameAs.first
+    if !self.agent.nil? && !self.agent.first.nil?
+      solr_doc[Solrizer.solr_name("desc_metadata__funder", :stored_searchable)] << self.agent.first.name.first
+      solr_doc[Solrizer.solr_name("desc_metadata__funder", :facetable)] << self.agent.first.name.first
+      solr_doc[Solrizer.solr_name("desc_metadata__funderSameAs", :symbol)] << self.agent.first.sameAs.first
+    end
     solr_doc[Solrizer.solr_name("desc_metadata__funderRole", :symbol)] << self.role.first
     solr_doc[Solrizer.solr_name("desc_metadata__funderAnnotation", :displayable)] << self.annotation.first
     # Index each entity funded
