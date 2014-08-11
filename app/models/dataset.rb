@@ -74,7 +74,9 @@ class Dataset < ActiveFedora::Base
 
   def remove_blank_assertions
     DatasetRdfDatastream.fields.each do |key|
-      self[key] = nil if self[key] == ['']
+      if !["temporal", "dateCollected", "spatial"].include?(key)
+        self[key] = nil if self[key] == ['']
+      end
     end
   end
 
