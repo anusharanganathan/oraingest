@@ -16,6 +16,7 @@ require 'fields/work_type'
 require 'fields/rights_activity'
 require 'fields/funding_activity'
 require 'fields/creation_activity'
+require 'fields/publication_activity'
 
 class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
@@ -75,9 +76,12 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # TODO: Nested attributes of name, homepage and uri - one to many
 
   end
-  accepts_nested_attributes_for :language
   accepts_nested_attributes_for :subject
   accepts_nested_attributes_for :worktype
+  accepts_nested_attributes_for :language
+  accepts_nested_attributes_for :temporal
+  accepts_nested_attributes_for :dateCollected
+  accepts_nested_attributes_for :spatial
   accepts_nested_attributes_for :license
   accepts_nested_attributes_for :rights
   accepts_nested_attributes_for :rightsActivity
@@ -105,12 +109,12 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # Temporal coverage of data 
     if !self.temporal.nil? && !self.temporal.first.nil?
       temporalDate = nil
-      if !self.temporal.first.hasEnd.nil? && !self.temporal.first.hasBeginning.nil?
-        temporalDate = "%s to %s"% [self.temporal.first.hasBeginning.first, self.temporal.first.hasEnd.first]
-      elsif !self.temporal.first.hasBeginning.nil?
-        temporalDate = self.temporal.first.hasBeginning.first
-      elsif !self.temporal.first.hasEnd.nil?
-        temporalDate = self.temporal.first.hasEnd.first
+      if !self.temporal.first.end.nil? && !self.temporal.first.start.nil?
+        temporalDate = "%s to %s"% [self.temporal.first.start.first, self.temporal.first.end.first]
+      elsif !self.temporal.first.start.nil?
+        temporalDate = self.temporal.first.start.first
+      elsif !self.temporal.first.end.nil?
+        temporalDate = self.temporal.first.end.first
       end
       if !temporalDate.nil?
         solr_doc[Solrizer.solr_name("desc_metadata__temporal", :stored_searchable)] = temporalDate
@@ -119,12 +123,12 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     # Temporal coverage of data collection
     if !self.dateCollected.nil? && !self.dateCollected.first.nil?
       collectedDate = nil
-      if !self.dateCollected.first.hasEnd.nil? && !self.dateCollected.first.hasBeginning.nil?
-        collectedDate = "%s to %s"% [self.dateCollected.first.hasBeginning.first, self.dateCollected.first.hasEnd.first]
-      elsif !self.dateCollected.first.hasBeginning.nil?
-        collectedDate = self.dateCollected.first.hasBeginning.first
-      elsif !self.dateCollected.first.hasEnd.nil?
-        collectedDate = self.dateCollected.first.hasEnd.first
+      if !self.dateCollected.first.end.nil? && !self.dateCollected.first.start.nil?
+        collectedDate = "%s to %s"% [self.dateCollected.first.start.first, self.dateCollected.first.end.first]
+      elsif !self.dateCollected.first.start.nil?
+        collectedDate = self.dateCollected.first.start.first
+      elsif !self.dateCollected.first.end.nil?
+        collectedDate = self.dateCollected.first.end.first
       end
       if !collectedDate.nil?
         solr_doc[Solrizer.solr_name("desc_metadata__dateCollected", :stored_searchable)] = collectedDate
@@ -189,8 +193,9 @@ class DateDuration
   include ActiveModel::Conversion
   attr_accessor :start, :end
 
-  rdf_type RDF::TIME.TemporalEntity
   map_predicates do |map|
+    #-- type
+    map.type(:in => RDF)
     #-- Start --
     map.start(:to => "hasBeginning", :in => RDF::TIME)
     #-- End --
