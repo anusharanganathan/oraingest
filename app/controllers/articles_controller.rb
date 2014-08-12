@@ -25,7 +25,7 @@ require "utils"
 require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy, :revokePermissions]
+  before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -108,9 +108,9 @@ class ArticlesController < ApplicationController
       create_from_upload(params)
     elsif params.has_key?(:article)
       if params[:article].has_key?(:workflows_attributes)
-        add_workflow(article_params)
+        add_workflow(params[:article])
       else
-        add_metadata(article_params)
+        add_metadata(params[:article])
       end
     else
       format.html { render action: 'edit' }
@@ -127,9 +127,9 @@ class ArticlesController < ApplicationController
       create_from_upload(params)
     elsif article_params
       if params[:article].has_key?(:workflows_attributes)
-        add_workflow(article_params)
+        add_workflow(params[:article])
       else
-        add_metadata(article_params)
+        add_metadata(params[:article])
       end
     else
       format.html { render action: 'edit' }
@@ -251,15 +251,7 @@ class ArticlesController < ApplicationController
   end
 
   def add_workflow(article_params)
-    article_params[:workflows_attributes] = [article_params[:workflows_attributes]]
-    if article_params[:workflows_attributes][0].has_key?(:entries_attributes)
-      article_params[:workflows_attributes][0][:entries_attributes] = [article_params[:workflows_attributes][0][:entries_attributes]]
-    end
-    if article_params[:workflows_attributes][0].has_key?(:comments_attributes)
-      article_params[:workflows_attributes][0][:comments_attributes] = [article_params[:workflows_attributes][0][:comments_attributes]]
-    end
-    @article.attributes = article_params
-
+    @article.attributes = Ora.validateWorkflow(article_params)
     respond_to do |format|
       if @article.save
         format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
@@ -272,29 +264,21 @@ class ArticlesController < ApplicationController
 
   end
 
-  def revokePermissions
-    if article_params.has_key? 'permissions_attributes'
-      article_params['permissions_attributes'].each do |p|
-        if p["type"].downcase != "group" && p["name"] != @article.workflowMetadata.depositor[0]
-          if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
-            p["type"] = "user"
-            p["_destroy"] = true
-          else
-            article_params['permissions_attributes'].delete(p)
-          end #check name and access exists
+  def revoke_permissions
+    if params.has_key?(:article) && params[:article].has_key?(:permissions_attributes)
+      article_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
+      respond_to do |format|
+        if @article.update(article_params)
+          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
         else
-          article_params['permissions_attributes'].delete(p)
-        end # check not type = group and not depositor
-      end # loop each permission
-    end #has permission attributes
-    respond_to do |format|
-      if @article.update(article_params)
-        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
+          format.html { render action: 'edit' }
+          format.json { render json: @article.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     end
   end
 

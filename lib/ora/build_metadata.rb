@@ -20,6 +20,33 @@ module Ora
     params
   end
 
+  def validatePermissionsToRevoke(params, depositor)
+    params['permissions_attributes'].each do |p|
+      if p["type"].downcase != "group" && p["name"] != depositor
+        if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
+          p["type"] = "user"
+          p["_destroy"] = true
+        else
+          params['permissions_attributes'].delete(p)
+        end #check name and access exists
+      else
+        params['permissions_attributes'].delete(p)
+      end # check not type = group and not depositor
+    end # loop each permission
+    params
+  end
+
+  def validateWorkflow(params)
+    params[:workflows_attributes] = [params[:workflows_attributes]]
+    if params[:workflows_attributes][0].has_key?(:entries_attributes)
+      params[:workflows_attributes][0][:entries_attributes] = [params[:workflows_attributes][0][:entries_attributes]]
+    end
+    if params[:workflows_attributes][0].has_key?(:comments_attributes)
+      params[:workflows_attributes][0][:comments_attributes] = [params[:workflows_attributes][0][:comments_attributes]]
+    end
+    params
+  end
+
   def buildLanguage(params, article)
     #remove_blank_assertions for language and build
     article.language = nil

@@ -9,7 +9,7 @@
       
         <% unless article.workflows.first.nil? %>
           <% wf = article.workflows.first %>
-          <input type="hidden" name="article[workflows_attributes][id]" value="<%= wf.rdf_subject.to_s%>" />
+          <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
         <% end %>
       
         <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" %>
@@ -39,8 +39,7 @@
           <%# article.workflows.each_with_index do |wf, wf_index| %>
             <div class="fields">
               <%= f.label "workflows_attributes_entries_attributes_status", "Status", :class=>"control-label" %>
-      
-              <%= f.select "workflows_attributes][entries_attributes][status", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], :selected => wf.current_status), :class=>'span20 select_perm', :id => "workflows_entries_status" %>   
+              <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], :selected => wf.current_status), :class=>'span20 select_perm', :id => "workflows_entries_status" %>   
               <%= f.hidden_field "workflows_attributes][entries_attributes][date", :value => Time.now.to_s, :id => "workflows_entries_date" %>
               <%= f.hidden_field "workflows_attributes][entries_attributes][creator", :value => current_user.user_key, :id => "workflows_entires_creator" %>
             

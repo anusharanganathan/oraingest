@@ -25,7 +25,7 @@ require "utils"
 require 'ora/build_metadata'
 
 class DatasetsController < ApplicationController
-  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :revokePermissions]
+  before_action :set_dataset, only: [:show, :edit, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -108,9 +108,9 @@ class DatasetsController < ApplicationController
       create_from_upload(params)
     elsif params.has_key?(:dataset)
       if params[:dataset].has_key?(:workflows_attributes)
-        add_workflow(dataset_params)
+        add_workflow(params[:dataset])
       else
-        add_metadata(dataset_params)
+        add_metadata(params[:dataset])
       end
     else
       format.html { render action: 'edit' }
@@ -127,9 +127,9 @@ class DatasetsController < ApplicationController
       create_from_upload(params)
     elsif dataset_params
       if params[:dataset].has_key?(:workflows_attributes)
-        add_workflow(dataset_params)
+        add_workflow(params[:dataset])
       else
-        add_metadata(dataset_params)
+        add_metadata(params[:dataset])
       end
     else
       format.html { render action: 'edit' }
@@ -251,15 +251,7 @@ class DatasetsController < ApplicationController
   end
 
   def add_workflow(dataset_params)
-    dataset_params[:workflows_attributes] = [dataset_params[:workflows_attributes]]
-    if dataset_params[:workflows_attributes][0].has_key?(:entries_attributes)
-      dataset_params[:workflows_attributes][0][:entries_attributes] = [dataset_params[:workflows_attributes][0][:entries_attributes]]
-    end
-    if dataset_params[:workflows_attributes][0].has_key?(:comments_attributes)
-      dataset_params[:workflows_attributes][0][:comments_attributes] = [dataset_params[:workflows_attributes][0][:comments_attributes]]
-    end
-    @dataset.attributes = dataset_params
-
+    @dataset.attributes = Ora.validateWorkflow(dataset_params)
     respond_to do |format|
       if @dataset.save
         format.html { redirect_to dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
@@ -269,33 +261,24 @@ class DatasetsController < ApplicationController
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end
     end
-
   end
 
-  def revokePermissions
-    if dataset_params.has_key? 'permissions_attributes'
-      dataset_params['permissions_attributes'].each do |p|
-        if p["type"].downcase != "group" && p["name"] != @dataset.workflowMetadata.depositor[0]
-          if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
-            p["type"] = "user"
-            p["_destroy"] = true
-          else
-            dataset_params['permissions_attributes'].delete(p)
-          end #check name and access exists
+  def revoke_permissions
+    if params.has_key?(:dataset) && params[:dataset].has_key?(:permissions_attributes)
+      dataset_params = Ora.validatePermissionsToRevoke(params[:dataset], @dataset.workflowMetadata.depositor[0])
+      respond_to do |format|
+        if @dataset.update(dataset_params)
+          format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+          format.json { head :no_content }
         else
-          dataset_params['permissions_attributes'].delete(p)
-        end # check not type = group and not depositor
-      end # loop each permission
-    end #has permission attributes
-    respond_to do |format|
-      if @dataset.update(dataset_params)
-        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @dataset.errors, status: :unprocessable_entity }
+          format.html { render action: 'edit' }
+          format.json { render json: @dataset.errors, status: :unprocessable_entity }
+        end
       end
-    end
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @dataset.errors, status: :unprocessable_entity }
+    end 
   end
 
   def add_metadata(dataset_params)

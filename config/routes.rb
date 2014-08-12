@@ -19,10 +19,10 @@ OraHydra::Application.routes.draw do
   end
 
   resources :articles
-  delete 'articles/:id/permissions', to: 'articles#revokePermissions'
+  delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
   
   resources :datasets
-  delete 'datasets/:id/permissions', to: 'datasets#revokePermissions'
+  delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
 
   #resources 'article', :only=>:index do
   #  collection do
