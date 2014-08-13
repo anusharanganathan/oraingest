@@ -439,6 +439,15 @@ module Ora
     article
   end
 
+  def buildStorageAgreementData(params, article)
+    article.storageAgreement = nil
+    if !params[:title].empty? || !params[:identifier].empty?
+      params['id'] = "info:fedora/#{article.id}#storageAgreement"
+      article.storageAgreement.build(params)
+    end
+    article
+  end
+
   def buildMetadata(params, article, contents)
     # Validate permissions
     if params.has_key?(:permissions_attributes)
@@ -474,6 +483,10 @@ module Ora
     #Remove blank assertions for spatial coverage and build
     if params.has_key?(:spatial)
       article = Ora.buildSpatialData(params[:spatial], article)
+    end
+
+    if params.has_key?(:storageAgreement)
+      article = Ora.buildStorageAgreementData(params[:storageAgreement], article)
     end
 
     # Remove blank assertions for rights activity and build

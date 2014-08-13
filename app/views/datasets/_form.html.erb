@@ -91,9 +91,7 @@
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'rightstab') %>
     <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
-    <% if false %>
-      <%= render partial: "admin_fields_edit", as: :dataset, :locals => { :f => f } %>
-    <% end %>
+    <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
     <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>

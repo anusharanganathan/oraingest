@@ -11,9 +11,7 @@
 <%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @dataset } %>
 <%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @dataset } %>
 <%= render partial: "shared/file_info_fields_show", :locals => { :article => @dataset } %>
-<% if false %>
-  <%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
-<% end %>
+<%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
 <%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
 <%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
 

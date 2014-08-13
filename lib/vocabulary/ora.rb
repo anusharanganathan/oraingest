@@ -25,12 +25,14 @@ module RDF
     property :DataStorageAgreement
     property :locator
     property :hasAgreement
+    property :storageAgreement
+    property :agreementStatus
     property :digitalSize
     property :digitalSizeAllocated
     property :digitalStorageSilo
     property :dataSteward
     property :dataContributor
-    property :dataStorageInvoice
+    property :hasInvoice
     property :monetaryValue
     property :monetaryStatus
     property :dateCollected

@@ -1,7 +1,7 @@
 require "datastreams/workflow_rdf_datastream"
 require "datastreams/dataset_rdf_datastream"
 require "datastreams/relations_rdf_datastream"
-#require "datastreams/dataset_admin_rdf_datastream"
+require "datastreams/dataset_admin_rdf_datastream"
 #require "person"
 require "rdf"
 
@@ -12,8 +12,7 @@ class Dataset < ActiveFedora::Base
   include Sufia::Noid
   include Hydra::ModelMethods
 
-  #attr_accessible *(DatasetRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + DatasetAdminRdfDatastream.fields)
-  attr_accessible *(DatasetRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes])
+  attr_accessible *(DatasetRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + DatasetAdminRdfDatastream.fields)
   
   before_create :initialize_submission_workflow
 
@@ -22,13 +21,12 @@ class Dataset < ActiveFedora::Base
   has_metadata :name => "descMetadata", :type => DatasetRdfDatastream
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
   has_metadata :name => "relationsMetadata", :type => RelationsRdfDatastream
-  #has_metadata :name => "adminMetadata", :type => DatasetAdminRdfDatastream
-  #has_file_datastream "content01"
+  has_metadata :name => "adminMetadata", :type => DatasetAdminRdfDatastream
 
   has_attributes :workflows, :workflows_attributes, datastream: :workflowMetadata, multiple: true
   has_attributes *DatasetRdfDatastream.fields, datastream: :descMetadata, multiple: true
   has_attributes *RelationsRdfDatastream.fields, datastream: :relationsMetadata, multiple: true
-  #has_attributes *DatasetAdminRdfDatastream.fields, datastream: :adminMetadata, multiple: true
+  has_attributes *DatasetAdminRdfDatastream.fields, datastream: :adminMetadata, multiple: true
 
   #has_and_belongs_to_many :authors, :property=> :has_author, :class_name=>"Person"
   #has_and_belongs_to_many :contributors, :property=> :has_contributor, :class_name=>"Person"
@@ -36,7 +34,6 @@ class Dataset < ActiveFedora::Base
   def to_solr(solr_doc={}, opts={})
     super(solr_doc, opts)
     solr_doc[Solrizer.solr_name('label')] = self.label
-    #index_collection_pids(solr_doc)
     return solr_doc
   end
 
