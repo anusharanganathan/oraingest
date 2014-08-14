@@ -8,7 +8,6 @@ require 'vocabulary/dams'
 require 'vocabulary/frapo'
 require 'vocabulary/cito'
 require 'vocabulary/prism'
-require 'vocabulary/time'
 # Fields
 require 'fields/mads_language'
 require 'fields/mads_subject'
@@ -17,6 +16,8 @@ require 'fields/rights_activity'
 require 'fields/funding_activity'
 require 'fields/creation_activity'
 require 'fields/publication_activity'
+require 'fields/date_duration'
+require 'fields/location'
 
 class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
@@ -185,51 +186,5 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #rescue
   #  puts "tables for vocabularies missing"
   #end
-end
-
-class DateDuration
-  include ActiveFedora::RdfObject
-  extend ActiveModel::Naming
-  include ActiveModel::Conversion
-  attr_accessor :start, :end
-
-  map_predicates do |map|
-    #-- type
-    map.type(:in => RDF)
-    #-- Start --
-    map.start(:to => "hasBeginning", :in => RDF::TIME)
-    #-- End --
-    map.end(:to => "hasEnd", :in => RDF::TIME)
-  end
-
-  def persisted?
-    rdf_subject.kind_of? RDF::URI
-  end
-
-  def id
-    rdf_subject if rdf_subject.kind_of? RDF::URI
-  end
-
-end
-
-class Location
-  include ActiveFedora::RdfObject
-  extend ActiveModel::Naming
-  include ActiveModel::Conversion
-  attr_accessor :value
-
-  rdf_type RDF::DC.Location
-  map_predicates do |map|
-    map.value(:in => RDF)
-  end
-
-  def persisted?
-    rdf_subject.kind_of? RDF::URI
-  end
-
-  def id
-    rdf_subject if rdf_subject.kind_of? RDF::URI
-  end
-
 end
 
