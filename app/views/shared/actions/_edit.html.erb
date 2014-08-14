@@ -1,6 +1,6 @@
 <div class="actions">
-  <a href="<%= path[:show] %>"><button class="btn btn-primary"><i class="icon-check"></i>&nbsp; View <%= @model %></button></a>
-  <a href="<%= path[:show] %>" data-method="delete" data-confirm="Are you sure?"><button class="btn btn-warning"><i class="icon-remove"></i>&nbsp; Delete <%= @model %></button></a>
-  <a href="<%= path[:list] %>"><button class="btn btn-inverse"><i class="icon-list"></i>&nbsp; My recent <%= @model.pluralize %></button></a>
+  <a href="<%= path[:show] %>"><button class="btn btn-primary"><i class="icon-check"></i>&nbsp; View <%= @model.gsub('_', ' ') || @model %></button></a>
+  <a href="<%= path[:show] %>" data-method="delete" data-confirm="Are you sure?"><button class="btn btn-warning"><i class="icon-remove"></i>&nbsp; Delete <%= @model.gsub('_', ' ') || @model %></button></a>
+  <a href="<%= path[:list] %>"><button class="btn btn-inverse"><i class="icon-list"></i>&nbsp; My recent <%= @model.gsub('_', ' ') || @model.pluralize %></button></a>
 </div>
 
