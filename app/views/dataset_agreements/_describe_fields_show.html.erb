@@ -1,0 +1,96 @@
+<p id="notice"><%= notice %></p>
+<% if !@dataset_agreement.title.empty? %>
+  <h1><%= @dataset_agreement.title.first %></h1>
+<% else %>
+  <h1>Dataset agreement</h1>
+<% end %>
+      
+<% path = { :new => new_dataset_agreement_path, :show => dataset_agreement_path(@dataset_agreement), :edit => edit_dataset_agreement_path(@dataset_agreement), :list => dataset_agreements_path } %>
+<br/><%= render partial: "shared/actions/show", :locals => { :path => path } %><br/>
+      
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <% if !@dataset_agreement.digitalSizeAllocated.empty? %>
+      <p>
+        <strong>Size of allocated storage:</strong>
+        <%= @dataset_agreement.digitalSizeAllocated.first %>
+      </p>
+      <% end %>
+      
+      <% if !@dataset_agreement.contributor.empty? %>
+      <p>
+        <strong>Users allowed to contribute data:</strong>
+         <% @dataset_agreement.contributor.each do |c|%>
+            <span><%=c%></span>     
+         <% end %>
+      </p>
+      <% end %>
+
+      <% if !@dataset_agreement.annotation.empty? %>
+      <p>
+        <strong>Details on payment for storage:</strong>
+        <%= @dataset_agreement.annotation.first %>
+      </p>
+      <% end %>
+      
+      <% if can? :review, DatasetAgreement %>
+        <% if !@dataset_agreement.dataStorageSilo.empty? %>
+        <p>
+          <strong>Silo allocated for storage:</strong>
+          <%= @dataset_agreement.dataStorageSilo.first %>     
+        </p>
+        <% end %>
+
+        <% if !@dataset_agreement.valid.empty? && !@dataset_agreement.valid.first.start.empty? %>
+        <p>
+          <strong>Agreement validity date:</strong>
+          <%= @dataset_agreement.valid.first.start.first %>
+          <% if !@dataset_agreement.valid.first.end.empty? %>
+            to <%= @dataset_agreement.valid.first.end.first %>
+          <% end %>
+        </p>
+        <% end %>
+
+        <% if !@dataset_agreement.invoice.empty? && (!@dataset_agreement.invoice.first.identifier.empty? || @dataset_agreement.invoice.first.source.empty?) %>
+          <% if !@dataset_agreement.invoice.first.source.empty? %>
+            <p>
+              <strong>Source system invoice was registered / paid in:</strong>
+              <%= @dataset_agreement.invoice.first.source.first %>
+            </p>
+          <% end %>
+
+          <% if !@dataset_agreement.invoice.first.identifier.empty? %>
+            <p>
+              <strong>Invoice number / id:</strong>
+              <%= @dataset_agreement.invoice.first.identifier.first %>
+            </p>
+          <% end %>
+
+          <% if !@dataset_agreement.invoice.first.monetaryValue.empty? %>
+            <p>
+              <strong>Monetary value:</strong>
+              <%= @dataset_agreement.invoice.first.monetaryValue.first %>
+            </p>
+          <% end %>
+
+          <% if !@dataset_agreement.invoice.first.monetaryStatus.empty? %>
+            <p>
+              <strong>Monetary status:</strong>
+              <%= @dataset_agreement.invoice.first.monetaryStatus.first %>
+            </p>
+          <% end %>
+        <% end #Invoice details%>
+
+      <% end #if can review %> 
+
+      <% if !@dataset_agreement.status.empty? %>
+      <p>
+        <strong>Agreement status:</strong>
+        <%= @dataset_agreement.status.first %>
+      </p>
+      <% end %>
+      
+    </div><!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->

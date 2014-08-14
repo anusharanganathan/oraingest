@@ -448,6 +448,32 @@ module Ora
     article
   end
 
+  def buildValidityDate(params, article)
+    article.valid = nil
+    if !params[:start].empty? || !params[:end].empty?
+      params.each do |k, v|
+        params[k] = nil if v.empty?
+      end
+      params['id'] = "info:fedora/#{article.id}#valid"
+      #TODO: On adding this the data is not retreived after create (because embargoDate is also of the same type?)
+      #params['type'] = RDF::TIME.TemporalEntity
+      article.valid.build(params)
+    end
+    article
+  end
+
+  def buildInvoiceData(params, article)
+    article.invoice = nil
+    if !params[:identifier].empty? || !params[:source].empty?
+      params.each do |k, v|
+        params[k] = nil if v.empty?
+      end
+      params['id'] = "info:fedora/#{article.id}#invoice"
+      article.invoice.build(params)
+    end
+    article
+  end
+
   def buildMetadata(params, article, contents)
     # Validate permissions
     if params.has_key?(:permissions_attributes)
@@ -499,9 +525,11 @@ module Ora
       article = Ora.buildPublicationActivity(params[:publication], article)
     end
     # get the publication date to calculate embargo dates for access rights
-    datePublished = nil
-    if !article.publication[0].nil? && !article.publication[0].datePublished.nil?
-      datePublished = article.publication[0].datePublished.first
+    if article.class.to_s != "DatasetAgreement"
+      datePublished = nil
+      if !article.publication[0].nil? && !article.publication[0].datePublished.nil?
+        datePublished = article.publication[0].datePublished.first
+      end
     end
 
     # Remove blank assertions for dataset access rights and build
@@ -528,6 +556,16 @@ module Ora
     #remove_blank_assertions for creation activity and build
     if params.has_key?(:creation)
       article = Ora.buildCreationActivity(params[:creation], article)
+    end
+
+    #Remove blank assertions for validity date and build
+    if params.has_key?(:valid)
+      article = Ora.buildValidityDate(params[:valid], article)
+    end
+
+    #Remove blank assertions for invoice details and build
+    if params.has_key?(:invoice)
+      article = Ora.buildInvoiceData(params[:invoice], article)
     end
 
     article

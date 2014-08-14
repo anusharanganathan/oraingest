@@ -1,5 +1,7 @@
 module RDF
   class ORA < RDF::Vocabulary("http://vocab.ox.ac.uk/ora#")
+    property :DataSteward
+    property :DataStorageAgreement
     property :reviewStatus
     property :copyrightNote
     property :thesisDegreeLevel
@@ -22,14 +24,13 @@ module RDF
     property :refException
     property :isPartOfSeries
     property :dataStorageDetails
-    property :DataStorageAgreement
     property :locator
     property :hasAgreement
     property :storageAgreement
     property :agreementStatus
     property :digitalSize
     property :digitalSizeAllocated
-    property :digitalStorageSilo
+    property :dataStorageSilo
     property :dataSteward
     property :dataContributor
     property :hasInvoice

@@ -1,0 +1,26 @@
+<h1>Dataset agreements</h1>
+
+<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = 'You have no documents to display' if msg.blank? %>
+<% display_thumbs = true %>
+<% display_access = false %>
+
+<% path = { :new => new_dataset_agreement_path, :list => dataset_agreements_path } %>
+<br/><%= render partial: "shared/actions/list", :locals => { :path => path } %>
+
+<div>
+  <% if @dataset_agreements.blank? %>
+      <h3>  <%= msg %> </h3>
+  <% else %>
+    <% if !@dataset_agreements.blank? %>
+      <div id="recent_docs">
+        <table class="table table-bordered table-striped">
+          <% @dataset_agreements.each do |dataset_agreement| %>
+            <%= render :partial => "recent_dataset_agreement", as: :dataset_agreement, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :dataset_agreement => dataset_agreement} %>
+          <% end %>
+        </table>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+

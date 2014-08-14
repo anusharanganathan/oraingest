@@ -199,6 +199,9 @@ Sufia.config do |config|
       "creator" => RDF::DC.creator,
       "owner" => RDF::BIBO.owner,
       "Contributor" => RDF::DC.contributor
+    },
+    "dataset_agreement" => {
+      "data steward" => RDF::ORA.DataSteward
     }
   }
 

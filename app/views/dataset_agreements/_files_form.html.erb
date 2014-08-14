@@ -1,0 +1,13 @@
+<div class="tab-pane active" id="local">
+  <% editpath = edit_dataset_agreement_path(@pid) %>
+  <%= render partial: 'shared/upload/agreement' %>
+  <%= render partial: 'shared/upload/alerts', :locals => { :editpath => editpath } %>
+  <%= form_for(@dataset_agreement, :html => {:multipart => true, :id => 'fileupload'}) do |f| %>
+    <div class="well">
+      <%= render partial: 'shared/upload/file_upload_fields' %>
+    </div>
+  <% end %>
+  <%= render partial: 'shared/upload/script_templates', :locals => { :editpath => editpath } %>
+  <%= render partial: 'shared/upload/list_files' %>
+</div>
+

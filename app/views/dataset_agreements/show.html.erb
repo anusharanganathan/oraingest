@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<% if false %>
+  <h3><span class="label label-<%=@dataset_agreement.relationsMetadata.embargoClass%>"><%= @dataset_agreement.relationsMetadata.embargoStatus %></span> </h3>
+<% end %>
+<%= render partial: "describe_fields_show", as: :dataset_agreement %>
+<%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @dataset_agreement } %>
+<%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @dataset_agreement } %>
+<%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset_agreement } %>
+
+<% path = { :new => new_dataset_agreement_path, :show => dataset_agreement_path(@dataset_agreement), :edit => edit_dataset_agreement_path(@dataset_agreement), :list => dataset_agreements_path } %>
+<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+

@@ -1,0 +1,67 @@
+<div class="tab-pane" id="describetab">
+  <%= form_for(@dataset_agreement) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'describetab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: "describe_fields_edit", as: :dataset_agreement, :locals => { :f => f } %>
+          <div class="actions">
+            <%= f.submit "Save dataset agreement", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="creatorstab">
+  <%= form_for(@dataset_agreement) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'creatorstab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset_agreement.creation } %>
+          <div class="actions">
+            <%= f.submit "Save data steward information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="funderstab">
+  <%= form_for(@dataset_agreement) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'funderstab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset_agreement.funding } %>
+          <div class="actions">
+            <%= f.submit "Save funder information", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
+
+<div class="tab-pane" id="moreinfotab">
+  <%= form_for(@dataset_agreement) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
+    <div class="well">
+      <div class="row">
+        <div class="control-group">
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset_agreement.qualifiedRelation } %>
+          <div class="actions">
+            <%= f.submit "Save associations", class: "btn btn-success" %>
+          </div><!-- /.actions -->
+        </div><!-- /.control-group -->
+      </div> <!-- /.row -->
+    </div> <!-- /.well -->
+  <% end %>
+</div>
