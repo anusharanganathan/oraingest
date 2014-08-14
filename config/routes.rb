@@ -10,6 +10,9 @@ OraHydra::Application.routes.draw do
 
   devise_for :users
   
+  get 'deposit_agreement', to: 'static#deposit_agreement'
+  get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
+
   resources 'reviewer_dashboard', :only=>:index do
     collection do
       get 'page/:page', :action => :index
