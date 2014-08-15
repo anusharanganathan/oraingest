@@ -1,5 +1,16 @@
+<% label = @model.gsub('_', ' ') || @model %>
+<% if label.start_with?('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U') %>
+  <% label = "an #{label}" %>
+<% else %>
+  <% label = "a #{label}" %>
+<% end %>
+<% if label.include?("dataset agreement") %>
+  <% label = "Register #{label}" %>
+<% else %>
+  <% label = "Add #{label}" %>
+<% end %>
 <div class="actions">
-  <a href="<%= path[:new] %>"><button class="btn btn-primary"><i class="icon-edit"></i>&nbsp; Add an <%= @model.gsub('_', ' ') || @model %></button></a>
+  <a href="<%= path[:new] %>"><button class="btn btn-primary"><i class="icon-edit"></i>&nbsp; <%=label%></button></a>
   <a href="/"><button class="btn btn-inverse"><i class="icon-home"></i>&nbsp; Home</button></a><br/><br/>
 </div>
 

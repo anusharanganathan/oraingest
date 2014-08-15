@@ -1,5 +1,10 @@
+<% if @model == "dataset_agreement" %>
+  <% plural = "dataset agreements %>
+<% else %>
+  <% plural = @model.pluralize %>
+<% end %>
 <div class="actions">
-  <a href="<%= path[:list] %>"><button class="btn btn-primary"><i class="icon-list"></i>&nbsp; My recent <%= @model.gsub('_', ' ') || @model.pluralize %></button></a>
+  <a href="<%= path[:list] %>"><button class="btn btn-primary"><i class="icon-list"></i>&nbsp; My <%=plural%></button></a>
   <a href="/"><button class="btn btn-inverse"><i class="icon-home"></i>&nbsp; Home</button></a>
 </div>
 
