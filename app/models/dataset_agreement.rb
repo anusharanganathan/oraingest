@@ -34,6 +34,8 @@ class DatasetAgreement < ActiveFedora::Base
     depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
     rights_ds.permissions({:person=>depositor_id}, 'edit') unless rights_ds.nil?
     rights_ds.permissions({:group=>"reviewer"}, 'edit') unless rights_ds.nil?
+    #rights_ds.permissions({:group=>"registered"}, 'discover') unless rights_ds.nil?
+    rights_ds.permissions({:group=>"registered"}, 'read') unless rights_ds.nil?
     return true
   end
   
