@@ -71,7 +71,9 @@ class DatasetAgreementsController < ApplicationController
   def index
     #@datasets = DatasetAgreement.all
     #Grab users recent documents
+    recent
     recent_me
+    relevant
     @model = 'dataset_agreement'
   end
 
@@ -146,17 +148,21 @@ class DatasetAgreementsController < ApplicationController
   def recent
     if user_signed_in?
       # grab other people's documents
-      (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>5)
-    else 
-      # grab any documents we do not know who you are
-      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>5)
+      (_, @agreements) = get_search_results(:q =>filter_not_mine,
+                                        :sort=>sort_field, :rows=>50)
     end
   end
 
   def recent_me
     if user_signed_in?
-      (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
+      (_, @user_agreements) = get_search_results(:q =>filter_mine,
+                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
+    end
+  end
+
+  def relevant
+    if user_signed_in?
+      (_, @relevant_user_agreements) = get_search_results(:q =>filter_relevant,
                                         :sort=>sort_field, :rows=>50, :fields=>"*:*")
     end
   end
@@ -276,12 +282,7 @@ class DatasetAgreementsController < ApplicationController
 
   def depositor
   #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
-    Solrizer.solr_name('depositor', :stored_searchable, type: :string)
-  end
-
-  def workflow_status
-  #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
-    Solrizer.solr_name('all_workflow_statuses', :stored_searchable, type: :symbol)
+    Solrizer.solr_name('edit_access_person', :symbol, type: :string)
   end
 
   def filter_not_mine 
@@ -290,6 +291,10 @@ class DatasetAgreementsController < ApplicationController
 
   def filter_mine
     "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
+  end
+
+  def filter_relevant
+    "{!lucene q.op=AND df=#{Solrizer.solr_name("desc_metadata__contributor", :stored_searchable)}}#{current_user.user_key}"
   end
 
   def sort_field

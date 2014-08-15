@@ -1,0 +1,21 @@
+    <tr>
+      <% if display_thumbs %>
+        <td class="span10"><%= link_to image_tag("default.png", {width: 45, height: 60}), dataset_agreement_path(dataset_agreement) %> </td>
+      <% end %>
+      <td>
+        <h3>
+          <%= link_to dataset_agreement.title, dataset_agreement, :title => dataset_agreement.title  %>
+        </h3>
+        <div> 
+          <% if !dataset_agreement.creator.nil? %>
+            <%= render :partial => "shared/creator_show", :locals=>{:creators => dataset_agreement.creator} %>
+          <% end %>
+          <% if !dataset_agreement.digitalSizeAllocated.nil? %>
+            <span><%= dataset_agreement.digitalSizeAllocated %></span>
+          <% end %>
+          <% if !dataset_agreement.status.nil? %>
+            <span><% dataset_agreement.status %></span>
+          <% end %>
+        </div>
+      </td>
+    </tr>
