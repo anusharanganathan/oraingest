@@ -196,15 +196,25 @@ Sufia.config do |config|
       "Contributor" => RDF::DC.contributor
     },
     "dataset" => {
-      "creator" => RDF::DC.creator,
-      "owner" => RDF::BIBO.owner,
+      "Creator" => RDF::DC.creator,
+      "Cwner" => RDF::BIBO.owner,
       "Contributor" => RDF::DC.contributor
     },
     "dataset_agreement" => {
-      "data steward" => RDF::ORA.DataSteward
+      "Data steward" => RDF::ORA.DataSteward
     }
   }
 
+  config.role_labels = {
+    RDF::ORA.author.to_s => "Author",
+    RDF::DC.contributor.to_s => "Contributor",
+    RDF::DC.creator.to_s => "Creator",
+    RDF::ORA.DataSteward.to_s => "Data steward",
+    RDF::BIBO.editor.to_s => "Editor",
+    RDF::ORA.examiner.to_s => "Examiner",
+    RDF::BIBO.owner.to_s => "Owner",
+    RDF::ORA.supervisor.to_s => "Supervisor"
+  }
 
   config.oa_types = {
     "" => "",

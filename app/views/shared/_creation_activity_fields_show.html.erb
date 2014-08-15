@@ -11,7 +11,11 @@
                <strong><%= c.agent[0].name.first %></strong><br/>
             <% end %>
             <% if c.role %>
-              Role <%= c.role.first %><br/>
+              <% if Sufia.config.role_labels.include?(c.role.first) %>
+                <%= Sufia.config.role_labels[c.role.first] %><br/>
+              <% else %>
+                <%= c.role.first %>
+              <% end %>
             <% end %>
             <% if !c.agent[0].affiliation.empty? %>
               <% c.agent[0].affiliation.each do |c2| %>
