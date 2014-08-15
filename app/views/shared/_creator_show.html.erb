@@ -2,25 +2,29 @@
 <% if !creators.empty? %>
   <% creators.each do |creator| %>
     <% c = JSON.parse(creator) %>
-    <div>
-      <% if !c['name'].empty? and !c['sameAs'].empty? %>
-        <strong><%=link_to c['name'], c['sameAs'] %></strong><br/>
-      <% elsif !c['name'].empty? %>
-         <strong><%= c['name'] %></strong><br/>
-      <% end %>
-      <% if c['role'] %>
-        <% if Sufia.config.role_labels.include?(c['role']) %>
-          <%= Sufia.config.role_labels[c['role']] %><br/>
+    <% if !c.nil? && !c.empty? && c.has_key?('name') && !c['name'].nil? && !c['name'].empty? %>
+      <div>
+        <% if c.has_key?('sameAs') && !c['sameAs'].nil? && !c['sameAs'].empty? %>
+          <strong><%=link_to c['name'], c['sameAs'] %></strong><br/>
         <% else %>
-          <%= c['role'] %>
+           <strong><%= c['name'] %></strong><br/>
         <% end %>
-      <% end %>
-      <% if !c['affiliationName'].empty? and !c['affiliationSameAs'].empty? %>
-        <%=link_to c['affiliationName'], c['affiliationSameAs'] %><br/>
-      <% elsif c['affiliationName'] %>
-        <%= c['affiliationName'] %><br/>
-      <% end %>
-    </div>
+        <% if c.has_key?('role') && !c['role'].nil? && !c['role'].empty? %>
+          <% if Sufia.config.role_labels.include?(c['role']) %>
+            <%= Sufia.config.role_labels[c['role']] %><br/>
+          <% else %>
+            <%= c['role'] %>
+          <% end %>
+        <% end %>
+        <% if c.has_key?('affiliationName') && !c['affiliationName'].nil? && !c['affiliationName'].empty? %>
+          <% if c.has_key?('affiliationSameAs') && !c['affiliationSameAs'].nil? && !c['affiliationSameAs'].empty? %>
+            <%=link_to c['affiliationName'], c['affiliationSameAs'] %><br/>
+          <% else %>
+            <%= c['affiliationName'] %><br/>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
 
