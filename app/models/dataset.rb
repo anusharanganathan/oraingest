@@ -4,6 +4,7 @@ require "datastreams/relations_rdf_datastream"
 require "datastreams/dataset_admin_rdf_datastream"
 #require "person"
 require "rdf"
+require "fileutils"
 
 class Dataset < ActiveFedora::Base
   include Hydra::AccessControls::Permissions
@@ -58,6 +59,42 @@ class Dataset < ActiveFedora::Base
       "delete_url" => "deleteme", # generic_file_path(:id => id),
       "delete_type" => "DELETE"
     }
+  end
+
+  def save_file(file, pid)
+    name =  file.original_filename
+    name = File.basename(name) 
+    if pid.include?('sufia:')
+      pid = pid.gsub('sufia:', '')
+    end
+    directory = "/data/%s" % pid
+    FileUtils::mkdir_p(directory) 
+    # create the file path
+    path = File.join(directory, name)
+    # write the file
+    File.open(path, "wb") { |f| f.write(file.read) }
+    path
+  end
+
+  def delete_file(file_location)
+    File.delete(file_location) if File.exist?(file_location)
+  end
+
+  def delete_dir(pid)
+    if pid.include?('sufia:')
+      pid = pid.gsub('sufia:', '')
+    end
+    directory = "/data/%s" % pid
+    FileUtils.rm_rf(directory) if File.exist?(directory)
+  end
+
+  def create_external_datastream(dsid, url, file_name, file_size)
+    set_title_and_label(file_name, :only_if_blank=>true )
+    mime_types = MIME::Types.of(file_name)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    attrs = {:dsLabel => dsid, :controlGroup => "E", :dsLocation=>url, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
+    ds = create_datastream(ActiveFedora::Datastream, dsid, attrs)
+    ds
   end
 
   private

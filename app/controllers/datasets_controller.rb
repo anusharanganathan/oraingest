@@ -24,6 +24,8 @@ require 'parsing_nesting/tree'
 require "utils"
 require 'ora/build_metadata'
 
+require 'json'
+
 class DatasetsController < ApplicationController
   before_action :set_dataset, only: [:show, :edit, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
@@ -142,15 +144,19 @@ class DatasetsController < ApplicationController
     if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
+    @dataset.delete_dir(@dataset.id)
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url }
       format.json { head :no_content }
     end
+    
   end
 
-  def datastream
+  def delete_datastream
     # To delete a datastream 
+    opts =  datastream_opts(dsid)
+    @dataset.delete_file(opts['dsLocation'])
     @dataset.datasteams[dsid].delete
     parts = @dataset.hasPart
     @dataset.hasPart = nil
@@ -221,8 +227,23 @@ class DatasetsController < ApplicationController
   end
 
   def process_file(file)
-    #Sufia::GenericFile::Actions.create_content(@dataset, file, file.original_filename, datastream_id, current_user)
-    @dataset.add_file(file, datastream_id, file.original_filename)
+    dsid = datastream_id
+    # Save file to disk
+    location = @dataset.save_file(file, @dataset.id)
+
+    # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
+    #ds = @dataset.create_external_datastream(dsid, url, File.basename(location), file.size)
+    #@dataset.add_datastream(ds)
+
+    # Prepare data for associated datastream
+    file_name =  file.original_filename
+    file_name = File.basename(file_name)
+    mime_types = MIME::Types.of(file_name)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    opts = {:dsLabel => file_name, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file.size}
+    dsfile = StringIO.new(opts.to_json)
+    # Add data as file datastream
+    @dataset.add_file(dsfile, dsid, "options.json")
     save_tries = 0
     begin
       @dataset.save!
@@ -298,9 +319,19 @@ class DatasetsController < ApplicationController
     choicesUsed = @dataset.datastreams.keys.select { |key| key.match(/^content\d+/) and @dataset.datastreams[key].content != nil }
     files = []
     for dsid in choicesUsed
-      files.push(@dataset.to_jq_upload(@dataset.datastreams[dsid].label, @dataset.datastreams[dsid].size, @dataset.id, dsid))
+      opts = datastream_opts(dsid)
+      files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end
     files
+  end
+
+  def datastream_opts(dsid)
+    opts = {}
+    if @dataset.datastreams.keys.include?(dsid)
+      opts = @dataset.datastreams[dsid].content
+      opts = JSON.parse(opts)    
+    end
+    opts
   end
 
   def datastream_id
