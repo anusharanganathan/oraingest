@@ -2,40 +2,43 @@ module RDF
   class ORA < RDF::Vocabulary("http://vocab.ox.ac.uk/ora#")
     property :DataSteward
     property :DataStorageAgreement
-    property :reviewStatus
+    property :TitularAgent
+    property :affiliation
+    property :agreementStatus
+    property :annotation
+    property :apcPaid
+    property :author
     property :copyrightNote
-    property :thesisDegreeLevel
-    property :rightsHolderGroup
+    property :dateCollected
+    property :dataContributor
+    property :dataSteward
+    property :dataStorageDetails
+    property :dataStorageSilo
+    property :digitalSize
+    property :digitalSizeAllocated
     property :embargoStatus
     property :embargoStart
     property :embargoEnd
     property :embargoReason
     property :embargoRelease
-    property :affiliation
-    property :author
-    property :supervisor
     property :examiner
     property :hadCreationActivity
     property :hadPublicationActivity
-    property :annotation
-    property :oaReason
-    property :oaStatus
-    property :apcPaid
-    property :refException
-    property :isPartOfSeries
-    property :dataStorageDetails
-    property :locator
+    property :hadTitularActivity
     property :hasAgreement
-    property :storageAgreement
-    property :agreementStatus
-    property :digitalSize
-    property :digitalSizeAllocated
-    property :dataStorageSilo
-    property :dataSteward
-    property :dataContributor
+    property :hasDataManagementPlan
     property :hasInvoice
+    property :isPartOfSeries
+    property :locator
     property :monetaryValue
     property :monetaryStatus
-    property :dateCollected
+    property :oaReason
+    property :oaStatus
+    property :refException
+    property :reviewStatus
+    property :rightsHolderGroup
+    property :storageAgreement
+    property :supervisor
+    property :thesisDegreeLevel
   end
 end

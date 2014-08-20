@@ -4,8 +4,11 @@
 <div class="well">
   <div class="row">
     <div class="control-group">
-
-      <legend>Data storage</legend>
+      <legend>Data management</legend>
+      <div class="fields">
+        <%= f.label :hasDataManagementPlan, "The URL of the data management plan for your research project", :class=>"control-label" %>
+        <%= f.text_field :hasDataManagementPlan, :value=>article.hasDataManagementPlan.first %>
+      </div>
       <div class="fields">
         <%= f.label :hasAgreement, "Do you, the project or department have an agreement for storing data with the Bodleian?", :class=>"control-label" %>
         <%= f.radio_button :hasAgreement, "Yes", :checked=>(article.hasAgreement.first=='Yes') %> Yes &nbsp;&nbsp;
@@ -18,19 +21,16 @@
           <%= f_a.hidden_field :identifier, :value=>article.storageAgreement.first.identifier.first %>
         </div>
       <% end %>
-      
       <% if can? :review, Dataset %>
         <div class="fields">
           <%= f.label :locator, "Data silo for storage", :class=>"control-label" %>
           <%= f.text_field :locator, :value=>article.locator.first %>
         </div>
-      
         <div class="fields">
           <%= f.label :note, "Notes", :class=>"control-label" %>
           <%= f.text_field :note, :value=>article.note.first %>
         </div>
-      <% end %>
-
+      <% end #can review %>
     </div><!-- /.control-group -->
   </div> <!-- /.row -->
 </div> <!-- /.well -->

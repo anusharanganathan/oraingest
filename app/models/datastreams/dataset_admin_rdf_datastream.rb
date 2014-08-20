@@ -9,6 +9,7 @@ class DatasetAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
   map_predicates do |map|
     # For internal relations
+    map.hasDataManagementPlan(:in => RDF::ORA)
     map.hasAgreement(:in => RDF::ORA)
     map.storageAgreement(:in => RDF::ORA, class_name:"AgreementDetails")
     map.note(:to => "annotation", :in => RDF::ORA)

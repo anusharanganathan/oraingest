@@ -238,6 +238,18 @@ Sufia.config do |config|
     "Digital" => RDF::FABIO.DigitalStorageMedium
   }
 
+  config.agreement_types = {
+    "Principal" => "Principal",
+    "Individual" => "Individual",
+    "Bilateral" => "Bilateral"
+  }
+
+  config.archiving_payment_options = {
+    "Payment for archiving these data has already been paid [Give details below including X5 ID if you have it]" => "Paid",
+    "Who should we invoice for archiving these data? [Give details below]" => "To be invoiced",
+    "My publisher requires I cite the data underpinning my article (or other work) and my research is unfunded [Give details below]" => "Unfunded research"
+  }
+
   # Map hostnames onto Google Analytics tracking IDs
   # config.google_analytics_id = 'UA-99999999-1'
  
