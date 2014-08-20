@@ -28,31 +28,18 @@
 </div>
 
 <div class="field">
-  <%= f.label :annotation, "Have you paid for this storage?" %>
-  <%= f.text_field :annotation, :value=>@dataset_agreement.annotation.first, :required=>true %>
+  <%= f.label :annotation, "Archiving payment option" %>
+  <%= f.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>@dataset_agreement.annotation.first) %>
 </div>
-
-<% if can? :review, DatasetAgreement %> 
+<% if @dataset_agreement.invoice.empty? %>
+  <% @dataset_agreement.invoice.build %>
+<% end %>
+<%= f.fields_for :invoice, @dataset_agreement.invoice.first do |f_i| %>
   <div class="field">
-    <%= f.label :dataStorageSilo, "Silo allocated for storage" %>
-    <%= f.text_field :dataStorageSilo, :value=>@dataset_agreement.dataStorageSilo.first %>
+    <%= f_i.label :description, "Details for archiving payment option" %>
+    <%= f_i.text_field :description, :value=>@dataset_agreement.invoice.first.description.first %> 
   </div>
-  <div class="field">
-    <% if @dataset_agreement.valid.empty? %>
-      <% @dataset_agreement.valid.build %>
-    <% end %>
-    <%= f.label :valid, "until when is this agreement valid" %>
-    <% if @dataset_agreement.valid[0].start.empty? %>
-      <%= f.text_field "valid][start", :value=>startDate = Time.now.strftime("%d %b %Y") %> to 
-    <% else %>
-      <%= f.text_field "valid][start", :value=>@dataset_agreement.valid[0].start.first %> to 
-    <% end %>
-    <%= f.text_field "valid][end", :value=>@dataset_agreement.valid[0].end.first %>
-  </div>
-  <% if @dataset_agreement.invoice.empty? %>
-    <% @dataset_agreement.invoice.build %>
-  <% end %>
-  <%= f.fields_for :invoice, @dataset_agreement.invoice.first do |f_i| %>
+  <% if can? :review, DatasetAgreement %> 
     <div class="field">
       <%= f_i.label :source, "Source system invoice was registered / paid in" %>
       <%= f_i.text_field :source, :value=>@dataset_agreement.invoice.first.source.first %> 
@@ -70,6 +57,29 @@
       <%= f_i.text_field :monetaryStatus, :value=>@dataset_agreement.invoice.first.monetaryStatus.first %> 
     </div>
   <% end %>
+<% end %>
+
+<% if can? :review, DatasetAgreement %> 
+  <div class="field">
+    <%= f.label :type, "Type of agreement" %>
+    <%= f.select :type, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.type.first) %>
+  </div>
+  <div class="field">
+    <%= f.label :dataStorageSilo, "Silo allocated for storage" %>
+    <%= f.text_field :dataStorageSilo, :value=>@dataset_agreement.dataStorageSilo.first %>
+  </div>
+  <div class="field">
+    <% if @dataset_agreement.valid.empty? %>
+      <% @dataset_agreement.valid.build %>
+    <% end %>
+    <%= f.label :valid, "until when is this agreement valid" %>
+    <% if @dataset_agreement.valid[0].start.empty? %>
+      <%= f.text_field "valid][start", :value=>startDate = Time.now.strftime("%d %b %Y") %> to 
+    <% else %>
+      <%= f.text_field "valid][start", :value=>@dataset_agreement.valid[0].start.first %> to 
+    <% end %>
+    <%= f.text_field "valid][end", :value=>@dataset_agreement.valid[0].end.first %>
+  </div>
   <div class="field">
     <%= f.label :status, "Agreement status" %>
     <%= f.text_field :status, :value=>@dataset_agreement.status.first %>

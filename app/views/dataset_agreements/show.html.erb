@@ -5,6 +5,7 @@
 <% end %>
 <%= render partial: "describe_fields_show", as: :dataset_agreement %>
 <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @dataset_agreement } %>
+<%= render partial: "shared/titular_activity_fields_show", :locals => { :article => @dataset_agreement } %>
 <%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @dataset_agreement } %>
 <%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset_agreement } %>
 

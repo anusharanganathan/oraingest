@@ -29,30 +29,19 @@
 
       <% if !@dataset_agreement.annotation.empty? %>
       <p>
-        <strong>Details on payment for storage:</strong>
+        <strong>Archiving payment option:</strong>
         <%= @dataset_agreement.annotation.first %>
       </p>
       <% end %>
       
-      <% if can? :review, DatasetAgreement %>
-        <% if !@dataset_agreement.dataStorageSilo.empty? %>
-        <p>
-          <strong>Silo allocated for storage:</strong>
-          <%= @dataset_agreement.dataStorageSilo.first %>     
-        </p>
+      <% if !@dataset_agreement.invoice.empty? && (!@dataset_agreement.invoice.first.identifier.empty? || @dataset_agreement.invoice.first.source.empty?) %>
+        <% if !@dataset_agreement.invoice.first.description.empty? %>
+          <p>
+            <strong>Archiving payment option details:</strong>
+            <%= @dataset_agreement.invoice.first.description.first %>
+          </p>
         <% end %>
-
-        <% if !@dataset_agreement.valid.empty? && !@dataset_agreement.valid.first.start.empty? %>
-        <p>
-          <strong>Agreement validity date:</strong>
-          <%= @dataset_agreement.valid.first.start.first %>
-          <% if !@dataset_agreement.valid.first.end.empty? %>
-            to <%= @dataset_agreement.valid.first.end.first %>
-          <% end %>
-        </p>
-        <% end %>
-
-        <% if !@dataset_agreement.invoice.empty? && (!@dataset_agreement.invoice.first.identifier.empty? || @dataset_agreement.invoice.first.source.empty?) %>
+        <% if can? :review, DatasetAgreement %>
           <% if !@dataset_agreement.invoice.first.source.empty? %>
             <p>
               <strong>Source system invoice was registered / paid in:</strong>
@@ -80,7 +69,26 @@
               <%= @dataset_agreement.invoice.first.monetaryStatus.first %>
             </p>
           <% end %>
-        <% end #Invoice details%>
+        <% end #if can review %> 
+      <% end #Invoice details%>
+
+      <% if can? :review, DatasetAgreement %>
+        <% if !@dataset_agreement.dataStorageSilo.empty? %>
+        <p>
+          <strong>Silo allocated for storage:</strong>
+          <%= @dataset_agreement.dataStorageSilo.first %>     
+        </p>
+        <% end %>
+
+        <% if !@dataset_agreement.valid.empty? && !@dataset_agreement.valid.first.start.empty? %>
+        <p>
+          <strong>Agreement validity date:</strong>
+          <%= @dataset_agreement.valid.first.start.first %>
+          <% if !@dataset_agreement.valid.first.end.empty? %>
+            to <%= @dataset_agreement.valid.first.end.first %>
+          <% end %>
+        </p>
+        <% end %>
 
       <% end #if can review %> 
 

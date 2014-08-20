@@ -351,6 +351,54 @@ module Ora
     article
   end
 
+  def buildTitularActivity(params, article)
+    article.titularActivity = nil
+    if params[:titular_attributes].is_a?(Hash)
+      params[:titular_attributes] = params[:titular_attributes].values()
+    end
+    # has to have name of titular
+    params[:titular_attributes].each do |c|
+      if c.nil? || c.empty? || !c.has_key?("name")
+        params[:titular_attributes].delete(c)
+      elsif c[:name].empty?
+        params[:titular_attributes].delete(c)
+      else
+        c.each do |k, v|
+          c[k] = nil if v.empty?
+        end
+      end
+    end
+    if !params[:titular_attributes].empty?
+      id0 = "info:fedora/%s#titularActivity" % article.id
+      vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
+      (0..params[:titular_attributes].length-1).each do |n|
+        b1 = "info:fedora/%s#titular%d" % [article.id, n]
+        vals[:wasAssociatedWith].push(b1)
+      end
+      article.titularActivity.build(vals)
+      affiliationCount = 0
+      article.titularActivity[0].titular = nil
+      params[:titular_attributes].each_with_index do |c1, c1_index|
+        b1 = "info:fedora/%s#titular%d" % [article.id, c1_index]
+        agent = { 'id'=> b1, :name => c1[:name], :roleHeldBy => c1[:roleHeldBy] }
+        b2 = "info:fedora/%s#titularAssociation%d" % [article.id, c1_index]
+        c1['id'] = b2
+        #c1[:agent] = b1
+        c1[:type] = RDF::PROV.Association
+        article.titularActivity[0].titular.build(c1)
+        article.titularActivity[0].titular[c1_index].agent = nil
+        article.titularActivity[0].titular[c1_index].agent.build(agent)
+        article.titularActivity[0].titular[c1_index].agent[0].affiliation = nil
+        if c1[:affiliation] && c1[:affiliation].has_key?(:name) and !c1[:affiliation][:name].empty?
+          c1[:affiliation]['id'] = "info:fedora/%s#titularAffiliation%d" % [article.id, affiliationCount]
+          article.titularActivity[0].titular[c1_index].agent[0].affiliation.build(c1[:affiliation])
+          affiliationCount += 1
+        end # if affiliation
+      end #for each titular
+    end #if titular attributes
+    article
+  end
+
   def buildPublicationActivity(params, article)
     article.publication = nil
     params.each do |k, v|
@@ -464,7 +512,9 @@ module Ora
 
   def buildInvoiceData(params, article)
     article.invoice = nil
-    if !params[:identifier].empty? || !params[:source].empty?
+    if ((params.has_key?('description') && !params[:description].empty?) || \
+       (params.has_key?('identifier') && !params[:identifier].empty?) || \
+       (params.has_key?('source') && !params[:source].empty?))
       params.each do |k, v|
         params[k] = nil if v.empty?
       end
@@ -556,6 +606,11 @@ module Ora
     #remove_blank_assertions for creation activity and build
     if params.has_key?(:creation)
       article = Ora.buildCreationActivity(params[:creation], article)
+    end
+
+    #remove_blank_assertions for titular stewardship activity and build
+    if params.has_key?(:titularActivity)
+      article = Ora.buildTitularActivity(params[:titularActivity], article)
     end
 
     #Remove blank assertions for validity date and build
