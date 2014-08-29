@@ -1,9 +1,4 @@
 <div id="creator" class="control-group">
-  <% if @model == "dataset_agreement" %>
-    <% label = "data steward" %>
-  <% else %>
-    <% label = "creator" %>
-  <% end %>
   <% if creation.empty? %>
     <% creation.build %>
   <% end %>

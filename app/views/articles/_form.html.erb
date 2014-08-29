@@ -25,7 +25,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation } %>
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
           <div class="actions">
             <%= f.submit "Save creator information", class: "btn btn-success" %>
           </div><!-- /.actions -->
