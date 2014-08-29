@@ -61,8 +61,8 @@
 
 <% if can? :review, DatasetAgreement %> 
   <div class="field">
-    <%= f.label :type, "Type of agreement" %>
-    <%= f.select :type, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.type.first) %>
+    <%= f.label :agreementType, "Type of agreement" %>
+    <%= f.select :agreementType, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.agreementType.first) %>
   </div>
   <div class="field">
     <%= f.label :dataStorageSilo, "Silo allocated for storage" %>

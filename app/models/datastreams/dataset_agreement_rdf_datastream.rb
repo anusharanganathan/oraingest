@@ -10,12 +10,13 @@ require 'fields/date_duration'
 
 class DatasetAgreementRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :identifier, :title, :type, :annotation, :digitalSizeAllocated, :dataStorageSilo, :status, :contributor, :references, :valid, :creation, :titularActivity, :invoice, :funding 
+  attr_accessor :identifier, :title, :agreementType, :annotation, :digitalSizeAllocated, :dataStorageSilo, :status, :contributor, :references, :valid, :creation, :titularActivity, :invoice, :funding 
 
   map_predicates do |map|
     map.identifier(:in => RDF::DC)
     map.title(:in => RDF::DC)
     map.type(:in => RDF::DC)
+    map.agreementType(:in => RDF::ORA)
     map.annotation(:in => RDF::ORA)
     map.digitalSizeAllocated(:in => RDF::ORA)
     map.dataStorageSilo(:in => RDF::ORA)
@@ -42,7 +43,7 @@ class DatasetAgreementRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     super
     solr_doc[Solrizer.solr_name("desc_metadata__identifier", :symbol)] = self.identifier
     solr_doc[Solrizer.solr_name("desc_metadata__title", :stored_searchable)] = self.title
-    solr_doc[Solrizer.solr_name("desc_metadata__type", :symbol)] = self.type
+    solr_doc[Solrizer.solr_name("desc_metadata__agreementType", :symbol)] = self.agreementType
     solr_doc[Solrizer.solr_name("desc_metadata__digitalSizeAllocated", :symbol)] = self.digitalSizeAllocated
     solr_doc[Solrizer.solr_name("desc_metadata__dataStorageSilo", :stored_searchable)] = self.dataStorageSilo
     solr_doc[Solrizer.solr_name("desc_metadata__dataStorageSilo", :symbol)] = self.dataStorageSilo

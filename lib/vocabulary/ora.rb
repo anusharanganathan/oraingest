@@ -5,6 +5,7 @@ module RDF
     property :TitularAgent
     property :affiliation
     property :agreementStatus
+    property :agreementType
     property :annotation
     property :apcPaid
     property :author
@@ -26,6 +27,7 @@ module RDF
     property :hadPublicationActivity
     property :hadTitularActivity
     property :hasAgreement
+    property :hasDataset
     property :hasDataManagementPlan
     property :hasInvoice
     property :isPartOfSeries

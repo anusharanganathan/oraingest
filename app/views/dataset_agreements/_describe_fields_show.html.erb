@@ -73,6 +73,13 @@
       <% end #Invoice details%>
 
       <% if can? :review, DatasetAgreement %>
+        <% if !@dataset_agreement.agreementType.empty? %>
+        <p>
+          <strong>Type:</strong>
+          <%= @dataset_agreement.agreementType.first %>     
+        </p>
+        <% end %>
+
         <% if !@dataset_agreement.dataStorageSilo.empty? %>
         <p>
           <strong>Silo allocated for storage:</strong>
