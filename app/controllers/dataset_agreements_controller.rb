@@ -228,6 +228,7 @@ class DatasetAgreementsController < ApplicationController
   end
 
   def add_metadata(dataset_agreement_params)
+    #TODO: All data stewards should be added to list of contibutors
     @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, contents)
     respond_to do |format|
       if @dataset_agreement.save
@@ -294,7 +295,7 @@ class DatasetAgreementsController < ApplicationController
   end
 
   def filter_relevant
-    "{!lucene q.op=AND df=#{Solrizer.solr_name("desc_metadata__contributor", :stored_searchable)}}#{current_user.user_key}"
+    "{!lucene q.op=AND df=#{Solrizer.solr_name("desc_metadata__contributor", :stored_searchable)}}#{current_user.user_key} -#{depositor}:#{current_user.user_key}"
   end
 
   def sort_field
