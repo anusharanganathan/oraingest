@@ -62,30 +62,39 @@
   <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first %> 
 </div>
 
-<div class="field">
-  <%= f.label :medium, "In which medium is your data stored" %>
-  <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]) %> Analog
-  <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]) %> Digital
-</div>
+<% if !@files.nil? && !@files.empty? %>
+  <%= f.hidden_field :medium, :value=>Sufia.config.data_medium["Digital"] %>
+<% else %>
+  <% if @dataset.medium[0] == Sufia.config.data_medium["Digital"] %>
+    <% showDigital = "inline" %>
+  <% else %>
+    <% showDigital = "none" %>
+  <% end %>
+  <div class="field">
+    <%= f.label :medium, "In which medium is your data stored" %>
+    <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')" %> Analog
+    <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')" %> Digital
+  </div>
 
-<div class="field">
-  <%= f.label :locator, "Where is your data located?" %>
-  <%= f.text_field :locator, :value=>@dataset.locator.first %>
-</div>
+  <div class="field">
+    <%= f.label :locator, "Where is your data located?" %>
+    <%= f.text_field :locator, :value=>@dataset.locator.first %>
+  </div>
 
-<div class="field">
-  <%= f.label :digitalSize, "Approximate size of the data" %>
-  <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first %>
-</div>
-
-<div class="field">
-  <%= f.label :format, "Data format" %>
-  <%= f.text_field :format, :value=>@dataset.format.first %>
-</div>
-
-<div class="field">
-  <%= f.label :version, "Version number" %>
-  <%= f.text_field :version, :value=>@dataset.version.first %>
-</div>
-
-
+  <div id="digitalFields" style="display:<%=showDigital%>;">  
+    <div class="field">
+      <%= f.label :digitalSize, "Approximate size of the data" %>
+      <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :format, "Data format" %>
+      <%= f.text_field :format, :value=>@dataset.format.first %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :version, "Version number" %>
+      <%= f.text_field :version, :value=>@dataset.version.first %>
+    </div>
+  </div>
+<% end %>
