@@ -1,0 +1,31 @@
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <h3>Dataset agreement <small>related to this dataset</small></h3>
+      <% path = dataset_agreement_path(dataset_agreement.id) %>
+      <% if !dataset_agreement.title.empty? or !dataset_agreement.title.first.start_with "Agreement for" %>
+        <strong><a href="<%=path%>"><%= dataset_agreement.title.first %></a></strong>
+      <% else %>
+        <strong><a href="<%=path%>">Dataset agreement</a></strong>
+      <% end %>
+      
+      <% if !dataset_agreement.annotation.empty? %>
+      <p>
+        <strong>Archiving payment option:</strong>
+        <%= dataset_agreement.annotation.first %>
+      </p>
+      <% end %>
+      
+      <% if !dataset_agreement.invoice.empty? && (!dataset_agreement.invoice.first.identifier.empty? || dataset_agreement.invoice.first.source.empty?) %>
+        <% if !dataset_agreement.invoice.first.description.empty? %>
+          <p>
+            <strong>Archiving payment option details:</strong>
+            <%= dataset_agreement.invoice.first.description.first %>
+          </p>
+        <% end %>
+      <% end #Invoice details%>
+      <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => dataset_agreement } %>
+      <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => dataset_agreement } %> 
+    </div><!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->

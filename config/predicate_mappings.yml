@@ -49,13 +49,15 @@
     :oai_item_id: itemID
   http://projecthydra.org/ns/relations#:
     :is_governed_by: isGovernedBy
-  http://vocab.ox.ac.uk/terms/schema#:
+  http://vocab.ox.ac.uk/ora#:
     :has_author: hasAuthor
     :has_editor: hasEditor
     :has_principal_investigator: hasPrincipalInvestigator
     :has_supervisor: hasSupervisor
     :has_funder: hasFunder
     :has_copyright_holder: hasCopyrightHolder
+    :has_agreement: hasAgreement
+    :has_dataset: hasDataset
   http://purl.org/dc/terms/:
     :has_contributor: contributor
     :has_publisher: publisher

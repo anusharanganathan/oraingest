@@ -2,6 +2,7 @@ require "datastreams/workflow_rdf_datastream"
 require "datastreams/dataset_rdf_datastream"
 require "datastreams/relations_rdf_datastream"
 require "datastreams/dataset_admin_rdf_datastream"
+require "dataset_agreement"
 #require "person"
 require "rdf"
 require "fileutils"
@@ -23,6 +24,8 @@ class Dataset < ActiveFedora::Base
   has_metadata :name => "workflowMetadata", :type => WorkflowRdfDatastream
   has_metadata :name => "relationsMetadata", :type => RelationsRdfDatastream
   has_metadata :name => "adminMetadata", :type => DatasetAdminRdfDatastream
+
+  belongs_to :hasRelatedAgreement, :property=>:has_agreement, :class_name=>"DatasetAgreement"
 
   has_attributes :workflows, :workflows_attributes, datastream: :workflowMetadata, multiple: true
   has_attributes *DatasetRdfDatastream.fields, datastream: :descMetadata, multiple: true

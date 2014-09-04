@@ -1,6 +1,3 @@
-<% if article.storageAgreement.nil? || article.storageAgreement.empty? %>
-  <% article.storageAgreement.build() %>
-<% end %>
 <div class="well">
   <div class="row">
     <div class="control-group">
@@ -9,23 +6,28 @@
         <%= f.label :hasDataManagementPlan, "The URL of the data management plan for your research project", :class=>"control-label" %>
         <%= f.text_field :hasDataManagementPlan, :value=>article.hasDataManagementPlan.first %>
       </div>
-      <div class="fields">
-        <%= f.label :hasAgreement, "Do you, the project or department have an agreement for storing data with the Bodleian?", :class=>"control-label" %>
-        <%= f.radio_button :hasAgreement, "Yes", :checked=>(article.hasAgreement.first=='Yes') %> Yes &nbsp;&nbsp;
-        <%= f.radio_button :hasAgreement, "No", :checked=>(article.hasAgreement.first=='No') %> No
-      </div>
-      <%= f.fields_for :storageAgreement, article.hasAgreement.first do |f_a| %>
-        <div class="fields">
-          <%= f_a.label :title, "In whose name is the agreement", :class=>"control-label" %>
-          <%= f_a.text_field :title, :value=>article.storageAgreement.first.title.first %>
-          <%= f_a.hidden_field :identifier, :value=>article.storageAgreement.first.identifier.first %>
-        </div>
+      <% if !@dataset.hasRelatedAgreement.nil? and @dataset.hasRelatedAgreement.agreementType.first == "Individual" %>
+        <% showAgreement = "inline" %>
+      <% else %>
+        <% agreements = {} %>
+        <% if !@relevant_user_agreements.nil? %>
+          <% @relevant_user_agreements.each do |agreement| %>
+            <% agreements[agreement.id] = agreement.title %>
+          <% end %>
+        <% end %>
+        <% if agreements.length > 0 %>
+          <div class="fields">
+            <% agreements[""] = "This dataset has been paid for individually" %>      
+            <%= f.label :hasAgreement, "Select the agreement relevant to this dataset", :class=>"control-label" %>
+            <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), {}, {:onchange => "toggleDatasetAgreementDisplay(this.value)"} %>
+          </div>
+          <% showAgreement = "none" %>
+        <% else %>
+          <% showAgreement = "inline" %>
+        <% end %>
       <% end %>
+      <%= render partial: 'dataset_agreement_fields_edit', :locals => { :f => f, :hasRelatedAgreement => @dataset.hasRelatedAgreement, :showAgreement => showAgreement } %>
       <% if can? :review, Dataset %>
-        <div class="fields">
-          <%= f.label :locator, "Data silo for storage", :class=>"control-label" %>
-          <%= f.text_field :locator, :value=>article.locator.first %>
-        </div>
         <div class="fields">
           <%= f.label :note, "Notes", :class=>"control-label" %>
           <%= f.text_field :note, :value=>article.note.first %>

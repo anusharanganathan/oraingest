@@ -245,9 +245,9 @@ Sufia.config do |config|
   }
 
   config.archiving_payment_options = {
-    "Payment for archiving these data has already been paid [Give details below including X5 ID if you have it]" => "Paid",
-    "Who should we invoice for archiving these data? [Give details below]" => "To be invoiced",
-    "My publisher requires I cite the data underpinning my article (or other work) and my research is unfunded [Give details below]" => "Unfunded research"
+    "Payment has already been made for archiving the data" => "Paid",
+    "Raise me an inoice for archiving the data" => "To be invoiced",
+    "My publisher requires I cite the data and my research is unfunded" => "Unfunded research"
   }
 
   # Map hostnames onto Google Analytics tracking IDs

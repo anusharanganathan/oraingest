@@ -3,7 +3,7 @@
   <div class="row">
     <div class="control-group">
       <h3>Data storage details</h3>
-       <% if !article.hasAgreement.empty? %>
+       <% if article.hasRelatedAgreement.nil? && !article.hasAgreement.empty? %>
          <div>Agreement involving you found for data storage? <%= article.hasAgreement.first %></div>
        <% end %>
        <% if !article.storageAgreement.nil? && !article.storageAgreement.first.nil? && (!article.storageAgreement[0].title.empty? || !article.storageAgreement[0].identifier.empty?) %>

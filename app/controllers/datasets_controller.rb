@@ -51,7 +51,7 @@ class DatasetsController < ApplicationController
   # This applies appropriate access controls to all solr queries
   DatasetsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
-  DatasetsController.solr_search_params_logic += [:exclude_unwanted_models]
+  #DatasetsController.solr_search_params_logic += [:exclude_unwanted_models]
 
   skip_before_filter :default_html_head
 
@@ -89,6 +89,9 @@ class DatasetsController < ApplicationController
     @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset = Dataset.new
+    relevant_agreements
+    @agreement = DatasetAgreement.new
+    principal_agreement
     @model = 'dataset'
   end
 
@@ -99,6 +102,12 @@ class DatasetsController < ApplicationController
     end
     @pid = params[:id]
     @files = contents
+    if !@files and @dataset.medium[0].empty?
+      @dataset.medium[0] = Sufia.config.data_medium["Digital"]
+    end
+    relevant_agreements
+    @agreement = DatasetAgreement.new
+    principal_agreement
     @model = 'dataset'
   end
 
@@ -131,6 +140,7 @@ class DatasetsController < ApplicationController
       if params[:dataset].has_key?(:workflows_attributes)
         add_workflow(params[:dataset])
       else
+        #TODO: Make sure dataset param for medium is digital, if files are uploaded
         add_metadata(params[:dataset])
       end
     else
@@ -150,11 +160,11 @@ class DatasetsController < ApplicationController
       format.html { redirect_to datasets_url }
       format.json { head :no_content }
     end
-    
+    #TODO: If associated with an individual agreement, do we delete it? 
+    #      Especially, if the status of agreemnt is new?
   end
 
   def delete_datastream
-    # To delete a datastream 
     opts =  datastream_opts(dsid)
     @dataset.delete_file(opts['dsLocation'])
     @dataset.datasteams[dsid].delete
@@ -162,6 +172,7 @@ class DatasetsController < ApplicationController
     @dataset.hasPart = nil
     @dataset.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
     @dataset.save
+    #TODO: Remove file size from digitalSize in admin
   end
 
   def recent
@@ -196,8 +207,23 @@ class DatasetsController < ApplicationController
     end
   end
 
+  def relevant_agreements
+    # All people including the data steward should be listed in the contributor, if allowed to contribute
+    if user_signed_in?
+      (_, @relevant_user_agreements) = get_search_results(:q =>filter_relevant_agreement, 
+                                        :sort=>sort_field, :rows=>5, :fields=>"*:*")
+    end
+  end
+
+  def principal_agreement
+    if user_signed_in?
+      (_, @principal_agreement) = get_search_results(:q =>filter_principal_agreement, 
+                                        :sort=>sort_field, :rows=>5, :fields=>"*:*")
+    end
+  end
+
   def self.uploaded_field
-#  system_create_dtsi
+    #system_create_dtsi
     solr_name('desc_metadata__date_uploaded', :stored_sortable, type: :date)
   end
 
@@ -230,7 +256,13 @@ class DatasetsController < ApplicationController
     dsid = datastream_id
     # Save file to disk
     location = @dataset.save_file(file, @dataset.id)
-
+    #Save the location and add the file size to the admin datastream
+    if !@dataset.locator.include?(File.dirname(location))
+      @dataset.locator << File.dirname(location)
+    end
+    size = Integer(@dataset.digitalSize.first) rescue 0
+    @dataset.digitalSize = size + file.size
+     
     # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
     #ds = @dataset.create_external_datastream(dsid, url, File.basename(location), file.size)
     #@dataset.add_datastream(ds)
@@ -243,7 +275,7 @@ class DatasetsController < ApplicationController
     opts = {:dsLabel => file_name, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file.size}
     dsfile = StringIO.new(opts.to_json)
     # Add data as file datastream
-    @dataset.add_file(dsfile, dsid, "options.json")
+    @dataset.add_file(dsfile, dsid, "attributes.json")
     save_tries = 0
     begin
       @dataset.save!
@@ -303,12 +335,31 @@ class DatasetsController < ApplicationController
   end
 
   def add_metadata(dataset_params)
+    # find or create the dataset agreement, if included in the params
+    if dataset_params.has_key?(:hasAgreement) or dataset_params.has_key?(:hasRelatedAgreement)
+      @@dataset_agreement, created = add_agreement(dataset_params)
+    end
+    dataset_params[:hasRelatedAgreement] = nil
+    dataset_params[:hasAgreement] = nil
+    if @dataset_agreement
+      dataset_params[:hasAgreement] = @dataset_agreement.id
+    end
+    # Update params
     @dataset = Ora.buildMetadata(dataset_params, @dataset, contents)
     respond_to do |format|
       if @dataset.save
+        # Associate the dataset agreement to the dataset
+        if @dataset_agreement
+          @dataset.hasRelatedAgreement = @dataset_agreement
+          @dataset.save
+        end
         format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
         format.json { head :no_content }
       else
+        # If a dataset agreement was created newly, roll back changes
+        if @dataset_agreement and created
+          @dataset_agreement.destroy
+        end
         format.html { render action: 'edit' }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end
@@ -323,6 +374,37 @@ class DatasetsController < ApplicationController
       files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end
     files
+  end
+
+  def add_agreement(dataset_params)
+    @dataset_agreement = nil
+    created = false
+    if dataset_params.has_key?(:hasAgreement) and !dataset_params[:hasAgreement].empty?
+      da_pid = dataset_params[:hasAgreement]
+      @dataset_agreement = DatasetAgreement.find(da_pid)
+      #TODO: If individual agreement apply updates
+    end
+    if !@dataset_agreement and dataset_params.has_key?(:hasRelatedAgreement)
+      da_pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+      da_pid = Sufia::Noid.namespaceize(da_pid)
+      dataset_agreement_params = {}
+      dataset_agreement_params = dataset_params[:hasRelatedAgreement]
+      @dataset_agreement = DatasetAgreement.find_or_create(da_pid)
+      @dataset_agreement.apply_permissions(current_user)
+      #TODO: Add reference to principal agreement
+      if !dataset_agreement_params.empty?
+        dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
+        dataset_agreement_params[:agreementType] = "Individual"
+        dataset_agreement_params[:contributor] = current_user.user_key
+        @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [])
+        if @dataset_agreement.save
+          created = true
+        else
+          @dataset_agreement = nil
+        end 
+      end
+    end
+    return @dataset_agreement, created
   end
 
   def datastream_opts(dsid)
@@ -366,29 +448,60 @@ class DatasetsController < ApplicationController
   end
 
   def depositor
-  #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 
   def workflow_status
-  #  #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
+    #Hydra.config[:permissions][:owner] maybe it should match this config variable, but it doesn't.
     Solrizer.solr_name('all_workflow_statuses', :stored_searchable, type: :symbol)
   end
 
+  def s_model
+    Solrizer.solr_name("has_model", :symbol)
+  end
+
+  def s_contributor
+    Solrizer.solr_name("desc_metadata__contributor", :stored_searchable)
+  end
+
+  def s_editor
+    Solrizer.solr_name('edit_access_person', :symbol, type: :string)
+  end
+
+  def s_type
+    Solrizer.solr_name("desc_metadata__agreementType", :symbol)
+  end
+
   def filter_not_mine 
-    "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
+    "{!lucene q.op=AND #{depositor}:-#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
   end
 
   def filter_mine
-    "{!lucene q.op=AND df=#{depositor}}#{current_user.user_key}"
+    "{!lucene q.op=AND #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
   end
 
   def filter_mine_draft
-    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft"
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
   end
 
   def filter_mine_not_draft
-    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft"
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
+  end
+
+  def filter_relevant_agreement
+    # All people including the data steward should be listed in the contributor, if allowed to contribute
+    "{!lucene q.op=AND} #{s_model}:\"info:fedora/afmodel:DatasetAgreement\" #{s_contributor}:#{current_user.user_key} #{s_type}:Bilateral"
+  end
+
+  def filter_principal_agreement
+    "{!lucene q.op=AND} #{s_model}:\"info:fedora/afmodel:DatasetAgreement\" #{s_type}:Principal"
+  end
+
+  def filter_my_agreement
+    # All people including the data steward should be listed in the contributor, if allowed to contribute
+    # I do not need the person who signed the agreement here
+    "{!lucene q.op=AND} #{s_model}:\"info:fedora/afmodel:DatasetAgreement\" #{s_editor}:#{current_user.user_key} #{s_type}:Bilateral"
   end
 
   def sort_field

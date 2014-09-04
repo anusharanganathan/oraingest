@@ -1,5 +1,6 @@
 require "datastreams/dataset_agreement_rdf_datastream"
 require "datastreams/relations_rdf_datastream"
+require "dataset"
 #require "person"
 require "rdf"
 
@@ -16,6 +17,8 @@ class DatasetAgreement < ActiveFedora::Base
 
   has_metadata :name => "descMetadata", :type => DatasetAgreementRdfDatastream
   has_metadata :name => "relationsMetadata", :type => RelationsRdfDatastream
+
+  has_many :datasets, :property=>:has_agreement, :class_name=>"Dataset"
 
   has_attributes *DatasetAgreementRdfDatastream.fields, datastream: :descMetadata, multiple: true
   has_attributes *RelationsRdfDatastream.fields, datastream: :relationsMetadata, multiple: true
