@@ -15,3 +15,22 @@ function toggleDigitalFieldsDisplay(val) {
     $("#digitalFields").css('display', 'none');
   }
 }
+
+function displayDatasetAgreement(id, val) {
+  if (val != "") {
+    //console.log("I am in the js function");
+    $.ajax({
+      url: "/datasets/" + id + "/agreement?a_id=" + val,
+      type: "GET",
+      success: function(data) {
+        //append returned data to view
+        $("#relatedAgreement").empty().html(data);
+        // and then remove the form tag
+        //var data2 = $("#relatedAgreement form").html();
+        //$("#relatedAgreement").empty().append(data2);
+        // and then remove the first div
+        //$("#relatedAgreement").find("div").first().remove();
+      }
+    })
+  }
+}

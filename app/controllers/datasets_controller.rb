@@ -48,6 +48,7 @@ class DatasetsController < ApplicationController
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]
   before_filter :has_access?
+  respond_to :js, only: :agreement
   # This applies appropriate access controls to all solr queries
   DatasetsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
@@ -89,8 +90,12 @@ class DatasetsController < ApplicationController
     @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset = Dataset.new
-    relevant_agreements
     @agreement = DatasetAgreement.new
+    @agreement.title = "Agreement for #{@pid}"
+    @agreement.agreementType = "Individual"
+    @agreement.contributor = current_user.user_key
+    @dataset.hasRelatedAgreement = @agreement
+    relevant_agreements
     principal_agreement
     @model = 'dataset'
   end
@@ -106,9 +111,15 @@ class DatasetsController < ApplicationController
       @dataset.medium[0] = Sufia.config.data_medium["Digital"]
     end
     relevant_agreements
-    @agreement = DatasetAgreement.new
     principal_agreement
     @model = 'dataset'
+    if @dataset.hasRelatedAgreement.nil?
+      @agreement = DatasetAgreement.new
+      @agreement.title = "Agreement for #{@pid}"
+      @agreement.agreementType = "Individual"
+      @agreement.contributor = current_user.user_key
+      @dataset.hasRelatedAgreement = @agreement
+    end
   end
 
   def create
@@ -140,7 +151,6 @@ class DatasetsController < ApplicationController
       if params[:dataset].has_key?(:workflows_attributes)
         add_workflow(params[:dataset])
       else
-        #TODO: Make sure dataset param for medium is digital, if files are uploaded
         add_metadata(params[:dataset])
       end
     else
@@ -173,6 +183,44 @@ class DatasetsController < ApplicationController
     @dataset.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
     @dataset.save
     #TODO: Remove file size from digitalSize in admin
+  end
+
+  def agreement
+    #puts "========================================"
+    #puts "Dataset id is %s"%params[:id]
+    #begin
+    #  @dataset = Dataset.find(params[:id])
+    #rescue ActiveFedora::ObjectNotFoundError
+    #  @dataset = Dataset.new
+    #end
+    @model = 'dataset_agreement'
+    @agreement = nil
+    agreement_id = params[:a_id]
+    if agreement_id == "new"
+      agreement_id = nil
+    end
+    #puts "Agreement id is %s"%agreement_id
+    if !agreement_id.nil? && !agreement_id.empty?
+      begin
+        @agreement = DatasetAgreement.find(agreement_id)
+      rescue ActiveFedora::ObjectNotFoundError
+        @agreement = nil
+      end
+    end
+    if @agreement.nil?
+      @agreement = DatasetAgreement.new
+      if !params[:id].nil? && !params[:id].empty?
+        @agreement.title = "Agreement for #{params[:id]}"
+      else
+        @agreement.title = "Agreement for data deposit"
+      end
+      @agreement.agreementType = "Individual"
+      @agreement.contributor = current_user.user_key
+      @agreement.apply_permissions(current_user)
+    end
+    #@dataset.hasRelatedAgreement = @agreement
+    #render :partial => "agreement"
+    render :partial => "dataset_agreement_fields_edit", :locals => { :hasRelatedAgreement => @agreement }
   end
 
   def recent
@@ -262,6 +310,7 @@ class DatasetsController < ApplicationController
     end
     size = Integer(@dataset.digitalSize.first) rescue 0
     @dataset.digitalSize = size + file.size
+    @dataset.medium = Sufia.config.data_medium["Digital"]
      
     # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
     #ds = @dataset.create_external_datastream(dsid, url, File.basename(location), file.size)
@@ -276,6 +325,7 @@ class DatasetsController < ApplicationController
     dsfile = StringIO.new(opts.to_json)
     # Add data as file datastream
     @dataset.add_file(dsfile, dsid, "attributes.json")
+    @dataset.title = file.original_filename
     save_tries = 0
     begin
       @dataset.save!
@@ -346,6 +396,9 @@ class DatasetsController < ApplicationController
     end
     # Update params
     @dataset = Ora.buildMetadata(dataset_params, @dataset, contents)
+    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
+      @dataset.medium = Sufia.config.data_medium["Digital"]
+    end
     respond_to do |format|
       if @dataset.save
         # Associate the dataset agreement to the dataset
@@ -379,30 +432,41 @@ class DatasetsController < ApplicationController
   def add_agreement(dataset_params)
     @dataset_agreement = nil
     created = false
+    da_pid = nil
+    # Get the parameter and sanitize it
     if dataset_params.has_key?(:hasAgreement) and !dataset_params[:hasAgreement].empty?
       da_pid = dataset_params[:hasAgreement]
-      @dataset_agreement = DatasetAgreement.find(da_pid)
-      #TODO: If individual agreement apply updates
+      if da_pid == "new" || da_pid.empty? || da_pid == ""
+        da_pid = nil
+      end
     end
-    if !@dataset_agreement and dataset_params.has_key?(:hasRelatedAgreement)
+    # Try to extract the dataset agreement
+    if !da_pid.nil?
+      begin
+        @dataset_agreement = DatasetAgreement.find(da_pid)
+      rescue ActiveFedora::ObjectNotFoundError
+        da_pid = nil
+    end
+    # Mint a pid if one does not exist
+    if da_pid.nil?
       da_pid = Sufia::Noid.noidify(Sufia::IdService.mint)
       da_pid = Sufia::Noid.namespaceize(da_pid)
+      created = true
+    end  
+    if (@dataset_agreement.nil? or @dataset_agreement.agreementType.first == "Individual") and dataset_params.has_key?(:hasRelatedAgreement)
       dataset_agreement_params = {}
       dataset_agreement_params = dataset_params[:hasRelatedAgreement]
-      @dataset_agreement = DatasetAgreement.find_or_create(da_pid)
-      @dataset_agreement.apply_permissions(current_user)
-      #TODO: Add reference to principal agreement
-      if !dataset_agreement_params.empty?
-        dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
-        dataset_agreement_params[:agreementType] = "Individual"
-        dataset_agreement_params[:contributor] = current_user.user_key
-        @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [])
-        if @dataset_agreement.save
-          created = true
-        else
-          @dataset_agreement = nil
-        end 
+      if @dataset_agreement.nil?
+        @dataset_agreement = DatasetAgreement.create(da_pid)
+        @dataset_agreement.apply_permissions(current_user)
       end
+      dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
+      dataset_agreement_params[:agreementType] = "Individual"
+      dataset_agreement_params[:contributor] = current_user.user_key
+      @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [])
+      if !@dataset_agreement.save
+        @dataset_agreement = nil
+      end 
     end
     return @dataset_agreement, created
   end

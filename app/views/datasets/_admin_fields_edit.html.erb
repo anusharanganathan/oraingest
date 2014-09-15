@@ -6,27 +6,27 @@
         <%= f.label :hasDataManagementPlan, "The URL of the data management plan for your research project", :class=>"control-label" %>
         <%= f.text_field :hasDataManagementPlan, :value=>article.hasDataManagementPlan.first %>
       </div>
-      <% if !@dataset.hasRelatedAgreement.nil? and @dataset.hasRelatedAgreement.agreementType.first == "Individual" %>
-        <% showAgreement = "inline" %>
-      <% else %>
-        <% agreements = {} %>
-        <% if !@relevant_user_agreements.nil? %>
-          <% @relevant_user_agreements.each do |agreement| %>
-            <% agreements[agreement.id] = agreement.title %>
-          <% end %>
+      <% agreements = {} %>
+      <% if !@relevant_user_agreements.nil? %>
+        <% agreements[""] = "Choose an option" %>
+        <% @relevant_user_agreements.each do |agreement| %>
+          <% agreements[agreement.id] = agreement.title %>
         <% end %>
-        <% if agreements.length > 0 %>
-          <div class="fields">
-            <% agreements[""] = "This dataset has been paid for individually" %>      
-            <%= f.label :hasAgreement, "Select the agreement relevant to this dataset", :class=>"control-label" %>
-            <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), {}, {:onchange => "toggleDatasetAgreementDisplay(this.value)"} %>
-          </div>
-          <% showAgreement = "none" %>
-        <% else %>
-          <% showAgreement = "inline" %>
+        <% !@principal_agreement.nil? || !@principal_agreement.empty? %>
+          <% agreements["new"] = "This dataset has been paid for individually" %> 
         <% end %>
       <% end %>
-      <%= render partial: 'dataset_agreement_fields_edit', :locals => { :f => f, :hasRelatedAgreement => @dataset.hasRelatedAgreement, :showAgreement => showAgreement } %>
+      <% if agreements.length > 1 %>
+        <div class="fields">
+          <%= f.label :hasAgreement, "Select the agreement relevant to this dataset", :class=>"control-label" %>
+          <%= f.select :hasAgreement, options_for_select(agreements, :selected=>article.hasAgreement.first), {}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
+        </div>
+        <div class="control-group" id="relatedAgreement"></div>
+      <% else #TODO: Should this option be available only if principal agreement is available, if not what? %>
+        <div class="control-group" id="relatedAgreement">
+          <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
+        </div>
+      <% end %>
       <% if can? :review, Dataset %>
         <div class="fields">
           <%= f.label :note, "Notes", :class=>"control-label" %>

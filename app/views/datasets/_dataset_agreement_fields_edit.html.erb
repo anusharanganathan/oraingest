@@ -1,12 +1,10 @@
-<% if hasRelatedAgreement.nil? %>
-  <% hasRelatedAgreement = DatasetAgreement.new %>
-<% end %>
-<%= f.fields_for :hasRelatedAgreement, hasRelatedAgreement do |f_a| %>
-  <div class="control-group" style="display:<%=showAgreement%>;" id="relatedAgreement" >
+<legend>Details about the agreement</legend>
+<% if hasRelatedAgreement.agreementType.first == "Individual" %>
+  <%= fields_for "dataset[hasRelatedAgreement]", hasRelatedAgreement do |f_a| %>
     <div class="field">
-      <%= f_a.hidden_field :title, :value=>hasRelatedAgreement.title.first||"Agreement for #{@pid}", :id=>"dataset_agreement_title" %>
-      <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first||"Individual" %>
-      <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first||current_user.user_key %>
+      <%= f_a.text_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
+      <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
+      <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first %>
       <%= f_a.label :annotation, "Archiving payment option" %>
       <%= f_a.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>hasRelatedAgreement.annotation.first) %>
     </div>
@@ -21,5 +19,8 @@
     <% end %>
     <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "data steward" } %>
     <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f_a, :titularActivity => hasRelatedAgreement.titularActivity } %>
-  </div><!-- /.control-group -->
+  <% end %>
+<% else %>
+  <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
+  <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
 <% end %>
