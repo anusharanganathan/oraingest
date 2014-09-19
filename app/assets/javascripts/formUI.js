@@ -18,18 +18,16 @@ function toggleDigitalFieldsDisplay(val) {
 
 function displayDatasetAgreement(id, val) {
   if (val != "") {
-    //console.log("I am in the js function");
     $.ajax({
       url: "/datasets/" + id + "/agreement?a_id=" + val,
       type: "GET",
       success: function(data) {
         //append returned data to view
         $("#relatedAgreement").empty().html(data);
-        // and then remove the form tag
-        //var data2 = $("#relatedAgreement form").html();
-        //$("#relatedAgreement").empty().append(data2);
-        // and then remove the first div
-        //$("#relatedAgreement").find("div").first().remove();
+        $( "#relatedAgreement input.creatorName" ).each(function (i) {
+          $(this).autocomplete(autocompletePerson).data("autocomplete")._renderItem = renderPerson;
+        });
+        //TODO: Add jquery onclick call to this html snippet
       }
     })
   }

@@ -12,16 +12,22 @@
         <% @relevant_user_agreements.each do |agreement| %>
           <% agreements[agreement.id] = agreement.title %>
         <% end %>
-        <% !@principal_agreement.nil? || !@principal_agreement.empty? %>
-          <% agreements["new"] = "This dataset has been paid for individually" %> 
+        <% if !@dataset.hasRelatedAgreement.id.nil? and @dataset.hasRelatedAgreement.agreementType.first == "Individual" %>
+          <% agreements[@dataset.hasRelatedAgreement.id] = @dataset.hasRelatedAgreement.title.first %>
+        <% elsif !@principal_agreement.nil? || !@principal_agreement.empty? %>
+          <% agreements["new"] = "I'd like a new agreement" %> 
         <% end %>
       <% end %>
       <% if agreements.length > 1 %>
         <div class="fields">
           <%= f.label :hasAgreement, "Select the agreement relevant to this dataset", :class=>"control-label" %>
-          <%= f.select :hasAgreement, options_for_select(agreements, :selected=>article.hasAgreement.first), {}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
+          <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), {}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
         </div>
-        <div class="control-group" id="relatedAgreement"></div>
+        <div class="control-group" id="relatedAgreement">
+          <% if article.hasAgreement.first %>
+            <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
+          <% end %>
+        </div>
       <% else #TODO: Should this option be available only if principal agreement is available, if not what? %>
         <div class="control-group" id="relatedAgreement">
           <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>

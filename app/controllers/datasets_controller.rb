@@ -186,20 +186,12 @@ class DatasetsController < ApplicationController
   end
 
   def agreement
-    #puts "========================================"
-    #puts "Dataset id is %s"%params[:id]
-    #begin
-    #  @dataset = Dataset.find(params[:id])
-    #rescue ActiveFedora::ObjectNotFoundError
-    #  @dataset = Dataset.new
-    #end
     @model = 'dataset_agreement'
     @agreement = nil
     agreement_id = params[:a_id]
     if agreement_id == "new"
       agreement_id = nil
     end
-    #puts "Agreement id is %s"%agreement_id
     if !agreement_id.nil? && !agreement_id.empty?
       begin
         @agreement = DatasetAgreement.find(agreement_id)
@@ -446,6 +438,7 @@ class DatasetsController < ApplicationController
         @dataset_agreement = DatasetAgreement.find(da_pid)
       rescue ActiveFedora::ObjectNotFoundError
         da_pid = nil
+      end
     end
     # Mint a pid if one does not exist
     if da_pid.nil?
@@ -457,7 +450,7 @@ class DatasetsController < ApplicationController
       dataset_agreement_params = {}
       dataset_agreement_params = dataset_params[:hasRelatedAgreement]
       if @dataset_agreement.nil?
-        @dataset_agreement = DatasetAgreement.create(da_pid)
+        @dataset_agreement = DatasetAgreement.find_or_create(da_pid)
         @dataset_agreement.apply_permissions(current_user)
       end
       dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
@@ -490,11 +483,11 @@ class DatasetsController < ApplicationController
   end
 
   private
-    def dataset_params
+  def dataset_params
     #  #params.require(:dataset).permit(:title, :subtitle, :description, :abstract, {:keyword => []}, :medium, :numPages, :pages, :publicationStatus, :reviewStatus, :language, :language_attributes, :workflows, :workflows_attributes, :permissions, :permissions_attributes, :subject, :scheme, :elementList, :externalAuthority, :topicElement_attributes, :topicElement, :scheme_attributes)
     #  params.require(:dataset).permit!
     params.require(:dataset)
-    end
+  end
 
   def set_dataset
     @dataset = Dataset.find(params[:id])
