@@ -1,0 +1,21 @@
+<div class="tab-pane active" id="contributions">
+  <i class="icon-trophy trophy-on"></i> <strong>Highlighted Files</strong>
+  <% if @trophies.count > 0 %>
+    <table>
+      <% @trophies.each do |t| %>
+        <tr id="trophyrow_<%= Sufia::Noid.noidify(t.pid) %>">
+          <td>
+            <%= render partial: "dashboard/_index_partials/thumbnail_display", locals: {document: t, width: 90} %>
+          </td>
+          <td>
+            <%= link_to display_title(t), sufia.generic_file_path(t) %>
+            <%= link_to raw("<i class='trophy-on icon-remove'></i>"), "", class: 'trophy-on trophy-class', title: "Click to remove from Highlighted files.", id: Sufia::Noid.noidify(t.pid), remote: true, data: {removerow: "true"} if current_user == @user%>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <%= @user.name %> has no highlighted files.
+  <% end %>
+</div>
+

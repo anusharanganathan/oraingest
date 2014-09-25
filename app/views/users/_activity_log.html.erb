@@ -1,0 +1,20 @@
+<table id="activity" class="table table-striped well"> 
+  <caption class="accessible-hidden">Activity of users you follow</caption>
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>User Activity</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% events.each do |event| %>
+    <% next if event[:action].blank? or event[:timestamp].blank? %>
+    <tr>
+      <td>&nbsp;</td>
+      <td><%= event[:action].html_safe %></td>
+      <td><%= time_ago_in_words(Time.at(event[:timestamp].to_i)) %> ago</td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
