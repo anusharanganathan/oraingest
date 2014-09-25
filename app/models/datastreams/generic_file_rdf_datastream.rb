@@ -1,6 +1,6 @@
 require 'rdf'
 require 'datastreams/person_rdf_datastream'
-require 'oxford_terms'
+require 'vocabulary/oxford_terms'
 
 class GenericFileRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   map_predicates do |map|

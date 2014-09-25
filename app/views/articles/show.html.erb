@@ -1,15 +1,20 @@
 <p id="notice"><%= notice %></p>
 
-<h3><span class="label label-<%=@article.relationsMetadata.embargoLevel%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
-<%= render partial: "describe_show", as: :article %>
-<%= render partial: "shared/creation_activity_fields_show", as: :article %>
-<%= render partial: "shared/publication_activity_fields_show", as: :article %>
-<%= render partial: "shared/funding_activity_fields_show", as: :article %>
-<%= render partial: "shared/relation_fields_show", as: :article %>
-<%= render partial: "shared/rights_activity_fields_show", as: :article %>
-<%= render partial: "shared/files_with_details_show", as: :article %>
-<%= render partial: "shared/article_admin_fields_show", as: :article %>
-<%= render partial: "shared/workflow_show", as: :article %>
+<% if false %>
+  <h3><span class="label label-<%=@article.relationsMetadata.embargoClass%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
+<% end %>
+<%= render partial: "describe_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/publication_activity/article_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/relation_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/file_info_fields_show", :locals => { :article => @article } %>
+<%= render partial: "admin_fields_show", :locals => { :article => @article } %>
+<%= render partial: "shared/workflow_show", :locals => { :article => @article } %>
+<%= render partial: "shared/permissions_show", :locals => { :article => @article } %>
 
-<%= render partial: "shared/actions_show", as: :article %>
+<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
+<%= render partial: "shared/actions/show", :locals => { :path => path } %>
 

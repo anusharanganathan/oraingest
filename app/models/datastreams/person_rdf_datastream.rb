@@ -1,4 +1,4 @@
-require "oxford_terms"
+require "vocabulary/oxford_terms"
 
 class PersonRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ActiveFedora::RdfObject

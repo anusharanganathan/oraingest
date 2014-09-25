@@ -1,0 +1,26 @@
+<legend>Details about the agreement</legend>
+<% if hasRelatedAgreement.agreementType.first == "Individual" %>
+  <%= fields_for "dataset[hasRelatedAgreement]", hasRelatedAgreement do |f_a| %>
+    <div class="field">
+      <%= f_a.text_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
+      <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
+      <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first %>
+      <%= f_a.label :annotation, "Archiving payment option" %>
+      <%= f_a.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>hasRelatedAgreement.annotation.first) %>
+    </div>
+    <% if hasRelatedAgreement.invoice.empty? %>
+      <% hasRelatedAgreement.invoice.build %>
+    <% end %>
+    <%= f_a.fields_for :invoice, hasRelatedAgreement.invoice.first do |f_i| %>
+      <div class="field">
+        <%= f_i.label :description, "Details for archiving payment option" %>
+        <%= f_i.text_field :description, :value=>hasRelatedAgreement.invoice.first.description.first %> 
+      </div>
+    <% end %>
+    <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "data steward" } %>
+    <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f_a, :titularActivity => hasRelatedAgreement.titularActivity } %>
+  <% end %>
+<% else %>
+  <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
+  <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
+<% end %>

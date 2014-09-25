@@ -1,10 +1,10 @@
-<% if !@article.funding.empty? %>
+<% if !article.funding.empty? %>
   <div class="well">
     <div class="row">
       <div class="control-group">
         <div id="funding">
           <p><strong>Funding Information:</strong></p>
-          <% @article.funding[0].funder.each_with_index do |f, f_index| %>
+          <% article.funding[0].funder.each_with_index do |f, f_index| %>
             <div>
             <% if f.agent[0].name and f.agent[0].sameAs %>
               <span><%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></span>

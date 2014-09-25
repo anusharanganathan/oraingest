@@ -22,17 +22,25 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require "vocabulary/prov_vocabulary"
-require "vocabulary/frapo_vocabulary"
+require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy]
+  before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
   include Sufia::Controller
   #include Sufia::FilesControllerBehavior
+  # Include ORA search logic
+  include Ora::Search::Defaults
+  include Ora::Search::ViewConfiguration
+  include Ora::Search::Facets
+  include Ora::Search::IndexFields
+  #include Ora::Search::ShowFields
+  include Ora::Search::SearchFields
+  #include Ora::Search::RequestHandlerDefaults
+  include Ora::Search::SortFields
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
@@ -65,18 +73,21 @@ class ArticlesController < ApplicationController
     #Grab users recent documents
     recent_me_not_draft
     recent_me_draft
+    @model = 'article'
   end
 
   def show
     authorize! :show, params[:id]
     @pid = params[:id]
     @files = contents
+    @model = 'article'
   end
 
   def new
     @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
+    @model = 'article'
   end
 
   def edit
@@ -86,6 +97,7 @@ class ArticlesController < ApplicationController
     end
     @pid = params[:id]
     @files = contents
+    @model = 'article'
   end
 
   def create
@@ -96,9 +108,9 @@ class ArticlesController < ApplicationController
       create_from_upload(params)
     elsif params.has_key?(:article)
       if params[:article].has_key?(:workflows_attributes)
-        add_workflow(article_params)
+        add_workflow(params[:article])
       else
-        add_metadata(article_params)
+        add_metadata(params[:article])
       end
     else
       format.html { render action: 'edit' }
@@ -111,14 +123,13 @@ class ArticlesController < ApplicationController
 
   def update
     @pid = params[:pid]
-    #@article = Article.find_or_create(@pid)
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
       if params[:article].has_key?(:workflows_attributes)
-        add_workflow(article_params)
+        add_workflow(params[:article])
       else
-        add_metadata(article_params)
+        add_metadata(params[:article])
       end
     else
       format.html { render action: 'edit' }
@@ -240,15 +251,7 @@ class ArticlesController < ApplicationController
   end
 
   def add_workflow(article_params)
-    article_params[:workflows_attributes] = [article_params[:workflows_attributes]]
-    if article_params[:workflows_attributes][0].has_key?(:entries_attributes)
-      article_params[:workflows_attributes][0][:entries_attributes] = [article_params[:workflows_attributes][0][:entries_attributes]]
-    end
-    if article_params[:workflows_attributes][0].has_key?(:comments_attributes)
-      article_params[:workflows_attributes][0][:comments_attributes] = [article_params[:workflows_attributes][0][:comments_attributes]]
-    end
-    @article.attributes = article_params
-
+    @article.attributes = Ora.validateWorkflow(article_params)
     respond_to do |format|
       if @article.save
         format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
@@ -261,312 +264,29 @@ class ArticlesController < ApplicationController
 
   end
 
+  def revoke_permissions
+    if params.has_key?(:article) && params[:article].has_key?(:permissions_attributes)
+      article_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
+      respond_to do |format|
+        if @article.update(article_params)
+          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: 'edit' }
+          format.json { render json: @article.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
+    end
+  end
+
   def add_metadata(article_params)
-    @article.attributes = article_params
-
-    #remove_blank_assertions for language and build
-    if article_params.has_key?(:language)
-      lp = article_params[:language]
-      @article.language = nil
-      if !lp[:languageLabel].empty?
-        lp.each do |k, v| 
-          lp[k] = nil if v.empty?
-        end
-        lp['id'] = "info:fedora/#{@article.id}#language"
-        @article.language.build(lp)
-      end
-    end
-
-    #remove_blank_assertions for subject and build
-    if article_params.has_key?(:subject)
-      sp = article_params[:subject]
-      @article.subject = nil
-      sp.each do |s|
-        if s[:subjectLabel].empty?
-           sp.delete(s)
-        end
-      end
-      sp.each_with_index do |s, s_index|
-        s.each do |k, v| 
-          s[k] = nil if v.empty?
-        end
-        s['id'] = "info:fedora/#{@article.id}#subject#{s_index.to_s}"
-        @article.subject.build(s)
-      end
-    end
-
-    # Remove blank assertions for worktype and build
-    if article_params.has_key?(:worktype)
-      tp = article_params[:worktype].except(:typeAuthority)
-      @article.worktype = nil
-      if !tp[:typeLabel].empty?
-        if Sufia.config.article_type_authorities.include?(tp[:typeLabel])
-          tp[:typeAuthority] = Sufia.config.article_type_authorities[tp[:typeLabel]]
-        end
-        tp['id'] = "info:fedora/#{@article.id}#type"
-        @article.worktype.build(tp)
-      else
-        tp[:typeLabel] = 'Article'
-        tp[:typeAuthority] = Sufia.config.article_type_authorities["Article"]
-        tp['id'] = "info:fedora/#{@article.id}#type"
-        @article.worktype.build(tp)
-      end
-    end
-
-    # Remove blank assertions for rights activity and build
-    ag = []
-    if article_params.has_key?(:license)
-      lsp = article_params[:license].except(:licenseURI)
-      @article.license = nil
-      @article.rightsActivity = nil
-      if !lsp[:licenseLabel].empty? or !lsp[:licenseStatement].empty?
-        if Sufia.config.article_license_urls.include?(lsp[:licenseLabel])
-          lsp[:licenseURI] = Sufia.config.article_license_urls[lsp[:licenseLabel]]
-        elsif isURI(lsp[:licenseStatement])
-          lsp[:licenseURI] = lsp[:licenseStatement]
-          lsp[:licenseStatement] = nil
-        end
-        lsp['id'] = "info:fedora/#{@article.id}#license"
-        lsp.each do |k, v|
-          lsp[k] = nil if v.empty?
-        end 
-        @article.license.build(lsp)
-        ag.push("info:fedora/#{@article.id}#license")
-      end
-    end
-    if article_params.has_key?(:rights)
-      rp = article_params[:rights].except(:rightsType)
-      @article.rights = nil
-      @article.rightsActivity = nil
-      if !rp[:rightsStatement].empty?
-        rp.each do |k, v| 
-          rp[k] = nil if v.empty?
-        end
-      end
-      rp[:rightsType] = RDF::DC.RightsStatement
-      rp['id'] = "info:fedora/#{@article.id}#rights"
-      @article.rights.build(rp)
-      ag.push("info:fedora/#{@article.id}#rights")
-    end
-    if !ag.empty?
-      rap = {activityUsed: "info:fedora/#{@article.id}", "id" => "info:fedora/#{@article.id}#rightsActivity", activityType: PROV.Activity, activityGenerated: ag}
-      @article.rightsActivity.build(rap)
-    end
-    
-    # Remove blank assertions for internal relations and build
-    if article_params.has_key?(:hasPart)
-      hp = article_params[:hasPart]
-      @article.hasPart = nil
-      select = {}
-      for ds in contents
-        dsid = ds['url'].split("/")[-1]
-        hp.each do |k, h|
-          if h[:identifier] == dsid
-            select = h
-            select['id'] = "info:fedora/#{@article.id}/datastreams/#{dsid}"
-          end
-        end
-        select.each do |k, v| 
-          select[k] = nil if v.empty?
-        end
-        if select[:embargoStatus] == "Visible"
-          select[:embargoStart] = nil
-          select[:embargoEnd] = nil
-          select[:embargoRelease] = nil
-        elsif select[:embargoStatus] == "Not visible"
-          select[:embargoStart] = nil
-          select[:embargoEnd] = nil
-          select[:embargoRelease] = nil
-        end
-        @article.hasPart.build(select) 
-      end 
-    end
-
-    #remove_blank_assertions for external relations and build
-    if article_params.has_key?(:qualifiedRelation)
-      qr = article_params[:qualifiedRelation]
-      @article.qualifiedRelation = nil
-      influences = []
-      @article.influence = nil
-      qr.each_with_index do |rel, rel_index|
-        rel.each do |k, v|
-          qr[rel_index][k] = nil if v.empty?
-        end
-        tmp = rel.except(:relation)
-        qr[rel_index][:entity] = tmp
-      end
-      qr.each_with_index do |rel, rel_index|
-        if !rel[:relation].nil? and !rel[:entity].empty?
-          influences.push(rel[:entity]['id'])
-          rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [@article.id, rel_index]
-          @article.qualifiedRelation.build(rel)
-          @article.qualifiedRelation[rel_index].entity = nil
-          rel[:entity][:type] = PROV.Entity
-          @article.qualifiedRelation[rel_index].entity.build(rel[:entity])
-        end
-      end
-      #influences = @article.relationsMetadata.getInfluences
-      @article.influence = influences
-    end
-
-    #remove_blank_assertions for funding activity and build
-    if article_params.has_key?(:funding)
-      fp = article_params[:funding]
-      @article.funding = nil
-      if fp[0]
-        # has to have name of funder and whom the funder funds
-        fp[0][:funder].each do |f|
-          if f[:name].empty? and f[:funds].empty?
-            fp[0][:funder].delete(f)
-          else
-            f.each do |k, v|
-              f[k] = nil if v.empty?
-            end
-          end
-        end  
-        id0 = "info:fedora/%s#fundingActivity" % @article.id
-        vals = {'id' => id0, :wasAssociatedWith=> []}
-        (0..fp[0][:funder].length-1).each do |n|
-          b1 = "info:fedora/%s#funder%d" % [@article.id, n]
-          vals[:wasAssociatedWith].push(b1)
-        end
-        @article.funding.build(vals)
-        awardCount = 0
-        fp[0][:funder].each_with_index do |f1, f1_index|
-          agent = { 'id' => "info:fedora/%s#funder%d" % [@article.id, f1_index], :name => f1[:name], :sameAs => f1[:sameAs], :type => FRAPO.FundingAgency }
-          b2 = "info:fedora/%s#fundingAssociation%d" % [@article.id, f1_index]
-          f1['id'] = b2
-          f1[:role] = FRAPO.FundingAgency
-          #TODO: Need to be more smart about these Ids. These assumptions are wrong
-          if f1[:funds] == "Author"
-            f1[:funds] = "info:fedora/#{params[:pid]}#creator1"
-          elsif f1[:funds] == "Publication"
-            funds = "info:fedora/#{params[:pid]}"
-          elsif f1[:funds] == "Project"
-            funds = "info:fedora/#{params[:pid]}#project1"
-          end
-          @article.funding[0].funder.build(f1)
-          @article.funding[0].funder[f1_index].agent = nil
-          @article.funding[0].funder[f1_index].agent.build(agent)
-          @article.funding[0].funder[f1_index].awards = nil
-          if f1[:awards]
-            f1[:awards].each do |aw|
-              if aw[:grantNumber]
-                aw['id'] = "info:fedora/%s#fundingAward%d" % [@article.id, awardCount]
-                @article.funding[0].funder[f1_index].awards.build(aw)
-                awardCount += 1
-              end
-            end
-          end
-        end
-      end
-    end
-
-    #remove_blank_assertions for creation activity and build
-    if article_params.has_key?(:creation)
-      cp = article_params[:creation]
-      @article.creation = nil
-      if cp[0]
-        # has to have name of creator
-        cp[0][:creator].each do |c|
-          if c[:name].empty?
-            cp[0][:creator].delete(c)
-          else
-            c.each do |k, v|
-              c[k] = nil if v.empty?
-            end
-          end
-        end  
-        id0 = "info:fedora/%s#creationActivity" % @article.id
-        vals = {'id' => id0, :wasAssociatedWith=> [], :type => PROV.Activity}
-        (0..cp[0][:creator].length-1).each do |n|
-          b1 = "info:fedora/%s#creator%d" % [@article.id, n]
-          vals[:wasAssociatedWith].push(b1)
-        end
-        @article.creation.build(vals)
-        affiliationCount = 0
-        @article.creation[0].creator = nil
-        cp[0][:creator].each_with_index do |c1, c1_index|
-          b1 = "info:fedora/%s#creator%d" % [@article.id, c1_index]
-          agent = { 'id'=> b1, :name => c1[:name], :email => c1[:email], :type => RDF::VCARD.Individual, :sameAs => c1[:sameAs] }
-          b2 = "info:fedora/%s#creationAssociation%d" % [@article.id, c1_index]
-          c1['id'] = b2
-          #c1[:agent] = b1
-          c1[:type] = PROV.Association
-          @article.creation[0].creator.build(c1)
-          @article.creation[0].creator[c1_index].agent = nil
-          @article.creation[0].creator[c1_index].agent.build(agent)
-          @article.creation[0].creator[c1_index].agent[0].affiliation = nil
-          if c1[:affiliation]
-            c1[:affiliation].each do |af|
-              if af[:name]
-                af['id'] = "info:fedora/%s#affiliation%d" % [@article.id, affiliationCount]
-                @article.creation[0].creator[c1_index].agent[0].affiliation.build(af)
-                affiliationCount += 1
-              end
-            end
-          end
-        end
-      end
-    end
-
-    #remove_blank_assertions for publication activity and build
-    if article_params.has_key?(:publication)
-      p = article_params[:publication]
-      @article.publication = nil
-      if !p.empty?
-        p[0].each do |k, v|
-          p[0][k] = nil if v.empty?
-        end
-        id0 = "info:fedora/%s#publicationActivity" % @article.id
-        p[0]['id'] = id0
-        p[0][:type] = PROV.Activity
-        if !p[0][:publisher][0][:name].empty?
-          p[0][:wasAssociatedWith] = ["info:fedora/%s#publisher" % @article.id]
-        end
-        @article.publication.build(p[0])
-        @article.publication[0].hasDocument = nil
-        if !p[0][:hasDocument].empty?
-          if (p[0]["hasDocument"][0].except("journal").any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
-              p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
-            p[0][:hasDocument][0]['id'] = "info:fedora/%s#publicationDocument" % @article.id
-            @article.publication[0].hasDocument.build(p[0][:hasDocument][0])
-            @article.publication[0].hasDocument[0].journal = nil
-            if (p[0]["hasDocument"][0]["journal"][0].except("periodical").any? {|k,v| !v.nil? && !v.empty?} or \
-               p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?})
-               p[0][:hasDocument][0][:journal][0]['id'] = "info:fedora/%s#publicationJournal" % @article.id
-              @article.publication[0].hasDocument[0].journal.build(p[0][:hasDocument][0][:journal][0])
-              @article.publication[0].hasDocument[0].journal[0].periodical = nil
-              p[0][:hasDocument][0][:journal][0][:periodical][0].each do |k, v|
-                p[0][:hasDocument][0][:journal][0][:periodical][0][k] = nil if v.empty?
-              end
-              if p[0]["hasDocument"][0]["journal"][0]["periodical"][0].any? {|k,v| !v.nil? && !v.empty?}
-                p[0][:hasDocument][0][:journal][0][:periodical][0]['id'] = "info:fedora/%s#publicationPeriodical" % @article.id
-                @article.publication[0].hasDocument[0].journal[0].periodical.build(p[0][:hasDocument][0][:journal][0][:periodical][0])
-              end
-            end
-          end
-        end
-        @article.publication[0].publisher = nil
-        if !p[0][:publisher].empty?
-          p[0][:publisher][0].each do |k, v|
-            p[0][:publisher][0][k] = nil if v.empty?
-          end
-          if !p[0][:publisher][0][:name].nil?
-            p[0][:publisher][0]['id'] = "info:fedora/%s#publicationAssociation" % @article.id
-            p[0][:publisher][0][:type] = PROV.Association
-            p[0][:publisher][0][:agent] = "info:fedora/%s#publisher" % @article.id
-            p[0][:publisher][0][:role] = RDF::DC.publisher
-            @article.publication[0].publisher.build(p[0][:publisher][0])
-          end
-        end  
-      end
-    end
-
+    @article = Ora.buildMetadata(article_params, @article, contents)
     respond_to do |format|
       if @article.save
-        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
+        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -591,474 +311,6 @@ class ArticlesController < ApplicationController
     rescue
       "content01"
     end
-  end
-
-  configure_blacklight do |config|
-    ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
-    config.default_solr_params = {
-      :qt => "search",
-      :rows => 10
-    }
-
-    # solr field configuration for search results/index views
-    config.index.show_link = solr_name("desc_metadata__title", :displayable)
-    config.index.record_display_type = "id"
-
-    # solr field configuration for document/show views
-    config.show.html_title = solr_name("desc_metadata__title", :displayable)
-    config.show.heading = solr_name("desc_metadata__title", :displayable)
-    config.show.display_type = solr_name("has_model", :symbol)
-
-    # solr fields that will be treated as facets by the blacklight application
-    #   The ordering of the field names is the order of the display
-    #config.add_facet_field solr_name("desc_metadata__resource_type", :facetable), :label => "Resource Type", :limit => 5
-    config.add_facet_field solr_name("desc_metadata__type", :facetable), :label => "Resource Type", :limit => 5
-    config.add_facet_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status", :limit => 5
-    config.add_facet_field solr_name("desc_metadata__creator", :facetable), :label => "Creator", :limit => 5
-    config.add_facet_field solr_name("desc_metadata__keyword", :facetable), :label => "Keyword", :limit => 5
-    config.add_facet_field solr_name("desc_metadata__subject", :facetable), :label => "Subject", :limit => 5
-    #config.add_facet_field solr_name("desc_metadata__based_near", :facetable), :label => "Location", :limit => 5
-    config.add_facet_field solr_name("desc_metadata__publisher", :facetable), :label => "Publisher", :limit => 5
-
-
-    #config.add_facet_field solr_name("file_format", :facetable), :label => "File Format", :limit => 5
-
-    # Have BL send all facet field names to Solr, which has been the default
-    # previously. Simply remove these lines if you'd rather use Solr request
-    # handler defaults, or have no facets.
-    config.add_facet_fields_to_solr_request!
-
-    # solr fields to be displayed in the index (search results) view
-    #   The ordering of the field names is the order of the display
-    config.add_index_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status"
-    config.add_index_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
-    config.add_index_field solr_name("desc_metadata__subtitle", :stored_searchable, type: :string), :label => "Subtitle"
-    config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
-    config.add_index_field solr_name("desc_metadata__abstract", :stored_searchable, type: :string), :label => "Abstract"
-    config.add_index_field solr_name("desc_metadata__type", :stored_searchable, type: :string), :label => "Document type"
-    config.add_index_field solr_name("desc_metadata__type_category", :stored_searchable, type: :string), :label => "Document category"
-    config.add_index_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
-    config.add_index_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
-    config.add_index_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
-    config.add_index_field solr_name("desc_metadata__keyword", :stored_searchable, type: :string), :label => "Keyword"
-    config.add_index_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
-    config.add_index_field solr_name("desc_metadata__medium", :stored_searchable, type: :string), :label => "Medium"
-    config.add_index_field solr_name("desc_metadata__edition", :stored_searchable, type: :string), :label => "Edition"
-    config.add_index_field solr_name("desc_metadata__numPages", :stored_searchable, type: :string), :label => "Number of pages"
-    config.add_index_field solr_name("desc_metadata__pages", :stored_searchable, type: :string), :label => "Page range"
-    config.add_index_field solr_name("desc_metadata__publicationStatus", :stored_searchable, type: :string), :label => "Publication status"
-    config.add_index_field solr_name("desc_metadata__reviewStatus", :stored_searchable, type: :string), :label => "Review status"
-    #config.add_index_field solr_name("desc_metadata__date_uploaded", :stored_searchable, type: :string), :label => "Date Uploaded"
-    config.add_index_field solr_name("desc_metadata__date_modified", :stored_searchable, type: :string), :label => "Date Modified"
-    config.add_index_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), :label => "Date Created"
-    #config.add_index_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), :label => "Rights"
-    #config.add_index_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
-    #config.add_index_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
-    config.add_index_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
-    config.add_index_field solr_name("desc_metadata__language", :stored_searchable, type: :string), :label => "language"
-    config.add_index_field solr_name("desc_metadata__languageCode", :stored_searchable, type: :string), :label => "Language code"
-    config.add_index_field solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text), :label => "Language authority"
-    config.add_index_field solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text), :label => "Language scheme"
-
-    # solr fields to be displayed in the show (single result) view
-    #   The ordering of the field names is the order of the display
-    config.add_show_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
-    config.add_show_field solr_name("desc_metadata__subtitle", :stored_searchable, type: :string), :label => "Subtitle"
-    config.add_show_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
-    config.add_show_field solr_name("desc_metadata__abstract", :stored_searchable, type: :string), :label => "Abstract"
-    config.add_show_field solr_name("desc_metadata__type", :stored_searchable, type: :string), :label => "Document type"
-    config.add_show_field solr_name("desc_metadata__type_category", :stored_searchable, type: :string), :label => "Document category"
-    config.add_show_field solr_name("desc_metadata__creator", :stored_searchable, type: :string), :label => "Creator"
-    config.add_show_field solr_name("desc_metadata__contributor", :stored_searchable, type: :string), :label => "Contributor"
-    config.add_show_field solr_name("desc_metadata__publisher", :stored_searchable, type: :string), :label => "Publisher"
-    config.add_show_field solr_name("desc_metadata__keyword", :stored_searchable, type: :string), :label => "Keyword"
-    config.add_show_field solr_name("desc_metadata__subject", :stored_searchable, type: :string), :label => "Subject"
-    config.add_show_field solr_name("desc_metadata__medium", :stored_searchable, type: :string), :label => "Medium"
-    config.add_show_field solr_name("desc_metadata__edition", :stored_searchable, type: :string), :label => "Edition"
-    config.add_show_field solr_name("desc_metadata__numPages", :stored_searchable, type: :string), :label => "Number of pages"
-    config.add_show_field solr_name("desc_metadata__pages", :stored_searchable, type: :string), :label => "Page range"
-    config.add_show_field solr_name("desc_metadata__publicationStatus", :stored_searchable, type: :string), :label => "Publication status"
-    config.add_show_field solr_name("desc_metadata__reviewStatus", :stored_searchable, type: :string), :label => "Review status"
-    #config.add_show_field solr_name("desc_metadata__based_near", :stored_searchable, type: :string), :label => "Location"
-    #config.add_show_field solr_name("desc_metadata__date_uploaded", :stored_searchable, type: :string), :label => "Date Uploaded"
-    config.add_show_field solr_name("desc_metadata__date_modified", :stored_searchable, type: :string), :label => "Date Modified"
-    config.add_show_field solr_name("desc_metadata__date_created", :stored_searchable, type: :string), :label => "Date Created"
-    #config.add_show_field solr_name("desc_metadata__rights", :stored_searchable, type: :string), :label => "Rights"
-    #config.add_show_field solr_name("desc_metadata__resource_type", :stored_searchable, type: :string), :label => "Resource Type"
-    #config.add_show_field solr_name("desc_metadata__format", :stored_searchable, type: :string), :label => "File Format"
-    config.add_show_field solr_name("desc_metadata__identifier", :stored_searchable, type: :string), :label => "Identifier"
-    config.add_show_field solr_name("desc_metadata__language", :stored_searchable, type: :string), :label => "language"
-    config.add_show_field solr_name("desc_metadata__languageCode", :stored_searchable, type: :string), :label => "Language code"
-    config.add_show_field solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text), :label => "Language authority"
-    config.add_show_field solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text), :label => "Language scheme"
-
-    # "fielded" search configuration. Used by pulldown among other places.
-    # For supported keys in hash, see rdoc for Blacklight::SearchFields
-    #
-    # Search fields will inherit the :qt solr request handler from
-    # config[:default_solr_parameters], OR can specify a different one
-    # with a :qt key/value. Below examples inherit, except for subject
-    # that specifies the same :qt as default for our own internal
-    # testing purposes.
-    #
-    # The :key is what will be used to identify this BL search field internally,
-    # as well as in URLs -- so changing it after deployment may break bookmarked
-    # urls.  A display label will be automatically calculated from the :key,
-    # or can be specified manually to be different.
-    #
-    # This one uses all the defaults set by the solr request handler. Which
-    # solr request handler? The one set in config[:default_solr_parameters][:qt],
-    # since we aren't specifying it otherwise.
-    config.add_search_field('all_fields', :label => 'All Fields', :include_in_advanced_search => false) do |field|
-      title_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
-      label_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
-      contributor_name = solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
-      field.solr_parameters = {
-        :qf => "#{title_name} noid_tsi #{label_name} file_format_tesim #{contributor_name}",
-        :pf => "#{title_name}"
-      }
-    end
-    
-
-    # Now we see how to over-ride Solr request handler defaults, in this
-    # case for a BL "search field", which is really a dismax aggregate
-    # of Solr search fields.
-    # creator, title, description, publisher, date_created,
-    # subject, language, resource_type, format, identifier, based_near,
-    config.add_search_field('contributor') do |field|
-      # solr_parameters hash are sent to Solr as ordinary url query params.
-      field.solr_parameters = { :"spellcheck.dictionary" => "contributor" }
-
-      # :solr_local_parameters will be sent using Solr LocalParams
-      # syntax, as eg {! qf=$title_qf }. This is neccesary to use
-      # Solr parameter de-referencing like $title_qf.
-      # See: http://wiki.apache.org/solr/LocalParams
-      solr_name = solr_name("desc_metadata__contributor", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-
-    config.add_search_field('creator') do |field|
-      field.solr_parameters = { :"spellcheck.dictionary" => "creator" }
-      solr_name = solr_name("desc_metadata__creator", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('title') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "title"
-      }
-      solr_name = solr_name("desc_metadata__title", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('subtitle') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "subtitle"
-      }
-      solr_name = solr_name("desc_metadata__subtitle", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('description') do |field|
-      field.label = "Abstract or Summary"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "description"
-      }
-      solr_name = solr_name("desc_metadata__description", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('abstract') do |field|
-      field.label = "Abstract or Summary"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "abstract"
-      }
-      solr_name = solr_name("desc_metadata__abstract", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('type') do |field|
-      field.label = "Document type"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "type"
-      }
-      solr_name = solr_name("desc_metadata__type", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('type_category') do |field|
-      field.label = "Document category"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "type_category"
-      }
-      solr_name = solr_name("desc_metadata__type_category", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('publisher') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "publisher"
-      }
-      solr_name = solr_name("desc_metadata__publisher", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('subject') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "subject"
-      }
-      solr_name = solr_name("desc_metadata__subject", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('medium') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "medium"
-      }
-      solr_name = solr_name("desc_metadata__medium", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('edition') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "edition"
-      }
-      solr_name = solr_name("desc_metadata__edition", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('numPages') do |field|
-      field.label = "Number of pages"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "numPages"
-      }
-      solr_name = solr_name("desc_metadata__numPages", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('pages') do |field|
-      field.label = "Page range"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "pages"
-      }
-      solr_name = solr_name("desc_metadata__numPages", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('publicationStatus') do |field|
-      field.label = "Publication status"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "publicationStatus"
-      }
-      solr_name = solr_name("desc_metadata__publicationStatus", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('reviewStatus') do |field|
-      field.label = "Review status"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "reviewStatus"
-      }
-      solr_name = solr_name("desc_metadata__reviewStatus", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    #config.add_search_field('format') do |field|
-    #  field.include_in_advanced_search = false
-    #  field.solr_parameters = {
-    #    :"spellcheck.dictionary" => "format"
-    #  }
-    #  solr_name = solr_name("desc_metadata__format", :stored_searchable, type: :string)
-    #  field.solr_local_parameters = {
-    #    :qf => solr_name,
-    #    :pf => solr_name
-    #  }
-    #end
-
-    config.add_search_field('identifier') do |field|
-      field.include_in_advanced_search = false
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "identifier"
-      }
-      solr_name = solr_name("desc_metadata__id", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    #config.add_search_field('based_near') do |field|
-    #  field.label = "Location"
-    #  field.solr_parameters = {
-    #    :"spellcheck.dictionary" => "based_near"
-    #  }
-    #  solr_name = solr_name("desc_metadata__based_near", :stored_searchable, type: :string)
-    #  field.solr_local_parameters = {
-    #    :qf => solr_name,
-    #    :pf => solr_name
-    #  }
-    #end
-
-    config.add_search_field('keyword') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "keyword"
-      }
-      solr_name = solr_name("desc_metadata__keyword", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    #config.add_search_field('depositor') do |field|
-    #  solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
-    #  field.solr_local_parameters = {
-    #    :qf => solr_name,
-    #    :pf => solr_name
-    #  }
-    #end
-
-    #config.add_search_field('rights') do |field|
-    #  solr_name = solr_name("desc_metadata__rights", :stored_searchable, type: :string)
-    #  field.solr_local_parameters = {
-    #    :qf => solr_name,
-    #    :pf => solr_name
-    #  }
-    #end
-
-    config.add_search_field('date_modified') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "date_modified"
-      }
-      solr_name = solr_name("desc_metadata__modified", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('date_created') do |field|
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "date_created"
-      }
-      solr_name = solr_name("desc_metadata__created", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('language') do |field|
-      field.label = "Language"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "language"
-      }
-      solr_name = solr_name("desc_metadata__language", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('languageCode') do |field|
-      field.label = "Language code"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "languageCode"
-      }
-      solr_name = solr_name("desc_metadata__languageCode", :stored_searchable, type: :string)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('languageAuthority') do |field|
-      field.label = "Language authority"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "languageAuthority"
-      }
-      solr_name = solr_name("desc_metadata__languageAuthority", :stored_searchable, type: :text)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    config.add_search_field('languageScheme') do |field|
-      field.label = "Language scheme"
-      field.solr_parameters = {
-        :"spellcheck.dictionary" => "languageScheme"
-      }
-      solr_name = solr_name("desc_metadata__languageScheme", :stored_searchable, type: :text)
-      field.solr_local_parameters = {
-        :qf => solr_name,
-        :pf => solr_name
-      }
-    end
-
-    # "sort results by" select (pulldown)
-    # label in pulldown is followed by the name of the SOLR field to sort by and
-    # whether the sort is ascending or descending (it must be asc or desc
-    # except in the relevancy case).
-    # label is key, solr field is value
-    config.add_sort_field "score desc, #{uploaded_field} desc", :label => "relevance \u25BC"
-    config.add_sort_field "#{uploaded_field} desc", :label => "date uploaded \u25BC"
-    config.add_sort_field "#{uploaded_field} asc", :label => "date uploaded \u25B2"
-    config.add_sort_field "#{modified_field} desc", :label => "date modified \u25BC"
-    config.add_sort_field "#{modified_field} asc", :label => "date modified \u25B2"
-
-    # If there are more than this many search results, no spelling ("did you
-    # mean") suggestion is offered.
-    config.spell_max = 5
   end
 
   private

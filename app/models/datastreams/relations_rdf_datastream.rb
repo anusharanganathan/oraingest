@@ -1,29 +1,33 @@
 #require 'active_support/concern'
 require 'rdf'
-require 'vocabulary/ora_vocabulary'
-require 'vocabulary/prov_vocabulary'
+require 'chronic'
+require 'vocabulary/ora'
+require 'vocabulary/time'
+require 'vocabulary/fabio'
 
 class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
-
-  attr_accessor :hasPart, :influence, :qualifiedRelation
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :hasPart, :accessRights, :influence, :qualifiedRelation
 
   map_predicates do |map|
     # For internal relations
-    map.hasPart(:in => RDF::DC, class_name:"InternalRelations")
+    map.hasPart(:in => RDF::DC, class_name: "InternalRelations")
+    map.accessRights(:in => RDF::DC, class_name: "EmbargoInfo")
     # For external relations
-    map.influence(:to => "wasInfluencedBy", :in => PROV)
-    map.qualifiedRelation(:to => "qualifiedInfluence", :in => PROV, class_name:"ExternalRelationsQualified")
+    map.influence(:to => "wasInfluencedBy", :in => RDF::PROV)
+    map.qualifiedRelation(:to => "qualifiedInfluence", :in => RDF::PROV, class_name: "ExternalRelationsQualified")
   end
-  accepts_nested_attributes_for :hasPart, :qualifiedRelation
+  accepts_nested_attributes_for :hasPart
+  accepts_nested_attributes_for :accessRights
+  accepts_nested_attributes_for :qualifiedRelation
 
   def getInfluences
     # Not Working
     influence = []
     self.qualifiedRelation.each do |qr|
-      if !qr.entity.empty?
-         qr.entity.each do |qre|
-           influence.push(qre.rdf_subject.to_s)
-         end
+      qr.entity.each do |qre|
+        influence.push(qre.rdf_subject.to_s)
       end
     end
     influence
@@ -34,18 +38,22 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   end
 
   def embargoStatus
+    # 3 embargo states: Open access, Closed access, Access restricted until embargo end date 
     articleVisible = true
     contentVisible = false
     hasContent = false
+    if !self.accessRights.nil? && !self.accessRights.first.nil?
+      if self.accessRights.first.embargoStatus != 'Open access'
+        articleVisible = false
+      end
+    end
     self.hasPart.each do |hp|
-      if hp.identifier.first == 'descMetadata'
-        if hp.embargoStatus.first != 'Visible'
-          articleVisible = false
-        end
-      elsif hp.identifier.first.start_with?('content')
-        hasContent = true
-        if hp.embargoStatus.first == 'Visible'
-          contentVisible = true
+      if !hp.nil?
+        if hp.identifier.first.start_with?('content')
+          hasContent = true
+          if !hp.accessRights.nil? && hp.accessRights.first.embargoStatus == 'Open access'
+            contentVisible = true
+          end
         end
       end
     end
@@ -54,33 +62,56 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
         if contentVisible
           "Open access"
         else
-          "Under embargo"
+          "Embargoed"
         end
       else
-        "Reference record"
+        "Catalogued"
       end
     else
-      "Closed"
+      "Closed access"
     end
   end
 
-  def embargoLevel
+  def embargoClass
     if self.embargoStatus == "Open access"
       "success"
-    elsif self.embargoStatus == "Under embargo"
+    elsif self.embargoStatus == "Embargoed"
       "info"
-    elsif self.embargoStatus == "Reference record"
+    elsif self.embargoStatus == "Catalogued"
       "warning"
     else
       "error"
     end
   end
 
+  def to_solr(solr_doc={})
+    super 
+    # Index embargo info
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoStatus", :symbol)] = self.embargoStatus
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
+    if !self.accessRights.nil? && !self.accessRights.first.nil?
+      self.accessRights.first.to_solr(solr_doc)
+    end
+    self.hasPart.each do |hp|
+      if hp.identifier.first.start_with?('content') && !hp.accessRights.nil? && !hp.accessRights.first.nil?
+        hp.accessRights.first.to_solr(solr_doc)
+      end #if content and accessRights
+    end #each hasPart
+    # index external relation
+    self.qualifiedRelation.each do |qr|
+      qr.to_solr(solr_doc)
+    end
+    solr_doc
+  end
+
 end
 
 class InternalRelations
   include ActiveFedora::RdfObject
-  attr_accessor :description, :type, :format, :embargoStatus, :embargoStart, :embargoEnd, :embargoReason, :embargoRelease
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :identifier, :description, :type, :format, :accessRights
 
   map_predicates do |map|
     map.identifier(:in => RDF::DC)
@@ -90,16 +121,8 @@ class InternalRelations
     map.type(:to=>"type", :in => RDF::DC)
     #-- format --
     map.format(:in => RDF::DC)
-    #-- embargoStatus --
-    map.embargoStatus(:in => ORA)
-    #-- embargoStart --
-    map.embargoStart(:in => ORA)
-    #-- embargoEnd --
-    map.embargoEnd(:in => ORA)
-    #-- embargoReason --
-    map.embargoReason(:in => ORA)
-    #-- embargoRelease --
-    map.embargoRelease(:in => ORA)
+    #-- embargo info --
+    map.accessRights(:in => RDF::DC, class_name: "EmbargoInfo")
   end
 
   def persisted?
@@ -114,12 +137,14 @@ end
 
 class ExternalRelationsQualified
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :relation, :entity
 
-  rdf_type rdf_type PROV.Influence
+  rdf_type rdf_type RDF::PROV.Influence
   map_predicates do |map|
     #-- qualifying entity --
-    map.entity(:to => "entity", :in => PROV, class_name:"ExternalRelations")
+    map.entity(:to => "entity", :in => RDF::PROV, class_name: "ExternalRelations")
     #-- relation --
     map.relation(:to=>"relation", :in => RDF::DC)
   end
@@ -133,11 +158,31 @@ class ExternalRelationsQualified
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end
 
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] ||= []
+    riHash = {}
+    if !self.entity.nil? && !self.entity.first.nil?
+      riHash['url'] = self.entity.first.rdf_subject.to_s
+      riHash['title'] = self.entity.first.title.first 
+      riHash['description'] = self.entity.first.description.first
+      riHash['citation'] = self.entity.first.citation.first
+      riHash['typeOfRelation'] = self.relation.first
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItem", :displayable)] << riHash.to_json
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] << self.entity.first.rdf_subject.to_s
+      solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] << self.relation.first
+    end
+    solr_doc
+  end
+
 end
 
 class ExternalRelations
   include ActiveFedora::RdfObject
-  attr_accessor :identifier, :title, :description, :type, :citation
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :title, :description, :type, :citation
 
   map_predicates do |map|
     #-- title --
@@ -148,6 +193,152 @@ class ExternalRelations
     map.type(:in => RDF::DC)
     #-- citation --
     map.citation(:to => "bibliographicCitation", :in => RDF::DC)
+  end
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+end
+
+class EmbargoInfo
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :embargoStatus, :embargoDate, :embargoReason, :embargoRelease
+
+  rdf_type RDF::PSO.PublicationStatus
+  map_predicates do |map|
+    #-- embargoStatus --
+    map.embargoStatus(:in => RDF::ORA)
+    #-- embargoDate --
+    map.embargoDate(:to => "hasEmbargoDuration", :in => RDF::FABIO, class_name: "EmbargoDate")
+    #-- embargoReason --
+    map.embargoReason(:in => RDF::ORA)
+    #-- embargoRelease --
+    map.embargoRelease(:in => RDF::ORA)
+  end
+  accepts_nested_attributes_for :embargoDate
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+  def to_solr(solr_doc={})
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
+    embargoHash = {}
+    embargoHash['identifier'] = rdf_subject.to_s
+    embargoHash['embargoStatus'] = self.embargoStatus.first 
+    embargoHash['embargoReason'] = self.embargoReason.first 
+    embargoHash['embargoRelease'] = self.embargoRelease.first 
+
+    if !self.embargoDate.nil? && !self.embargoDate.first.nil?
+      if !self.embargoDate.first.end.nil? && !self.embargoDate.first.end.first.nil?
+        if !self.embargoDate.first.end.first.label.nil? && !self.embargoDate.first.end.first.date.nil?
+          embargoHash['embargoEnd'] = "%s %s"% [self.embargoDate.first.end.first.label.first, self.embargoDate.first.end.first.date.first]
+        elsif !self.embargoDate.first.end.first.date.nil?
+          embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
+        end
+        if !self.embargoDate.first.end.first.date.nil?
+          solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] << self.embargoDate.first.end.first.date.first
+          begin 
+            solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] << Chronic.parse(self.embargoDate.first.end.first.date.first).utc.iso8601
+          rescue
+          end
+        end
+      end
+      if !self.embargoDate.first.start.nil? && !self.embargoDate.first.start.first.nil?
+        if !self.embargoDate.first.start.first.label.nil? && !self.embargoDate.first.start.first.date.nil?
+          embargoHash['embargoStart'] = "%s %s"% [self.embargoDate.first.start.first.label.first, self.embargoDate.first.start.first.date.first]
+        elsif !self.embargoDate.first.start.first.label.nil?
+          embargoHash['embargoStart'] = self.embargoDate.first.start.first.label.first
+        elsif !self.embargoDate.first.start.first.date.nil?
+          embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
+        end
+      end
+      if !self.embargoDate.first.duration.nil? && !self.embargoDate.first.duration.first.nil? 
+        embargoHash['embargoPeriod'] = "%d years and %d months"% [self.embargoDate.first.duration.first.years.first.to_i, self.embargoDate.first.duration.first.months.first.to_i]
+      end
+    end
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] << embargoHash.to_json
+    solr_doc
+  end
+
+end
+
+class EmbargoDate
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :start, :end, :duration
+
+  rdf_type RDF::TIME.TemporalEntity
+  map_predicates do |map|
+    #-- embargoStart --
+    map.start(:to => "hasBeginning", :in => RDF::TIME, class_name: "LabelledDate")
+    #-- embargoPeriod --
+    map.duration(:to => "hasDurationDescription", :in => RDF::TIME, class_name: "EmbargoDuration")
+    #-- embargoEnd --
+    map.end(:to => "hasEnd", :in => RDF::TIME, class_name: "LabelledDate")
+  end
+  accepts_nested_attributes_for :start
+  accepts_nested_attributes_for :duration
+  accepts_nested_attributes_for :end
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+end
+
+class LabelledDate
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :date, :label
+
+  map_predicates do |map|
+    #-- start date --
+    map.date(:to=> 'value', :in => RDF)
+    #-- start description --
+    map.label(:in => RDF::RDFS)
+  end
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end
+
+end
+
+class EmbargoDuration
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :years, :months
+
+  map_predicates do |map|
+    #-- embargo duration - years --
+    map.years(:in => RDF::TIME)
+    #-- embargo duration - months --
+    map.months(:in => RDF::TIME)
   end
 
   def persisted?

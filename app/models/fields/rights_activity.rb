@@ -1,8 +1,7 @@
-require 'vocabulary/rdfs_vocabulary'
-require 'vocabulary/prov_vocabulary'
-
 class LicenseStatement
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :licenseLabel, :licenseStatement, :licenseURI
 
   rdf_subject { |ds|
@@ -13,9 +12,9 @@ class LicenseStatement
     end
     }
   map_predicates do |map|
-    map.licenseLabel(:to => "label", :in => RDFS)
-    map.licenseStatement(:to => "value", :in => RDFS)
-    map.licenseURI(:to => "isDefinedBy", :in => RDFS)
+    map.licenseLabel(:to => "label", :in => RDF::RDFS)
+    map.licenseStatement(:to => "value", :in => RDF)
+    map.licenseURI(:to => "isDefinedBy", :in => RDF::RDFS)
   end
 
   def persisted?
@@ -27,8 +26,11 @@ class LicenseStatement
   end 
 
   def to_solr(solr_doc={})
-    super
-    solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseLabel.first
+    if !licenseLabel.first.empty?
+      solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseLabel.first
+    elsif !licenseURI.first.empty?
+      solr_doc[Solrizer.solr_name("desc_metadata__license", :stored_searchable)] = licenseURI.first
+    end
     solr_doc
   end
 
@@ -40,6 +42,8 @@ end
 
 class RightsStatement
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :rightsStatement, :rightsType
 
   rdf_subject { |ds|
@@ -50,7 +54,7 @@ class RightsStatement
     end
     }
   map_predicates do |map|
-    map.rightsStatement(:to => "value", :in => RDFS)
+    map.rightsStatement(:to => "value", :in => RDF)
     map.rightsType(:to => "type", :in => RDF::DC)
   end
 
@@ -70,6 +74,8 @@ end
 
 class RightsActivity
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :activityType, :activityUsed, :activityGenerated
 
   rdf_subject { |ds|
@@ -81,8 +87,8 @@ class RightsActivity
     }
   map_predicates do |map|
     map.activityType(:to => "type", :in => RDF::DC)
-    map.activityUsed(:to => "used", :in => PROV)
-    map.activityGenerated(:to => "generated", :in => PROV)
+    map.activityUsed(:to => "used", :in => RDF::PROV)
+    map.activityGenerated(:to => "generated", :in => RDF::PROV)
   end
 
   def persisted?

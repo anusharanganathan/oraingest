@@ -1,0 +1,27 @@
+<h1>Update dataset agreement</h1>
+
+<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
+<%= render partial: 'tabs' %>
+
+<div>
+    <% if @dataset_agreement.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@dataset_agreement.errors.count, "error") %> prohibited this dataset agreement from being saved:</h2>
+        <ul>
+          <% @dataset_agreement.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+</div>
+
+<div class="tab-content">
+  <%= render partial: 'files_form' %>
+  <%= render partial: 'form' %>
+</div>
+<br/>
+
+<% path = { :new => new_dataset_agreement_path, :show => dataset_agreement_path(@pid), :edit => edit_dataset_agreement_path(@pid), :list => dataset_agreements_path } %>
+<%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+

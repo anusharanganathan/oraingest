@@ -1,0 +1,87 @@
+<div class="field">
+  <%= f.label :title %>
+  <%= f.text_field :title, :value=>@dataset_agreement.title.first, :required=>true %>
+  <%= f.hidden_field :identifier, :value=>@dataset_agreement.identifier.first %>
+</div>
+
+<div class="field">
+  <%= f.label :digitalSizeAllocated, "Size of allocated storage being asked / required" %>
+  <%= f.text_field :digitalSizeAllocated, :value=>@dataset_agreement.digitalSizeAllocated.first %>
+</div>
+
+<div class="control-group" id="contributor">
+  <%= f.label :contributor, "<span class='error'>*</span> Users allowed to contribute data".html_safe, :class=>"control-label" %>
+  <div class="controls" id="contributor_clone_0">
+    <%= f.text_field :contributor, :name=>"dataset_agreement[contributor][]", :value=>@dataset_agreement.contributor.first, id: "contributor0" %>
+    <button class="adder btn" name="additional_contributor" id="contributor_button_0" type="button">+<span class="accessible-hidden">add another contributor</span></button>
+    &nbsp;
+    <%= help_icon(:contributor) %>
+  </div>
+  <% kcount = 1 %>
+  <% for k in @dataset_agreement.contributor.from(1) %>
+    <div class="controls" id="contributor_clone_<%=kcount%>">
+      <%= f.text_field :contributor, :name=>"dataset_agreement[contributor][]", :value=>k, id: "contributor%d"% kcount %>
+      <button class="remover btn" name="additional_contributor" id="contributor_button_<%=kcount%>" type="button">-<span class="accessible-hidden">remove this contributor</span></button>
+      <% kcount += 1 %>
+    </div>
+  <% end %>
+</div>
+
+<div class="field">
+  <%= f.label :annotation, "Archiving payment option" %>
+  <%= f.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>@dataset_agreement.annotation.first) %>
+</div>
+<% if @dataset_agreement.invoice.empty? %>
+  <% @dataset_agreement.invoice.build %>
+<% end %>
+<%= f.fields_for :invoice, @dataset_agreement.invoice.first do |f_i| %>
+  <div class="field">
+    <%= f_i.label :description, "Details for archiving payment option" %>
+    <%= f_i.text_field :description, :value=>@dataset_agreement.invoice.first.description.first %> 
+  </div>
+  <% if can? :review, DatasetAgreement %> 
+    <div class="field">
+      <%= f_i.label :source, "Source system invoice was registered / paid in" %>
+      <%= f_i.text_field :source, :value=>@dataset_agreement.invoice.first.source.first %> 
+    </div>
+    <div class="field">
+      <%= f_i.label :identifier, "Invoice number / id" %>
+      <%= f_i.text_field :identifier, :value=>@dataset_agreement.invoice.first.identifier.first %> 
+    </div>
+    <div class="field">
+      <%= f_i.label :monetaryValue, "Monetary value of the invoice" %>
+      <%= f_i.text_field :monetaryValue, :value=>@dataset_agreement.invoice.first.monetaryValue.first %> 
+    </div>
+    <div class="field">
+      <%= f_i.label :monetaryStatus, "Monetary status" %>
+      <%= f_i.text_field :monetaryStatus, :value=>@dataset_agreement.invoice.first.monetaryStatus.first %> 
+    </div>
+  <% end %>
+<% end %>
+
+<% if can? :review, DatasetAgreement %> 
+  <div class="field">
+    <%= f.label :agreementType, "Type of agreement" %>
+    <%= f.select :agreementType, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.agreementType.first) %>
+  </div>
+  <div class="field">
+    <%= f.label :dataStorageSilo, "Silo allocated for storage" %>
+    <%= f.text_field :dataStorageSilo, :value=>@dataset_agreement.dataStorageSilo.first %>
+  </div>
+  <div class="field">
+    <% if @dataset_agreement.valid.empty? %>
+      <% @dataset_agreement.valid.build %>
+    <% end %>
+    <%= f.label :valid, "until when is this agreement valid" %>
+    <% if @dataset_agreement.valid[0].start.empty? %>
+      <%= f.text_field "valid][start", :value=>startDate = Time.now.strftime("%d %b %Y") %> to 
+    <% else %>
+      <%= f.text_field "valid][start", :value=>@dataset_agreement.valid[0].start.first %> to 
+    <% end %>
+    <%= f.text_field "valid][end", :value=>@dataset_agreement.valid[0].end.first %>
+  </div>
+  <div class="field">
+    <%= f.label :status, "Agreement status" %>
+    <%= f.text_field :status, :value=>@dataset_agreement.status.first %>
+  </div>
+<% end %>

@@ -1,6 +1,8 @@
-require 'vocabulary/mads_vocabulary'
+require 'vocabulary/mads'
 class MadsLanguage
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :languageLabel, :languageCode, :languageAuthority, :languageScheme
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>
@@ -14,12 +16,12 @@ class MadsLanguage
       RDF::URI.new("info:fedora/" + ds.pid + "#language")
     end
     }
-  rdf_type MADS.Language
+  rdf_type RDF::MADS.Language
   map_predicates do |map|
-    map.languageLabel(:to => "authoritativeLabel", :in => MADS)
-    map.languageCode(:to => "code", :in => MADS)
-    map.languageAuthority(:to => "hasExactExternalAuthority", :in => MADS)
-    map.languageScheme(:to => "isMemberOfMADSScheme", :in => MADS)
+    map.languageLabel(:to => "authoritativeLabel", :in => RDF::MADS)
+    map.languageCode(:to => "code", :in => RDF::MADS)
+    map.languageAuthority(:to => "hasExactExternalAuthority", :in => RDF::MADS)
+    map.languageScheme(:to => "isMemberOfMADSScheme", :in => RDF::MADS)
   end
 
   def persisted?
@@ -31,11 +33,10 @@ class MadsLanguage
   end 
 
   def to_solr(solr_doc={})
-    super
-    solr_doc[Solrizer.solr_name("desc_metadata__language", :stored_searchable)] = languageLabel.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageCode", :stored_searchable)] = languageCode.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageAuthority", :stored_searchable)] = languageAuthority.first
-    solr_doc[Solrizer.solr_name("desc_metadata__languageAcheme", :stored_searchable)] = languageScheme.first
+    solr_doc[Solrizer.solr_name("desc_metadata__language", :stored_searchable)] = self.languageLabel.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageCode", :stored_searchable)] = self.languageCode.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageAuthority", :stored_searchable)] = self.languageAuthority.first
+    solr_doc[Solrizer.solr_name("desc_metadata__languageScheme", :stored_searchable)] = self.languageScheme.first
     solr_doc
   end
 

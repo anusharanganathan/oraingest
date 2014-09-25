@@ -13,18 +13,12 @@ $(function() {
     $(this).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
   });
 
-
-  // don't navigate away from the field on tab when selecting an item
-  //$( "#subjectLabel0" ).bind( "keydown", function( event ) {
-  //    if ( event.keyCode === $.ui.keyCode.TAB &&
-  //        $( this ).autocomplete( "instance" ).menu.active ) {
-  //      event.preventDefault();
-  //      }
-  //  });
-  //$( "#subjectLabel0" ).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
-
   $("input.subjectLabel").each(function (i) {
     $(this).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
+  });
+
+  $( "input.creatorName" ).each(function (i) {
+    $(this).autocomplete(autocompletePerson).data("autocomplete")._renderItem = renderPerson;
   });
 
 });
@@ -85,6 +79,36 @@ var renderSubject = function ( ul, item ) {
   } else {
     line = "<a>" + item.label + " <i>Use</i> <b>" + item.auth + "</b></a>";
   }
+  return $("<li></li>")
+      .data("item.autocomplete", item)
+      .append( line )
+      .appendTo(ul);
+}
+
+var autocompletePerson = {
+  minLength: 2,
+  source: function( request, response ) {
+    $.getJSON( "/qa/search/cud/fullname", {
+      q: request.term
+    }, response);
+   //console.log("I have a response");
+  },
+  focus: function( event, ui ) {
+    $(this).val( ui.item.auth );
+    return false; 
+  },
+  select: function( event, ui ) {
+    $(this).val( ui.item.fullname );
+    $(this).attr("value", ui.item.fullname);
+    $(this).parent().find( ".creatorEmail" ).val( ui.item.oxford_email );
+    $(this).parent().find( ".creatorAffiliation" ).val( ui.item.current_affiliation );
+    return false;
+  }
+}
+
+var renderPerson = function ( ul, item ) {
+  var line = ""
+  line = "<a><b>" + item.fullname + "</b><br/>" + item.oxford_email + "</a>";
   return $("<li></li>")
       .data("item.autocomplete", item)
       .append( line )

@@ -1,0 +1,44 @@
+<div class="control-group">
+  <!-- <legend>Access rights for article</legend> -->
+  <% if !hp.accessRights.empty? %>
+    <% if !hp.accessRights[0].embargoStatus.empty? %>
+      <div>Embargo status: <%= hp.accessRights[0].embargoStatus.first %></div>
+    <% end %>
+    <% if !hp.accessRights[0].embargoDate.empty? %>
+      <div>Embargo end date: 
+      <% if !hp.accessRights[0].embargoDate[0].end.empty? && (!hp.accessRights[0].embargoDate[0].end[0].label.empty? || !hp.accessRights[0].embargoDate[0].end[0].date.empty?) %>
+        <% if !hp.accessRights[0].embargoDate[0].end[0].date.empty? %>
+          <%= hp.accessRights[0].embargoDate[0].end[0].date.first %>
+        <% end %>
+        <% if !hp.accessRights[0].embargoDate[0].end[0].label.empty? %>
+          (<%= hp.accessRights[0].embargoDate[0].end[0].label.first %>)
+        <% end %>
+      <% end %>
+      <% if !hp.accessRights[0].embargoDate[0].duration.empty? && (!hp.accessRights[0].embargoDate[0].duration[0].years.empty? || !hp.accessRights[0].embargoDate[0].duration[0].month.empty?) %>
+        <% if !hp.accessRights[0].embargoDate[0].duration[0].years.empty? %>
+          <br/><%= hp.accessRights[0].embargoDate[0].duration[0].years.first %> years
+        <% end %>
+        <% if !hp.accessRights[0].embargoDate[0].duration[0].months.empty? %>
+          <%= hp.accessRights[0].embargoDate[0].duration[0].months.first %> months
+        <% end %>
+        from
+      <% end %>
+      <% if !hp.accessRights[0].embargoDate[0].start.empty? && (!hp.accessRights[0].embargoDate[0].start[0].label.empty? || !hp.accessRights[0].embargoDate[0].start[0].date.empty?) %>
+        <% if !hp.accessRights[0].embargoDate[0].start[0].date.empty? %>
+          <%= hp.accessRights[0].embargoDate[0].start[0].date.first %>
+        <% end %>
+        <% if !hp.accessRights[0].embargoDate[0].start[0].label.empty? %>
+          (<%= hp.accessRights[0].embargoDate[0].start[0].label.first %>)
+        <% end %>
+      <% end %>
+      </div>
+    <% end %>
+    <% if !hp.accessRights[0].embargoReason.empty? && !hp.accessRights[0].embargoReason.first.empty? %>
+      <div>Embargo reason: <%= hp.accessRights[0].embargoReason.first %></div>
+    <% end %>
+    <% if !hp.accessRights[0].embargoRelease.empty? && !hp.accessRights[0].embargoRelease.first.empty?%>
+       <div>Embargo release method: <%= hp.accessRights[0].embargoRelease.first %></div>
+    <% end %>
+  <% end %>
+</div> <!-- /.control-group -->
+

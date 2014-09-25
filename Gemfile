@@ -67,7 +67,8 @@ gem 'qa'
 
 group :development, :test do
   gem "rspec-rails"
-  gem 'jettywrapper', "~> 1.5.0"
+  #gem 'jettywrapper', "~> 1.5.0"
+  gem 'chronic'
   #gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'capybara', '~>2.1.0'

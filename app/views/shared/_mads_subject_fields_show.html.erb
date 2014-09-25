@@ -1,5 +1,5 @@
 <% hasData = false %>
-<% @article.subject.each do |s| %>
+<% article.subject.each do |s| %>
   <% if !s.subjectLabel.empty? %>
     <% hasData = true %>
   <% end %>
@@ -7,7 +7,7 @@
 <% if hasData %>
   <div id="subject">
     <p><strong>Subject:</strong></p>
-    <% @article.subject.each do |s|%>
+    <% article.subject.each do |s|%>
       <div>
         <% if !s.subjectAuthority.empty? and !s.subjectLabel.empty? %>
           <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>

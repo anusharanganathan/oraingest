@@ -1,0 +1,48 @@
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <legend>Access rights for article</legend>
+      <% if !article.accessRights.empty? %>
+        <% if !article.accessRights[0].embargoStatus.empty? %>
+          <div>Embargo status: <%= article.accessRights[0].embargoStatus.first %></div>
+        <% end %>
+        <% if !article.accessRights[0].embargoDate.empty? %>
+          <div>Embargo end date: 
+          <% if !article.accessRights[0].embargoDate[0].end.empty? && (!article.accessRights[0].embargoDate[0].end[0].label.empty? || !article.accessRights[0].embargoDate[0].end[0].date.empty?) %>
+            <% if !article.accessRights[0].embargoDate[0].end[0].date.empty? %>
+              <%= article.accessRights[0].embargoDate[0].end[0].date.first %>
+            <% end %>
+            <% if !article.accessRights[0].embargoDate[0].end[0].label.empty? %>
+              (<%= article.accessRights[0].embargoDate[0].end[0].label.first %>)
+            <% end %>
+          <% end %>
+          <% if !article.accessRights[0].embargoDate[0].duration.empty? && (!article.accessRights[0].embargoDate[0].duration[0].years.empty? || !article.accessRights[0].embargoDate[0].duration[0].month.empty?) %>
+            <% if !article.accessRights[0].embargoDate[0].duration[0].years.empty? %>
+              <br/><%= article.accessRights[0].embargoDate[0].duration[0].years.first %> years
+            <% end %>
+            <% if !article.accessRights[0].embargoDate[0].duration[0].months.empty? %>
+              <%= article.accessRights[0].embargoDate[0].duration[0].months.first %> months
+            <% end %>
+            from
+          <% end %>
+          <% if !article.accessRights[0].embargoDate[0].start.empty? && (!article.accessRights[0].embargoDate[0].start[0].label.empty? || !article.accessRights[0].embargoDate[0].start[0].date.empty?) %>
+            <% if !article.accessRights[0].embargoDate[0].start[0].date.empty? %>
+              <%= article.accessRights[0].embargoDate[0].start[0].date.first %>
+            <% end %>
+            <% if !article.accessRights[0].embargoDate[0].start[0].label.empty? %>
+              (<%= article.accessRights[0].embargoDate[0].start[0].label.first %>)
+            <% end %>
+          <% end %>
+          </div>
+        <% end %>
+        <% if !article.accessRights[0].embargoReason.empty? && !article.accessRights[0].embargoReason.first.empty? %>
+          <div>Embargo reason: <%= article.accessRights[0].embargoReason.first %></div>
+        <% end %>
+        <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty?%>
+           <div>Embargo release method: <%= article.accessRights[0].embargoRelease.first %></div>
+        <% end %>
+      <% end %>
+    </div> <!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->
+

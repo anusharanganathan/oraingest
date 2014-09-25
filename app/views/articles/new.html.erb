@@ -21,5 +21,6 @@
   <%= render partial: 'form' %>
 </div>
 
-<br/><%= render partial: "shared/actions_new", as: :article %>
+<% path = { :new => new_article_path, :list => articles_path } %>
+<br/><%= render partial: "shared/actions/new",  :locals => { :path => path } %>
 

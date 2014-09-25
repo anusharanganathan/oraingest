@@ -7,7 +7,7 @@
           <%= link_to article.title, article, :title => article.title  %>
 
           <% if display_access %>
-            <span class="label label-<%=article.embargoLevel%>"><%= article.embargoStatus %></span>
+            <span class="label label-<%=article.embargoClass%>"><%= article.embargoStatus %></span>
           <% end %>
         </h3>
         <p> 

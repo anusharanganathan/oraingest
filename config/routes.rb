@@ -7,9 +7,11 @@ OraHydra::Application.routes.draw do
   HydraHead.add_routes(self)
   Hydra::BatchEdit.add_routes(self)
 
-
   devise_for :users
   
+  get 'deposit_agreement', to: 'static#deposit_agreement'
+  get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
+
   resources 'reviewer_dashboard', :only=>:index do
     collection do
       get 'page/:page', :action => :index
@@ -19,7 +21,14 @@ OraHydra::Application.routes.draw do
   end
 
   resources :articles
+  delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
   
+  resources :datasets
+  delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
+  get 'datasets/:id/agreement', to: 'datasets#agreement'
+
+  resources :dataset_agreements
+
   #resources 'article', :only=>:index do
   #  collection do
   #    get 'page/:page', :action => :index

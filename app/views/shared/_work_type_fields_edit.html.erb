@@ -1,0 +1,17 @@
+<% if worktype.empty? %>
+  <% worktype.build %>
+<% end %>
+<div id="type">
+  <%= f.fields_for :worktype do |t| %>
+    <% if Sufia.config.subtypes[@model].length > 1 %>
+      <div class="field">
+        <%= t.label :typeLabel, "Type", :class=>"control-label" %>
+        <%= t.select :typeLabel, options_for_select(Sufia.config.subtypes[@model], :selected=>worktype[0].typeLabel.first) %>
+      </div>
+    <% elsif !worktype[0].typeLabel.nil? && !worktype[0].typeLabel.first.nil? %>
+      <%= t.hidden_field :typeLabel, :value => worktype[0].typeLabel.first %>
+    <% else %>
+      <%= t.hidden_field :typeLabel, :value => Sufia.config.subtypes[@model].values()[0] %>
+    <% end %>
+  <% end %>
+</div>

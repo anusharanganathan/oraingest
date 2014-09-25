@@ -1,0 +1,23 @@
+<p id="notice"><%= notice %></p>
+
+<% if false %>
+  <h3><span class="label label-<%=@dataset.relationsMetadata.embargoClass%>"><%= @dataset.relationsMetadata.embargoStatus %></span> </h3>
+<% end %>
+<%= render partial: "describe_fields_show", as: :dataset %>
+<%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/publication_activity/dataset_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/file_info_fields_show", :locals => { :article => @dataset } %>
+<% if @dataset.hasRelatedAgreement %>
+  <%= render partial: "dataset_agreement_fields_show", :locals => { :dataset_agreement => @dataset.hasRelatedAgreement } %>
+  <%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
+<% end %>
+<%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
+
+<% path = { :new => new_dataset_path, :show => dataset_path(@dataset), :edit => edit_dataset_path(@dataset), :list => datasets_path } %>
+<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+

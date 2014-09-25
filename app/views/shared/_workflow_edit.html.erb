@@ -1,0 +1,72 @@
+<%= form_for article, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
+
+  <%= hidden_field_tag('redirect_tab', 'workflow') %>
+
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <legend>Workflow Status</legend>
+      
+        <% unless article.workflows.first.nil? %>
+          <% wf = article.workflows.first %>
+          <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+        <% end %>
+      
+        <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" %>
+          <% buttonText = 'Submit for Review' %>
+          <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+          <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
+          <%= f.hidden_field "workflows_attributes][entries_attributes][date", :value => Time.now.to_s, :id => "workflows_entries_date" %>
+          <%= f.hidden_field "workflows_attributes][entires_attributes][creator", :value => current_user.user_key, :id => "workflows_entires_creator" %>
+          <div class="fields">
+            <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
+            <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entries_description" %> 
+          </div>
+          
+        <% elsif article.workflows.first.current_status == "Referred" %>
+          <% buttonText = 'Submit for Review' %>
+          <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
+          <%= f.hidden_field "workflows_attributes][entries_attributes][date", :value => Time.now.to_s, :id => "workflows_entries_date" %>
+          <%= f.hidden_field "workflows_attributes][entires_attributes][creator", :value => current_user.user_key, :id => "workflows_entires_creator" %>
+          <div class="fields">
+            <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
+            <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entries_description" %> 
+          </div>
+          
+        <% else %>
+          <% buttonText = 'Update workflow' %>
+          <h3>Change Status</h3>
+          <%# article.workflows.each_with_index do |wf, wf_index| %>
+            <div class="fields">
+              <%= f.label "workflows_attributes_entries_attributes_status", "Status", :class=>"control-label" %>
+              <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], :selected => wf.current_status), :class=>'span20 select_perm', :id => "workflows_entries_status" %>   
+              <%= f.hidden_field "workflows_attributes][entries_attributes][date", :value => Time.now.to_s, :id => "workflows_entries_date" %>
+              <%= f.hidden_field "workflows_attributes][entries_attributes][creator", :value => current_user.user_key, :id => "workflows_entires_creator" %>
+            
+            </div>
+            <div class="fields">
+              <%= f.label "workflows_attributes_entries_attributes_reviewer_id", "Reviewer", :class=>"control-label" %>
+              <% if wf.current_reviewer.nil? %>
+                <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => wf.current_reviewer, :id => "workflows_entires_reviewer_id" %>
+              <% else %>
+                <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => wf.current_reviewer.user_key, :id => "workflows_entires_reviewer_id" %>
+              <% end %>
+            </div>
+            <div class="fields">
+              <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
+              <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description" %> 
+            </div>
+          <%# end %>
+        <% end %> 
+      </div><!-- /.control-group -->
+    </div><!-- /.row -->
+  </div><!-- /.well -->
+
+  <%= render partial: "shared/workflow_show", :locals => { :wf => wf, :article => article } %>
+
+  <div class="row form-actions" id="workflow_submit">
+    <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+    <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+  </div>
+
+<% end %>

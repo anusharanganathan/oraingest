@@ -1,0 +1,76 @@
+<% if accessRights.empty? %>
+  <% accessRights.build %>
+<% end %>
+<% if accessRights[0].embargoDate.empty? %>
+  <% accessRights[0].embargoDate.build %>
+<% end %>
+<% if accessRights[0].embargoDate[0].start.empty? %>
+  <% accessRights[0].embargoDate[0].start.build %>
+<% end %>
+<% if accessRights[0].embargoDate[0].duration.empty? %>
+  <% accessRights[0].embargoDate[0].duration.build %>
+<% end %>
+<% if accessRights[0].embargoDate[0].end.empty? %>
+  <% accessRights[0].embargoDate[0].end.build %>
+<% end %>
+
+<% startOption = nil %>
+<% if accessRights[0].embargoDate[0].start[0].label[0].nil? %>
+  <% startOption = "Today" %>
+<% else %>
+  <% startOption = accessRights[0].embargoDate[0].start[0].label[0] %>
+<% end %>
+
+<%= f.fields_for :accessRights do |f_a| %>
+  <div class="field">
+    <%= f_a.label :embargoStatus, "Can this catalogue record be made visible?", :class=>"control-label" %>
+    <span><%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access") %> Yes</span>
+    <span><%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed") %> After a certain period</span>
+    <span><%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access") %> No</span>
+  </div>
+  
+  <div class="field">
+    <%= f_a.label :embargoDate, "What is the embargo end date?", :class=>"control-label" %>
+    <%= f_a.fields_for :embargoDate do |f_dt| %>
+      <div class="field" style="background-color:#ccc;">
+      <%= f_dt.fields_for :end do |f_dt_end| %>
+        <%= f_dt_end.label :date, "Enter the embargo end date", :class=>"control-label" %>
+        <%= f_dt_end.text_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first %>
+      <% end %>
+      </div>
+      <div class="field" style="background-color:#ddd;">
+      <%= f_dt.label :duration, "<b>OR</b> Enter the embargo period".html_safe, :class=>"control-label" %>
+      <%= f_dt.fields_for :duration do |f_dt_duration| %>
+        <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2", style: "width: 20px;" %>
+        <span> years and </span>
+        <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2", style: "width: 20px;" %>
+        <span> months starting from</span>
+      <% end %>
+      <%= f_dt.fields_for :start do |f_dt_start| %>
+        <span><%= f_dt_start.radio_button :label, "Today", :checked => (startOption == "Today") %> today</span>
+        <span><%= f_dt_start.radio_button :label, "Publication date", :checked => (startOption == "Publication date") %> publication date</span>
+        <span><%= f_dt_start.radio_button :label, "", :checked => (startOption == "Date") %> date</span>
+        <%= f_dt_start.text_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first %>
+      <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="field">
+    <%= f_a.label :embargoReason, "Reason for embargo", :class=>"control-label" %>
+    <% if !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
+      <%= f_a.text_field :embargoReason, :value => accessRights[0].embargoReason.first %>
+    <% else %>
+      <%= f_a.text_field :embargoReason %>
+    <% end %>
+  </div>
+  
+  <div class="field">
+    <%= f_a.label :embargoRelease, "Embargo release method", :class=>"control-label" %>
+    <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
+      <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first) %>
+    <% else %>
+      <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods) %>
+    <% end %>
+  </div>
+<% end %>

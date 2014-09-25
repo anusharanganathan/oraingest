@@ -1,0 +1,23 @@
+<div id="language" class="field">
+  <% if language.empty? %>
+   <% language.build %>
+  <% end %>
+  <%= f.fields_for :language do |l| %>
+      <%= l.label :languageLabel, "Language", :class=>"control-label" %>
+      <%= l.text_field :languageLabel, :value=>language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel" %>
+      <% if can? :review, :all %>
+        <%= l.label :languageCode, "Language code", :class=>"control-label" %>
+        <%= l.text_field :languageCode, :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+        <%= l.label :languageAuthority, "Language authority", :class=>"control-label" %>
+        <%= l.text_field :languageAuthority, :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+        <%= l.label :languageScheme, "Language scheme", :class=>"control-label" %>
+        <%= l.text_field :languageScheme, :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+      <% else %>
+        <%= l.hidden_field :languageCode, :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+        <%= l.hidden_field :languageAuthority, :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+        <%= l.hidden_field :languageScheme, :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+      <% end %>
+     
+  <% end %>
+</div>
+

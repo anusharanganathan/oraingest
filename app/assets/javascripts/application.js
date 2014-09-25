@@ -20,5 +20,6 @@
 //
 // ORA custom
 //= require autocomplete
+//= require formUI
 //= require sufia/multiForm
 

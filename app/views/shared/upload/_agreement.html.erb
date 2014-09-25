@@ -1,5 +1,10 @@
 <div class="alert">
-  <strong>Note:</strong> You must agree to <a href='/agreement/' target="_blank"><%= "ORA's deposit agreement" %></a> before starting your upload.
+  <% if @model == "dataset" %>
+    <% url = "/data_deposit_agreement/" %>
+  <% else %>
+    <% url = "/deposit_agreement/" %>
+  <% end %>
+  <strong>Note:</strong> You must agree to <a href='<%=url%>' target="_blank"><%= "ORA's deposit agreement" %></a> before starting your upload.
 </div>
 
 

@@ -7,9 +7,10 @@
 
   function addField() {
     var parentId = this.id.replace("button", "clone");
-    var groupId = this.id.split("_",1)
+    var groupId = this.id.split("_",1);
     var count = $("#" + groupId + " div").size();
     var lastId = $("#" + groupId + " div").last().attr("id");
+    var currentId = this.id.replace(groupId+"_button_", "");
     lastId = lastId.replace(groupId+"_clone_", "");
     if ($.isNumeric(lastId)) {
       count = parseInt(lastId) + 1;
@@ -35,15 +36,23 @@
     //so the new element has a blank value
     inputFields = cloneElem.find('input')
     $.each(inputFields, function(n, tf) {
-      newName = $(tf).attr('id').replace('0', count);
-      $(tf).val("");
-      $(tf).attr('id', newName).attr("required", false);
+      if ($(tf).attr('type') != "hidden") {
+        newId = $(tf).attr('id').replace(currentId, count);
+        newName = $(tf).attr('name').replace("0", count);
+        $(tf).val("");
+        $(tf).attr('value', "");
+        $(tf).attr('name', newName);
+        $(tf).attr('id', newId).attr("required", false);
+      }
     })
     selectFields = cloneElem.find('select')
     $.each(selectFields, function(n, tf) {
-      newName = $(tf).attr('id').replace('0', count);
+      newId = $(tf).attr('id').replace(currentId, count);
+      newName = $(tf).attr('name').replace("0", count);
       $(tf).val("");
-      $(tf).attr('id', newName).attr("required", false);
+      $(tf).attr('value', "");
+      $(tf).attr('name', newName);
+      $(tf).attr('id', newId).attr("required", false);
     })
   
     if (settings.afterAdd) {
@@ -56,12 +65,13 @@
     //add autocomplete option
     if (groupId == "subject") {
       inputId = "subjectLabel"+count;
-      console.log(inputId);
       $( "#"+inputId ).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
     } else if (groupId == "language") {
       inputId = "languageLabel"+count;
-      console.log(inputId);
       $( "#"+inputId ).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
+    } else if (groupId == "creator") {
+      inputId = "creatorName"+count;
+      $( "#"+inputId ).autocomplete(autocompletePerson).data("autocomplete")._renderItem = renderPerson;
     }
   
     // Focus on the cloned element 
@@ -83,7 +93,7 @@
        * adds additional metadata elements
        */
       $('.adder', this).click(addField);
-
+      
       $('.remover', this).click(removeField);
       
     });

@@ -1,0 +1,30 @@
+<div id="subject" class="control-group">
+  <% if subject.empty? %>
+   <% subject.build %>
+  <% end %>
+  <% subject.each_with_index do |s, s_index| %>
+    <%= f.fields_for "subject][", s do |f_s| %>
+      <div class="controls" id="subject_clone_<%=s_index%>">
+        <%= f_s.label :subjectLabel, "Subject", :class=>"control-label" %>
+        <%= f_s.text_field :subjectLabel, :value => s.subjectLabel.first, :class=>"subjectLabel", id: "subjectLabel%d"% s_index %>
+        <% if can? :review, :all %>
+          <%= f_s.label :subjectAuthority, "Subject authority", :class=>"control-label" %>
+          <%= f_s.text_field :subjectAuthority, :value => s.subjectAuthority.first, :class=>"subjectAuthority", id: "subjectAuthority%d"% s_index %>
+          <%= f_s.label :subjectScheme, "Subject Scheme", :class=>"control-label" %>
+          <%= f_s.text_field :subjectScheme, :value => s.subjectScheme.first, :class=>"subjectScheme", id: "subjectScheme%d"% s_index %>
+        <% else %>
+          <%= f_s.hidden_field :subjectAuthority, :value => s.subjectAuthority.first, :class=>"subjectAuthority", id: "subjectAuthority%d"% s_index  %>
+          <%= f_s.hidden_field :subjectScheme, :value => s.subjectScheme.first, :class=>"subjectScheme", id: "subjectScheme%d"% s_index %>
+        <% end %>
+        <% if s_index.to_s == "0" %>
+          <button class="adder btn" name="additional_subject" id="subject_button_<%=s_index%>" type="button">+<span class="accessible-hidden">add another subject</span></button>
+          &nbsp;
+          <%= help_icon(:subject) %>
+        <% else %>
+          <button class="remover btn" name="additional_subject" id="subject_button_<%=s_index%>" type="button">-<span class="accessible-hidden">remove this subject</span></button>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+

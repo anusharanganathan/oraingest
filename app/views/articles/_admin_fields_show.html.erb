@@ -1,0 +1,25 @@
+<% if !article.oaStatus.empty? || !article.apcPaid.empty? || !article.oaReason.empty? || !article.refException.empty? %>
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+      <h3>Administration details - <small>APC's and Ref</small></h3>
+       <% if !article.oaStatus.empty? %>
+         <div>Open access status: <%= article.oaStatus.first %></div>
+       <% end %>
+       <% if !article.apcPaid.empty? %>
+         <% if article.apcPaid.first == "Yes" %>
+            <div>Article processing charge was paid for this article</div>
+         <% else %>
+            <div>Article processing charge was not paid for this article</div>
+         <% end %>
+       <% end %>
+       <% if !article.oaReason.empty? %>
+         <div>Basis of the APC: <%= article.oaReason.first %></div>
+       <% end %>
+       <% if !article.refException.empty? %>
+         <div>Ref exception: <%= article.refException.first %></div>
+       <% end %>
+    </div><!-- /.control-group -->
+  </div><!-- /.row -->
+</div>
+<% end %>

@@ -1,7 +1,7 @@
-require 'vocabulary/rdfs_vocabulary'
-
 class WorkType
   include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
   attr_accessor :typelabel, :typeAuthority
 
   #  <mads:authoritativeLabel>French</mads:authoritativeLabel>
@@ -16,7 +16,7 @@ class WorkType
     end
     }
   map_predicates do |map|
-    map.typeLabel(:to => "label", :in => RDFS)
+    map.typeLabel(:to => "label", :in => RDF::RDFS)
     map.typeAuthority(:to => "type", :in => RDF)
   end
 
@@ -29,7 +29,6 @@ class WorkType
   end 
 
   def to_solr(solr_doc={})
-    super
     solr_doc[Solrizer.solr_name("desc_metadata__type", :stored_searchable)] = typeLabel.first
     solr_doc[Solrizer.solr_name("desc_metadata__typeAuthority", :stored_searchable)] = typeAuthority.first
     solr_doc

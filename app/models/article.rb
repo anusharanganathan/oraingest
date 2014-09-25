@@ -3,7 +3,6 @@ require "datastreams/article_rdf_datastream"
 require "datastreams/relations_rdf_datastream"
 require "datastreams/article_admin_rdf_datastream"
 #require "person"
-require "oxford_terms"
 require "rdf"
 
 class Article < ActiveFedora::Base
