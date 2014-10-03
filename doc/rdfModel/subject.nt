@@ -1,0 +1,8 @@
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/subject> <info:fedora/sufia:2z10wt94t#subject0> .
+<info:fedora/sufia:2z10wt94t#subject0> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Input design, Computer" .
+<info:fedora/sufia:2z10wt94t#subject0> <http://www.loc.gov/mads/rdf/v1#hasExactExternalAuthority> "http://id.worldcat.org/fast/00973780" .
+<info:fedora/sufia:2z10wt94t#subject0> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> "FAST" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/subject> <info:fedora/sufia:2z10wt94t#subject1> .
+<info:fedora/sufia:2z10wt94t#subject1> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Linked data" .
+<info:fedora/sufia:2z10wt94t#subject1> <http://www.loc.gov/mads/rdf/v1#hasExactExternalAuthority> "http://id.worldcat.org/fast/01896555" .
+<info:fedora/sufia:2z10wt94t#subject1> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> "FAST" .

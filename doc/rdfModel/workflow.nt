@@ -1,0 +1,23 @@
+_:g65374540 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://vocab.ox.ac.uk/workflow/schema#Workflow> .
+_:g65374540 <http://vocab.ox.ac.uk/workflow/schema#entry> _:g67090840 .
+_:g65374540 <http://vocab.ox.ac.uk/workflow/schema#entry> _:g72661780 .
+_:g65374540 <http://vocab.ox.ac.uk/workflow/schema#entry> _:g68194800 .
+_:g65374540 <http://vocab.ox.ac.uk/workflow/schema#entry> _:g66419000 .
+_:g65374540 <http://purl.org/dc/terms/identifier> "MediatedSubmission" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/workflow/schema#workflow> _:g65374540 .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/workflow/schema#depositor> "user1@example.com" .
+_:g67090840 <http://vocab.ox.ac.uk/workflow/schema#status> "Draft" .
+_:g67090840 <http://purl.org/dc/terms/date> "2014-07-31 13:24:05 +0100" .
+_:g72661780 <http://vocab.ox.ac.uk/workflow/schema#status> "Submitted" .
+_:g72661780 <http://purl.org/dc/terms/date> "2014-08-11 19:24:49 +0100" .
+_:g72661780 <http://purl.org/dc/terms/description> "Submitting" .
+_:g68194800 <http://vocab.ox.ac.uk/workflow/schema#status> "Assigned" .
+_:g68194800 <http://purl.org/dc/terms/date> "2014-10-03 01:44:23 +0100" .
+_:g68194800 <http://purl.org/dc/terms/creator> "reviewer1@example.com" .
+_:g68194800 <http://vocab.ox.ac.uk/workflow/schema#reviewer_id> "reviewer2@example.com" .
+_:g68194800 <http://purl.org/dc/terms/description> "Assigned to reviewer 2" .
+_:g66419000 <http://vocab.ox.ac.uk/workflow/schema#status> "Referred" .
+_:g66419000 <http://purl.org/dc/terms/date> "2014-10-03 01:49:34 +0100" .
+_:g66419000 <http://purl.org/dc/terms/creator> "reviewer2@example.com" .
+_:g66419000 <http://vocab.ox.ac.uk/workflow/schema#reviewer_id> "reviewer2@example.com" .
+_:g66419000 <http://purl.org/dc/terms/description> "http://hydra.bodleian.ox.ac.uk:3000/articles/sufia:2z10wt94t/content02 seems to be a duplicate copy of http://hydra.bodleian.ox.ac.uk:3000/articles/sufia:2z10wt94t/content01. Can this file be deleted?" .

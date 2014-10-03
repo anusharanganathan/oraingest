@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:fabio="http://purl.org/spar/fabio/"
+  xmlns:bibo="http://purl.org/ontology/bibo/"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:camelot="http://vocab.ox.ac.uk/camelot#"
+  xmlns:prov="http://www.w3.org/ns/prov#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:frapo="http://purl.org/cerif/frapo/"
+  xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"
+  xmlns:ns1="http://vocab.ox.ac.uk/ora#"
+  xmlns:ns2="http://library.ucsd.edu/ontology/dams#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+>
+  <prov:Association rdf:about="info:fedora/sufia:2z10wt94t#fundingAssociation2">
+    <ns1:annotation>eh</ns1:annotation>
+    <prov:hadRole rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+    <frapo:awards>
+      <frapo:Grant rdf:about="info:fedora/sufia:2z10wt94t#fundingAward2">
+        <frapo:hasGrantNumber>GN1234</frapo:hasGrantNumber>
+      </frapo:Grant>
+    </frapo:awards>
+    <frapo:isFundingAgencyFor>Article</frapo:isFundingAgencyFor>
+    <prov:agent>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#funder2">
+        <owl:sameAs>http://funder/3</owl:sameAs>
+        <vcard:n>Funder 3</vcard:n>
+        <dcterms:type rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+      </rdf:Description>
+    </prov:agent>
+  </prov:Association>
+  <frapo:Grant rdf:nodeID="N362221d4a049474c8c7e7d94c0dd18ac">
+    <frapo:hasGrantNumber>GN1234</frapo:hasGrantNumber>
+  </frapo:Grant>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <camelot:keyword>PROV</camelot:keyword>
+    <ns2:subtitle>RDF model using PROV</ns2:subtitle>
+    <ns1:hadPublicationActivity>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#publicationActivity">
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#publisher</prov:wasAssociatedWith>
+        <dcterms:dateAccepted>01-01-2012</dcterms:dateAccepted>
+        <prov:generated rdf:resource="info:fedora/sufia:2z10wt94t#publicationDocument"/>
+        <prov:generatedAtTime>31-06-2014</prov:generatedAtTime>
+        <prov:atLocation>London, England</prov:atLocation>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#publicationAssociation"/>
+        <bibo:DocumentStatus>Submitted</bibo:DocumentStatus>
+        <ns1:reviewStatus>Peer reviewed</ns1:reviewStatus>
+      </rdf:Description>
+    </ns1:hadPublicationActivity>
+    <dcterms:rightsHolder>second name</dcterms:rightsHolder>
+    <camelot:keyword>linked data</camelot:keyword>
+    <dcterms:rights>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#rights">
+        <rdf:value>statement required to be displayed by the publisher </rdf:value>
+        <dcterms:type rdf:resource="http://purl.org/dc/terms/RightsStatement"/>
+      </rdf:Description>
+    </dcterms:rights>
+    <dcterms:subject>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#subject0">
+        <madsrdf:hasExactExternalAuthority>http://id.worldcat.org/fast/00973780</madsrdf:hasExactExternalAuthority>
+        <madsrdf:authoritativeLabel>Input design, Computer</madsrdf:authoritativeLabel>
+        <madsrdf:isMemberOfMADSScheme>FAST</madsrdf:isMemberOfMADSScheme>
+      </rdf:Description>
+    </dcterms:subject>
+    <dcterms:rightsHolder>first name</dcterms:rightsHolder>
+    <dcterms:subject>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#subject1">
+        <madsrdf:isMemberOfMADSScheme>FAST</madsrdf:isMemberOfMADSScheme>
+        <madsrdf:authoritativeLabel>Linked data</madsrdf:authoritativeLabel>
+        <madsrdf:hasExactExternalAuthority>http://id.worldcat.org/fast/01896555</madsrdf:hasExactExternalAuthority>
+      </rdf:Description>
+    </dcterms:subject>
+    <frapo:isOutputOf>
+      <prov:Activity rdf:about="info:fedora/sufia:2z10wt94t#fundingActivity">
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#funder0</prov:wasAssociatedWith>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#fundingAssociation1"/>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#fundingAssociation0"/>
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#funder1</prov:wasAssociatedWith>
+      </prov:Activity>
+    </frapo:isOutputOf>
+    <ns1:hadCreationActivity>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationActivity">
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#creator1</prov:wasAssociatedWith>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#creationAssociation1"/>
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#creator0</prov:wasAssociatedWith>
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#creationAssociation0"/>
+      </rdf:Description>
+    </ns1:hadCreationActivity>
+    <dcterms:license>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#license">
+        <rdfs:isDefinedBy>http://creativecommons.org/licenses/by-nc/2.5/</rdfs:isDefinedBy>
+        <rdfs:label>CC Attribution-NonCommercial (CC BY-NC 2.5)</rdfs:label>
+        <rdf:value>License statement goes here</rdf:value>
+      </rdf:Description>
+    </dcterms:license>
+    <dcterms:language>
+      <madsrdf:Language rdf:about="info:fedora/sufia:2z10wt94t#language">
+        <madsrdf:authoritativeLabel>English</madsrdf:authoritativeLabel>
+        <madsrdf:code>info:lc/vocabulary/iso639-2/eng</madsrdf:code>
+        <madsrdf:isMemberOfMADSScheme>iso639-2</madsrdf:isMemberOfMADSScheme>
+        <madsrdf:hasExactExternalAuthority>http://id.loc.gov/vocabulary/iso639-2/eng</madsrdf:hasExactExternalAuthority>
+      </madsrdf:Language>
+    </dcterms:language>
+    <ns1:rightsHolderGroup>Other party</ns1:rightsHolderGroup>
+    <dcterms:dateCopyrighted>2014</dcterms:dateCopyrighted>
+    <prov:hadActivity>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#rightsActivity">
+        <prov:used>info:fedora/sufia:2z10wt94t</prov:used>
+        <prov:generated>info:fedora/sufia:2z10wt94t#license</prov:generated>
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <prov:generated>info:fedora/sufia:2z10wt94t#rights</prov:generated>
+      </rdf:Description>
+    </prov:hadActivity>
+    <dcterms:abstract>An example of an RDF model using PROV with all of the data</dcterms:abstract>
+    <dcterms:type>
+      <camelot:technicalReport rdf:about="info:fedora/sufia:2z10wt94t#type">
+        <rdfs:label>Technical report</rdfs:label>
+      </camelot:technicalReport>
+    </dcterms:type>
+    <dcterms:title>Data model for article content type</dcterms:title>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nee5767a740e14ae7bff89c760c5bbac5">
+    <vcard:n>Funder 3</vcard:n>
+    <owl:sameAs>http://funder/3</owl:sameAs>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#funder0">
+    <owl:sameAs>http://someUrl.com</owl:sameAs>
+    <dcterms:type rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+    <vcard:n>Funder 1</vcard:n>
+  </rdf:Description>
+  <frapo:Grant rdf:about="info:fedora/sufia:2z10wt94t#fundingAward0">
+    <frapo:hasGrantNumber>dasfsdf</frapo:hasGrantNumber>
+  </frapo:Grant>
+  <bibo:Journal rdf:about="info:fedora/sufia:2z10wt94t#publicationJournal">
+    <dcterms:title>Title of the journal</dcterms:title>
+    <bibo:eissn>013490-0-0423</bibo:eissn>
+    <bibo:issn>0987654321</bibo:issn>
+    <bibo:pages>121-180</bibo:pages>
+    <bibo:issue>347</bibo:issue>
+    <bibo:volume>1245</bibo:volume>
+  </bibo:Journal>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationAssociation1">
+    <prov:hadRole>http://vocab.ox.ac.uk/ora#author</prov:hadRole>
+    <prov:agent>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creator1">
+        <vcard:n>Sally Rumsey</vcard:n>
+        <vcard:hasEmail>sally.rumsey@bodleian.ox.ac.uk</vcard:hasEmail>
+        <dcterms:type rdf:resource="http://www.w3.org/2006/vcard/ns#Individual"/>
+        <ns1:affiliation rdf:resource="info:fedora/sufia:2z10wt94t#affiliation1"/>
+        <owl:sameAs>http://creator/2</owl:sameAs>
+      </rdf:Description>
+    </prov:agent>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+  </rdf:Description>
+  <prov:Association rdf:about="info:fedora/sufia:2z10wt94t#fundingAssociation0">
+    <frapo:isFundingAgencyFor>Creator</frapo:isFundingAgencyFor>
+    <prov:agent rdf:resource="info:fedora/sufia:2z10wt94t#funder0"/>
+    <ns1:annotation>Funder is acknowledged in the journal article</ns1:annotation>
+    <frapo:awards rdf:resource="info:fedora/sufia:2z10wt94t#fundingAward0"/>
+    <prov:hadRole rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+  </prov:Association>
+  <vcard:Organization rdf:about="info:fedora/sufia:2z10wt94t#affiliation1">
+    <vcard:n>BDLSS</vcard:n>
+    <owl:sameAs>http://affiliation/1</owl:sameAs>
+  </vcard:Organization>
+  <vcard:Organization rdf:about="info:fedora/sufia:2z10wt94t#affiliation0">
+    <owl:sameAs>http://affiliation/3</owl:sameAs>
+    <vcard:n>Radcliffe Science Library</vcard:n>
+  </vcard:Organization>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#publicationAssociation">
+    <vcard:hasURL>http://wiley.com</vcard:hasURL>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+    <vcard:n>WIley Publications</vcard:n>
+    <prov:agent>info:fedora/sufia:2z10wt94t#publisher</prov:agent>
+    <prov:hadRole rdf:resource="http://purl.org/dc/terms/publisher"/>
+  </rdf:Description>
+  <fabio:Work rdf:about="info:fedora/sufia:2z10wt94t#publicationDocument">
+    <bibo:doi>10.x.1234.4567.89</bibo:doi>
+    <ns1:isPartOfSeries>
+      <bibo:Series rdf:about="info:fedora/sufia:2z10wt94t#publicationSeries">
+        <dcterms:title>Title of the series</dcterms:title>
+      </bibo:Series>
+    </ns1:isPartOfSeries>
+    <bibo:uri>http://url/to/publisher/copy.com</bibo:uri>
+    <dcterms:isPartOf rdf:resource="info:fedora/sufia:2z10wt94t#publicationJournal"/>
+    <bibo:identifier>A1234567890</bibo:identifier>
+  </fabio:Work>
+  <frapo:Grant rdf:about="info:fedora/sufia:2z10wt94t#fundingAward1">
+    <frapo:hasGrantNumber>GN1234</frapo:hasGrantNumber>
+  </frapo:Grant>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creator0">
+    <vcard:hasEmail>alena.ptak-danchak@bodleian.ox.ac.uk</vcard:hasEmail>
+    <ns1:affiliation rdf:resource="info:fedora/sufia:2z10wt94t#affiliation0"/>
+    <dcterms:type rdf:resource="http://www.w3.org/2006/vcard/ns#Individual"/>
+    <owl:sameAs>http://creator/1</owl:sameAs>
+    <vcard:n>Alena  Ptak-Danchak</vcard:n>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#funder1">
+    <owl:sameAs>http://funder/3</owl:sameAs>
+    <dcterms:type rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+    <vcard:n>Funder 3</vcard:n>
+  </rdf:Description>
+  <prov:Association rdf:about="info:fedora/sufia:2z10wt94t#fundingAssociation1">
+    <prov:agent rdf:resource="info:fedora/sufia:2z10wt94t#funder1"/>
+    <prov:hadRole rdf:resource="http://purl.org/cerif/frapo/FundingAgency"/>
+    <ns1:annotation>eh</ns1:annotation>
+    <frapo:isFundingAgencyFor>Article</frapo:isFundingAgencyFor>
+    <frapo:awards rdf:resource="info:fedora/sufia:2z10wt94t#fundingAward1"/>
+  </prov:Association>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationAssociation0">
+    <prov:agent rdf:resource="info:fedora/sufia:2z10wt94t#creator0"/>
+    <prov:hadRole>http://vocab.ox.ac.uk/ora#author</prov:hadRole>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+  </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,16 @@
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/dateCopyrighted> "2014" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#rightsHolderGroup> "Other party" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rightsHolder> "first name" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rightsHolder> "second name" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/license> <info:fedora/sufia:2z10wt94t#license> .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rights> <info:fedora/sufia:2z10wt94t#rights> .
+<info:fedora/sufia:2z10wt94t> <http://www.w3.org/ns/prov#hadActivity> <info:fedora/sufia:2z10wt94t#rightsActivity> .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#used> "info:fedora/sufia:2z10wt94t" .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#generated> "info:fedora/sufia:2z10wt94t#license" .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#generated> "info:fedora/sufia:2z10wt94t#rights" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/2000/01/rdf-schema#label> "CC Attribution-NonCommercial (CC BY-NC 2.5)" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "License statement goes here" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/2000/01/rdf-schema#isDefinedBy> "http://creativecommons.org/licenses/by-nc/2.5/" .
+<info:fedora/sufia:2z10wt94t#rights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "statement required to be displayed by the publisher " .
+<info:fedora/sufia:2z10wt94t#rights> <http://purl.org/dc/terms/type> <http://purl.org/dc/terms/RightsStatement> .
