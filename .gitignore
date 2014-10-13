@@ -16,5 +16,8 @@ jetty
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+#Ignore all of the cookies files
+/rt_cookies/*
 #Committing Gemfile.lock before upgrading to sufia 4.0
 #Gemfile.lock
+
