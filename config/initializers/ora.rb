@@ -250,6 +250,20 @@ Sufia.config do |config|
     "My publisher requires I cite the data and my research is unfunded" => "Unfunded research"
   }
 
+  config.workflow_status = {
+    "Select a status" => "",
+    "Draft" => "Draft",
+    "Submitted" => "Submitted",
+    "Assigned" => "Assigned",
+    "Claimed" => "Claimed",
+    "Approved" => "Approved",
+    "Escalated" => "Escalated",
+    "Referred" => "Referred",
+    "Rejected" => "Rejected"
+  }
+
+  config.rt_server = 'https://support.bodleian.ox.ac.uk/'
+  config.rt_queue = 'oraq'
   # Map hostnames onto Google Analytics tracking IDs
   # config.google_analytics_id = 'UA-99999999-1'
  

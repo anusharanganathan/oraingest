@@ -8,6 +8,7 @@ class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
   property :reviewer_id
   
   property :Workflow
+  property :emailThread
 end
 
 class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
@@ -51,9 +52,10 @@ class Workflow
     map.identifier(:in => RDF::DC)
     map.entries(to: :entry, :in => OxfordWorkflow, class_name:"WorkflowEntry")
     map.comments(to: :comment, :in => OxfordWorkflow, class_name:"WorkflowComment")
+    map.emailThreads(to: :emailThread, :in => OxfordWorkflow, class_name:"WorkflowCommunication")
   end
   
-  accepts_nested_attributes_for :entries, :comments
+  accepts_nested_attributes_for :entries, :comments, :emailThreads
   
   def current_status
     if self.entries.empty?
@@ -72,14 +74,20 @@ class Workflow
       self.entries.last.reviewer
     end
   end
-  
+
   # Returns the (String) id of current reviewer on last entry
   # Returns nil if no value to return
   def current_reviewer_id
     if self.entries.empty?
       return nil
     else
-      self.entries.last.reviewer_id.first
+      selected_entries = self.entries.select{|e| e.status.first != "Draft" && e.status.first != "Submitted"}
+      if selected_entries.empty?
+        return nil
+      else
+        return selected_entries.last.creator.first
+      end
+      #self.entries.last.reviewer_id.first
     end
   end
   
@@ -94,7 +102,7 @@ class Workflow
       submission_entry.date.first
     end
   end
-  
+ 
   def persisted?
     false
   end
@@ -102,7 +110,8 @@ class Workflow
   def to_solr(solr_doc)
     solr_doc[Solrizer.solr_name(self.identifier.first+"_status", :symbol)] = self.current_status 
     solr_doc[Solrizer.solr_name(self.identifier.first+"_current_reviewer_id", :symbol)] = self.current_reviewer_id
-    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.reviewer_id.first }.uniq.reject{|v| v.nil? || v.empty? }    
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.creator.first if (e.status.first != "Draft" && e.status.first != "Submitted") }.uniq.reject{|v| v.nil? || v.empty? }
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_email_threads", :symbol)] = self.emailThreads.map{|e| e.identifier.first }.uniq.reject{|v| v.nil? || v.empty? }
     unless self.date_submitted.nil?
       begin
         solr_doc[Solrizer.solr_name(self.identifier.first+"_date_submitted", :dateable)] = Time.parse(self.date_submitted).utc.iso8601
@@ -148,5 +157,15 @@ class WorkflowComment
   end
 end
 
+class WorkflowCommunication
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  map_predicates do |map|
+    map.identifier(in: RDF::DC)
+    map.date(in: RDF::DC) 
+    map.references(in: RDF::DC)
+  end
+end
 
 

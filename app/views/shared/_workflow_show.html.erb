@@ -6,7 +6,7 @@
       <% end %>
 
       <h3>History - <small>what's happened so far</small></h3>
-      <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" %>
+      <% if article.workflows.empty? || article.workflows.first.entries.map{|e| e.status.first } == ["Draft"]  %>
         This <%=@model.capitalize()%> has never been submitted for review.
 
       <% else %>
@@ -24,8 +24,7 @@
             </tr>
           <% end %>
         </table>
-        <% if false %>
-          <!-- Hiding this as I am not sure we need seperate comments? -->
+        <% if !wf.comments.nil? and !wf.comments.empty? %>
           <h3>Comments</h3>
           <table class="table table-bordered">
             <tr>
@@ -36,6 +35,20 @@
                 <td><%= format_date(comment.date.first) %></td>
                 <td><%= comment.creator.first %></td>
                 <td><%= comment.description.first %></td>
+              </tr>
+            <% end %>
+          </table>
+        <% end %>
+        <% if !wf.emailThreads.nil? and !wf.emailThreads.empty? %>
+          <h3>Email threads</h3>
+          <table class="table table-bordered">
+            <tr>
+              <th>Date</th><th>Email thread</th>
+            </tr>
+            <% wf.emailThreads.each do |emailThread| %>
+              <tr>
+                <td><%= format_date(emailThread.date.first) %></td>
+                <td><%=link_to emailThread.identifier.first, emailThread.references.first, :target => "_blank" %></td>
               </tr>
             <% end %>
           </table>
