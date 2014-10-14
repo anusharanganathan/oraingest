@@ -23,6 +23,7 @@ require 'parsing_nesting/tree'
 
 require "utils"
 require 'ora/build_metadata'
+require 'ora/rt_client'
 
 require 'json'
 
@@ -48,7 +49,7 @@ class DatasetsController < ApplicationController
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]
   before_filter :has_access?
-  respond_to :js, only: :agreement
+  #respond_to :js, only: :agreement
   # This applies appropriate access controls to all solr queries
   DatasetsController.solr_search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
@@ -346,15 +347,27 @@ class DatasetsController < ApplicationController
   end
 
   def add_workflow(dataset_params)
-    @dataset.attributes = Ora.validateWorkflow(dataset_params)
-    respond_to do |format|
-      if @dataset.save
-        format.html { redirect_to dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @dataset.errors, status: :unprocessable_entity }
+    if dataset_params.has_key?(:workflows_attributes)
+      # Send created email if workflow status is submitted
+      if @dataset.workflows.first.entries.first.status == ["Draft"] && dataset_params[:workflows_attributes].has_key?(:entries_attributes) && dataset_params[:workflows_attributes][:entries_attributes][:status] == 'Submitted'
+        rt = Ora::RtClient.new
+        ans = rt.create(current_user.user_key, current_user.user_key, dataset_url(@dataset), 'Dataset')
+        dataset_params[:workflows_attributes][:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
       end
+      # Save workflow step
+      @dataset.attributes = Ora.validateWorkflow(params[:dataset], current_user.user_key, @dataset)
+      respond_to do |format|
+        if @dataset.save
+          format.html { redirect_to dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: 'edit' }
+          format.json { render json: @dataset.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @dataset.errors, status: :unprocessable_entity }
     end
   end
 

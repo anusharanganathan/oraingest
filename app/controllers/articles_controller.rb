@@ -23,6 +23,7 @@ require 'parsing_nesting/tree'
 
 require "utils"
 require 'ora/build_metadata'
+require 'ora/rt_client'
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions]
@@ -251,17 +252,28 @@ class ArticlesController < ApplicationController
   end
 
   def add_workflow(article_params)
-    @article.attributes = Ora.validateWorkflow(article_params)
-    respond_to do |format|
-      if @article.save
-        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
+    if article_params.has_key?(:workflows_attributes)
+      # Send created email if workflow status is submitted
+      if @article.workflows.first.entries.first.status == ["Draft"] && article_params[:workflows_attributes].has_key?(:entries_attributes) && article_params[:workflows_attributes][:entries_attributes][:status] == 'Submitted'
+        rt = Ora::RtClient.new
+        ans = rt.create(current_user.user_key, current_user.user_key, article_url(@article), 'Article')
+        article_params[:workflows_attributes][:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
       end
+      # Save workflow step
+      @article.attributes = Ora.validateWorkflow(article_params, current_user.user_key, @article)
+      respond_to do |format|
+        if @article.save
+          format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: 'edit' }
+          format.json { render json: @article.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      format.html { render action: 'edit' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     end
-
   end
 
   def revoke_permissions
