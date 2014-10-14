@@ -17,6 +17,7 @@ jetty
 /log/*.log
 /tmp
 #Ignore all of the cookies files
+.rtclientrc
 /rt_cookies/*
 #Committing Gemfile.lock before upgrading to sufia 4.0
 #Gemfile.lock
