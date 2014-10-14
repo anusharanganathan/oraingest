@@ -11,10 +11,18 @@ class SolrDocument
     Array(self[Solrizer.solr_name('desc_metadata__subtitle', :stored_searchable)]).first
   end
 
+  def abstract
+    Array(self[Solrizer.solr_name('desc_metadata__abstract', :stored_searchable)]).first
+  end
+
   def medium
     Array(self[Solrizer.solr_name('desc_metadata__medium', :stored_searchable)]).first
   end
 
+  def keywords
+    Array(self[Solrizer.solr_name("desc_metadata__keyword", :stored_searchable)])
+  end
+ 
   def publicationStatus
     Array(self[Solrizer.solr_name('desc_metadata__publicationStatus', :stored_searchable)]).first
   end
@@ -59,8 +67,9 @@ class SolrDocument
     Array(self[Solrizer.solr_name('desc_metadata__subjectAuthority', :stored_searchable)]).first
   end
   
-  def creator
-    Array(self[Solrizer.solr_name('desc_metadata__creator', :displayable)])
+  def creators
+    ans = Array(self[Solrizer.solr_name('desc_metadata__creator', :displayable)])
+    ans = ans.map{|a| JSON.parse(a) }
   end
  
   def license
@@ -218,7 +227,23 @@ class SolrDocument
   def contributor
     Array(self[Solrizer.solr_name('desc_metadata__contributor', :stored_searchable)]).first
   end
- 
+
+  def model
+    get(Solrizer.solr_name("has_model", :symbol))
+  end
+
+  def modelName
+    get("active_fedora_model_ssi")
+  end
+
+  def dateCreated
+    get("system_create_dtsi")
+  end
+
+  def dateModified
+    get("system_modified_dtsi")
+  end
+
   # Email uses the semantic field mappings below to generate the body of an email.
   SolrDocument.use_extension( Blacklight::Solr::Document::Email )
   
