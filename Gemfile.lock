@@ -233,8 +233,6 @@ GEM
     parslet (1.6.1)
       blankslate (~> 2.0)
     polyglot (0.3.5)
-    protected_attributes (1.0.8)
-      activemodel (>= 4.0.1, < 5.0)
     qa (0.3.0)
       activerecord-import
       deprecation
@@ -308,6 +306,8 @@ GEM
       rspec-mocks (~> 3.1.0)
       rspec-support (~> 3.1.0)
     rspec-support (3.1.1)
+    rt-client (0.8.0)
+      rest-client (>= 0.9)
     rubydora (1.7.5)
       activemodel
       activesupport
@@ -429,10 +429,10 @@ DEPENDENCIES
   jquery-rails
   kaminari!
   paperclip (>= 3.1.0)
-  protected_attributes
   qa
   rails (= 4.0.3)
   rspec-rails
+  rt-client
   sass-rails (~> 4.0.0)
   sdoc
   sqlite3
