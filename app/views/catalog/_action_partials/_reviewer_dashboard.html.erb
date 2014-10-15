@@ -1,0 +1,9 @@
+<% if can? :review, :all %>
+  <div class="actions">
+    <div class="row">
+      <div class="control-group">
+        <a href="<%= reviewer_dashboard_index_path %>"><button class="btn btn-large"><h2><i class="icon-dashboard icon-large"></i>&nbsp;&nbsp; Review submissions</h2></button></a>
+      </div>
+    </div>
+  </div>
+<% end %>

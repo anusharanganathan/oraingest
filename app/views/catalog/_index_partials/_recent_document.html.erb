@@ -1,0 +1,13 @@
+<tr>
+  <td class="span5"><%= counter + 1 %></td>
+  <td>
+    <h3>
+      <% path = url_for(:controller => document.modelName.downcase.pluralize, :action=>'show', :id => document.id) %>
+      <%= link_to truncate(document.title_or_label, :length => 28, :separator => ' '), path, :title => document.title_or_label  %>
+    </h3>
+    <% document.creators.each do |c| %>
+      <%= render :partial => 'catalog/_index_partials/creator', :locals => {:creator=>c} %>
+    <% end %>
+    <div class="label"><%= document.submission_workflow_status %></div>
+  </td>
+</tr>

@@ -27,6 +27,8 @@ class CatalogController < ApplicationController
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
 
+  layout :search_layout
+
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, :only=>:show
   # This applies appropriate access controls to all solr queries
@@ -38,9 +40,13 @@ class CatalogController < ApplicationController
 
   def index
     super
-    recent
+    #recent
     #also grab my recent docs too
-    recent_me    
+    #recent_me
+    #grab my recent publications
+    my_recent_publications
+    #grab my recent publications
+    my_recent_datasets
   end
 
   def recent
@@ -58,6 +64,20 @@ class CatalogController < ApplicationController
     if user_signed_in?
       (_, @recent_user_documents) = get_search_results(:q =>filter_not_mine,
                                         :sort=>sort_field, :rows=>4)
+    end
+  end
+
+  def my_recent_publications
+    if user_signed_in?
+      (_, @recent_publications) = get_search_results(:q =>filter_mine_publications,
+                                        :sort=>sort_field, :rows=>5)
+    end
+  end
+
+  def my_recent_datasets
+    if user_signed_in?
+      (_, @recent_datasets) = get_search_results(:q =>filter_mine_datasets,
+                                        :sort=>sort_field, :rows=>5)
     end
   end
 
@@ -377,12 +397,24 @@ class CatalogController < ApplicationController
     Solrizer.solr_name('depositor', :stored_searchable, type: :string)
   end
 
+  def s_model
+    Solrizer.solr_name("has_model", :symbol)
+  end
+
   def filter_not_mine 
     "{!lucene q.op=AND df=#{depositor}}-#{current_user.user_key}"
   end
 
+  def filter_mine_publications
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{s_model}:\"info:fedora/afmodel:Dataset\""
+  end
+
+  def filter_mine_datasets
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
+  end
+
   def sort_field
-    "#{Solrizer.solr_name('system_create', :sortable)} desc"
+    "#{Solrizer.solr_name('system_modified', :sortable)} desc"
   end
 
 
