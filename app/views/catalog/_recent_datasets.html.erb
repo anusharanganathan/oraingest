@@ -1,4 +1,4 @@
-<% msg = '' if msg.blank? and current_user.blank? %>
+<% msg = 'Login to see your recently added datasets' if msg.blank? and current_user.blank? %>
 <% msg = 'You have no datasets to display. Contribute some of your datasets!' if msg.blank? %>
 <div>
   <% if recent_datasets.blank? %>
