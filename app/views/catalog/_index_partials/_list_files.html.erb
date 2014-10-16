@@ -1,7 +1,6 @@
 <li>
   <h2>
-    <% path = url_for(:controller => document.modelName.downcase.pluralize, :action=>'show', :id => document.id) %>
-    <%= link_to document.title_or_label, path %>
+    <%= link_to document.title_or_label, document_url(document.modelName, 'show', document.id) %>
     <!-- <small>[<%# = link_to 'Download', sufia.download_path(document.noid), :target => '_new' %>]</small> -->
   </h2>
   <table class="table">
