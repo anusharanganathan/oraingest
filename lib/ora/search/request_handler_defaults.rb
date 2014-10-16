@@ -104,6 +104,78 @@ module Ora
             }
           end
 
+          config.add_search_field('publisher') do |field|
+            field.solr_parameters = {
+              :"spellcheck.dictionary" => "publisher"
+            }
+            solr_name = solr_name("desc_metadata__publisher", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('date_created') do |field|
+            field.solr_parameters = {
+              :"spellcheck.dictionary" => "date_created"
+            }
+            solr_name = solr_name("desc_metadata__created", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('subject') do |field|
+            field.solr_parameters = {
+              :"spellcheck.dictionary" => "subject"
+            }
+            solr_name = solr_name("desc_metadata__subject", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('language') do |field|
+            field.solr_parameters = {
+              :"spellcheck.dictionary" => "language"
+            }
+            solr_name = solr_name("desc_metadata__language", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('identifier') do |field|
+            field.include_in_advanced_search = false
+            field.solr_parameters = {
+              :"spellcheck.dictionary" => "identifier"
+            }
+            solr_name = solr_name("desc_metadata__id", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('depositor') do |field|
+            solr_name = solr_name("desc_metadata__depositor", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
+          config.add_search_field('rights') do |field|
+            solr_name = solr_name("desc_metadata__rights", :stored_searchable, type: :string)
+            field.solr_local_parameters = {
+              :qf => solr_name,
+              :pf => solr_name
+            }
+          end
+
         end
       end
     end

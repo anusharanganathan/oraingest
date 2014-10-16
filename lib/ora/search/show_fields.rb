@@ -4,8 +4,15 @@ module Ora
       extend ActiveSupport::Concern
       included do
         configure_blacklight do |config|
+          # solr field configuration for search results/index views
+          config.index.show_link = solr_name("desc_metadata__title", :displayable)
+          config.index.record_display_type = "id"
+          # solr field configuration for document/show views
+          config.show.html_title = solr_name("desc_metadata__title", :displayable)
+          config.show.heading = solr_name("desc_metadata__title", :displayable)
+          config.show.display_type = solr_name("has_model", :symbol)
           # solr fields to be displayed in the show (single result) view
-          #   The ordering of the field names is the order of the display
+          # The ordering of the field names is the order of the display
           config.add_show_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
           config.add_show_field solr_name("desc_metadata__subtitle", :stored_searchable, type: :string), :label => "Subtitle"
           config.add_show_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
