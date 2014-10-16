@@ -38,11 +38,7 @@
             </div>
             <div class="fields">
               <%= f.label "workflows_attributes_entries_attributes_reviewer_id", "Reviewer", :class=>"control-label" %>
-              <% if wf.current_reviewer.nil? %>
-                <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => wf.current_reviewer, :id => "workflows_entires_reviewer_id" %>
-              <% else %>
-                <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => wf.current_reviewer.user_key, :id => "workflows_entires_reviewer_id" %>
-              <% end %>
+              <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id" %>
             </div>
             <div class="fields">
               <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
