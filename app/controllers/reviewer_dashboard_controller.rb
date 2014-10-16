@@ -1,7 +1,7 @@
 require 'blacklight/catalog'
 class ReviewerDashboardController < ApplicationController
   include  Sufia::DashboardControllerBehavior
-  
+  layout "sufia-two-column"    
   # Remove the solr_search_params_logic that we don't want applied 
   # (No advanced search & Don't apply the Hydra gated discovery, which filters out all things that don't list you in their permissions.)
   # See: https://github.com/projectblacklight/blacklight/wiki/Extending-or-Modifying-Blacklight-Search-Behavior
@@ -25,7 +25,7 @@ class ReviewerDashboardController < ApplicationController
   private
   
   def restrict_access_to_reviewers
-    unless can? :review, GenericFile
+    unless can? :review, :all
       raise Hydra::AccessDenied.new("You do not have permission to review submissions.", :review_submissions, params[:id])
     end 
   end
