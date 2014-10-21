@@ -8,9 +8,13 @@ module Ora
       @queue = queue
     end
   
-    def create(name, email, url, type)
-      @cont = ApplicationController.new.render_to_string :partial => "/shared/emails/record_submitted", :locals => { :name => name, :url => url } 
-      @ans = @rt.create(:Queue => @queue, :Subject => "Record submitted to ORA", :Requestor => email, :Cc => email, :Text => @cont)
+    def email_content(template, data)
+      @cont = ApplicationController.new.render_to_string :partial => template, :locals => { :data => data } rescue nil
+      return @cont
+    end
+
+    def create_ticket(subject, email_address, content)
+      @ans = @rt.create(:Queue => @queue, :Subject => subject, :Requestor => email_address, :Cc => email_address, :Text => content)
       return @ans
     end
 
