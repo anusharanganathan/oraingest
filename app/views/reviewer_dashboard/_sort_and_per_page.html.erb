@@ -1,6 +1,6 @@
 <div class="batch-info"> 
   <% unless @response.response['numFound'] < 2 %>
-    <%= form_tag publications_path, :method=>:get, :class=>'per_page form-inline' do %>
+    <%= form_tag reviewer_dashboard_index_path, :method=>:get, :class=>'per_page form-inline' do %>
       <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
       <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort])), :class => "span15") %>			      
       &nbsp;&nbsp;&nbsp;
