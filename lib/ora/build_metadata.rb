@@ -37,48 +37,48 @@ module Ora
   end
 
   def validateWorkflow(params, depositor, article)
-    if params.has_key?(:workflows_attributes)
-      if !params[:workflows_attributes].kind_of?(Array)
-        params[:workflows_attributes] = [params[:workflows_attributes]]
+    if params
+      unless params.kind_of?(Array)
+        params = [params]
       end
-      if params[:workflows_attributes][0].has_key?(:entries_attributes)
+      if params[0].has_key?(:entries_attributes)
         # Validate entries is array
-        if !params[:workflows_attributes][0][:entries_attributes].kind_of?(Array)
-          params[:workflows_attributes][0][:entries_attributes] = [params[:workflows_attributes][0][:entries_attributes]]
+        unless params[0][:entries_attributes].kind_of?(Array)
+          params[0][:entries_attributes] = [params[0][:entries_attributes]]
         end
-        if params[:workflows_attributes][0][:entries_attributes][0][:status].nil? || params[:workflows_attributes][0][:entries_attributes][0][:status].empty? || article.workflows.first.current_status == params[:workflows_attributes][0][:entries_attributes][0][:status]
-          params[:workflows_attributes][0] = params[:workflows_attributes][0].except(:entries_attributes)
-          #params[:workflows_attributes][0][:entries_attributes][0][:status] = nil
-          #params[:workflows_attributes][0][:entries_attributes][0][:date] = nil
-          #params[:workflows_attributes][0][:entries_attributes][0][:creator] = nil
-          #params[:workflows_attributes][0][:entries_attributes][0][:creator] = nil
-          #params[:workflows_attributes][0][:entries_attributes][0][:reviewer_id] = nil
+        if params[0][:entries_attributes][0][:status].nil? || params[0][:entries_attributes][0][:status].empty? || article.workflows.first.current_status == params[0][:entries_attributes][0][:status]
+          params[0] = params[0].except(:entries_attributes)
+          #params[0][:entries_attributes][0][:status] = nil
+          #params[0][:entries_attributes][0][:date] = nil
+          #params[0][:entries_attributes][0][:creator] = nil
+          #params[0][:entries_attributes][0][:creator] = nil
+          #params[0][:entries_attributes][0][:reviewer_id] = nil
         else
           # Set creator to user logged in
-          params[:workflows_attributes][0][:entries_attributes][0][:creator] = [depositor]
-          params[:workflows_attributes][0][:entries_attributes][0][:date] = [Time.now.to_s]
+          params[0][:entries_attributes][0][:creator] = [depositor]
+          params[0][:entries_attributes][0][:date] = [Time.now.to_s]
         end
       end
-      if params[:workflows_attributes][0].has_key?(:emailThreads_attributes)
+      if params[0].has_key?(:emailThreads_attributes)
         # Validate emailThreads is array
-        if !params[:workflows_attributes][0][:emailThreads_attributes].kind_of?(Array)
-          params[:workflows_attributes][0][:emailThreads_attributes] = [params[:workflows_attributes][0][:emailThreads_attributes]]
+        if !params[0][:emailThreads_attributes].kind_of?(Array)
+          params[0][:emailThreads_attributes] = [params[0][:emailThreads_attributes]]
         end
       end
-      if params[:workflows_attributes][0].has_key?(:comments_attributes)
+      if params[0].has_key?(:comments_attributes)
         # Validate comments is array
-        if !params[:workflows_attributes][0][:comments_attributes].kind_of?(Array)
-          params[:workflows_attributes][0][:comments_attributes] = [params[:workflows_attributes][0][:comments_attributes]]
+        if !params[0][:comments_attributes].kind_of?(Array)
+          params[0][:comments_attributes] = [params[0][:comments_attributes]]
         end
         # Add date and creator if not empty, else set to nil
-        if params[:workflows_attributes][0][:comments_attributes][0][:description].nil? || params[:workflows_attributes][0][:comments_attributes][0][:description].empty?
-          params[:workflows_attributes][0] = params[:workflows_attributes][0].except(:comments_attributes)
-          #params[:workflows_attributes][0][:comments_attributes][0][:description] = nil
-          #params[:workflows_attributes][0][:comments_attributes][0][:date] = nil
-          #params[:workflows_attributes][0][:comments_attributes][0][:creator] = nil
+        if params[0][:comments_attributes][0][:description].nil? || params[0][:comments_attributes][0][:description].empty?
+          params[0] = params[0].except(:comments_attributes)
+          #params[0][:comments_attributes][0][:description] = nil
+          #params[0][:comments_attributes][0][:date] = nil
+          #params[0][:comments_attributes][0][:creator] = nil
         else
-          params[:workflows_attributes][0][:comments_attributes][0][:date] = [Time.now.to_s]
-          params[:workflows_attributes][0][:comments_attributes][0][:creator] = [depositor]
+          params[0][:comments_attributes][0][:date] = [Time.now.to_s]
+          params[0][:comments_attributes][0][:creator] = [depositor]
         end
       end 
     end
@@ -562,10 +562,13 @@ module Ora
     article
   end
 
-  def buildMetadata(params, article, contents)
+  def buildMetadata(params, article, contents, depositor)
     # Validate permissions
     if params.has_key?(:permissions_attributes)
       params[:permissions_attributes] = Ora.validatePermissions(params[:permissions_attributes])
+    end
+    if params.has_key?(:workflows_attributes)
+      params[:workflows_attributes] = Ora.validateWorkflow(params[:workflows_attributes], depositor, article)
     end
     article.attributes = params
 

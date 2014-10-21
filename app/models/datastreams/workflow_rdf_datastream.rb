@@ -1,3 +1,5 @@
+require 'ora/rt_client'
+
 class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
   property :depositor
   property :workflow
@@ -24,6 +26,41 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   def current_statuses
     self.workflows.map {|wf| wf.current_status }
   end
+
+  def send_email(wf_id, data, model)
+    # data hash to include name, email_address, record_id, record_url 
+    # If ticket was created successfully, should return ticket number
+    # if there was an error getting the content, should return false
+    # If no email is configured to be sent, should return nil
+    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
+    if wf && Sufia.config.email_options.keys.include?(model.downcase) && Sufia.config.email_options[model.downcase].include?(wf.current_status)
+      occurences = wf.all_statuses.select{|s| s == wf.current_status}
+      occurence = Sufia.config.email_options[model.downcase][wf.current_status]['occurence']
+      template = Sufia.config.email_options[model.downcase][wf.current_status]['template']
+      subject = Sufia.config.email_options[model.downcase][wf.current_status]['subject'].gsub('ID', data['record_id'])
+      if (occurence == "first" && occurences.length == 1) || occurence == "all"
+        rt = Ora::RtClient.new
+        content = rt.email_content(template, data)
+        if content
+          ans = rt.create_ticket(subject, data['email_address'], content)
+          is_number = true if Float(ans) rescue false
+          if ans and is_number
+            email_params = { :id => wf.rdf_subject.to_s }
+            email_params[:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
+            return email_params
+          else
+            return false
+          end
+        else
+          return false
+        end
+      else
+        return nil
+      end
+    else
+      return nil
+    end
+  end 
   
   def to_solr(solr_doc={})
     super
@@ -65,6 +102,14 @@ class Workflow
     end
   end
   
+  def all_statuses
+    if self.entries.empty?
+      return nil
+    else
+      return self.entries.map{|e| e.status.first}.reject{|v| v.nil? || v.empty? }
+    end
+  end
+
   # Returns the User matching the reviewer id on last entry in the workflow
   # Returns nil if no reviewer_id available or if the reviewer_id does not match any existing Users
   def current_reviewer
