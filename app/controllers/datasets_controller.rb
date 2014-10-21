@@ -459,7 +459,7 @@ class DatasetsController < ApplicationController
       dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
       dataset_agreement_params[:agreementType] = "Individual"
       dataset_agreement_params[:contributor] = current_user.user_key
-      @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [])
+      @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [], current_user.user_key)
       if !@dataset_agreement.save
         @dataset_agreement = nil
       end 
