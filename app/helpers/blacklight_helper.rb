@@ -9,11 +9,10 @@ module BlacklightHelper
     actions = ['index', 'show', 'new', 'edit', 'destroy']
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
     path = ""
-    puts "============================"
-    puts actions.include?(action)
-    puts models.keys.include?(model)
-    puts "============================"
     if actions.include?(action) && models.keys.include?(model)
+      if action == 'edit' and model == 'Article' and can? :review, :all
+        action = "edit_detailed"
+      end
       begin
         if id
           path = url_for(:controller => models[model], :action=>action, :id => id)

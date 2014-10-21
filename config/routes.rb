@@ -30,6 +30,7 @@ OraHydra::Application.routes.draw do
 
   resources :articles
   delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
+  get 'articles/:id/detailed/edit', to: 'articles#edit_detailed'
   
   resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
