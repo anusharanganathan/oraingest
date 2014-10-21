@@ -570,50 +570,59 @@ module Ora
     if params.has_key?(:workflows_attributes)
       params[:workflows_attributes] = Ora.validateWorkflow(params[:workflows_attributes], depositor, article)
     end
-    article.attributes = params
 
     #remove_blank_assertions for language and build
     if params.has_key?(:language)
       article = Ora.buildLanguage(params[:language], article)
+      params.except!(:language)
     end
 
     #remove_blank_assertions for subject and build
     if params.has_key?(:subject)
       article = Ora.buildSubject(params[:subject], article)
+      params.except!(:subject)
     end
 
     # Remove blank assertions for worktype and build
     if params.has_key?(:worktype)
       article = Ora.buildWorktype(params[:worktype], article)
+      params.except!(:worktype)
     end
 
     #Remove blank assertions for temporal coverage and build
     if params.has_key?(:temporal)
       article = Ora.buildTemporalData(params[:temporal], article)
+      params.except!(:temporal)
     end
 
     #Remove blank assertions for date collected and build
     if params.has_key?(:dateCollected)
       article = Ora.buildDateCollected(params[:dateCollected], article)
+      params.except!(:dateCollected)
     end
 
     #Remove blank assertions for spatial coverage and build
     if params.has_key?(:spatial)
       article = Ora.buildSpatialData(params[:spatial], article)
+      params.except!(:spatial)
     end
 
     if params.has_key?(:storageAgreement)
       article = Ora.buildStorageAgreementData(params[:storageAgreement], article)
+      params.except!(:storageAgreement)
     end
 
     # Remove blank assertions for rights activity and build
     if params.has_key?(:license) || params.has_key?(:rights)
       article = Ora.buildRightsActivity(params, article)
+      params.except!(:license)
+      params.except!(:rights)
     end
 
     #remove_blank_assertions for publication activity and build
     if params.has_key?(:publication)
       article = Ora.buildPublicationActivity(params[:publication], article)
+      params.except!(:publication)
     end
     # get the publication date to calculate embargo dates for access rights
     if article.class.to_s != "DatasetAgreement"
@@ -625,45 +634,52 @@ module Ora
 
     # Remove blank assertions for dataset access rights and build
     if params.has_key?(:accessRights)
-      #ar = Ora.validateEmbargoDates(params[:accessRights], "info:fedora/#{article.id}", datePublished)
       article = Ora.buildAccessRights(params[:accessRights], article, datePublished)
+      params.except!(:accessRights)
     end
 
     # Remove blank assertions for internal relations and build
     if params.has_key?(:hasPart)
       article = Ora.buildInternalRelations(params[:hasPart], article, datePublished, contents)
+      params.except!(:hasPart)
     end
 
     #remove_blank_assertions for external relations and build
     if params.has_key?(:qualifiedRelation)
       article = Ora.buildExternalRelations(params[:qualifiedRelation], article)
+      params.except!(:qualifiedRelation)
     end
 
     #remove_blank_assertions for funding activity and build
     if params.has_key?(:funding)
       article = Ora.buildFundingActivity(params[:funding], article)
+      params.except!(:funding)
     end
 
     #remove_blank_assertions for creation activity and build
     if params.has_key?(:creation)
       article = Ora.buildCreationActivity(params[:creation], article)
+      params.except!(:creation)
     end
 
     #remove_blank_assertions for titular stewardship activity and build
     if params.has_key?(:titularActivity)
       article = Ora.buildTitularActivity(params[:titularActivity], article)
+      params.except!(:titularActivity)
     end
 
     #Remove blank assertions for validity date and build
     if params.has_key?(:valid)
       article = Ora.buildValidityDate(params[:valid], article)
+      params.except!(:valid)
     end
 
     #Remove blank assertions for invoice details and build
     if params.has_key?(:invoice)
       article = Ora.buildInvoiceData(params[:invoice], article)
+      params.except!(:invoice)
     end
-
+    article.attributes = params
     article
   end
 

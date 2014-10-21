@@ -23,7 +23,6 @@ require 'parsing_nesting/tree'
 
 require "utils"
 require 'ora/build_metadata'
-require 'ora/rt_client'
 
 require 'json'
 
@@ -130,11 +129,7 @@ class DatasetsController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:dataset)
-      if params[:dataset].has_key?(:workflows_attributes)
-        add_workflow(params[:dataset])
-      else
-        add_metadata(params[:dataset])
-      end
+      add_metadata(params[:dataset])
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -149,11 +144,7 @@ class DatasetsController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif dataset_params
-      if params[:dataset].has_key?(:workflows_attributes)
-        add_workflow(params[:dataset])
-      else
-        add_metadata(params[:dataset])
-      end
+      add_metadata(params[:dataset])
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -346,31 +337,6 @@ class DatasetsController < ApplicationController
     json_error "Error creating generic file: #{af.message}"
   end
 
-  def add_workflow(dataset_params)
-    if dataset_params.has_key?(:workflows_attributes)
-      # Send created email if workflow status is submitted
-      if @dataset.workflows.first.entries.first.status == ["Draft"] && dataset_params[:workflows_attributes].has_key?(:entries_attributes) && dataset_params[:workflows_attributes][:entries_attributes][:status] == 'Submitted'
-        rt = Ora::RtClient.new
-        ans = rt.create(current_user.user_key, current_user.user_key, dataset_url(@dataset), 'Dataset')
-        dataset_params[:workflows_attributes][:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
-      end
-      # Save workflow step
-      @dataset.attributes = Ora.validateWorkflow(params[:dataset], current_user.user_key, @dataset)
-      respond_to do |format|
-        if @dataset.save
-          format.html { redirect_to dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: 'edit' }
-          format.json { render json: @dataset.errors, status: :unprocessable_entity }
-        end
-      end
-    else
-      format.html { render action: 'edit' }
-      format.json { render json: @dataset.errors, status: :unprocessable_entity }
-    end
-  end
-
   def revoke_permissions
     if params.has_key?(:dataset) && params[:dataset].has_key?(:permissions_attributes)
       dataset_params = Ora.validatePermissionsToRevoke(params[:dataset], @dataset.workflowMetadata.depositor[0])
@@ -400,19 +366,43 @@ class DatasetsController < ApplicationController
       dataset_params[:hasAgreement] = @dataset_agreement.id
     end
     # Update params
-    @dataset = Ora.buildMetadata(dataset_params, @dataset, contents)
+    @dataset = Ora.buildMetadata(dataset_params, @dataset, contents, current_user.user_key)
     if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
-      @dataset.medium = Sufia.config.data_medium["Digital"]
+      @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
     respond_to do |format|
       if @dataset.save
+        saveAgain = false
         # Associate the dataset agreement to the dataset
         if @dataset_agreement
           @dataset.hasRelatedAgreement = @dataset_agreement
-          @dataset.save
+          saveAgain = true
         end
-        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-        format.json { head :no_content }
+        # Send email
+        data = {
+          "name" => current_user.user_key, 
+          "email_address" => current_user.user_key,
+          "record_id" => @dataset.id,
+          "record_url" => dataset_url(@dataset)
+        }
+        ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, "Dataset")
+        if ans
+          dataset_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @dataset)
+          @dataset.attributes = dataset_params
+          saveAgain = true
+        end
+        if saveAgain 
+          if @dataset.save
+            format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+            format.json { head :no_content }
+          else
+            format.html { render action: 'edit' }
+            format.json { render json: @dataset.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+          format.json { head :no_content }
+        end
       else
         # If a dataset agreement was created newly, roll back changes
         if @dataset_agreement and created
