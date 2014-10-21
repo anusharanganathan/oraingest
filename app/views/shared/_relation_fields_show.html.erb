@@ -1,4 +1,13 @@
-<% if !article.qualifiedRelation.empty? %>
+<% if !article.qualifiedRelation.nil? %>
+  <% hasData = false %>
+  <% article.qualifiedRelation.each do |r|%>
+    <% if !r.relation.empty? && !r.relation[0].empty? && !r.entity.nil? && !r.entity[0].nil? %>
+      <% hasData = true %>
+    <% end %>    
+  <% end %>
+<% end %>
+
+<% if hasData %>
   <div class="well">
     <div class="row">
       <div class="control-group">
@@ -6,19 +15,19 @@
           <p><strong>Related resources:</strong></p>
           <% article.qualifiedRelation.each do |r|%>
             <div>
-            <% if !r.entity.empty? %>
-              <% if !r.entity[0].title.empty? %>
+            <% if !r.relation.empty? && !r.relation[0].empty? && !r.entity.nil? && !r.entity[0].nil? %>
+              <% if !r.entity[0].title.empty? && !r.entity[0].title[0].empty? %>
                 <span><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></span>
               <% else %>
                 <span><%=link_to r.entity[0].id %></span>
               <% end %><br/>
-              <% if !r.relation.empty? %>
+              <% if !r.relation.empty? && !r.relation[0].empty? %>
                 <span><%= article.title.first %> <strong><%= r.relation.first %></strong> <%= r.entity[0].rdf_subject.to_s %></span>
               <% end %>      
-              <% if !r.entity[0].description.empty? %>
+              <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
                 <span><%= r.entity[0].description.first %></span>
               <% end %>
-              <% if !r.entity[0].citation.empty? %>
+              <% if !r.entity[0].citation.empty? && !r.entity[0].citation[0].empty? %>
                 <span><%= r.entity[0].citation.first %></span>
               <% end %>
             <% end %>

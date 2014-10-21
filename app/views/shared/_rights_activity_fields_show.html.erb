@@ -1,5 +1,5 @@
 <% haslData = false %>
-<% if !article.license.empty? %>
+<% if !article.license.nil? %>
   <% article.license.each do |l|%>
     <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) || (!l.licenseStatement.empty? && !l.licenseStatement.first.empty?) %>
       <% haslData = true %>
@@ -11,7 +11,7 @@
 <% if !article.rightsHolder.empty? || (!article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty?) || (!article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty?) %>
   <% hasrData = true %>
 <% end %>
-<% if !article.rights.empty? %>
+<% if !article.rights.nil? %>
   <% article.rights.each do |r| %>
     <% if !r.rightsStatement.empty? && !r.rightsStatement.first.empty? %>
       <% hasrData = true %>
@@ -66,7 +66,7 @@
               <span><%= article.dateCopyrighted.first %></span>
             </p>
           <% end %>
-          <% if !article.rights.empty? %>
+          <% if !article.rights.nil? %>
             <% article.rights.each do |r|%>
               <% if !r.rightsStatement.empty? && !r.rightsStatement.first.empty? %>
                 <p>

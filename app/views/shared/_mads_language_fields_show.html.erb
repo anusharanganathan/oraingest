@@ -1,6 +1,6 @@
 <% hasData = false %>
 <% article.language.each do |l| %>
-  <% if !l.languageLabel.empty? %>
+  <% if !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
     <% hasData = true %>
   <% end %>
 <% end %>
@@ -9,18 +9,18 @@
     <p><strong>Language:</strong></p>
     <% article.language.each do |l|%>
       <div>
-        <% if !l.languageAuthority.empty? and !l.languageLabel.empty? %>
+        <% if !l.languageAuthority.empty? && !l.languageAuthority.first.empty? && !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
           <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
-        <% elsif !l.languageLabel.empty? %>
+          <% if !l.languageCode.empty? && !l.languageCode.first.empty? && !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
+            <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
+          <% elsif !l.languageCode.empty? && !l.languageCode.first.empty? %>
+            <span>(<%= l.languageCode.first %>)</span>
+          <% elsif !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
+            <span>(<%= l.languageScheme.first %>)</span>
+        <% elsif !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
           <span><%= l.languageLabel.first %></span>
         <% end %>
-        <% if !l.languageCode.empty? and !l.languageScheme.empty? %>
-          <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
-        <% elsif !l.languageCode.empty? %>
-          <span>(<%= l.languageCode.first %>)</span>
-        <% elsif !l.languageScheme.empty? %>
-          <span>(<%= l.languageScheme.first %>)</span>
-        <% end %>
+          <% end %>
       </div>
     <% end %>
   </div><!-- /language -->

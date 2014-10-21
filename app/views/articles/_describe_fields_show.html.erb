@@ -1,11 +1,11 @@
 <p id="notice"><%= notice %></p>
-<% if !article.title.empty? %>
+<% if !article.title.empty? && !article.title[0].empty? %>
   <h1><%= article.title.first %></h1>
 <% else %>
   <h1>Article</h1>
 <% end %>
       
-<% if !article.subtitle.empty? %>
+<% if !article.subtitle.empty? && !article.subtitle[0].empty? %>
   <h2><%= article.subtitle.first %></h2>
 <% end %>
 
@@ -17,14 +17,14 @@
     <div class="control-group">
       <%= render partial: "shared/work_type_fields_show", :locals => { :article => @article } %>
       
-      <% if !article.abstract.empty? %>
+      <% if !article.abstract.empty? && !article.abstract[0].empty? %>
       <p>
         <strong>Abstract:</strong>
         <%= article.abstract.first %>
       </p>
       <% end %>
       
-      <% if !article.medium.empty? %>
+      <% if !article.medium.empty? && !article.medium[0].empty? %>
       <p>
         <strong>Medium or material:</strong>
         <%= article.medium.first %>

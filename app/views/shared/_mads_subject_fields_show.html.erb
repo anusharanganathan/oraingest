@@ -1,6 +1,6 @@
 <% hasData = false %>
 <% article.subject.each do |s| %>
-  <% if !s.subjectLabel.empty? %>
+  <% if !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
     <% hasData = true %>
   <% end %>
 <% end %>
@@ -9,13 +9,13 @@
     <p><strong>Subject:</strong></p>
     <% article.subject.each do |s|%>
       <div>
-        <% if !s.subjectAuthority.empty? and !s.subjectLabel.empty? %>
+        <% if !s.subjectAuthority.empty? && !s.subjectAuthority.first.empty? && !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
           <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>
-        <% elsif !s.subjectLabel.empty? %>
+          <% if !s.subjectScheme.empty? && !s.subjectScheme.first.empty? %>
+            <span>(<%= s.subjectScheme.first %>)</span>
+          <% end %>
+        <% elsif !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
           <span><%= s.subjectLabel.first %></span>
-        <% end %>
-        <% if !s.subjectScheme.empty? %>
-          <span>(<%= s.subjectScheme.first %>)</span>
         <% end %>
       </div>
     <% end %>
