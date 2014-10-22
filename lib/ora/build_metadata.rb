@@ -121,8 +121,8 @@ module Ora
   def buildWorktype(params, article)
     params = params.except(:typeAuthority)
     article.worktype = nil
+    model = article.class.to_s.downcase
     if !params[:typeLabel].empty?
-      model = article.class.to_s.downcase
       if Sufia.config.type_authorities[model].include?(params[:typeLabel])
         params[:typeAuthority] = Sufia.config.type_authorities[model][params[:typeLabel]]
       end
