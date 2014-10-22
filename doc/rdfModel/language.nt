@@ -1,0 +1,6 @@
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/language> <info:fedora/sufia:2z10wt94t#language> .
+<info:fedora/sufia:2z10wt94t#language> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Language> .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "English" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#code> "info:lc/vocabulary/iso639-2/eng" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#hasExactExternalAuthority> "http://id.loc.gov/vocabulary/iso639-2/eng" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> "iso639-2" .

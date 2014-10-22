@@ -1,5 +1,5 @@
 <p id="notice"><%= notice %></p>
-<% if !@dataset_agreement.title.empty? %>
+<% if !@dataset_agreement.title.empty? && !@dataset_agreement.title[0].empty? %>
   <h1><%= @dataset_agreement.title.first %></h1>
 <% else %>
   <h1>Dataset agreement</h1>
@@ -11,7 +11,7 @@
 <div class="well">
   <div class="row">
     <div class="control-group">
-      <% if !@dataset_agreement.digitalSizeAllocated.empty? %>
+      <% if !@dataset_agreement.digitalSizeAllocated.empty? && !@dataset_agreement.digitalSizeAllocated[0].empty? %>
       <p>
         <strong>Size of allocated storage:</strong>
         <%= @dataset_agreement.digitalSizeAllocated.first %>
@@ -27,43 +27,43 @@
       </p>
       <% end %>
 
-      <% if !@dataset_agreement.annotation.empty? %>
+      <% if !@dataset_agreement.annotation.empty? && !@dataset_agreement.annotation[0].empty? %>
       <p>
         <strong>Archiving payment option:</strong>
         <%= @dataset_agreement.annotation.first %>
       </p>
       <% end %>
       
-      <% if !@dataset_agreement.invoice.empty? && (!@dataset_agreement.invoice.first.identifier.empty? || @dataset_agreement.invoice.first.source.empty?) %>
-        <% if !@dataset_agreement.invoice.first.description.empty? %>
+      <% if !@dataset_agreement.invoice.nil? && !@dataset_agreement.invoice[0].nil? && (!@dataset_agreement.invoice.first.identifier.empty? || @dataset_agreement.invoice.first.source.empty?) %>
+        <% if !@dataset_agreement.invoice.first.description.empty? && !@dataset_agreement.invoice.first.description.first.empty? %>
           <p>
             <strong>Archiving payment option details:</strong>
             <%= @dataset_agreement.invoice.first.description.first %>
           </p>
         <% end %>
         <% if can? :review, DatasetAgreement %>
-          <% if !@dataset_agreement.invoice.first.source.empty? %>
+          <% if !@dataset_agreement.invoice.first.source.empty? && !@dataset_agreement.invoice.first.source.first.empty? %>
             <p>
               <strong>Source system invoice was registered / paid in:</strong>
               <%= @dataset_agreement.invoice.first.source.first %>
             </p>
           <% end %>
 
-          <% if !@dataset_agreement.invoice.first.identifier.empty? %>
+          <% if !@dataset_agreement.invoice.first.identifier.empty? && !@dataset_agreement.invoice.first.identifier.first.empty? %>
             <p>
               <strong>Invoice number / id:</strong>
               <%= @dataset_agreement.invoice.first.identifier.first %>
             </p>
           <% end %>
 
-          <% if !@dataset_agreement.invoice.first.monetaryValue.empty? %>
+          <% if !@dataset_agreement.invoice.first.monetaryValue.empty? && !@dataset_agreement.invoice.first.monetaryValue.first.empty? %>
             <p>
               <strong>Monetary value:</strong>
               <%= @dataset_agreement.invoice.first.monetaryValue.first %>
             </p>
           <% end %>
 
-          <% if !@dataset_agreement.invoice.first.monetaryStatus.empty? %>
+          <% if !@dataset_agreement.invoice.first.monetaryStatus.empty? && !@dataset_agreement.invoice.first.monetaryStatus.first.empty? %>
             <p>
               <strong>Monetary status:</strong>
               <%= @dataset_agreement.invoice.first.monetaryStatus.first %>
@@ -73,25 +73,25 @@
       <% end #Invoice details%>
 
       <% if can? :review, DatasetAgreement %>
-        <% if !@dataset_agreement.agreementType.empty? %>
+        <% if !@dataset_agreement.agreementType.empty? && !@dataset_agreement.agreementType.first.empty? %>
         <p>
           <strong>Type:</strong>
           <%= @dataset_agreement.agreementType.first %>     
         </p>
         <% end %>
 
-        <% if !@dataset_agreement.dataStorageSilo.empty? %>
+        <% if !@dataset_agreement.dataStorageSilo.empty? && !@dataset_agreement.dataStorageSilo.first.empty? %>
         <p>
           <strong>Silo allocated for storage:</strong>
           <%= @dataset_agreement.dataStorageSilo.first %>     
         </p>
         <% end %>
 
-        <% if !@dataset_agreement.valid.empty? && !@dataset_agreement.valid.first.start.empty? %>
+        <% if !@dataset_agreement.valid.nil? && !@dataset_agreement.valid.first.start.empty? && !@dataset_agreement.valid.first.start.first.empty? %>
         <p>
           <strong>Agreement validity date:</strong>
           <%= @dataset_agreement.valid.first.start.first %>
-          <% if !@dataset_agreement.valid.first.end.empty? %>
+          <% if !@dataset_agreement.valid.first.end.empty? && !@dataset_agreement.valid.first.end.first.empty? %>
             to <%= @dataset_agreement.valid.first.end.first %>
           <% end %>
         </p>
@@ -99,7 +99,7 @@
 
       <% end #if can review %> 
 
-      <% if !@dataset_agreement.status.empty? %>
+      <% if !@dataset_agreement.status.empty? && !@dataset_agreement.status.first.empty? %>
       <p>
         <strong>Agreement status:</strong>
         <%= @dataset_agreement.status.first %>

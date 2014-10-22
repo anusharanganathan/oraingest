@@ -1,15 +1,7 @@
 <% noid = document.id %>
 <tr id="document_<%= noid %>" class="<%= cycle("","zebra") %>">
-  <% if document['active_fedora_model_ssi'] == 'Article' %>
-    <% path = article_path(noid) %>
-    <% edit_path = edit_article_path(noid) %>
-  <% elsif document['active_fedora_model_ssi'] == 'Dataset'  %>
-    <% path = dataset_path(noid) %>
-    <% edit_path = edit_dataset_path(noid) %>
-  <% else %>
-    <% path = "" %>
-    <% editPath = "" %>
-  <% end %>
+  <% path = document_url(document.modelName, 'show', document.id) %>
+  <% edit_path = document_url(document.modelName, 'edit', document.id) %>
   <td width="1%">
      <a href="<%= edit_path %>"<i class="icon-edit icon-large"></i></a>
   </td>

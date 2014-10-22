@@ -1,0 +1,71 @@
+<info:fedora/sufia:2z10wt94t> <http://www.w3.org/ns/prov#qualifiedInfluence> <info:fedora/sufia:2z10wt94t#qualifiedRelation0> .
+<info:fedora/sufia:2z10wt94t> <http://www.w3.org/ns/prov#wasInfluencedBy> "http://related/item/4" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/accessRights> <info:fedora/sufia:2z10wt94t#accessRights> .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/hasPart> <info:fedora/sufia:2z10wt94t/datastreams/content01> .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/hasPart> <info:fedora/sufia:2z10wt94t/datastreams/content02> .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/hasPart> <info:fedora/sufia:2z10wt94t/datastreams/content03> .
+<info:fedora/sufia:2z10wt94t#accessRights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/spar/pso/PublicationStatus> .
+<info:fedora/sufia:2z10wt94t#accessRights> <http://vocab.ox.ac.uk/ora#embargoStatus> "Embargoed" .
+<info:fedora/sufia:2z10wt94t#accessRights> <http://vocab.ox.ac.uk/ora#embargoReason> "I am dark....Ha! Ha! Ha!" .
+<info:fedora/sufia:2z10wt94t#accessRights> <http://vocab.ox.ac.uk/ora#embargoRelease> "Consult me before lift of embargo" .
+<info:fedora/sufia:2z10wt94t#accessRights> <http://purl.org/spar/fabio/hasEmbargoDuration> <info:fedora/sufia:2z10wt94t#embargoDate> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01> <http://purl.org/dc/terms/identifier> "content01" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01> <http://purl.org/dc/terms/type> "Content" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01> <http://purl.org/dc/terms/description> "Metadata in ntriples - 1st copy" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01> <http://purl.org/dc/terms/accessRights> <info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/spar/pso/PublicationStatus> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> <http://vocab.ox.ac.uk/ora#embargoStatus> "Embargoed" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> <http://vocab.ox.ac.uk/ora#embargoReason> "ehhhhhhh" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> <http://vocab.ox.ac.uk/ora#embargoRelease> "Automatically lift the embargo" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights> <http://purl.org/spar/fabio/hasEmbargoDuration> <info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDate> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/time#TemporalEntity> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDate> <http://www.w3.org/2006/time#hasEnd> <info:fedora/sufia:2z10wt94t/datastreams/content01#embargoEnd> .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoStart> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "31 Jul 2014" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoStart> <http://www.w3.org/2000/01/rdf-schema#label> "Date" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDuration> <http://www.w3.org/2006/time#years> "3" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDuration> <http://www.w3.org/2006/time#months> "0" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoEnd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "31 Jul 2017" .
+<info:fedora/sufia:2z10wt94t/datastreams/content01#embargoEnd> <http://www.w3.org/2000/01/rdf-schema#label> "Stated" .
+<info:fedora/sufia:2z10wt94t#embargoDate> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/time#TemporalEntity> .
+<info:fedora/sufia:2z10wt94t#embargoDate> <http://www.w3.org/2006/time#hasBeginning> <info:fedora/sufia:2z10wt94t#embargoStart> .
+<info:fedora/sufia:2z10wt94t#embargoDate> <http://www.w3.org/2006/time#hasDurationDescription> <info:fedora/sufia:2z10wt94t#embargoDuration> .
+<info:fedora/sufia:2z10wt94t#embargoDate> <http://www.w3.org/2006/time#hasEnd> <info:fedora/sufia:2z10wt94t#embargoEnd> .
+<info:fedora/sufia:2z10wt94t#embargoEnd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "01 Aug 2018" .
+<info:fedora/sufia:2z10wt94t#embargoEnd> <http://www.w3.org/2000/01/rdf-schema#label> "Defined" .
+<info:fedora/sufia:2z10wt94t#embargoStart> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "01 Jul 2014" .
+<info:fedora/sufia:2z10wt94t#embargoStart> <http://www.w3.org/2000/01/rdf-schema#label> "Publication date" .
+<info:fedora/sufia:2z10wt94t#embargoDuration> <http://www.w3.org/2006/time#years> "4" .
+<info:fedora/sufia:2z10wt94t#embargoDuration> <http://www.w3.org/2006/time#months> "1" .
+<info:fedora/sufia:2z10wt94t/datastreams/content02> <http://purl.org/dc/terms/identifier> "content02" .
+<info:fedora/sufia:2z10wt94t/datastreams/content02> <http://purl.org/dc/terms/type> "Content" .
+<info:fedora/sufia:2z10wt94t/datastreams/content02> <http://purl.org/dc/terms/description> "Metadata in ntriples - 2nd copy" .
+<info:fedora/sufia:2z10wt94t/datastreams/content02> <http://purl.org/dc/terms/accessRights> <info:fedora/sufia:2z10wt94t/datastreams/content02#accessRights> .
+<info:fedora/sufia:2z10wt94t/datastreams/content02#accessRights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/spar/pso/PublicationStatus> .
+<info:fedora/sufia:2z10wt94t/datastreams/content02#accessRights> <http://vocab.ox.ac.uk/ora#embargoStatus> "Open access" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03> <http://purl.org/dc/terms/identifier> "content03" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03> <http://purl.org/dc/terms/type> "Content" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03> <http://purl.org/dc/terms/description> "metadata in rdf/xml" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03> <http://purl.org/dc/terms/accessRights> <info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights> .
+<info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/spar/pso/PublicationStatus> .
+<info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights> <http://vocab.ox.ac.uk/ora#embargoStatus> "Closed access" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights> <http://vocab.ox.ac.uk/ora#embargoReason> "Xml is so not in vogue" .
+<info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights> <http://vocab.ox.ac.uk/ora#embargoRelease> "Consult me before lift of embargo" .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Influence> .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation0> <http://purl.org/dc/terms/relation> "http://purl.org/dc/terms/isFormatOf" .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation0> <http://www.w3.org/ns/prov#entity> <http://related/item/4> .
+<http://related/item/1> <http://purl.org/dc/terms/title> "Title of related item 1" .
+<http://related/item/1> <http://purl.org/dc/terms/description> "Description of related item 1" .
+<http://related/item/1> <http://purl.org/dc/terms/bibliographicCitation> "Citation text of related item 1" .
+<http://related/item/1> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Entity> .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Influence> .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation1> <http://purl.org/dc/terms/relation> "http://purl.org/dc/terms/isVersionOf" .
+<info:fedora/sufia:2z10wt94t#qualifiedRelation1> <http://www.w3.org/ns/prov#entity> <http://related/item/5> .
+<http://related/item/5> <http://purl.org/dc/terms/title> "Title of related item 555555" .
+<http://related/item/5> <http://purl.org/dc/terms/description> "Description of related item 5" .
+<http://related/item/5> <http://purl.org/dc/terms/bibliographicCitation> "Citation text of related item 5" .
+<http://related/item/5> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Entity> .
+<http://related/item/4> <http://purl.org/dc/terms/title> "Title of related item 4" .
+<http://related/item/4> <http://purl.org/dc/terms/description> "Description of related item 4" .
+<http://related/item/4> <http://purl.org/dc/terms/bibliographicCitation> "Citation text of related item 4" .
+<http://related/item/4> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Entity> .
+

@@ -6,7 +6,7 @@
       <div class="row">
         <div class="control-group">
           <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
-          <%= render partial: "describe_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "articles/_edit_detailed/describe_fields_edit", as: :article, :locals => { :f => f } %>
           <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
           <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
           <div class="actions">
@@ -91,7 +91,7 @@
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'rightstab') %>
     <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
-    <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @article } %>
+    <%= render partial: "articles/_edit_detailed/admin_fields_edit", :locals => { :f => f, :article => @article } %>
     <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @article } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
@@ -103,5 +103,19 @@
 </div>
 
 <div class="tab-pane" id="workflowtab">
-  <%= render partial: 'shared/workflow_edit', :locals => { :article => @article } %>
+  <%= form_for @article, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
+    <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @article } %>
+    <% if can? :review, :all %>
+      <% buttonText = 'Save review changes' %>
+    <% else %>
+      <% buttonText = 'Submit for Review' %>
+    <% end %>
+    <div class="row form-actions" id="workflow_submit">
+      <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+      <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+    </div>
+  <% end %>
 </div>
+

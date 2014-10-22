@@ -1,87 +1,136 @@
-<% if !article.publication.empty? %>
-  <% if (!article.publication[0].publisher.empty? || !article.publication[0].datePublished.empty? || \
-    !article.publication[0].dateAccepted.empty? || \
-    article.publication[0]["hasDocument"][0].except("journal", "series").any? {|k,v| !v.nil? && !v.empty?} || \
-    article.publication[0]["hasDocument"][0]["journal"][0].any? {|k,v| !v.nil? && !v.empty?} || \
-    article.publication[0]["hasDocument"][0]["series"][0].any? {|k,v| !v.nil? && !v.empty?}) %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <div id="publication">
-            <div><strong>Publication details</strong></div>
-              <% article.publication.each do |p| %>
-                <div>
-                <% if !p.publicationStatus.empty? %>
-                  <p>Publication status: <%= p.publicationStatus.first %></p>
-                <% end %>
-                <% if !p.reviewStatus.empty? %>
-                  <p>reviewStatus: <%= p.reviewStatus.first %></p>
-                <% end %>
-                <% if !p.datePublished.empty? %>
-                  <p>Date published: <%= p.datePublished.first %></p>
-                <% end %>
-                <% if !p.location.empty? %>
-                  <p> Place of publication: <%= p.location.first %></p>
-                <% end %>
-                <% if !p.dateAccepted.empty? %>
-                  <p>Date of acceptance: <%= p.dateAccepted.first %></p>
-                <% end %>
-                <% if !p.hasDocument.empty? %>
-                  <% p.hasDocument.each do |p2| %>
-                    <% if !p2.identifier.empty? %>
-                      <p>Article number:<%= p2.identifier.first %></p>
-                    <% end %>
-                    <% if !p2.doi.empty? %>
-                      <p>DOI: <%= p2.doi.first %></p>
-                    <% end %>
-                    <% if !p2.uri.empty? %>
-                     <p>URI: <%= p2.uri.first %>
-                    <% end %>
-                    <% if !p2.journal.empty? %>
-                      <% p2.journal.each do |p3| %>
-                        <% if !p3.title.empty? %>
-                          <p>Journal title: <%= p3.title.first %></p>
-                        <% end %>
-                        <% if !p3.issn.empty? %>
-                          <p>Journal ISSN: <%= p3.issn.first %></p>
-                        <% end %>
-                        <% if !p3.eissn.empty? %>
-                          <p>Journal eISSN: <%= p3.eissn.first %></p>
-                        <% end %>
-                        <% if !p3.volume.empty? %>
-                          <p>Journal volume: <%= p3.volume.first %></p>
-                        <% end %>
-                        <% if !p3.issue.empty? %>
-                          <p>Journal issue: <%= p3.issue.first %></p>
-                        <% end %>
-                        <% if !p3.pages.empty? %>
-                          <p>Page range: <%= p3.pages.first %></p>
-                        <% end %>
-                      <% end #each journal %>
-                    <% end #journal %>
-                    <% if !p2.series.empty? %>
-                      <% p2.series.each do |p3| %>
-                        <% if !p3.title.empty? %>
-                          <p>Series: <%= p3.title.first %></p>
-                        <% end %>
-                      <% end #each series %>
-                    <% end #series %>
-                  <% end #each document %>
-                <% end #hasDocument %> 
-                <% if !p.publisher.empty? %>
-                  <% p.publisher.each do |p2| %>
-                    <% if !p2.name.empty? and !p2.website.empty? %>
-                      <p>Publisher: <%=link_to p2.name.first, p2.website.first %></p>
-                    <% elsif !p2.name.empty? %>
-                      <p>Publisher: <%= p2.name.first %></p>
-                    <% end %>
-                  <% end #each publisher %>
-                <% end #publisher %>
-                </div>
-              <% end #each publication %>
-          </div>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end #if information %>
+<% hasData = false %>
+<% if !article.publication.nil? && !article.publication[0].nil? %>
+  <% if !article.publication[0].publicationStatus.empty? && !article.publication[0].publicationStatus[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.publication[0].reviewStatus.empty? && !article.publication[0].reviewStatus[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.publication[0].datePublished.empty? && !article.publication[0].datePublished[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.publication[0].location.empty? && !article.publication[0].location[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.publication[0].dateAccepted.empty? && !article.publication[0].dateAccepted[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.publication[0].hasDocument.nil? && !article.publication[0].hasDocument[0].nil? %>
+    <% if !article.publication[0].hasDocument[0].identifier.empty? && !article.publication[0].hasDocument[0].identifier[0].empty? %>
+      <% hasData = true %>
+    <% end %>
+    <% if !article.publication[0].hasDocument[0].doi.empty? && !article.publication[0].hasDocument[0].doi[0].empty? %>
+      <% hasData = true %>
+    <% end %>
+    <% if !article.publication[0].hasDocument[0].uri.empty? && !article.publication[0].hasDocument[0].uri[0].empty? %>
+      <% hasData = true %>
+    <% end %>
+    <% if !article.publication[0].hasDocument[0].journal.nil? && !article.publication[0].hasDocument[0].journal[0].nil? %>
+      <% if !article.publication[0].hasDocument[0].journal[0].title.empty? && !article.publication[0].hasDocument[0].journal[0].title[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+      <% if !article.publication[0].hasDocument[0].journal[0].issn.empty? && !article.publication[0].hasDocument[0].journal[0].issn[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+      <% if !article.publication[0].hasDocument[0].journal[0].eissn.empty? && !article.publication[0].hasDocument[0].journal[0].eissn[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+      <% if !article.publication[0].hasDocument[0].journal[0].volume.empty? && !article.publication[0].hasDocument[0].journal[0].volume[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+      <% if !article.publication[0].hasDocument[0].journal[0].issue.empty? && !article.publication[0].hasDocument[0].journal[0].issue[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+      <% if !article.publication[0].hasDocument[0].journal[0].pages.empty? && !article.publication[0].hasDocument[0].journal[0].pages[0].empty? %>
+        <% hasData = true %>
+      <% end %>
+    <% end %>
+    <% if !article.publication[0].hasDocument[0].series.nil? && !article.publication[0].hasDocument[0].series[0].nil? && !article.publication[0].hasDocument[0].series[0].title.empty? && !article.publication[0].hasDocument[0].series[0].title[0].empty? %>
+      <% hasData = true %>
+    <% end %>
+  <% end %>
+  <% if !article.publication[0].publisher.nil? && !article.publication[0].publisher[0].nil? && !article.publication[0].publisher[0].name.empty? && !article.publication[0].publisher[0].name[0].empty? %>
+    <% hasData = true %>
+  <% end %>
+<% end %>  
+<% if hasData %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
+        <div id="publication">
+          <div><strong>Publication details</strong></div>
+            <% article.publication.each do |p| %>
+              <div>
+              <% if !p.publicationStatus.empty? && !p.publicationStatus[0].empty? %>
+                <p>Publication status: <%= p.publicationStatus.first %></p>
+              <% end %>
+              <% if !p.reviewStatus.empty? && !p.reviewStatus[0].empty? %>
+                <p>reviewStatus: <%= p.reviewStatus.first %></p>
+              <% end %>
+              <% if !p.datePublished.empty? && !p.datePublished[0].empty? %>
+                <p>Date published: <%= p.datePublished.first %></p>
+              <% end %>
+              <% if !p.location.empty? && !p.location[0].empty? %>
+                <p> Place of publication: <%= p.location.first %></p>
+              <% end %>
+              <% if !p.dateAccepted.empty? && !p.dateAccepted[0].empty? %>
+                <p>Date of acceptance: <%= p.dateAccepted.first %></p>
+              <% end %>
+              <% if !p.hasDocument.nil? %>
+                <% p.hasDocument.each do |p2| %>
+                  <% if !p2.identifier.empty? && !p2.identifier[0].empty? %>
+                    <p>Article number:<%= p2.identifier.first %></p>
+                  <% end %>
+                  <% if !p2.doi.empty? && !p2.doi[0].empty? %>
+                    <p>DOI: <%= p2.doi.first %></p>
+                  <% end %>
+                  <% if !p2.uri.empty? && !p2.uri[0].empty? %>
+                   <p>URI: <%= p2.uri.first %>
+                  <% end %>
+                  <% if !p2.journal.nil? %>
+                    <% p2.journal.each do |p3| %>
+                      <% if !p3.title.empty? && !p3.title[0].empty? %>
+                        <p>Journal title: <%= p3.title.first %></p>
+                      <% end %>
+                      <% if !p3.issn.empty? && !p3.issn[0].empty? %>
+                        <p>Journal ISSN: <%= p3.issn.first %></p>
+                      <% end %>
+                      <% if !p3.eissn.empty? & !p3.eissn[0].empty? %>
+                        <p>Journal eISSN: <%= p3.eissn.first %></p>
+                      <% end %>
+                      <% if !p3.volume.empty? & !p3.volume[0].empty? %>
+                        <p>Journal volume: <%= p3.volume.first %></p>
+                      <% end %>
+                      <% if !p3.issue.empty? & !p3.issue[0].empty? %>
+                        <p>Journal issue: <%= p3.issue.first %></p>
+                      <% end %>
+                      <% if !p3.pages.empty? & !p3.pages[0].empty? %>
+                        <p>Page range: <%= p3.pages.first %></p>
+                      <% end %>
+                    <% end #each journal %>
+                  <% end #journal %>
+                  <% if !p2.series.nil? %>
+                    <% p2.series.each do |p3| %>
+                      <% if !p3.title.empty? && !p3.title[0].empty? %>
+                        <p>Series: <%= p3.title.first %></p>
+                      <% end %>
+                    <% end #each series %>
+                  <% end #series %>
+                <% end #each document %>
+              <% end #hasDocument %> 
+              <% if !p.publisher.nil? %>
+                <% p.publisher.each do |p2| %>
+                  <% if !p2.name.empty? && !p2.website.empty? && !p2.name[0].empty? && !p2.website[0].empty? %>
+                    <p>Publisher: <%=link_to p2.name.first, p2.website.first %></p>
+                  <% elsif !p2.name.empty? && !p2.name[0].empty? %>
+                    <p>Publisher: <%= p2.name.first %></p>
+                  <% end %>
+                <% end #each publisher %>
+              <% end #publisher %>
+              </div>
+            <% end #each publication %>
+        </div>
+      </div><!-- /.control-group -->
+    </div> <!-- /.row -->
+  </div> <!-- /.well -->
 <% end #if publication %>

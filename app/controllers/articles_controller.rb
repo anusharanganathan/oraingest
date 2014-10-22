@@ -25,7 +25,7 @@ require "utils"
 require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions]
+  before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions, :edit_detailed]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -100,6 +100,15 @@ class ArticlesController < ApplicationController
     @model = 'article'
   end
 
+  def edit_detailed
+    authorize! :edit, params[:id]
+    authorize! :review, params[:id]
+    @pid = params[:id]
+    @files = contents
+    @model = 'article'
+    render "edit_detailed"
+  end
+
   def create
     @pid = params[:pid]
     @article = Article.find_or_create(@pid)
@@ -107,11 +116,7 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:article)
-      if params[:article].has_key?(:workflows_attributes)
-        add_workflow(params[:article])
-      else
-        add_metadata(params[:article])
-      end
+      add_metadata(params[:article])
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -126,11 +131,7 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
-      if params[:article].has_key?(:workflows_attributes)
-        add_workflow(params[:article])
-      else
-        add_metadata(params[:article])
-      end
+      add_metadata(params[:article])
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -250,20 +251,6 @@ class ArticlesController < ApplicationController
     json_error "Error creating generic file: #{af.message}"
   end
 
-  def add_workflow(article_params)
-    @article.attributes = Ora.validateWorkflow(article_params)
-    respond_to do |format|
-      if @article.save
-        format.html { redirect_to article_path(@article), notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
-    end
-
-  end
-
   def revoke_permissions
     if params.has_key?(:article) && params[:article].has_key?(:permissions_attributes)
       article_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
@@ -283,11 +270,35 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
-    @article = Ora.buildMetadata(article_params, @article, contents)
+    @article = Ora.buildMetadata(article_params, @article, contents, current_user.user_key)
     respond_to do |format|
       if @article.save
-        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
+        saveAgain = false
+        # Send email
+        data = {
+          "name" => current_user.user_key,
+          "email_address" => current_user.user_key,
+          "record_id" => @article.id,
+          "record_url" => article_url(@article)
+        }
+        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, "Article")
+        if ans
+          article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
+          @article.attributes = article_params
+          saveAgain = true
+        end
+        if saveAgain
+          if @article.save
+            format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+            format.json { head :no_content }
+          else
+            format.html { render action: 'edit' }
+            format.json { render json: @article.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
+        end
       else
         format.html { render action: 'edit' }
         format.json { render json: @article.errors, status: :unprocessable_entity }

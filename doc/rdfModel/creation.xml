@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:prov="http://www.w3.org/ns/prov#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:ns1="http://vocab.ox.ac.uk/ora#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <ns1:hadCreationActivity>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationActivity">
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#creationAssociation0"/>
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#creator0</prov:wasAssociatedWith>
+        <prov:wasAssociatedWith>info:fedora/sufia:2z10wt94t#creator1</prov:wasAssociatedWith>
+        <prov:qualifiedAssociation rdf:resource="info:fedora/sufia:2z10wt94t#creationAssociation1"/>
+      </rdf:Description>
+    </ns1:hadCreationActivity>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationAssociation0">
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+    <prov:hadRole>http://vocab.ox.ac.uk/ora#author</prov:hadRole>
+    <prov:agent>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creator0">
+        <vcard:hasEmail>alena.ptak-danchak@bodleian.ox.ac.uk</vcard:hasEmail>
+        <owl:sameAs>http://creator/1</owl:sameAs>
+        <vcard:n>Alena  Ptak-Danchak</vcard:n>
+        <ns1:affiliation rdf:resource="info:fedora/sufia:2z10wt94t#affiliation0"/>
+        <dcterms:type rdf:resource="http://www.w3.org/2006/vcard/ns#Individual"/>
+      </rdf:Description>
+    </prov:agent>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creator1">
+    <vcard:n>Sally Rumsey</vcard:n>
+    <owl:sameAs>http://creator/2</owl:sameAs>
+    <ns1:affiliation>
+      <vcard:Organization rdf:about="info:fedora/sufia:2z10wt94t#affiliation1">
+        <vcard:n>BDLSS</vcard:n>
+        <owl:sameAs>http://affiliation/1</owl:sameAs>
+      </vcard:Organization>
+    </ns1:affiliation>
+    <vcard:hasEmail>sally.rumsey@bodleian.ox.ac.uk</vcard:hasEmail>
+    <dcterms:type rdf:resource="http://www.w3.org/2006/vcard/ns#Individual"/>
+  </rdf:Description>
+  <vcard:Organization rdf:about="info:fedora/sufia:2z10wt94t#affiliation0">
+    <vcard:n>Radcliffe Science Library</vcard:n>
+    <owl:sameAs>http://affiliation/3</owl:sameAs>
+  </vcard:Organization>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#creationAssociation1">
+    <prov:hadRole>http://vocab.ox.ac.uk/ora#author</prov:hadRole>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Association"/>
+    <prov:agent rdf:resource="info:fedora/sufia:2z10wt94t#creator1"/>
+  </rdf:Description>
+</rdf:RDF>

@@ -103,5 +103,19 @@
 </div>
 
 <div class="tab-pane" id="workflowtab">
-  <%= render partial: 'shared/workflow_edit', :locals => { :article => @dataset } %>
+  <%= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
+    <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
+    <% if can? :review, :all %>
+      <% buttonText = 'Save review changes' %>
+    <% else %>
+      <% buttonText = 'Submit for Review' %>
+    <% end %>
+    <div class="row form-actions" id="workflow_submit">
+      <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+      <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+    </div>
+  <% end %>
 </div>
+

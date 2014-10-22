@@ -1,34 +1,37 @@
 <div class="control-group">
   <!-- <legend>Access rights for article</legend> -->
-  <% if !hp.accessRights.empty? %>
-    <% if !hp.accessRights[0].embargoStatus.empty? %>
+  <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
+    <% if !hp.accessRights[0].embargoStatus.empty? && !hp.accessRights[0].embargoStatus[0].empty? %>
       <div>Embargo status: <%= hp.accessRights[0].embargoStatus.first %></div>
     <% end %>
-    <% if !hp.accessRights[0].embargoDate.empty? %>
-      <div>Embargo end date: 
-      <% if !hp.accessRights[0].embargoDate[0].end.empty? && (!hp.accessRights[0].embargoDate[0].end[0].label.empty? || !hp.accessRights[0].embargoDate[0].end[0].date.empty?) %>
-        <% if !hp.accessRights[0].embargoDate[0].end[0].date.empty? %>
-          <%= hp.accessRights[0].embargoDate[0].end[0].date.first %>
+    <% if !hp.accessRights[0].embargoDate.nil? && !hp.accessRights[0].embargoDate[0].nil? %>
+      <% dateEnd = hp.accessRights[0].embargoDate[0].end %>
+      <% dateDuration = hp.accessRights[0].embargoDate[0].duration %>
+      <% dateStart = hp.accessRights[0].embargoDate[0].start %>
+      <% if !dateEnd.nil? && !dateEnd[0].nil? && (!dateEnd[0].label.empty? || dateEnd[0].date.empty?) %>
+        <div>Embargo end date: 
+        <% if !dateEnd[0].date.empty? && !dateEnd[0].date[0].empty? %>
+          <%= dateEnd.first.date.first %>
         <% end %>
-        <% if !hp.accessRights[0].embargoDate[0].end[0].label.empty? %>
-          (<%= hp.accessRights[0].embargoDate[0].end[0].label.first %>)
+        <% if !dateEnd[0].label.empty? && !dateEnd[0].label[0].empty? %>
+          (<%= dateEnd[0].label.first %>)
         <% end %>
       <% end %>
-      <% if !hp.accessRights[0].embargoDate[0].duration.empty? && (!hp.accessRights[0].embargoDate[0].duration[0].years.empty? || !hp.accessRights[0].embargoDate[0].duration[0].month.empty?) %>
-        <% if !hp.accessRights[0].embargoDate[0].duration[0].years.empty? %>
-          <br/><%= hp.accessRights[0].embargoDate[0].duration[0].years.first %> years
+      <% if !dateDuration.nil? && !dateDuration[0].nil? && (!dateDuration[0].years.empty? || !dateDuration[0].months.empty?) %>
+        <% if !dateDuration[0].years.empty? && !dateDuration[0].years[0].empty? %>
+          <br/><%= dateDuration[0].years.first %> years
         <% end %>
-        <% if !hp.accessRights[0].embargoDate[0].duration[0].months.empty? %>
-          <%= hp.accessRights[0].embargoDate[0].duration[0].months.first %> months
+        <% if !dateDuration[0].months.empty? && !dateDuration[0].months[0].empty? %>
+          <%= dateDuration[0].months.first %> months
         <% end %>
         from
       <% end %>
-      <% if !hp.accessRights[0].embargoDate[0].start.empty? && (!hp.accessRights[0].embargoDate[0].start[0].label.empty? || !hp.accessRights[0].embargoDate[0].start[0].date.empty?) %>
-        <% if !hp.accessRights[0].embargoDate[0].start[0].date.empty? %>
-          <%= hp.accessRights[0].embargoDate[0].start[0].date.first %>
+      <% if !dateStart.nil? && !dateStart[0].nil? && (!dateStart[0].label.empty? || !dateStart[0].date.empty?) %>
+        <% if !dateStart[0].date.empty? && !dateStart[0].date[0].empty? %>
+          <%= dateStart[0].date.first %>
         <% end %>
-        <% if !hp.accessRights[0].embargoDate[0].start[0].label.empty? %>
-          (<%= hp.accessRights[0].embargoDate[0].start[0].label.first %>)
+        <% if !dateStart[0].label.empty? && !dateStart[0].label[0].empty? %>
+          (<%= dateStart[0].label.first %>)
         <% end %>
       <% end %>
       </div>

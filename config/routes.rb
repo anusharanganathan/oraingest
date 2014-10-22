@@ -20,8 +20,17 @@ OraHydra::Application.routes.draw do
     end
   end
 
+  resources 'publications', :only=>:index do
+    collection do
+      get 'page/:page', :action => :index
+      get 'activity', :action => :activity, :as => :dashboard_activity
+      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+    end
+  end
+
   resources :articles
   delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
+  get 'articles/:id/detailed/edit', to: 'articles#edit_detailed'
   
   resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
@@ -29,13 +38,6 @@ OraHydra::Application.routes.draw do
 
   resources :dataset_agreements
 
-  #resources 'article', :only=>:index do
-  #  collection do
-  #    get 'page/:page', :action => :index
-  #    get 'activity', :action => :activity, :as => :dashboard_activity
-  #    get 'facet/:id', :action => :facet, :as => :dashboard_facet
-  #  end
-  #end
   #mount Hydra::Collections::Engine => '/' 
   mount Sufia::Engine => '/'
 

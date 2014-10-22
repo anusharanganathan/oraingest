@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:madsrdf="http://www.loc.gov/mads/rdf/v1#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <dcterms:subject>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#subject0">
+        <madsrdf:authoritativeLabel>Input design, Computer</madsrdf:authoritativeLabel>
+        <madsrdf:hasExactExternalAuthority>http://id.worldcat.org/fast/00973780</madsrdf:hasExactExternalAuthority>
+        <madsrdf:isMemberOfMADSScheme>FAST</madsrdf:isMemberOfMADSScheme>
+      </rdf:Description>
+    </dcterms:subject>
+    <dcterms:subject>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#subject1">
+        <madsrdf:authoritativeLabel>Linked data</madsrdf:authoritativeLabel>
+        <madsrdf:hasExactExternalAuthority>http://id.worldcat.org/fast/01896555</madsrdf:hasExactExternalAuthority>
+        <madsrdf:isMemberOfMADSScheme>FAST</madsrdf:isMemberOfMADSScheme>
+      </rdf:Description>
+    </dcterms:subject>
+  </rdf:Description>
+</rdf:RDF>

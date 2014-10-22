@@ -1,0 +1,5 @@
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#oaStatus> "Article should be made available freely in ORA" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#apcPaid> "Yes" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#oaReason> "To make a special case for the article to be open access" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#refException> "Something" .
+

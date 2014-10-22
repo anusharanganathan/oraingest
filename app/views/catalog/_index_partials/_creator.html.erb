@@ -1,0 +1,20 @@
+<div>
+  <% if creator["name"] and creator["sameAs"] %>
+    <strong><%=link_to creator["name"], creator["sameAs"] %></strong><br/>
+  <% elsif creator["name"] %>
+     <strong><%= creator["name"] %></strong><br/>
+  <% end %>
+  <% if creator["role"] %>
+    <% if Sufia.config.role_labels.include?(creator["role"]) %>
+      <%= Sufia.config.role_labels[creator["role"]] %><br/>
+    <% else %>
+      <%= creator["role"] %>
+    <% end %>
+  <% end %>
+  <% if creator["affiliationName"] and creator["affiliationSameAs"] %>
+    <%=link_to creator["affiliationName"], creator["affiliationSameAs"] %><br/>
+  <% elsif creator["affiliationName"] %>
+    <%= creator["affiliationName"] %><br/>
+  <% end %>
+</div>
+

@@ -1,0 +1,29 @@
+<div class="well">
+  <div class="row">
+    <div class="control-group">
+
+      <legend>Article processing fee and open access details</legend>
+      <div class="fields">
+        <%= f.label :oaStatus, "Is this an open access article?", :class=>"control-label" %>
+        <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), :style=>"width: 450px;" %>
+      </div>
+          
+      <div class="fields">
+        <%= f.label :apcPaid, "Does the article involve an article processing charge (either paid or to be paid)", :class=>"control-label" %>
+        <%= f.radio_button :apcPaid, "Yes", :checked=>(article.apcPaid.first=='Yes') %> Yes &nbsp;&nbsp;
+        <%= f.radio_button :apcPaid, "No", :checked=>(article.apcPaid.first=='No') %> No
+      </div>
+      
+      <div class="fields">
+        <%= f.label :oaReason, "What is the basis of the APC?", :class=>"control-label" %>
+        <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), :style=>"width: 550px;" %>
+      </div>
+      
+      <div class="fields">
+        <%= f.label :refExcepotion, "REF Exception?", :class=>"control-label" %>
+        <%= f.text_field :refException, :value=>article.refException.first %>
+      </div>
+
+    </div><!-- /.control-group -->
+  </div> <!-- /.row -->
+</div> <!-- /.well -->

@@ -1,11 +1,11 @@
 <p id="notice"><%= notice %></p>
-<% if !@dataset.title.empty? %>
+<% if !@dataset.title.empty? && !@dataset.title.first.empty? %>
   <h1><%= @dataset.title.first %></h1>
 <% else %>
   <h1>Article</h1>
 <% end %>
       
-<% if !@dataset.subtitle.empty? %>
+<% if !@dataset.subtitle.empty? && ! @dataset.subtitle.first.empty? %>
   <h2><%= @dataset.subtitle.first %></h2>
 <% end %>
 
@@ -17,7 +17,7 @@
     <div class="control-group">
       <%= render partial: "shared/work_type_fields_show", :locals => { :article => @dataset } %>
       
-      <% if !@dataset.abstract.empty? %>
+      <% if !@dataset.abstract.empty? && !@dataset.abstract.first.empty? %>
       <p>
         <strong>Abstract:</strong>
         <%= @dataset.abstract.first %>
@@ -37,41 +37,41 @@
       
       <%= render partial: "shared/mads_language_fields_show", :locals => { :article => @dataset } %>
 
-      <% if !@dataset.isDocumentedBy.empty? %>
+      <% if !@dataset.isDocumentedBy.empty? && !@dataset.isDocumentedBy.first.empty? %>
       <p>
         <strong>Documentation about the dataset and processes:</strong>
         <%= @dataset.isDocumentedBy.first %>     
       </p>
       <% end %>
 
-      <% if !@dataset.temporal.empty? && !@dataset.temporal.first.start.empty? %>
+      <% if !@dataset.temporal.nil? && !@dataset.temporal.first.nil? && !@dataset.temporal.first.start.empty? && !@dataset.temporal.first.start.first.empty? %>
       <p>
         <strong>Temporal coverage of the data:</strong>
         <%= @dataset.temporal.first.start.first %>
-        <% if !@dataset.temporal.first.end.empty? %>
+        <% if !@dataset.temporal.first.end.empty? && !@dataset.temporal.first.end.first.empty? %>
           to <%= @dataset.temporal.first.end.first %>
         <% end %>
       </p>
       <% end %>
 
-      <% if !@dataset.dateCollected.empty? && !@dataset.dateCollected.first.start.empty? %>
+      <% if !@dataset.dateCollected.nil? && !@dataset.dateCollected.first.nil? && !@dataset.dateCollected.first.start.empty? && !@dataset.dateCollected.first.start.first.empty? %>
       <p>
         <strong>Dates data was collected:</strong>
         <%= @dataset.dateCollected.first.start.first %>
-        <% if !@dataset.dateCollected.first.end.empty? %>
+        <% if !@dataset.dateCollected.first.end.empty? && !@dataset.dateCollected.first.end.first.empty? %>
           to <%= @dataset.dateCollected.first.end.first %>
         <% end %>
       </p>
       <% end %>
 
-      <% if !@dataset.spatial.empty? && !@dataset.spatial.first.value.empty? %>
+      <% if !@dataset.spatial.nil? && !@dataset.spatial.first.nil? && !@dataset.spatial.first.value.empty? && !@dataset.spatial.first.value.first.empty? %>
       <p>
         <strong>Geographical location or coverage of the data:</strong>
         <%= @dataset.spatial.first.value.first %>
       </p>
       <% end %>
       
-      <% if !@dataset.medium.empty? %>
+      <% if !@dataset.medium.empty? && !@dataset.medium.first.empty?  %>
       <p>
         <strong>Data storage medium:</strong>
         <% if @dataset.medium.first == Sufia.config.data_medium["Analog"] %>
@@ -84,28 +84,28 @@
       </p>
       <% end %>
       
-      <% if !@dataset.locator.empty? %>
+      <% if !@dataset.locator.empty? && !@dataset.locator.first.empty? %>
       <p>
         <strong>Data location:</strong>
         <%= @dataset.locator.first %>
       </p>
       <% end %>
       
-      <% if !@dataset.digitalSize.empty? %>
+      <% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
       <p>
         <strong>Approximate data size:</strong>
         <%= @dataset.digitalSize.first %>
       </p>
       <% end %>
       
-      <% if !@dataset.format.empty? %>
+      <% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
       <p>
         <strong>Data format:</strong>
         <%= @dataset.format.first %>
       </p>
       <% end %>
       
-      <% if !@dataset.version.empty? %>
+      <% if !@dataset.version.empty? && !@dataset.version.first.empty? %>
       <p>
         <strong>Version number:</strong>
         <%= @dataset.version.first %>
