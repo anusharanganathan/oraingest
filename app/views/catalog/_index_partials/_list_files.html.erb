@@ -1,0 +1,46 @@
+<li>
+  <h2>
+    <%= link_to document.title_or_label, document_url(document.modelName, 'show', document.id) %>
+    <!-- <small>[<%# = link_to 'Download', sufia.download_path(document.noid), :target => '_new' %>]</small> -->
+  </h2>
+  <table class="table">
+    <tr>
+      <td rowspan="8" class="span20"> <%= render :partial => 'dashboard/_index_partials/thumbnail_display', :locals => {:document=>document, :height=>200, :width=>150} %>
+      </td>
+      <th><h4>Title:</h4></th>
+      <td><%= document.title %></td>
+    </tr>
+    <tr>
+      <th><h4>Model:<h4></div>
+      <td><%= document.modelName %></td>
+    </tr>
+    <tr>
+      <th><h4>Depositor:<h4></div>
+      <td><%= link_to_profile document.depositor("no depositor value") %></td>
+    </tr>
+    <tr>
+      <th><h4>Creator:</h4></th>
+      <td>
+        <% document.creators.each do |c| %>
+          <%= render :partial => 'catalog/_index_partials/creator', :locals => {:creator=>c} %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><h4>Abstract:</h4></th>
+      <td><%= iconify_auto_link(document.abstract) %></th>
+    </tr>
+    <tr>
+      <th><h4>Keywords:</h4></th>
+      <td><%= document.keywords.join(', ') %></td>
+    </tr>
+    <tr>
+      <th><h4>Date Created:</h4></th>
+      <td><%= format_date(document.dateCreated) %></td>
+    </tr>
+    <tr>
+      <th><h4>Date Modified:</h4></th>
+      <td><%= format_date(document.dateModified) %></td>
+    </tr>
+  </table>
+</li>

@@ -1,3 +1,5 @@
+require 'ora/rt_client'
+
 class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
   property :depositor
   property :workflow
@@ -8,6 +10,7 @@ class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
   property :reviewer_id
   
   property :Workflow
+  property :emailThread
 end
 
 class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
@@ -23,6 +26,41 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   def current_statuses
     self.workflows.map {|wf| wf.current_status }
   end
+
+  def send_email(wf_id, data, model)
+    # data hash to include name, email_address, record_id, record_url 
+    # If ticket was created successfully, should return ticket number
+    # if there was an error getting the content, should return false
+    # If no email is configured to be sent, should return nil
+    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
+    if wf && Sufia.config.email_options.keys.include?(model.downcase) && Sufia.config.email_options[model.downcase].include?(wf.current_status)
+      occurences = wf.all_statuses.select{|s| s == wf.current_status}
+      occurence = Sufia.config.email_options[model.downcase][wf.current_status]['occurence']
+      template = Sufia.config.email_options[model.downcase][wf.current_status]['template']
+      subject = Sufia.config.email_options[model.downcase][wf.current_status]['subject'].gsub('ID', data['record_id'])
+      if (occurence == "first" && occurences.length == 1) || occurence == "all"
+        rt = Ora::RtClient.new
+        content = rt.email_content(template, data)
+        if content
+          ans = rt.create_ticket(subject, data['email_address'], content)
+          is_number = true if Float(ans) rescue false
+          if ans and is_number
+            email_params = { :id => wf.rdf_subject.to_s }
+            email_params[:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
+            return email_params
+          else
+            return false
+          end
+        else
+          return false
+        end
+      else
+        return nil
+      end
+    else
+      return nil
+    end
+  end 
   
   def to_solr(solr_doc={})
     super
@@ -51,9 +89,10 @@ class Workflow
     map.identifier(:in => RDF::DC)
     map.entries(to: :entry, :in => OxfordWorkflow, class_name:"WorkflowEntry")
     map.comments(to: :comment, :in => OxfordWorkflow, class_name:"WorkflowComment")
+    map.emailThreads(to: :emailThread, :in => OxfordWorkflow, class_name:"WorkflowCommunication")
   end
   
-  accepts_nested_attributes_for :entries, :comments
+  accepts_nested_attributes_for :entries, :comments, :emailThreads
   
   def current_status
     if self.entries.empty?
@@ -63,6 +102,14 @@ class Workflow
     end
   end
   
+  def all_statuses
+    if self.entries.empty?
+      return nil
+    else
+      return self.entries.map{|e| e.status.first}.reject{|v| v.nil? || v.empty? }
+    end
+  end
+
   # Returns the User matching the reviewer id on last entry in the workflow
   # Returns nil if no reviewer_id available or if the reviewer_id does not match any existing Users
   def current_reviewer
@@ -72,14 +119,20 @@ class Workflow
       self.entries.last.reviewer
     end
   end
-  
+
   # Returns the (String) id of current reviewer on last entry
   # Returns nil if no value to return
   def current_reviewer_id
     if self.entries.empty?
       return nil
     else
-      self.entries.last.reviewer_id.first
+      selected_entries = self.entries.select{|e| e.status.first != "Draft" && e.status.first != "Submitted"}
+      if selected_entries.empty?
+        return nil
+      else
+        return selected_entries.last.creator.first
+      end
+      #self.entries.last.reviewer_id.first
     end
   end
   
@@ -94,7 +147,7 @@ class Workflow
       submission_entry.date.first
     end
   end
-  
+ 
   def persisted?
     false
   end
@@ -102,7 +155,8 @@ class Workflow
   def to_solr(solr_doc)
     solr_doc[Solrizer.solr_name(self.identifier.first+"_status", :symbol)] = self.current_status 
     solr_doc[Solrizer.solr_name(self.identifier.first+"_current_reviewer_id", :symbol)] = self.current_reviewer_id
-    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.reviewer_id.first }.uniq.reject{|v| v.nil? || v.empty? }    
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.creator.first if (e.status.first != "Draft" && e.status.first != "Submitted") }.uniq.reject{|v| v.nil? || v.empty? }
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_email_threads", :symbol)] = self.emailThreads.map{|e| e.identifier.first }.uniq.reject{|v| v.nil? || v.empty? }
     unless self.date_submitted.nil?
       begin
         solr_doc[Solrizer.solr_name(self.identifier.first+"_date_submitted", :dateable)] = Time.parse(self.date_submitted).utc.iso8601
@@ -148,5 +202,15 @@ class WorkflowComment
   end
 end
 
+class WorkflowCommunication
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  map_predicates do |map|
+    map.identifier(in: RDF::DC)
+    map.date(in: RDF::DC) 
+    map.references(in: RDF::DC)
+  end
+end
 
 

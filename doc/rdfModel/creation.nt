@@ -1,0 +1,30 @@
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#hadCreationActivity> <info:fedora/sufia:2z10wt94t#creationActivity> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#creator0" .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#creator1" .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#creationAssociation0> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#creationAssociation1> .
+
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://www.w3.org/ns/prov#hadRole> "http://vocab.ox.ac.uk/ora#author" .
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#creator0> .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2006/vcard/ns#n> "Alena  Ptak-Danchak" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2006/vcard/ns#hasEmail> "alena.ptak-danchak@bodleian.ox.ac.uk" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://purl.org/dc/terms/type> <http://www.w3.org/2006/vcard/ns#Individual> .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2002/07/owl#sameAs> "http://creator/1" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://vocab.ox.ac.uk/ora#affiliation> <info:fedora/sufia:2z10wt94t#affiliation0> .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Organization> .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/2006/vcard/ns#n> "Radcliffe Science Library" .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/2002/07/owl#sameAs> "http://affiliation/3" .
+
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://www.w3.org/ns/prov#hadRole> "http://vocab.ox.ac.uk/ora#author" .
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#creator1> .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2006/vcard/ns#n> "Sally Rumsey" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2006/vcard/ns#hasEmail> "sally.rumsey@bodleian.ox.ac.uk" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://purl.org/dc/terms/type> <http://www.w3.org/2006/vcard/ns#Individual> .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2002/07/owl#sameAs> "http://creator/2" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://vocab.ox.ac.uk/ora#affiliation> <info:fedora/sufia:2z10wt94t#affiliation1> .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Organization> .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/2006/vcard/ns#n> "BDLSS" .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/2002/07/owl#sameAs> "http://affiliation/1" .

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:fabio="http://purl.org/spar/fabio/"
+  xmlns:pso="http://purl.org/spar/pso/"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:prov="http://www.w3.org/ns/prov#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:time="http://www.w3.org/2006/time#"
+  xmlns:ns1="http://vocab.ox.ac.uk/ora#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01#embargoStart">
+    <rdfs:label>Date</rdfs:label>
+    <rdf:value>31 Jul 2014</rdf:value>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://related/item/1">
+    <dcterms:title>Title of related item 1</dcterms:title>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+    <dcterms:description>Description of related item 1</dcterms:description>
+    <dcterms:bibliographicCitation>Citation text of related item 1</dcterms:bibliographicCitation>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDuration">
+    <time:months>0</time:months>
+    <time:years>3</time:years>
+  </rdf:Description>
+  <prov:Influence rdf:about="info:fedora/sufia:2z10wt94t#qualifiedRelation1">
+    <dcterms:relation>http://purl.org/dc/terms/isVersionOf</dcterms:relation>
+    <prov:entity>
+      <rdf:Description rdf:about="http://related/item/5">
+        <dcterms:title>Title of related item 555555</dcterms:title>
+        <dcterms:bibliographicCitation>Citation text of related item 5</dcterms:bibliographicCitation>
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+        <dcterms:description>Description of related item 5</dcterms:description>
+      </rdf:Description>
+    </prov:entity>
+  </prov:Influence>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <prov:qualifiedInfluence>
+      <prov:Influence rdf:about="info:fedora/sufia:2z10wt94t#qualifiedRelation0">
+        <dcterms:relation>http://purl.org/dc/terms/isFormatOf</dcterms:relation>
+        <prov:entity rdf:resource="http://related/item/4"/>
+      </prov:Influence>
+    </prov:qualifiedInfluence>
+    <dcterms:accessRights>
+      <pso:PublicationStatus rdf:about="info:fedora/sufia:2z10wt94t#accessRights">
+        <ns1:embargoReason>I am dark....Ha! Ha! Ha!</ns1:embargoReason>
+        <ns1:embargoRelease>Consult me before lift of embargo</ns1:embargoRelease>
+        <fabio:hasEmbargoDuration rdf:resource="info:fedora/sufia:2z10wt94t#embargoDate"/>
+        <ns1:embargoStatus>Embargoed</ns1:embargoStatus>
+      </pso:PublicationStatus>
+    </dcterms:accessRights>
+    <dcterms:hasPart>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content02">
+        <dcterms:type>Content</dcterms:type>
+        <dcterms:accessRights rdf:resource="info:fedora/sufia:2z10wt94t/datastreams/content02#accessRights"/>
+        <dcterms:identifier>content02</dcterms:identifier>
+        <dcterms:description>Metadata in ntriples - 2nd copy</dcterms:description>
+      </rdf:Description>
+    </dcterms:hasPart>
+    <prov:wasInfluencedBy>http://related/item/4</prov:wasInfluencedBy>
+    <dcterms:hasPart>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content03">
+        <dcterms:type>Content</dcterms:type>
+        <dcterms:accessRights rdf:resource="info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights"/>
+        <dcterms:description>metadata in rdf/xml</dcterms:description>
+        <dcterms:identifier>content03</dcterms:identifier>
+      </rdf:Description>
+    </dcterms:hasPart>
+    <dcterms:hasPart>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01">
+        <dcterms:identifier>content01</dcterms:identifier>
+        <dcterms:accessRights rdf:resource="info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights"/>
+        <dcterms:type>Content</dcterms:type>
+        <dcterms:description>Metadata in ntriples - 1st copy</dcterms:description>
+      </rdf:Description>
+    </dcterms:hasPart>
+  </rdf:Description>
+  <time:TemporalEntity rdf:about="info:fedora/sufia:2z10wt94t#embargoDate">
+    <time:hasBeginning>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#embargoStart">
+        <rdf:value>01 Jul 2014</rdf:value>
+        <rdfs:label>Publication date</rdfs:label>
+      </rdf:Description>
+    </time:hasBeginning>
+    <time:hasEnd>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#embargoEnd">
+        <rdf:value>01 Aug 2018</rdf:value>
+        <rdfs:label>Defined</rdfs:label>
+      </rdf:Description>
+    </time:hasEnd>
+    <time:hasDurationDescription>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#embargoDuration">
+        <time:months>1</time:months>
+        <time:years>4</time:years>
+      </rdf:Description>
+    </time:hasDurationDescription>
+  </time:TemporalEntity>
+  <pso:PublicationStatus rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content03#accessRights">
+    <ns1:embargoRelease>Consult me before lift of embargo</ns1:embargoRelease>
+    <ns1:embargoStatus>Closed access</ns1:embargoStatus>
+    <ns1:embargoReason>Xml is so not in vogue</ns1:embargoReason>
+  </pso:PublicationStatus>
+  <pso:PublicationStatus rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01#accessRights">
+    <fabio:hasEmbargoDuration>
+      <time:TemporalEntity rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01#embargoDate">
+        <time:hasEnd rdf:resource="info:fedora/sufia:2z10wt94t/datastreams/content01#embargoEnd"/>
+      </time:TemporalEntity>
+    </fabio:hasEmbargoDuration>
+    <ns1:embargoReason>ehhhhhhh</ns1:embargoReason>
+    <ns1:embargoStatus>Embargoed</ns1:embargoStatus>
+    <ns1:embargoRelease>Automatically lift the embargo</ns1:embargoRelease>
+  </pso:PublicationStatus>
+  <pso:PublicationStatus rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content02#accessRights">
+    <ns1:embargoStatus>Open access</ns1:embargoStatus>
+  </pso:PublicationStatus>
+  <rdf:Description rdf:about="http://related/item/4">
+    <dcterms:bibliographicCitation>Citation text of related item 4</dcterms:bibliographicCitation>
+    <dcterms:title>Title of related item 4</dcterms:title>
+    <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Entity"/>
+    <dcterms:description>Description of related item 4</dcterms:description>
+  </rdf:Description>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t/datastreams/content01#embargoEnd">
+    <rdfs:label>Stated</rdfs:label>
+    <rdf:value>31 Jul 2017</rdf:value>
+  </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:prov="http://www.w3.org/ns/prov#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:ns1="http://vocab.ox.ac.uk/ora#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <dcterms:license>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#license">
+        <rdfs:label>CC Attribution-NonCommercial (CC BY-NC 2.5)</rdfs:label>
+        <rdf:value>License statement goes here</rdf:value>
+        <rdfs:isDefinedBy>http://creativecommons.org/licenses/by-nc/2.5/</rdfs:isDefinedBy>
+      </rdf:Description>
+    </dcterms:license>
+    <dcterms:rightsHolder>second name</dcterms:rightsHolder>
+    <dcterms:dateCopyrighted>2014</dcterms:dateCopyrighted>
+    <dcterms:rightsHolder>first name</dcterms:rightsHolder>
+    <prov:hadActivity>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#rightsActivity">
+        <dcterms:type rdf:resource="http://www.w3.org/ns/prov#Activity"/>
+        <prov:generated>info:fedora/sufia:2z10wt94t#license</prov:generated>
+        <prov:used>info:fedora/sufia:2z10wt94t</prov:used>
+        <prov:generated>info:fedora/sufia:2z10wt94t#rights</prov:generated>
+      </rdf:Description>
+    </prov:hadActivity>
+    <ns1:rightsHolderGroup>Other party</ns1:rightsHolderGroup>
+    <dcterms:rights>
+      <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t#rights">
+        <dcterms:type rdf:resource="http://purl.org/dc/terms/RightsStatement"/>
+        <rdf:value>statement required to be displayed by the publisher </rdf:value>
+      </rdf:Description>
+    </dcterms:rights>
+  </rdf:Description>
+</rdf:RDF>

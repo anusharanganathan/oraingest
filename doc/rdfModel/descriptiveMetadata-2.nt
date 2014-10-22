@@ -1,0 +1,145 @@
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://purl.org/ontology/bibo/DocumentStatus> "Submitted" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://vocab.ox.ac.uk/ora#reviewStatus> "Peer reviewed" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://purl.org/dc/terms/dateAccepted> "01-01-2012" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://www.w3.org/ns/prov#generatedAtTime> "31-06-2014" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://www.w3.org/ns/prov#atLocation> "London, England" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#publisher" .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://www.w3.org/ns/prov#generated> <info:fedora/sufia:2z10wt94t#publicationDocument> .
+<info:fedora/sufia:2z10wt94t#publicationActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#publicationAssociation> .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/spar/fabio/Work> .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://purl.org/ontology/bibo/doi> "10.x.1234.4567.89" .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://purl.org/ontology/bibo/uri> "http://url/to/publisher/copy.com" .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://purl.org/ontology/bibo/identifier> "A1234567890" .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://purl.org/dc/terms/isPartOf> <info:fedora/sufia:2z10wt94t#publicationJournal> .
+<info:fedora/sufia:2z10wt94t#publicationDocument> <http://vocab.ox.ac.uk/ora#isPartOfSeries> <info:fedora/sufia:2z10wt94t#publicationSeries> .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/ontology/bibo/Journal> .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/dc/terms/title> "Title of the journal" .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/ontology/bibo/issn> "0987654321" .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/ontology/bibo/eissn> "013490-0-0423" .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/ontology/bibo/volume> "1245" .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/ontology/bibo/issue> "347" .
+<info:fedora/sufia:2z10wt94t#publicationJournal> <http://purl.org/ontology/bibo/pages> "121-180" .
+<info:fedora/sufia:2z10wt94t#publicationSeries> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/ontology/bibo/Series> .
+<info:fedora/sufia:2z10wt94t#publicationSeries> <http://purl.org/dc/terms/title> "Title of the series" .
+<info:fedora/sufia:2z10wt94t#publicationAssociation> <http://www.w3.org/2006/vcard/ns#n> "Wiley Publications" .
+<info:fedora/sufia:2z10wt94t#publicationAssociation> <http://www.w3.org/2006/vcard/ns#hasURL> "http://wiley.com" .
+<info:fedora/sufia:2z10wt94t#publicationAssociation> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#publicationAssociation> <http://www.w3.org/ns/prov#agent> "info:fedora/sufia:2z10wt94t#publisher" .
+<info:fedora/sufia:2z10wt94t#publicationAssociation> <http://www.w3.org/ns/prov#hadRole> <http://purl.org/dc/terms/publisher> .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#hadPublicationActivity> <info:fedora/sufia:2z10wt94t#publicationActivity> .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/title> "Data model for article content type" .
+
+<info:fedora/sufia:2z10wt94t> <http://library.ucsd.edu/ontology/dams#subtitle> "RDF model using PROV" .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/abstract> "An example of an RDF model using PROV with all of the data" .
+
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/camelot#keyword> "linked data" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/camelot#keyword> "PROV" .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/language> <info:fedora/sufia:2z10wt94t#language> .
+<info:fedora/sufia:2z10wt94t#language> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.loc.gov/mads/rdf/v1#Language> .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "English" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#code> "info:lc/vocabulary/iso639-2/eng" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#hasExactExternalAuthority> "http://id.loc.gov/vocabulary/iso639-2/eng" .
+<info:fedora/sufia:2z10wt94t#language> <http://www.loc.gov/mads/rdf/v1#isMemberOfMADSScheme> "iso639-2" .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/subject> <info:fedora/sufia:2z10wt94t#subject0> .
+<info:fedora/sufia:2z10wt94t#subject0> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Data model" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/subject> <info:fedora/sufia:2z10wt94t#subject1> .
+<info:fedora/sufia:2z10wt94t#subject1> <http://www.loc.gov/mads/rdf/v1#authoritativeLabel> "Linked data" .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/type> <info:fedora/sufia:2z10wt94t#type> .
+<info:fedora/sufia:2z10wt94t#type> <http://www.w3.org/2000/01/rdf-schema#label> "Technical report" .
+<info:fedora/sufia:2z10wt94t#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://vocab.ox.ac.uk/camelot#technicalReport> .
+
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/dateCopyrighted> "2014" .
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#rightsHolderGroup> "Other party" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rightsHolder> "first name" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rightsHolder> "second name" .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/license> <info:fedora/sufia:2z10wt94t#license> .
+<info:fedora/sufia:2z10wt94t> <http://purl.org/dc/terms/rights> <info:fedora/sufia:2z10wt94t#rights> .
+<info:fedora/sufia:2z10wt94t> <http://www.w3.org/ns/prov#hadActivity> <info:fedora/sufia:2z10wt94t#rightsActivity> .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#used> "info:fedora/sufia:2z10wt94t" .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#generated> "info:fedora/sufia:2z10wt94t#license" .
+<info:fedora/sufia:2z10wt94t#rightsActivity> <http://www.w3.org/ns/prov#generated> "info:fedora/sufia:2z10wt94t#rights" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/2000/01/rdf-schema#label> "CC Attribution-NonCommercial (CC BY-NC 2.5)" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "License statement goes here" .
+<info:fedora/sufia:2z10wt94t#license> <http://www.w3.org/2000/01/rdf-schema#isDefinedBy> "http://creativecommons.org/licenses/by-nc/2.5/" .
+<info:fedora/sufia:2z10wt94t#rights> <http://www.w3.org/1999/02/22-rdf-syntax-ns#value> "statement required to be displayed by the publisher " .
+<info:fedora/sufia:2z10wt94t#rights> <http://purl.org/dc/terms/type> <http://purl.org/dc/terms/RightsStatement> .
+
+<info:fedora/sufia:2z10wt94t> <http://purl.org/cerif/frapo/isOutputOf> <info:fedora/sufia:2z10wt94t#fundingActivity> .
+<info:fedora/sufia:2z10wt94t#fundingActivity> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#fundingActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#funder0" .
+<info:fedora/sufia:2z10wt94t#fundingActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#funder1" .
+<info:fedora/sufia:2z10wt94t#fundingActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#fundingAssociation0> .
+<info:fedora/sufia:2z10wt94t#fundingActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#fundingAssociation1> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://purl.org/cerif/frapo/isFundingAgencyFor> "Creator" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://vocab.ox.ac.uk/ora#annotation> "Funder is acknowledged in the journal article" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://www.w3.org/ns/prov#hadRole> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#funder0> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation0> <http://purl.org/cerif/frapo/awards> <info:fedora/sufia:2z10wt94t#fundingAward0> .
+<info:fedora/sufia:2z10wt94t#funder0> <http://www.w3.org/2006/vcard/ns#n> "Funder 1" .
+<info:fedora/sufia:2z10wt94t#funder0> <http://www.w3.org/2002/07/owl#sameAs> "http://someUrl.com" .
+<info:fedora/sufia:2z10wt94t#funder0> <http://purl.org/dc/terms/type> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#fundingAward0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/cerif/frapo/Grant> .
+<info:fedora/sufia:2z10wt94t#fundingAward0> <http://purl.org/cerif/frapo/hasGrantNumber> "dasfsdf" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://purl.org/cerif/frapo/isFundingAgencyFor> "Article" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://vocab.ox.ac.uk/ora#annotation> "eh" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://www.w3.org/ns/prov#hadRole> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#funder1> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation1> <http://purl.org/cerif/frapo/awards> <info:fedora/sufia:2z10wt94t#fundingAward1> .
+<info:fedora/sufia:2z10wt94t#funder1> <http://www.w3.org/2006/vcard/ns#n> "Funder 3" .
+<info:fedora/sufia:2z10wt94t#funder1> <http://www.w3.org/2002/07/owl#sameAs> "http://funder/3" .
+<info:fedora/sufia:2z10wt94t#funder1> <http://purl.org/dc/terms/type> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#fundingAward1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/cerif/frapo/Grant> .
+<info:fedora/sufia:2z10wt94t#fundingAward1> <http://purl.org/cerif/frapo/hasGrantNumber> "GN1234" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://purl.org/cerif/frapo/isFundingAgencyFor> "Article" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://vocab.ox.ac.uk/ora#annotation> "eh" .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://www.w3.org/ns/prov#hadRole> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#funder2> .
+<info:fedora/sufia:2z10wt94t#fundingAssociation2> <http://purl.org/cerif/frapo/awards> <info:fedora/sufia:2z10wt94t#fundingAward2> .
+<info:fedora/sufia:2z10wt94t#funder2> <http://purl.org/dc/terms/type> <http://purl.org/cerif/frapo/FundingAgency> .
+<info:fedora/sufia:2z10wt94t#funder2> <http://www.w3.org/2006/vcard/ns#n> "Funder 3" .
+<info:fedora/sufia:2z10wt94t#funder2> <http://www.w3.org/2002/07/owl#sameAs> "http://funder/3" .
+<info:fedora/sufia:2z10wt94t#fundingAward2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.org/cerif/frapo/Grant> .
+<info:fedora/sufia:2z10wt94t#fundingAward2> <http://purl.org/cerif/frapo/hasGrantNumber> "GN1234" .
+
+
+<info:fedora/sufia:2z10wt94t> <http://vocab.ox.ac.uk/ora#hadCreationActivity> <info:fedora/sufia:2z10wt94t#creationActivity> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#creator0" .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#wasAssociatedWith> "info:fedora/sufia:2z10wt94t#creator1" .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Activity> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#creationAssociation0> .
+<info:fedora/sufia:2z10wt94t#creationActivity> <http://www.w3.org/ns/prov#qualifiedAssociation> <info:fedora/sufia:2z10wt94t#creationAssociation1> .
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://www.w3.org/ns/prov#hadRole> "http://vocab.ox.ac.uk/ora#author" .
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#creationAssociation0> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#creator0> .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2006/vcard/ns#n> "Alena  Ptak-Danchak" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2006/vcard/ns#hasEmail> "alena.ptak-danchak@bodleian.ox.ac.uk" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://purl.org/dc/terms/type> <http://www.w3.org/2006/vcard/ns#Individual> .
+<info:fedora/sufia:2z10wt94t#creator0> <http://www.w3.org/2002/07/owl#sameAs> "http://creator/1" .
+<info:fedora/sufia:2z10wt94t#creator0> <http://vocab.ox.ac.uk/ora#affiliation> <info:fedora/sufia:2z10wt94t#affiliation0> .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Organization> .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/2006/vcard/ns#n> "Radcliffe Science Library" .
+<info:fedora/sufia:2z10wt94t#affiliation0> <http://www.w3.org/2002/07/owl#sameAs> "http://affiliation/3" .
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://www.w3.org/ns/prov#hadRole> "http://vocab.ox.ac.uk/ora#author" .
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://purl.org/dc/terms/type> <http://www.w3.org/ns/prov#Association> .
+<info:fedora/sufia:2z10wt94t#creationAssociation1> <http://www.w3.org/ns/prov#agent> <info:fedora/sufia:2z10wt94t#creator1> .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2006/vcard/ns#n> "Sally Rumsey" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2006/vcard/ns#hasEmail> "sally.rumsey@bodleian.ox.ac.uk" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://purl.org/dc/terms/type> <http://www.w3.org/2006/vcard/ns#Individual> .
+<info:fedora/sufia:2z10wt94t#creator1> <http://www.w3.org/2002/07/owl#sameAs> "http://creator/2" .
+<info:fedora/sufia:2z10wt94t#creator1> <http://vocab.ox.ac.uk/ora#affiliation> <info:fedora/sufia:2z10wt94t#affiliation1> .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2006/vcard/ns#Organization> .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/2006/vcard/ns#n> "BDLSS" .
+<info:fedora/sufia:2z10wt94t#affiliation1> <http://www.w3.org/2002/07/owl#sameAs> "http://affiliation/1" .
+
+

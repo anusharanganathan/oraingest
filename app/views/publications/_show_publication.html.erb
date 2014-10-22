@@ -1,0 +1,22 @@
+    <tr>
+      <td>
+        <h3>
+          <% unless document.title %>
+            <%= link_to document.title, document_url(document.modelName, 'show', document.id), :title => document.title  %>
+          <% else %>
+            <%= link_to document.title, document_url(document.modelName, 'show', document.id), :title => document.title  %>
+          <% end %>
+        </h3>
+        <p> 
+          <% if !document.subtitle.nil? %>
+            <span><%= document.subtitle %></span>
+          <% end %>
+          <% if !document.description.nil? %>
+            <span><%= truncate(document.description, :length=>100, :separatoe =>"...") %></span>
+          <% end %>
+          <% if !document.reviewStatus.nil? %>
+            <span><% document.reviewStatus %></span>
+          <% end %>
+        </p>
+      </td>
+    </tr>

@@ -1,0 +1,4 @@
+server=https://rt_server.example.com/
+user=username
+pass=password
+cookies=rt_cookies

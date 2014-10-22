@@ -1,7 +1,7 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <% if !@files.empty? %>
+<% if !@files.empty? %>
+  <div class="well">
+    <div class="row">
+      <div class="control-group">
         <% @files.each do |file| %>
           <legend>
             <% if file['thumbnail_url'] %>
@@ -28,7 +28,7 @@
             <% end %>
           <% end %>
         <% end %>
-      <% end %>
-    </div> <!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+      </div> <!-- /.control-group -->
+    </div> <!-- /.row -->
+  </div> <!-- /.well -->
+<% end %>

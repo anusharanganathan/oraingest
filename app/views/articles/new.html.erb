@@ -1,8 +1,5 @@
 <h1>Create article</h1>
 
-<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
-<%= render partial: 'tabs' %>
-
 <div>
   <% if @article.errors.any? %>
     <div id="error_explanation">
@@ -16,10 +13,8 @@
   <% end %>
 </div>
 
-<div class="tab-content">
-  <%= render partial: 'files_form' %>
-  <%= render partial: 'form' %>
-</div>
+<%= render partial: 'articles/_edit_short/files_form' %>
+<%= render partial: 'articles/_edit_short/form' %>
 
 <% path = { :new => new_article_path, :list => articles_path } %>
 <br/><%= render partial: "shared/actions/new",  :locals => { :path => path } %>

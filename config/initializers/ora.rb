@@ -250,6 +250,44 @@ Sufia.config do |config|
     "My publisher requires I cite the data and my research is unfunded" => "Unfunded research"
   }
 
+  config.workflow_status = {
+    "Select a status" => "",
+    "Draft" => "Draft",
+    "Submitted" => "Submitted",
+    "Assigned" => "Assigned",
+    "Claimed" => "Claimed",
+    "Approved" => "Approved",
+    "Escalated" => "Escalated",
+    "Referred" => "Referred",
+    "Rejected" => "Rejected",
+    "Published" => "Published",
+  }
+
+  config.rt_server = 'https://support.bodleian.ox.ac.uk/'
+  config.rt_queue = 'oraq'
+
+  config.email_options = {
+    # occurence 
+    #   can be 'first' or 'all'
+    # template 
+    #   Naming of templates in line with rails convention for template partials 
+    #   Example: /shared/emails/record_submitted looks for the file app/views/shared/emails/_record_submitted.html.erb
+    # Subject 
+    #   ID will be replaced by record_id
+    #   TODO: Could replace subject string with a template. Needs code modification in rt_client.create_ticket
+    "article" => {
+      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+    },
+    "thesis" => {
+      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+    },
+    "dataset" => {
+      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+    },
+  }
   # Map hostnames onto Google Analytics tracking IDs
   # config.google_analytics_id = 'UA-99999999-1'
  

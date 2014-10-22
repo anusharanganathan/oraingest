@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:ns1="http://vocab.ox.ac.uk/workflow/schema#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <ns1:depositor>user1@example.com</ns1:depositor>
+    <ns1:workflow>
+      <ns1:Workflow rdf:nodeID="N073ce09f2b124feb91be6517fb90c653">
+        <ns1:entry>
+          <rdf:Description rdf:nodeID="Ncaa6e9f547174dbf94aaf2723937ac7d">
+            <dcterms:date>2014-07-31 13:24:05 +0100</dcterms:date>
+            <ns1:status>Draft</ns1:status>
+          </rdf:Description>
+        </ns1:entry>
+        <ns1:entry>
+          <rdf:Description rdf:nodeID="Nef17d7570d324c3080f99cbe4d78985e">
+            <ns1:status>Submitted</ns1:status>
+            <dcterms:date>2014-08-11 19:24:49 +0100</dcterms:date>
+            <dcterms:description>Submitting</dcterms:description>
+          </rdf:Description>
+        </ns1:entry>
+        <ns1:entry>
+          <rdf:Description rdf:nodeID="N1e17baed99d1409785664865d3ca7b96">
+            <dcterms:creator>reviewer1@example.com</dcterms:creator>
+            <dcterms:description>Assigned to reviewer 2</dcterms:description>
+            <ns1:reviewer_id>reviewer2@example.com</ns1:reviewer_id>
+            <ns1:status>Assigned</ns1:status>
+            <dcterms:date>2014-10-03 01:44:23 +0100</dcterms:date>
+          </rdf:Description>
+        </ns1:entry>
+        <dcterms:identifier>MediatedSubmission</dcterms:identifier>
+        <ns1:entry>
+          <rdf:Description rdf:nodeID="Nce6659611c474f76bd58aeb72210ed79">
+            <dcterms:date>2014-10-03 01:49:34 +0100</dcterms:date>
+            <dcterms:description>http://hydra.bodleian.ox.ac.uk:3000/articles/sufia:2z10wt94t/content02 seems to be a duplicate copy of http://hydra.bodleian.ox.ac.uk:3000/articles/sufia:2z10wt94t/content01. Can this file be deleted?</dcterms:description>
+            <dcterms:creator>reviewer2@example.com</dcterms:creator>
+            <ns1:status>Referred</ns1:status>
+            <ns1:reviewer_id>reviewer2@example.com</ns1:reviewer_id>
+          </rdf:Description>
+        </ns1:entry>
+      </ns1:Workflow>
+    </ns1:workflow>
+  </rdf:Description>
+</rdf:RDF>

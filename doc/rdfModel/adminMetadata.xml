@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:ns1="http://vocab.ox.ac.uk/ora#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <rdf:Description rdf:about="info:fedora/sufia:2z10wt94t">
+    <ns1:oaStatus>Article should be made available freely in ORA</ns1:oaStatus>
+    <ns1:apcPaid>Yes</ns1:apcPaid>
+    <ns1:oaReason>To make a special case for the article to be open access</ns1:oaReason>
+    <ns1:refException>Something</ns1:refException>
+  </rdf:Description>
+</rdf:RDF>

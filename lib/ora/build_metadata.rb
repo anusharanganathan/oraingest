@@ -36,13 +36,51 @@ module Ora
     params
   end
 
-  def validateWorkflow(params)
-    params[:workflows_attributes] = [params[:workflows_attributes]]
-    if params[:workflows_attributes][0].has_key?(:entries_attributes)
-      params[:workflows_attributes][0][:entries_attributes] = [params[:workflows_attributes][0][:entries_attributes]]
-    end
-    if params[:workflows_attributes][0].has_key?(:comments_attributes)
-      params[:workflows_attributes][0][:comments_attributes] = [params[:workflows_attributes][0][:comments_attributes]]
+  def validateWorkflow(params, depositor, article)
+    if params
+      unless params.kind_of?(Array)
+        params = [params]
+      end
+      if params[0].has_key?(:entries_attributes)
+        # Validate entries is array
+        unless params[0][:entries_attributes].kind_of?(Array)
+          params[0][:entries_attributes] = [params[0][:entries_attributes]]
+        end
+        if params[0][:entries_attributes][0][:status].nil? || params[0][:entries_attributes][0][:status].empty? || article.workflows.first.current_status == params[0][:entries_attributes][0][:status]
+          params[0] = params[0].except(:entries_attributes)
+          #params[0][:entries_attributes][0][:status] = nil
+          #params[0][:entries_attributes][0][:date] = nil
+          #params[0][:entries_attributes][0][:creator] = nil
+          #params[0][:entries_attributes][0][:creator] = nil
+          #params[0][:entries_attributes][0][:reviewer_id] = nil
+        else
+          # Set creator to user logged in
+          params[0][:entries_attributes][0][:creator] = [depositor]
+          params[0][:entries_attributes][0][:date] = [Time.now.to_s]
+        end
+      end
+      if params[0].has_key?(:emailThreads_attributes)
+        # Validate emailThreads is array
+        if !params[0][:emailThreads_attributes].kind_of?(Array)
+          params[0][:emailThreads_attributes] = [params[0][:emailThreads_attributes]]
+        end
+      end
+      if params[0].has_key?(:comments_attributes)
+        # Validate comments is array
+        if !params[0][:comments_attributes].kind_of?(Array)
+          params[0][:comments_attributes] = [params[0][:comments_attributes]]
+        end
+        # Add date and creator if not empty, else set to nil
+        if params[0][:comments_attributes][0][:description].nil? || params[0][:comments_attributes][0][:description].empty?
+          params[0] = params[0].except(:comments_attributes)
+          #params[0][:comments_attributes][0][:description] = nil
+          #params[0][:comments_attributes][0][:date] = nil
+          #params[0][:comments_attributes][0][:creator] = nil
+        else
+          params[0][:comments_attributes][0][:date] = [Time.now.to_s]
+          params[0][:comments_attributes][0][:creator] = [depositor]
+        end
+      end 
     end
     params
   end
@@ -83,8 +121,8 @@ module Ora
   def buildWorktype(params, article)
     params = params.except(:typeAuthority)
     article.worktype = nil
+    model = article.class.to_s.downcase
     if !params[:typeLabel].empty?
-      model = article.class.to_s.downcase
       if Sufia.config.type_authorities[model].include?(params[:typeLabel])
         params[:typeAuthority] = Sufia.config.type_authorities[model][params[:typeLabel]]
       end
@@ -524,55 +562,67 @@ module Ora
     article
   end
 
-  def buildMetadata(params, article, contents)
+  def buildMetadata(params, article, contents, depositor)
     # Validate permissions
     if params.has_key?(:permissions_attributes)
       params[:permissions_attributes] = Ora.validatePermissions(params[:permissions_attributes])
     end
-    article.attributes = params
+    if params.has_key?(:workflows_attributes)
+      params[:workflows_attributes] = Ora.validateWorkflow(params[:workflows_attributes], depositor, article)
+    end
 
     #remove_blank_assertions for language and build
     if params.has_key?(:language)
       article = Ora.buildLanguage(params[:language], article)
+      params.except!(:language)
     end
 
     #remove_blank_assertions for subject and build
     if params.has_key?(:subject)
       article = Ora.buildSubject(params[:subject], article)
+      params.except!(:subject)
     end
 
     # Remove blank assertions for worktype and build
     if params.has_key?(:worktype)
       article = Ora.buildWorktype(params[:worktype], article)
+      params.except!(:worktype)
     end
 
     #Remove blank assertions for temporal coverage and build
     if params.has_key?(:temporal)
       article = Ora.buildTemporalData(params[:temporal], article)
+      params.except!(:temporal)
     end
 
     #Remove blank assertions for date collected and build
     if params.has_key?(:dateCollected)
       article = Ora.buildDateCollected(params[:dateCollected], article)
+      params.except!(:dateCollected)
     end
 
     #Remove blank assertions for spatial coverage and build
     if params.has_key?(:spatial)
       article = Ora.buildSpatialData(params[:spatial], article)
+      params.except!(:spatial)
     end
 
     if params.has_key?(:storageAgreement)
       article = Ora.buildStorageAgreementData(params[:storageAgreement], article)
+      params.except!(:storageAgreement)
     end
 
     # Remove blank assertions for rights activity and build
     if params.has_key?(:license) || params.has_key?(:rights)
       article = Ora.buildRightsActivity(params, article)
+      params.except!(:license)
+      params.except!(:rights)
     end
 
     #remove_blank_assertions for publication activity and build
     if params.has_key?(:publication)
       article = Ora.buildPublicationActivity(params[:publication], article)
+      params.except!(:publication)
     end
     # get the publication date to calculate embargo dates for access rights
     if article.class.to_s != "DatasetAgreement"
@@ -584,45 +634,52 @@ module Ora
 
     # Remove blank assertions for dataset access rights and build
     if params.has_key?(:accessRights)
-      #ar = Ora.validateEmbargoDates(params[:accessRights], "info:fedora/#{article.id}", datePublished)
       article = Ora.buildAccessRights(params[:accessRights], article, datePublished)
+      params.except!(:accessRights)
     end
 
     # Remove blank assertions for internal relations and build
     if params.has_key?(:hasPart)
       article = Ora.buildInternalRelations(params[:hasPart], article, datePublished, contents)
+      params.except!(:hasPart)
     end
 
     #remove_blank_assertions for external relations and build
     if params.has_key?(:qualifiedRelation)
       article = Ora.buildExternalRelations(params[:qualifiedRelation], article)
+      params.except!(:qualifiedRelation)
     end
 
     #remove_blank_assertions for funding activity and build
     if params.has_key?(:funding)
       article = Ora.buildFundingActivity(params[:funding], article)
+      params.except!(:funding)
     end
 
     #remove_blank_assertions for creation activity and build
     if params.has_key?(:creation)
       article = Ora.buildCreationActivity(params[:creation], article)
+      params.except!(:creation)
     end
 
     #remove_blank_assertions for titular stewardship activity and build
     if params.has_key?(:titularActivity)
       article = Ora.buildTitularActivity(params[:titularActivity], article)
+      params.except!(:titularActivity)
     end
 
     #Remove blank assertions for validity date and build
     if params.has_key?(:valid)
       article = Ora.buildValidityDate(params[:valid], article)
+      params.except!(:valid)
     end
 
     #Remove blank assertions for invoice details and build
     if params.has_key?(:invoice)
       article = Ora.buildInvoiceData(params[:invoice], article)
+      params.except!(:invoice)
     end
-
+    article.attributes = params
     article
   end
 
