@@ -18,9 +18,13 @@ jetty
 rails_server.log
 /log/*.log
 /tmp
+
 #Ignore all of the cookies files
 .rtclientrc
 /rt_cookies/*
-#Committing Gemfile.lock before upgrading to sufia 4.0
+
+#Committing Gemfile.lock before upgrading to sufia 3.7.2
 #Gemfile.lock
 
+#Ignore public assets
+/public/assets/
