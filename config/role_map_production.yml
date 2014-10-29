@@ -1,2 +1,7 @@
 uva-only:
+reviewer:
+  - reviewer1@example.com
+  - reviewer2@example.com
+financier:
+  - financier1@example.com
 public:
