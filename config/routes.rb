@@ -8,7 +8,7 @@ OraHydra::Application.routes.draw do
   Hydra::BatchEdit.add_routes(self)
 
   devise_for :users
-  
+
   get 'deposit_agreement', to: 'static#deposit_agreement'
   get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
 
@@ -30,9 +30,11 @@ OraHydra::Application.routes.draw do
 
   resources :articles
   delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
-  delete 'articles/:id/file/:dsid', to: 'articles#destroy_datastream'
   get 'articles/:id/detailed/edit', to: 'articles#edit_detailed'
   
+  get 'articles/:id/file/:dsid', to: 'article_files#show'
+  delete 'articles/:id/file/:dsid', to: 'article_files#destroy'
+
   resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
   get 'datasets/:id/agreement', to: 'datasets#agreement'

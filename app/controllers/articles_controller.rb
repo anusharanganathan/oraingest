@@ -25,7 +25,7 @@ require "utils"
 require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :edit_detailed, :update, :destroy, :destroy_datastream, :revoke_permissions]
+  before_action :set_article, only: [:show, :edit, :edit_detailed, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
@@ -146,28 +146,6 @@ class ArticlesController < ApplicationController
     @article.destroy
     respond_to do |format|
       format.html { redirect_to articles_url }
-      format.json { head :no_content }
-    end
-  end
-
-  def destroy_datastream
-    authorize! :destroy, params[:id]
-    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
-       authorize! :review, params[:id]
-    end
-    # To delete a datastream 
-    @article.datastreams[params[:dsid]].delete
-    parts = @article.hasPart
-    n = parts.index{ |val| val.id.to_s.include? params[:dsid] }
-    unless n.nil?
-      #@article.hasPart[n].accessRights = nil
-      #@article.hasPart[n] = nil
-      @article.hasPart = nil
-      @article.hasPart = parts.select { |val| not val.id.to_s.include? params[:dsid] }
-      @article.save
-    end
-    respond_to do |format|
-      format.html { redirect_to article_url }
       format.json { head :no_content }
     end
   end
