@@ -51,7 +51,7 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       if !hp.nil?
         if hp.identifier.first.start_with?('content')
           hasContent = true
-          if !hp.accessRights.nil? && hp.accessRights.first.embargoStatus == 'Open access'
+          if !hp.accessRights.nil? && !hp.accessRights.first.nil? && hp.accessRights.first.embargoStatus == 'Open access'
             contentVisible = true
           end
         end
@@ -94,7 +94,7 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       self.accessRights.first.to_solr(solr_doc)
     end
     self.hasPart.each do |hp|
-      if hp.identifier.first.start_with?('content') && !hp.accessRights.nil? && !hp.accessRights.first.nil?
+      if !hp.nil? && hp.identifier.first.start_with?('content') && !hp.accessRights.nil? && !hp.accessRights.first.nil?
         hp.accessRights.first.to_solr(solr_doc)
       end #if content and accessRights
     end #each hasPart
