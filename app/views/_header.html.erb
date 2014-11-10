@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%= render :partial => "layouts/head_tag_content"%>
+  </head>
+
+  <body> 
+    <div class="wrapper">
+      <%= render :partial => '/masthead', :formats => [:html] %>
+      <%= render :partial => '/flash_msg' %>
+        <section class="main-content">
+          <div class="container">
+            <header class="content-header">
+              <img src="images/core/logo-myora.svg" alt="MyOra" class="float-left" />
+<!-- TODO: should be a partial which is used elsewhere too? -->
+              <aside class="search">
+                <form action="" method="post">
+                  <input type="search" type="search" placeholder="Type keywords here" />
+                  <button type="submit" class="button">Search</button>
+                </form>
+              </aside>
+            </header>
+          </div>
+
