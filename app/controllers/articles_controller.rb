@@ -30,6 +30,7 @@ class ArticlesController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
+  include BlacklightAdvancedSearch::Controller
   include Sufia::Controller
   #include Sufia::FilesControllerBehavior
   # Include ORA search logic
