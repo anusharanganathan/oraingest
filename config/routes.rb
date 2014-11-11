@@ -42,6 +42,9 @@ OraHydra::Application.routes.draw do
   resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
   get 'datasets/:id/agreement', to: 'datasets#agreement'
+  
+  get 'datasets/:id/file/:dsid', to: 'dataset_files#show'
+  delete 'datasets/:id/file/:dsid', to: 'dataset_files#destroy'
 
   resources :dataset_agreements
 

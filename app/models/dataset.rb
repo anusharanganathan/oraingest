@@ -64,6 +64,21 @@ class Dataset < ActiveFedora::Base
     }
   end
 
+  def datastream_opts(dsid)
+    opts = {}
+    #move to model??
+    #TODO: Check that its label is attributes.json and mime type is application/json and need to resque from parse
+    if self.datastreams.keys.include?(dsid) && dsid.start_with?("content")
+      opts = self.datastreams[dsid].content
+      begin
+        opts = JSON.parse(opts)
+      rescue
+        opts = {}
+      end
+    end
+    opts
+  end
+
   def save_file(file, pid)
     name =  file.original_filename
     name = File.basename(name) 
