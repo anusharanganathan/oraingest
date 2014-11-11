@@ -71,7 +71,7 @@
       </p>
       <% end %>
       
-      <% if !@dataset.medium.empty? && !@dataset.medium.first.empty?  %>
+      <% if !@dataset.medium.nil? && !@dataset.medium.first.nil? %>
       <p>
         <strong>Data storage medium:</strong>
         <% if @dataset.medium.first == Sufia.config.data_medium["Analog"] %>
