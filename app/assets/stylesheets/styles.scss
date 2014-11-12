@@ -99,6 +99,8 @@ body {
 
 .green-bg { background-color: #759B8E !important; }
 
+.inline { display: inline !important; }
+
 .overflow { overflow: hidden !important; }
 
 .v-center {
@@ -160,6 +162,15 @@ h5 {
 	color: #4F738A;
 }
 
+h6,
+span.h6 {
+	font-family: "Arial", sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+	color: #719AAA;
+	margin: 0;
+}
+
 p {
 	font-size: 14px;
 	color: #505050;
@@ -169,14 +180,6 @@ p {
 p.small {
 	margin: 8px 0;
 }
-
-a {
-	display: inline-block;
-	color: #4F738A;
-	text-decoration: none;
-}
-
-a:hover { text-decoration: underline; }
 
 strong { font-weight: bold; }
 em { font-style: italic; }
@@ -223,6 +226,14 @@ hr {
 }
 
 .colfull > hr { margin: 15px 0; }
+
+a {
+	display: inline-block;
+	color: #4F738A;
+	text-decoration: none;
+}
+
+a:hover { text-decoration: underline; }
 
 /* Icons
 ------------------------------------------- */
@@ -433,6 +444,7 @@ input[type=password] {
 	outline: 1px solid transparent;
 	box-sizing: border-box;
 	transition: border 0.3s ease-in-out, outline 0.3s ease-in-out;
+	-webkit-appearance: none;
 }
 
 input[type=search]:focus,
@@ -551,7 +563,9 @@ p + input { margin-top: 0 !important; }
 
 	/* Button Icons */
 	.button > img.icon {
-		float: right;
+		position: absolute;
+		right: 7px;
+		top: 5px;
 		margin: 2px 2px 0 0;
 		height: 13px;
 	}
@@ -994,7 +1008,8 @@ p + input { margin-top: 0 !important; }
 	clear: both;
 }
 
-.search-box input[type=search] {
+.search-box input[type=search],
+.search-box input[type=text] {
 	display: inline-block;
 	width: 280px;
 	margin: 0px 0px 0px 2px;
@@ -1021,6 +1036,10 @@ p + input { margin-top: 0 !important; }
 	position: relative;
 	top: 10px;
 }
+
+.search-header-full { width: 780px; }
+.search-header-full .search-box input[type=search],
+.search-header-full .search-box input[type=text] { width: 440px; }
 
 /* Content
 ------------------------------------------- */
@@ -1118,6 +1137,11 @@ p + input { margin-top: 0 !important; }
 ------------------------------------------- */
 
 .filters {}
+
+.filters > a.button { 
+	display: block; 
+	margin-bottom: 5px;
+}
 
 .filters > h3 {
 	display: block;
@@ -1339,6 +1363,113 @@ p + input { margin-top: 0 !important; }
 	display: block;
 	margin-top: 5px;
 }
+
+/* Records
+------------------------------------------- */
+
+.record-content {
+	float: left;
+	width: 520px;
+	border-right: 1px dotted #ccc;
+	padding-right: 25px;
+}
+
+
+.record-content h6 + h3 { margin-top: 5px; }
+.record-content h6 + p { margin-top: 0; }
+
+.record-content p {
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+}
+
+.record-content h3 { 
+	font-size: 24px;
+	line-height: 26px;
+}
+
+.record-sidebar {
+	float: right;
+	width: 165px;
+}
+
+.record-sidebar > h6 { margin-bottom: 10px; }
+
+.record-sidebar > a {
+	position: relative;
+	display: block;
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+	padding: 8px 0px 8px 38px;
+	margin: 10px 0;
+}
+
+.record-sidebar > a > img {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin-top: -17.5px;
+}
+
+.record-details { margin: 0 !important; }
+.record-details li { 
+	position: relative;
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+	border: 0px !important; 
+	padding-left: 60px;
+	margin: 20px 0;
+	color: #505050;
+}
+
+.record-details li > img {
+	position: absolute;
+	top: 0;
+	left: 15px;
+}
+
+.record-details li.status {
+	font-family: "Helvetica", sans-serif;
+	font-size: 16px;
+	color: #4F738A;
+}
+
+.record-details li.status > img { left: 10px; }
+.record-details li.downloads > img { left: 18px; }
+
+/* Accordian
+------------------------------------------- */
+
+.accordian { border-top: 1px dotted #ccc; }
+.accordian:last-of-type { border-bottom: 1px dotted #ccc; }
+
+.accordian .accordian-header {
+	position: relative;
+	font-family: "Helvetica", sans-serif;
+	font-size: 20px;
+	color: #4F738A;
+	padding: 10px 0 12px 0;
+	cursor: pointer;
+}
+
+.accordian .accordian-header:after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: 0px;
+	width: 21px;
+	height: 21px;
+	margin-top: -10.5px;
+	background: image-url("ora/icons/accordian-open.svg") no-repeat 0 0;
+	transition: transform 0.4s ease-in-out;
+}
+
+.accordian.open .accordian-header:after {
+	transform: rotate(45deg);
+}
+
+.accordian .accordian-content { display: none; }
 
 /* Pagination
 ------------------------------------------- */
@@ -1575,7 +1706,8 @@ p + input { margin-top: 0 !important; }
 	float: right;
 }
 
-.search input[type=search] {
+.search input[type=search],
+.search input[type=text] {
 	float: left;
 	width: 330px;
 	padding: 10px;
