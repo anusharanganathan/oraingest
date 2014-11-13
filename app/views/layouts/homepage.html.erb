@@ -21,10 +21,16 @@ limitations under the License.
 
 <div class="gutter-container">
   <div class="col col1of2">
-    <%= yield :column1 %>
+  	<div class="content-box padding-25 overflow">
+    	<%= yield :column1 %>
+    </div>
+    <%= render partial: '/catalog/_action_partials/reviewer_dashboard' %>
   </div>
-  <div class="col col2of2">
-    <%= yield :column2 %>
+  <div class="col col1of2">
+  	<div class="content-box padding-25 overflow">
+    	<%= yield :column2 %>
+    </div>
+    <%= render partial: '/catalog/_action_partials/list_agreements' %>
   </div>
 </div>
 

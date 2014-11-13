@@ -1,59 +1,57 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <% unless article.workflows.first.nil? %>
-        <% wf = article.workflows.first %>
-      <% end %>
+<% unless article.workflows.first.nil? %>
+  <% wf = article.workflows.first %>
+<% end %>
 
-      <h3>History - <small>what's happened so far</small></h3>
-      <% if article.workflows.empty? || article.workflows.first.entries.map{|e| e.status.first } == ["Draft"]  %>
-        This <%=@model.capitalize()%> has never been submitted for review.
+<div class="accordian">
+  <div class="accordian-header">History</div>
+  <div class="accordian-content">
+    <% if article.workflows.empty? || article.workflows.first.entries.map{|e| e.status.first } == ["Draft"]  %>
+      <p>This <%=@model.capitalize()%> has never been submitted for review.</p>
 
-      <% else %>
+    <% else %>
+      <table class="table table-bordered">
+        <tr>
+          <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th><th>Comment</th>
+        </tr>
+        <% wf.entries.each do |entry| %>
+          <tr>
+            <td><%= format_date(entry.date.first) %></td>
+            <td><%= entry.creator.first %></td>
+            <td><%= entry.status.first %></td>
+            <td><%= entry.reviewer_id.first %></td>
+            <td><%= entry.description.first %></td>
+          </tr>
+        <% end %>
+      </table>
+      <% if !wf.comments.nil? and !wf.comments.empty? %>
+        <h3>Comments</h3>
         <table class="table table-bordered">
           <tr>
-            <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th><th>Comment</th>
+            <th>Date</th><th>Comment Author</th><th>Comment</th>
           </tr>
-          <% wf.entries.each do |entry| %>
+          <% wf.comments.each do |comment| %>
             <tr>
-              <td><%= format_date(entry.date.first) %></td>
-              <td><%= entry.creator.first %></td>
-              <td><%= entry.status.first %></td>
-              <td><%= entry.reviewer_id.first %></td>
-              <td><%= entry.description.first %></td>
+              <td><%= format_date(comment.date.first) %></td>
+              <td><%= comment.creator.first %></td>
+              <td><%= comment.description.first %></td>
             </tr>
           <% end %>
         </table>
-        <% if !wf.comments.nil? and !wf.comments.empty? %>
-          <h3>Comments</h3>
-          <table class="table table-bordered">
-            <tr>
-              <th>Date</th><th>Comment Author</th><th>Comment</th>
-            </tr>
-            <% wf.comments.each do |comment| %>
-              <tr>
-                <td><%= format_date(comment.date.first) %></td>
-                <td><%= comment.creator.first %></td>
-                <td><%= comment.description.first %></td>
-              </tr>
-            <% end %>
-          </table>
-        <% end %>
-        <% if !wf.emailThreads.nil? and !wf.emailThreads.empty? %>
-          <h3>Email threads</h3>
-          <table class="table table-bordered">
-            <tr>
-              <th>Date</th><th>Email thread</th>
-            </tr>
-            <% wf.emailThreads.each do |emailThread| %>
-              <tr>
-                <td><%= format_date(emailThread.date.first) %></td>
-                <td><%=link_to emailThread.identifier.first, emailThread.references.first, :target => "_blank" %></td>
-              </tr>
-            <% end %>
-          </table>
-        <% end %>
       <% end %>
-    </div><!-- /.control-group -->
-  </div><!-- /.row -->
-</div><!-- /.well -->
+      <% if !wf.emailThreads.nil? and !wf.emailThreads.empty? %>
+        <h3>Email threads</h3>
+        <table class="table table-bordered">
+          <tr>
+            <th>Date</th><th>Email thread</th>
+          </tr>
+          <% wf.emailThreads.each do |emailThread| %>
+            <tr>
+              <td><%= format_date(emailThread.date.first) %></td>
+              <td><%=link_to emailThread.identifier.first, emailThread.references.first, :target => "_blank" %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    <% end %>
+  </div>
+</div>

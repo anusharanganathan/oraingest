@@ -2,7 +2,7 @@ require 'blacklight/catalog'
 class PublicationsController < ApplicationController
   include  Sufia::DashboardControllerBehavior
 
-  layout "sufia-two-column"    
+  layout "sufia-one-column"    
   # Remove the solr_search_params_logic that we don't want applied 
   # (No advanced search & Don't apply the Hydra gated discovery, which filters out all things that don't list you in their permissions.)
   # See: https://github.com/projectblacklight/blacklight/wiki/Extending-or-Modifying-Blacklight-Search-Behavior

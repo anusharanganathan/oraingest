@@ -1,23 +1,27 @@
 <% if !article.permissions.empty? %>
-  <legend>Permissions</legend>
-  <table class="table table-bordered">
-    <tbody>
-      <tr>
-        <th width="40%">Person / Group</th>
-        <th>Access level</th>
-      </tr>
-      <% article.permissions.each do |p| %>
-        <tr>
-          <td><%= p.name %>
-            <% if p.type.downcase == "group" %>
-              (<%= p.type %>)
-            <% elsif p.name == article.workflowMetadata.depositor[0] %>
-              (depositor)
-            <% end %>
-          </td>
-          <td><%= p.access %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>  
+  <div class="accordian">
+    <div class="accordian-header">Permissions</div>
+    <div class="accordian-content">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th><strong>Person / Group</strong></th>
+            <th><strong>Access level</strong></th>
+          </tr>
+          <% article.permissions.each do |p| %>
+            <tr>
+              <td><%= p.name %>
+                <% if p.type.downcase == "group" %>
+                  (<%= p.type %>)
+                <% elsif p.name == article.workflowMetadata.depositor[0] %>
+                  (depositor)
+                <% end %>
+              </td>
+              <td><%= p.access %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 <% end %>   

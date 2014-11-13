@@ -14,13 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 <%= render partial: '/header' %>
-      <div id="content-wrapper"> 
-        <div id="content" class="row">
-          <!-- 110 rows -->
-          <div class="span110">
-            <%= yield %>
-          </div>
-        </div><!-- /#content -->
-      </div><!-- /#content-wrapper -->
+
+<div class="container">
+  <%= yield %>
+</div> <!-- /.container -->
 
 <%= render partial: '/footer' %>

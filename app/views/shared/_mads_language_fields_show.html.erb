@@ -5,23 +5,22 @@
   <% end %>
 <% end %>
 <% if hasData %>
-  <div id="language">
-    <p><strong>Language:</strong></p>
-    <% article.language.each do |l|%>
-      <div>
-        <% if !l.languageAuthority.empty? && !l.languageAuthority.first.empty? && !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
-          <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
-          <% if !l.languageCode.empty? && !l.languageCode.first.empty? && !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
-            <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
-          <% elsif !l.languageCode.empty? && !l.languageCode.first.empty? %>
-            <span>(<%= l.languageCode.first %>)</span>
-          <% elsif !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
-            <span>(<%= l.languageScheme.first %>)</span>
-        <% elsif !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
-          <span><%= l.languageLabel.first %></span>
+
+  <p><span class="h6">Language:</span>
+  <% article.language.each do |l|%>
+      <% if !l.languageAuthority.empty? && !l.languageAuthority.first.empty? && !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
+        <span><%=link_to l.languageLabel.first, l.languageAuthority.first %></span>
+        <% if !l.languageCode.empty? && !l.languageCode.first.empty? && !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
+          <span>(<%= l.languageCode.first %>, <%= l.languageScheme.first %>)</span>
+        <% elsif !l.languageCode.empty? && !l.languageCode.first.empty? %>
+          <span>(<%= l.languageCode.first %>)</span>
+        <% elsif !l.languageScheme.empty? && !l.languageScheme.first.empty? %>
+          <span>(<%= l.languageScheme.first %>)</span>
+      <% elsif !l.languageLabel.empty? && !l.languageLabel.first.empty? %>
+        <span><%= l.languageLabel.first %></span>
+      <% end %>
         <% end %>
-          <% end %>
-      </div>
-    <% end %>
-  </div><!-- /language -->
+  <% end %>
+  </p>
+
 <% end %>

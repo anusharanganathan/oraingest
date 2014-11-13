@@ -5,11 +5,9 @@
   <%= render :partial=>'/catalog/_action_partials/add_publications' %>
   <%= render :partial=>'/catalog/recent_publications', :locals => {:recent_publications=>@recent_publications} %>
   <%= render :partial=>'/catalog/_action_partials/list_publications' %>
-  <%= render :partial=>'/catalog/_action_partials/reviewer_dashboard' %>
 <% end %>
 <% content_for :column2 do %>
   <%= render :partial=>'/catalog/_action_partials/add_datasets' %>
   <%= render :partial=>'/catalog/recent_datasets', :locals => {:recent_datasets=>@recent_datasets} %>
   <%= render :partial=>'/catalog/_action_partials/list_datasets' %>
-  <%= render :partial=>'/catalog/_action_partials/list_agreements' %>
 <% end %>

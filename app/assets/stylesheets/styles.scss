@@ -99,7 +99,7 @@ body {
 
 .green-bg { background-color: #759B8E !important; }
 
-.inline { display: inline !important; }
+.inline { display: inline !important; width: auto !important; }
 
 .overflow { overflow: hidden !important; }
 
@@ -125,6 +125,12 @@ body {
 .notification label p {
 	display: block;
 	float: left;
+}
+
+.notification p {
+	font-family: "Arial", sans-serif;
+	font-size: 14px;
+	color: #505050;
 	margin: 0;
 }
 
@@ -133,6 +139,9 @@ body {
 
 /* Typography
 ------------------------------------------- */
+
+.arial { font-family: "Arial", sans-serif !important; }
+.helvetica { font-family: "Helvetica", sans-serif !important; }
 
 h1, h2, h3, h4, h5, h6, hr {
 	margin: 15px 0;
@@ -169,6 +178,13 @@ span.h6 {
 	font-size: 12px;
 	color: #719AAA;
 	margin: 0;
+}
+
+h2.blue-heading {
+	font-family: "Helvetica Neue", sans-serif;
+	font-size: 26px;
+	color: #4F738A;
+	margin: 30px 0 20px 0;
 }
 
 p {
@@ -288,7 +304,7 @@ a:hover { text-decoration: underline; }
 }
 
 .icon-download {
-	transform: rotate(180deg);
+	background: image-url('ora/icons/download.svg') no-repeat 0 0;
 }
 
 	.button .icon-upload { margin-left: 5px; }
@@ -630,6 +646,11 @@ p + input { margin-top: 0 !important; }
 		background: #4F738A;
 	}
 
+/* Form Steps
+------------------------------------------- */
+section.form-step { display: none; }
+section.form-step:first-of-type { display: block; }
+
 /* Hidden Forms
 ------------------------------------------- */
 .hidden-form { 
@@ -707,12 +728,17 @@ p + input { margin-top: 0 !important; }
 	background: #FFFFF0;
 }
 
-.fieldset .row:last-of-type {
+.fieldset .row:last-of-type,
+.fieldset input[type=text]:last-child,
+.fieldset input[type=text]:last-of-type {
 	margin-bottom: 0;
 }
 
+.fieldset input[type=text]:first-child { margin: 0; }
+
+.fieldset h4 { margin-top: 0; }
+
 .fieldset label {
-	margin: 0;
 	font-size: 12px;
 	line-height: 26px;
 }
@@ -722,10 +748,15 @@ p + input { margin-top: 0 !important; }
 	top: 2px;
 }
 
+.fieldset label:first-of-type { margin-top: 0; }
+.fieldset label:last-of-type { margin-bottom: 0; }
+
 .fieldset textarea { 
 	max-width: 70%; 
 	margin-bottom: 0;
 }
+
+.fieldset fieldset { margin-bottom: 0; }
 
 .fieldset .indent { margin-left: 30px; }
 
@@ -742,7 +773,6 @@ p + input { margin-top: 0 !important; }
 
 .field-repeater {
 	position: relative;
-	top: -10px;
 }
 
 .field-repeater .add-field {
@@ -778,6 +808,8 @@ p + input { margin-top: 0 !important; }
 	margin: 8px 0;
 }
 
+.field-repeater ol li:first-of-type { margin-top: 0; }
+
 .field-repeater ol li:after { display: none; }
 
 .field-repeater ol li:before {
@@ -804,6 +836,24 @@ p + input { margin-top: 0 !important; }
 	margin-right: 8px;
 }
 
+.field-repeater ol li select:first-child,
+.field-repeater ol li input[type=text]:first-child {
+	margin-bottom: 10px;
+}
+
+.field-repeater.no-margins ol li select:first-child,
+.field-repeater.no-margins ol li input[type=text]:first-child {
+	margin-bottom: 0;
+}
+
+.field-repeater ol li h6:first-of-type {
+	padding: 4px 0;
+	font-family: "Helvetica", sans-serif;
+	font-weight: normal;
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
 /* Form Navigation
 ------------------------------------------- */
 .form-nav {}
@@ -826,6 +876,12 @@ p + input { margin-top: 0 !important; }
 	font-size: 16px;
 	padding: 10px;
 	color: #3C3C3C;
+}
+
+.form-nav-submit { float: right; }
+
+.form-nav-submit > button {
+	padding: 10px 50px;
 }
 
 /* Category Bars
@@ -876,6 +932,11 @@ p + input { margin-top: 0 !important; }
 	z-index: 19;
 }
 
+.tooltip.tooltip-wide {
+	width: 350px;
+	right: -220px;
+}
+
 .fieldset:hover .tooltip { display: block; }
 
 .tooltip strong {
@@ -906,6 +967,8 @@ p + input { margin-top: 0 !important; }
 }
 
 .tooltip .tooltip-extra { clear: both; }
+
+.tooltip.tooltip-wide .tooltip-extra { max-width: 250px; }
 
 .tooltip .tooltip-extra .circle {
 	display: block;
@@ -1049,13 +1112,18 @@ p + input { margin-top: 0 !important; }
 	padding: 1px 0;
 }
 
+.content-header + .bottom-border + a { margin-top: 15px; }
+.content-header + .bottom-border + a + h2 { margin: 15px 0; }
+
+.expand-content { display: none; }
+
 .bottom-border:after {
 	content: '';
 	display: block;
 	width: 100%;
 	height: 1px;
 	margin-top: 15px;
-	background: image-url('../ora/core/border-dotted.png') repeat-x 0 0;
+	background: image-url('/ora/core/border-dotted.png') repeat-x 0 0;
 }
 
 .content-box {
@@ -1065,6 +1133,8 @@ p + input { margin-top: 0 !important; }
 	border: 1px solid #DCE0E0;
 	clear: both;
 }
+
+.content-box > p:last-child { margin-bottom: 0; }
 
 .col .content-box:last-child {
 	margin-bottom: 0;
@@ -1234,6 +1304,29 @@ p + input { margin-top: 0 !important; }
 	margin: 3px 0 3px 15px;
 }
 
+/* Standard Table
+------------------------------------------- */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	border: none;
+	text-align: left;
+}
+
+table th { width: 120px; }
+
+table th, table td { 
+	vertical-align: top; 
+	padding: 5px 0;
+}
+
+table td input,
+table td select,
+table td textarea { 
+	margin: 0 !important; 
+	width: 300px !important;
+}
+
 /* Article Table
 ------------------------------------------- */
 
@@ -1243,7 +1336,7 @@ p + input { margin-top: 0 !important; }
 	border: 1px solid #DCDCDC;
 }
 
-.article-table, th, td {
+.article-table, .article-table th, .article-table td {
 	position: relative;
 	border-right: 1px solid #DCDCDC;
 	text-align: left;
@@ -1461,7 +1554,7 @@ p + input { margin-top: 0 !important; }
 	width: 21px;
 	height: 21px;
 	margin-top: -10.5px;
-	background: image-url("ora/icons/accordian-open.svg") no-repeat 0 0;
+	background: image-url("/assets/ora/icons/accordian-open.svg") no-repeat 0 0;
 	transition: transform 0.4s ease-in-out;
 }
 
@@ -1469,7 +1562,12 @@ p + input { margin-top: 0 !important; }
 	transform: rotate(45deg);
 }
 
-.accordian .accordian-content { display: none; }
+.accordian .accordian-content {  }
+
+.accordian .accordian-content br:last-of-type { display: none; }
+.accordian .accordian-content p { margin: 5px 0; }
+.accordian .accordian-content p:first-child { margin-top: 0; }
+.accordian .accordian-content p:last-child { margin-bottom: 10px; }
 
 /* Pagination
 ------------------------------------------- */
@@ -1575,7 +1673,7 @@ p + input { margin-top: 0 !important; }
 
 .form-steps {
 	position: relative;
-	margin: 20px 0;
+	margin: 0 0 20px 0;
 	overflow: hidden;
 }
 
@@ -1589,6 +1687,7 @@ p + input { margin-top: 0 !important; }
 	box-sizing: border-box;
 	font-family: "Helvetica Neue", sans-serif;
 	color: #4F738A;
+	cursor: pointer;
 }
 
 .form-steps ol li:after {
@@ -1610,6 +1709,7 @@ p + input { margin-top: 0 !important; }
 	color: #fff;
 	line-height: 50px;
 	z-index: 2;
+	transition: background-color 0.5s ease-in-out;
 }
 
 .form-steps ol li > span {
@@ -1622,6 +1722,18 @@ p + input { margin-top: 0 !important; }
 	height: 4px;
 	background: #719AAA;
 	z-index: 1;
+	transition: background-color 0.5s ease-in-out;
+}
+
+.form-steps ol li > span:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	height: 100%;
+	width: 50%;
+	background: #719AAA;
+	opacity: 0;
+	transition: all 0.5s ease-in-out;
 }
 
 .form-steps ol li:first-child > span,
@@ -1643,11 +1755,7 @@ p + input { margin-top: 0 !important; }
 }
 
 .form-steps ol li.current > span:after {
-	content: '';
-	position: absolute;
-	left: 0;
-	height: 100%;
-	width: 50%;
+	opacity: 1;
 	background: #719AAA;
 }
 
@@ -1669,9 +1777,8 @@ p + input { margin-top: 0 !important; }
 
 /* Tracker
 ------------------------------------------- */
-.tracker {
-	margin-top: 140px;
-}
+
+.tracker > h4 { margin-top: 0; }
 
 .tracker .chart {
 	position: relative;
@@ -1721,3 +1828,33 @@ p + input { margin-top: 0 !important; }
 .footer { 
 	height: 66px;
 }
+
+.footer { 
+	padding: 11px 0; 
+	box-sizing: border-box;
+}
+
+.footer .footer-logo {
+	display: block;
+	float: left;
+}
+
+.footer .footer-logo:hover {
+	background: rgba(0,0,0,0.1);
+}
+
+.footer ul { 
+	float: right; 
+}
+
+.footer ul li {
+	float: left;
+	font-family: "Arial", sans-serif;
+	font-size: 12px;
+	color: #fff;
+	margin: 15px 8px;
+}
+
+.footer ul li:last-of-type { margin-right: 0; }
+
+.footer ul li a { color: #fff; }

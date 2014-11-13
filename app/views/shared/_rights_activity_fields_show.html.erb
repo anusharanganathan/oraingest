@@ -20,65 +20,58 @@
 <% end %>
 
 <% if haslData or hasrData %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <% if haslData %>
-          <% article.license.each do |l|%>
-            <div id="license">
-              <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
-                <p><strong>License:</strong>
-                <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) && (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
-                  <span><%=link_to l.licenseLabel.first, l.licenseURI.first %></span>
-                <% elsif !l.licenseLabel.empty? && !l.licenseLabel.first.empty? %>
-                  <span><%= l.licenseLabel.first %></span>
-                <% elsif !l.licenseURI.empty? && !l.licenseURI.first.empty? %>
-                  <span><%=link_to l.licenseURI.first, l.licenseURI.first %></span>
-                <% end %>
-              <% end %>
-              <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
-                <p>
-                  <strong>License statement:</strong>
-                  <span><%= l.licenseStatement.first %></span>
-                </p>
-              <% end %>
-            </div>
-          <% end #each License %>
-        <% end #haslData %>
-        <% if hasrData %>
-          <div id="rights">
-          <% if !article.rightsHolder.empty? || (!article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty?) %>
-            <p>
-            <strong>Rights holder:</strong>
-            <% if !article.rightsHolder.empty? %>
-              <% article.rightsHolder.each do |rh| %>
-                <span><%= rh %></span>
-              <% end %>
-            <% end %>
-            <% if !article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty? %>
-              <span><%= article.rightsHolderGroup.first %></span>
+  <div class="accordian">
+    <div class="accordian-header">Rights</div>
+    <div class="accordian-content">
+
+      <% if haslData %>
+        <% article.license.each do |l|%>
+          <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
+            <p><span class="h6">License:</span> 
+            <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) && (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
+              <%=link_to l.licenseLabel.first, l.licenseURI.first %>
+            <% elsif !l.licenseLabel.empty? && !l.licenseLabel.first.empty? %>
+              <%= l.licenseLabel.first %>
+            <% elsif !l.licenseURI.empty? && !l.licenseURI.first.empty? %>
+              <%=link_to l.licenseURI.first, l.licenseURI.first %>
             <% end %>
             </p>
           <% end %>
-          <% if !article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty? %>
-            <p>
-              <strong>Copyright date:</strong>
-              <span><%= article.dateCopyrighted.first %></span>
+          <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
+              <p><span class="h6">License statement:</span> 
+              <%= l.licenseStatement.first %></p>
             </p>
           <% end %>
-          <% if !article.rights.nil? %>
-            <% article.rights.each do |r|%>
-              <% if !r.rightsStatement.empty? && !r.rightsStatement.first.empty? %>
-                <p>
-                  <strong>Rights statement:</strong>
-                  <span><%= r.rightsStatement.first %></span>
-                </p>
-              <% end %>
+        <% end #each License %>
+      <% end #haslData %>
+
+      <% if hasrData %>
+        <% if !article.rightsHolder.empty? || (!article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty?) %>
+          <p><span class="h6">Rights holder:</span> 
+          <% if !article.rightsHolder.empty? %>
+            <% article.rightsHolder.each do |rh| %>
+              <%= rh %>
             <% end %>
           <% end %>
-          </div>
+          <% if !article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty? %>
+            <%= article.rightsHolderGroup.first %>
+          <% end %>
+          </p>
         <% end %>
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+        <% if !article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty? %>
+            <p><span class="h6">Copyright date:</span>
+            <%= article.dateCopyrighted.first %></p>
+          </p>
+        <% end %>
+        <% if !article.rights.nil? %>
+          <% article.rights.each do |r|%>
+            <% if !r.rightsStatement.empty? && !r.rightsStatement.first.empty? %>
+                <p><span class="h6">Rights statement:</span>
+                <%= r.rightsStatement.first %></p>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 <% end %>
