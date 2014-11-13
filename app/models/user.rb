@@ -1,12 +1,13 @@
 class User < ActiveRecord::Base
-
+  
   # Connects this user object to Blacklights Bookmarks. 
   include Blacklight::User
   # Connects this user object to Hydra behaviors. 
   include Hydra::User
   # Connects this user object to Sufia behaviors. 
   include Sufia::User
- 
+  # Need to lookup email id
+  include Qa::Authorities
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -22,6 +23,35 @@ class User < ActiveRecord::Base
   # the account. 
   def to_s
     email
+  end
+
+  def user_info
+    c = Qa::Authorities::Cud.new
+    ans = c.search(user_key, 'sso_username_exact')
+    if !ans.nil? && !ans[0].nil? && ans[0]['sso_username'] == user_key
+      return ans[0]
+    end
+    return nil
+  end
+
+  def display_name
+    if self.user_info
+      if self.user_info['firstname'] and self.user_info['lastname']
+        return "#{self.user_info['firstname']} #{self.user_info['lastname']}"
+      elsif self.user_info['lastname']
+        return "#{self.user_info['lastname']}"
+      elsif self.user_info['firstname']
+        return "#{self.user_info['firstname']}"
+      end
+    end
+    return nil
+  end
+
+  def oxford_email
+    if self.user_info
+      return self.user_info['oxford_email']
+    end
+    return nil
   end
   
   # Returns true if user has permission to act as a reviewer
