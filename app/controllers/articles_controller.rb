@@ -268,12 +268,10 @@ class ArticlesController < ApplicationController
         saveAgain = false
         # Send email
         data = {
-          "name" => current_user.user_key,
-          "email_address" => current_user.user_key,
           "record_id" => @article.id,
           "record_url" => article_url(@article)
         }
-        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, "Article")
+        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Article")
         if ans
           article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
           @article.attributes = article_params
