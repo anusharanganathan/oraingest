@@ -32,6 +32,7 @@ class DatasetsController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
+  include BlacklightAdvancedSearch::Controller
   include Sufia::Controller
   #include Sufia::FilesControllerBehavior
   # Include ORA search logic
@@ -163,18 +164,7 @@ class DatasetsController < ApplicationController
       format.json { head :no_content }
     end
     #TODO: If associated with an individual agreement, do we delete it? 
-    #      Especially, if the status of agreemnt is new?
-  end
-
-  def delete_datastream
-    opts =  datastream_opts(dsid)
-    @dataset.delete_file(opts['dsLocation'])
-    @dataset.datasteams[dsid].delete
-    parts = @dataset.hasPart
-    @dataset.hasPart = nil
-    @dataset.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
-    @dataset.save
-    #TODO: Remove file size from digitalSize in admin
+    #      Especially, if the status of agreement is new?
   end
 
   def agreement
@@ -202,8 +192,6 @@ class DatasetsController < ApplicationController
       @agreement.contributor = current_user.user_key
       @agreement.apply_permissions(current_user)
     end
-    #@dataset.hasRelatedAgreement = @agreement
-    #render :partial => "agreement"
     render :partial => "dataset_agreement_fields_edit", :locals => { :hasRelatedAgreement => @agreement }
   end
 
@@ -277,7 +265,7 @@ class DatasetsController < ApplicationController
       process_file(file)
     end
   rescue => error
-    logger.error "GenericFilesController::create rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
+    logger.error "DatasetsController::create_from_upload rescued #{error.class}\n\t#{error.to_s}\n #{error.backtrace.join("\n")}\n\n"
     json_error "Error occurred while creating file."
   ensure
     # remove the tempfile (only if it is a temp file)
@@ -314,7 +302,7 @@ class DatasetsController < ApplicationController
     begin
       @dataset.save!
     rescue RSolr::Error::Http => error
-      logger.warn "GenericFilesController::create_and_save_generic_file Caught RSOLR error #{error.inspect}"
+      logger.warn "DatasetsController::process_file caught error #{error.inspect}"
       save_tries+=1
       # fail for good if the tries is greater than 3
       raise error if save_tries >=3
@@ -380,12 +368,10 @@ class DatasetsController < ApplicationController
         end
         # Send email
         data = {
-          "name" => current_user.user_key, 
-          "email_address" => current_user.user_key,
           "record_id" => @dataset.id,
           "record_url" => dataset_url(@dataset)
         }
-        ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, "Dataset")
+        ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Dataset")
         if ans
           dataset_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @dataset)
           @dataset.attributes = dataset_params
@@ -418,7 +404,7 @@ class DatasetsController < ApplicationController
     choicesUsed = @dataset.datastreams.keys.select { |key| key.match(/^content\d+/) and @dataset.datastreams[key].content != nil }
     files = []
     for dsid in choicesUsed
-      opts = datastream_opts(dsid)
+      opts = @dataset.datastream_opts(dsid)
       files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end
     files
@@ -465,15 +451,6 @@ class DatasetsController < ApplicationController
       end 
     end
     return @dataset_agreement, created
-  end
-
-  def datastream_opts(dsid)
-    opts = {}
-    if @dataset.datastreams.keys.include?(dsid)
-      opts = @dataset.datastreams[dsid].content
-      opts = JSON.parse(opts)    
-    end
-    opts
   end
 
   def datastream_id
