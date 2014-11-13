@@ -86,7 +86,7 @@ class DatasetAgreementsController < ApplicationController
   end
 
   def new
-    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset_agreement = DatasetAgreement.new
     @model = 'dataset_agreement'

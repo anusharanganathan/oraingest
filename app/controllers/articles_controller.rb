@@ -85,7 +85,7 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
     @model = 'article'

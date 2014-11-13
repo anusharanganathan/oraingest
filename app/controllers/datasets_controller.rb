@@ -88,7 +88,7 @@ class DatasetsController < ApplicationController
   end
 
   def new
-    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset = Dataset.new
     @agreement = DatasetAgreement.new
@@ -431,7 +431,7 @@ class DatasetsController < ApplicationController
     end
     # Mint a pid if one does not exist
     if da_pid.nil?
-      da_pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+      da_pid = Sufia::Noid.noidify(SecureRandom.uuid)
       da_pid = Sufia::Noid.namespaceize(da_pid)
       created = true
     end  
