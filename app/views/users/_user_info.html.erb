@@ -10,7 +10,7 @@
     <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
   <% end %>
  
-  <dt><i class="icon-envelope-alt"></i>SSO ID</dt>
+  <dt><i class="icon-tag"></i> &nbsp;&nbsp;SSO ID</dt>
   <dd><%= mail_to user.email %></dd>
 
   <% if user.display_name %>
