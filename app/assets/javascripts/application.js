@@ -22,4 +22,5 @@
 //= require autocomplete
 //= require formUI
 //= require sufia/multiForm
+//= require ora
 
