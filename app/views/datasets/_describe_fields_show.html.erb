@@ -1,117 +1,91 @@
 <p id="notice"><%= notice %></p>
+
 <% if !@dataset.title.empty? && !@dataset.title.first.empty? %>
-  <h1><%= @dataset.title.first %></h1>
+  <h6>Title:</h6>
+  <h3><%= @dataset.title.first %></h3>
 <% else %>
   <h1>Article</h1>
 <% end %>
       
 <% if !@dataset.subtitle.empty? && ! @dataset.subtitle.first.empty? %>
-  <h2><%= @dataset.subtitle.first %></h2>
+  <h6>Subtitle:</h6>
+  <h3><%= @dataset.subtitle.first %></h3>
 <% end %>
 
-<% path = { :new => new_dataset_path, :show => dataset_path(@dataset), :edit => edit_dataset_path(@dataset), :list => datasets_path } %>
-<br/><%= render partial: "shared/actions/show", :locals => { :path => path } %><br/>
-      
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <%= render partial: "shared/work_type_fields_show", :locals => { :article => @dataset } %>
-      
-      <% if !@dataset.abstract.empty? && !@dataset.abstract.first.empty? %>
-      <p>
-        <strong>Abstract:</strong>
-        <%= @dataset.abstract.first %>
-      </p>
-      <% end %>
-      
-      <%= render partial: "shared/mads_subject_fields_show", :locals => { :article => @dataset } %>
+<%= render partial: "shared/work_type_fields_show", :locals => { :article => @dataset } %>
 
-      <% if !@dataset.keyword.empty? %>
-      <p>
-        <strong>Keywords:</strong>
-         <% @dataset.keyword.each do |tag|%>
-            <span><%=tag %></span>     
-         <% end %>
-      </p>
-      <% end %>
-      
-      <%= render partial: "shared/mads_language_fields_show", :locals => { :article => @dataset } %>
+<% if !@dataset.abstract.empty? && !@dataset.abstract.first.empty? %>
+  <h6>Abstract:</h6>
+  <p><%= @dataset.abstract.first %></p>
+<% end %>
 
-      <% if !@dataset.isDocumentedBy.empty? && !@dataset.isDocumentedBy.first.empty? %>
-      <p>
-        <strong>Documentation about the dataset and processes:</strong>
-        <%= @dataset.isDocumentedBy.first %>     
-      </p>
-      <% end %>
+<%= render partial: "shared/mads_subject_fields_show", :locals => { :article => @dataset } %>
 
-      <% if !@dataset.temporal.nil? && !@dataset.temporal.first.nil? && !@dataset.temporal.first.start.empty? && !@dataset.temporal.first.start.first.empty? %>
-      <p>
-        <strong>Temporal coverage of the data:</strong>
-        <%= @dataset.temporal.first.start.first %>
-        <% if !@dataset.temporal.first.end.empty? && !@dataset.temporal.first.end.first.empty? %>
-          to <%= @dataset.temporal.first.end.first %>
-        <% end %>
-      </p>
-      <% end %>
+<% if !@dataset.keyword.empty? %>
+  <h6>Keywords:</h6>
+   <% @dataset.keyword.each do |tag|%>
+      <p><%=tag %></p>     
+   <% end %>
+<% end %>
 
-      <% if !@dataset.dateCollected.nil? && !@dataset.dateCollected.first.nil? && !@dataset.dateCollected.first.start.empty? && !@dataset.dateCollected.first.start.first.empty? %>
-      <p>
-        <strong>Dates data was collected:</strong>
-        <%= @dataset.dateCollected.first.start.first %>
-        <% if !@dataset.dateCollected.first.end.empty? && !@dataset.dateCollected.first.end.first.empty? %>
-          to <%= @dataset.dateCollected.first.end.first %>
-        <% end %>
-      </p>
-      <% end %>
+<%= render partial: "shared/mads_language_fields_show", :locals => { :article => @dataset } %>
 
-      <% if !@dataset.spatial.nil? && !@dataset.spatial.first.nil? && !@dataset.spatial.first.value.empty? && !@dataset.spatial.first.value.first.empty? %>
-      <p>
-        <strong>Geographical location or coverage of the data:</strong>
-        <%= @dataset.spatial.first.value.first %>
-      </p>
-      <% end %>
-      
-      <% if !@dataset.medium.empty? && !@dataset.medium.first.empty?  %>
-      <p>
-        <strong>Data storage medium:</strong>
-        <% if @dataset.medium.first == Sufia.config.data_medium["Analog"] %>
-          Analog
-        <% elsif @dataset.medium.first == Sufia.config.data_medium["Digital"] %>
-          Digital
-        <% else %>
-          <%= @dataset.medium.first %>
-        <% end %>
-      </p>
-      <% end %>
-      
-      <% if !@dataset.locator.empty? && !@dataset.locator.first.empty? %>
-      <p>
-        <strong>Data location:</strong>
-        <%= @dataset.locator.first %>
-      </p>
-      <% end %>
-      
-      <% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
-      <p>
-        <strong>Approximate data size:</strong>
-        <%= @dataset.digitalSize.first %>
-      </p>
-      <% end %>
-      
-      <% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
-      <p>
-        <strong>Data format:</strong>
-        <%= @dataset.format.first %>
-      </p>
-      <% end %>
-      
-      <% if !@dataset.version.empty? && !@dataset.version.first.empty? %>
-      <p>
-        <strong>Version number:</strong>
-        <%= @dataset.version.first %>
-      </p>
-      <% end %>
-      
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+<% if !@dataset.isDocumentedBy.empty? && !@dataset.isDocumentedBy.first.empty? %>
+  <h6>Documentation about the dataset and processes:</h6>
+  <p><%= @dataset.isDocumentedBy.first %></p>  
+<% end %>
+
+<% if !@dataset.temporal.nil? && !@dataset.temporal.first.nil? && !@dataset.temporal.first.start.empty? && !@dataset.temporal.first.start.first.empty? %>
+  <h6>Temporal coverage of the data:</h6>
+  <p><%= @dataset.temporal.first.start.first %>
+  <% if !@dataset.temporal.first.end.empty? && !@dataset.temporal.first.end.first.empty? %>
+    to <%= @dataset.temporal.first.end.first %>
+  <% end %>
+  </p>
+<% end %>
+
+<% if !@dataset.dateCollected.nil? && !@dataset.dateCollected.first.nil? && !@dataset.dateCollected.first.start.empty? && !@dataset.dateCollected.first.start.first.empty? %>
+  <h6>Dates data was collected:</h6>
+  <p><%= @dataset.dateCollected.first.start.first %>
+  <% if !@dataset.dateCollected.first.end.empty? && !@dataset.dateCollected.first.end.first.empty? %>
+    to <%= @dataset.dateCollected.first.end.first %>
+  <% end %>
+  </p>
+<% end %>
+
+<% if !@dataset.spatial.nil? && !@dataset.spatial.first.nil? && !@dataset.spatial.first.value.empty? && !@dataset.spatial.first.value.first.empty? %>
+  <h6>Geographical location or coverage of the data:</h6>
+  <p><%= @dataset.spatial.first.value.first %></p>
+<% end %>
+
+<% if !@dataset.medium.empty? && !@dataset.medium.first.empty?  %>
+  <h6>Data storage medium:</h6>
+  <p>
+  <% if @dataset.medium.first == Sufia.config.data_medium["Analog"] %>
+    Analog
+  <% elsif @dataset.medium.first == Sufia.config.data_medium["Digital"] %>
+    Digital
+  <% else %>
+    <%= @dataset.medium.first %>
+  <% end %>
+  </p>
+<% end %>
+
+<% if !@dataset.locator.empty? && !@dataset.locator.first.empty? %>
+  <p><span class="h6">Data location:</span>
+  <%= @dataset.locator.first %></p>
+<% end %>
+
+<% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
+  <p><span class="h6">Approximate data size:</span>
+  <%= @dataset.digitalSize.first %></p>
+<% end %>
+<% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
+  <p><span class="h6">Data format:</span>
+  <%= @dataset.format.first %></p>
+<% end %>
+
+<% if !@dataset.version.empty? && !@dataset.version.first.empty? %>
+  <p><span class="h6">Version number:</span>
+  <%= @dataset.version.first %></p>
+<% end %>

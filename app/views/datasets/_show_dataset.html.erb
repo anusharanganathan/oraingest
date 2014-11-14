@@ -1,0 +1,23 @@
+    <tr>
+      <td>
+        <h4><%= dataset.title %></h4>
+        <p>
+          <strong>Data Steward: </strong>
+          <span style="color: red">Data stewards to go here - what's the field name?</span> 
+          <%= dataset.creators.map { |author| author["name"] }.join "; " %>
+        </p>
+        <% unless dataset.abstract.nil? %>
+          <p>
+            <strong>Abstract: </strong>
+            <%= dataset.abstract %>
+          </p>
+        <% end %>
+      </td>
+      <td>
+        <h4 class="<%= "red-text" if (dataset.submission_workflow_status.downcase.eql? "draft") %>"><%= dataset.submission_workflow_status %></h4>
+        <a href="<%= dataset_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
+        <a href="<%= dataset_url(dataset.modelName, 'edit', dataset.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
+        <a href="<%= dataset_url(dataset.modelName, 'delete', dataset.id) %>" class="button button-small light-blue">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
+      </td>
+    </tr>
+

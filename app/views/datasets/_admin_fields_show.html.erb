@@ -20,32 +20,35 @@
 <% end %>
 
 <% if hasData %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <h3>Data storage details</h3>
-         <% if !article.hasAgreement.empty? %>
-           <div>Agreement involving you found for data storage? <%= article.hasAgreement.first %></div>
-         <% end %>
-         <% if !article.storageAgreement.nil? && !article.storageAgreement[0].nil? %>
-           <% if !article.storageAgreement[0].title.empty? && !article.storageAgreement[0].title[0].empty? && !article.storageAgreement[0].identifier.empty? && !article.storageAgreement[0].identifier[0].empty? %>
-             <% url = "#" #storage_path(article.storageAgreement[0].identifier.first) %>
-             <div>Storage agreement: <%=link_to article.storageAgreement[0].title.first, url %></div>
-           <% elsif !article.storageAgreement[0].title.empty? && !article.storageAgreement[0].title[0].empty? %>
-             <div>Storage agreement: <%= article.storageAgreement[0].title.first %></div>
-           <% elsif !article.storageAgreement[0].identifier.empty? && !article.storageAgreement[0].identifier[0].empty? %>
-             <div>Storage agreement: <%=link_to url, url %></div>
-           <% end %>
-         <% end %>
-         <% if can? :review, Dataset %>
-           <% if !article.locator.empty? && !article.locator.first.empty? %>
-             <div>Data silo for storage: <%= article.locator.first %></div>
-           <% end %>
-           <% if !article.note.empty? && !article.note.first.empty? %>
-             <div>Notes: <%= article.note.first %></div>
-           <% end %>
-         <% end %>
-      </div><!-- /.control-group -->
-    </div><!-- /.row -->
+  <div class="accordian">
+    <div class="accordian-header">Data storage details</div>
+    <div class="accordian-content">
+      <% if !article.hasAgreement.empty? %>
+        <p><span class="h6">Agreement involving you found for data storage?</span> <%= article.hasAgreement.first %></p>
+      <% end %>
+     <% if !article.storageAgreement.nil? && !article.storageAgreement[0].nil? %>
+       <% if !article.storageAgreement[0].title.empty? && !article.storageAgreement[0].title[0].empty? && !article.storageAgreement[0].identifier.empty? && !article.storageAgreement[0].identifier[0].empty? %>
+         <% url = "#" #storage_path(article.storageAgreement[0].identifier.first) %>
+         <p><span class="h6">Storage agreement:</span> 
+         <%=link_to article.storageAgreement[0].title.first, url %></p>
+       <% elsif !article.storageAgreement[0].title.empty? && !article.storageAgreement[0].title[0].empty? %>
+         <p><span class="h6">Storage agreement:</span> 
+         <%= article.storageAgreement[0].title.first %></p>
+       <% elsif !article.storageAgreement[0].identifier.empty? && !article.storageAgreement[0].identifier[0].empty? %>
+         <p><span class="h6">Storage agreement:</span> 
+         <%=link_to url, url %></p>
+       <% end %>
+     <% end %>
+     <% if can? :review, Dataset %>
+       <% if !article.locator.empty? && !article.locator.first.empty? %>
+         <p><span class="h6">Data silo for storage:</span> 
+         <%= article.locator.first %></p>
+       <% end %>
+       <% if !article.note.empty? && !article.note.first.empty? %>
+         <p><span class="h6">Notes:</span> 
+         <%= article.note.first %></p>
+       <% end %>
+     <% end %>
+    </div>
   </div>
 <% end %>

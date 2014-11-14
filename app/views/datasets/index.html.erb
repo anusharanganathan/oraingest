@@ -1,37 +1,57 @@
-<h1>Recent datasets</h1>
+<%#
+Copyright © 2012 The Pennsylvania State University
 
-<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
-<% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
-<% display_thumbs = true %>
-<% display_access = false %>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-<% path = { :new => new_dataset_path, :list => datasets_path } %>
-<br/><%= render partial: "shared/actions/list", :locals => { :path => path } %>
+http://www.apache.org/licenses/LICENSE-2.0
 
-<div>
-  <% if @datasets.blank? && @submitted_datasets.blank? %>
-      <h3>  <%= msg %> </h3>
-  <% else %>
-    <% if !@datasets.blank? %>
-      <h3>Datasets being worked on</h3>
-      <div id="recent_docs">
-        <table class="table table-bordered table-striped">
-          <% @datasets.each do |dataset| %>
-            <%= render :partial => "draft_dataset", as: :dataset, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :dataset => dataset} %>
-          <% end %>
-        </table>
-      </div>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
+  <% @page_title = application_name + " Datasets" %>
+
+  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+
+  <div class="col col1of2">
+    <h2>Dataset submissions</h2>
+  </div>
+
+
+  <div class="col col1of2">
+    <div class="blue-bar">
+      <form action="#" method="post">
+        <div class="float-left">
+          <img src="/assets/ora/icons/plus.svg" class="icon"/>
+          Deposit new dataset
+        </div>
+        <div class="float-right">
+          <button type="submit" class="button button-small button-arrow">GO</button>
+        </div>
+      </form>
+    </div> <!-- /blue-bar -->
+  </div>
+
+  <div class="colfull" style="text-align: right; margin-bottom: 15px">
+    <hr />
+    <%= render 'datasets/sort_and_per_page' %>
+  </div>
+
+  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+
+
+  <div class="col col5of6">
+    <% if params.has_key?("q") %>
+      <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
     <% end %>
-    <% if !@submitted_datasets.blank? %>
-      <h3>Datasets submitted</h3>
-      <div id="recent_docs">
-        <table class="table table-bordered table-striped">
-          <% @submitted_datasets.each do |dataset| %>
-            <%= render :partial => "recent_dataset", as: :dataset, :locals=>{:display_thumbs=> display_thumbs, :display_access=> display_access, :dataset => dataset} %>
-          <% end %>
-        </table>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+
+    <%= render :partial=>'datasets/dataset_list', :locals => {:datasets => @datasets + @submitted_datasets, :facet_value => nil}  %>  
+  </div>
+
+
 

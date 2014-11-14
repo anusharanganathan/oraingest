@@ -1,26 +1,40 @@
-<h1>Create dataset</h1>
+  <h2>Create dataset</h2>
 
-<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
-<%= render partial: 'tabs' %>
+  <div>
+    <% if @dataset.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@dataset.errors.count, "error") %> prohibited this dataset from being saved:</h2>
+        <ul>
+          <% @dataset.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
 
-<div>
-  <% if @dataset.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@dataset.errors.count, "error") %> prohibited this dataset from being saved:</h2>
-      <ul>
-        <% @dataset.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+</div>
+<div class="gutter-container">
+  <div class="col col3of4">
+  <%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
+  <%= render partial: 'tabs' %>
+
+  <section class="form-step">
+    <div class="content-box padding-0">
+      <div class="content-box-header">
+        1. Upload files
+      </div>
+      <div class="padding-25 no-pad-bottom">
+        <%= render partial: 'files_form' %>
+        <%= form_for(@dataset) do |f| %>
+          <% render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
         <% end %>
-      </ul>
+      </div>
+      <%= render partial: 'form' %>
+
+      <% path = { :new => new_dataset_path, :list => datasets_path } %>
+      <%= render partial: "shared/actions/new",  :locals => { :path => path } %>
+
     </div>
-  <% end %>
+  </div>
 </div>
-
-<div class="tab-content">
-  <%= render partial: 'files_form' %>
-  <%= render partial: 'form' %>
-</div>
-
-<% path = { :new => new_dataset_path, :list => datasets_path } %>
-<br/><%= render partial: "shared/actions/new",  :locals => { :path => path } %>
-
