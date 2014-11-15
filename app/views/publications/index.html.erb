@@ -18,6 +18,8 @@ limitations under the License.
 
   <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
+<% content_for :top do %>
+
   <div class="col col1of2">
     <h2>Publication submissions</h2>
   </div>
@@ -46,7 +48,7 @@ limitations under the License.
     <%= render 'publications/sort_and_per_page' %>
   </div>
 
-  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+<% end %>
 
 
   <div class="col col5of6">
@@ -62,3 +64,14 @@ limitations under the License.
   <% render_pagination_info @response, :entry_name=>'item' %>
 
   <%= render 'dashboard/results_pagination' %>
+
+
+
+
+
+
+<% content_for :sidebar do %>
+
+  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+
+<% end %>

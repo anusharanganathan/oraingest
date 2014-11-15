@@ -18,6 +18,7 @@ limitations under the License.
 
   <% extra_head_content << render_opensearch_response_metadata.html_safe %>
 
+<% content_for :top do %>
   <div class="col col1of2">
     <h2>Dataset submissions</h2>
   </div>
@@ -41,8 +42,14 @@ limitations under the License.
     <hr />
     <%= render 'datasets/sort_and_per_page' %>
   </div>
+<% end %>
+
+
+<% content_for :sidebar do %>
 
   <%= render :partial => 'reviewer_dashboard/facet_example' %>
+
+<% end %>
 
 
   <div class="col col5of6">

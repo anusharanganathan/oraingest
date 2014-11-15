@@ -15,10 +15,15 @@ limitations under the License.
 %>
 <%= render partial: '/header' %>
 
-<div class="container">
+
+<div class="gutter-container">
+
+  <%= yield :top %>
+
   <%= yield :sidebar %>
 
   <%= yield %>
+</div>
 
 <%= render partial: '/footer' %>
 
