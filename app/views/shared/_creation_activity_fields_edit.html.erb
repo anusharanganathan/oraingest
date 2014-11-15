@@ -1,49 +1,82 @@
-<div id="creator" class="control-group">
+<div class="fieldset">
   <% if creation.empty? %>
     <% creation.build %>
   <% end %>
-  <% creation.each do |c0| %>
-    <%= f.fields_for :creation, c0 do |f_c0| %>
-      <% if c0.creator.empty? %>
-        <% c0.creator.build %>
-      <% end %>
-      <% c0.creator.each_with_index do |c, c_index| %>
-        <%= f_c0.fields_for :creator, c do |f_c| %>
-          <% if c.agent.empty? %>
-            <% c.agent.build %>
+
+  <h4>Creator information</h4>
+
+  <div class="field-repeater">
+    <ol>
+      <% creation.each do |c0| %>
+        <%= f.fields_for :creation, c0 do |f_c0| %>
+          <% if c0.creator.empty? %>
+            <% c0.creator.build %>
           <% end %>
-          <% if c.agent[0].affiliation.empty? %>
-            <% c.agent[0].affiliation.build %>
-          <% end %>
-          <div class="controls" id="creator_clone_<%=c_index%>">
-            <legend><%=label.capitalize%> information</legend>
-            <%= f_c.label :name, "Name of %s"% label, :class=>"control-label" %>
-            <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
-            <%= f_c.label :email, "Email", :class=>"control-label" %>
-            <%= f_c.text_field :email, :value => c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
-            <%= f_c.label :sameAs, "Link to creator object", :class=>"control-label" %>
-            <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
-            <%= f_c.label :role, "Role", :class=>"control-label" %>
-            <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), id: "creatorRole%d"%c_index %>
-            <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
-              <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
-                <%= f_c2.label :name, "Affiliation", :class=>"control-label" %>
-                <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
-                <%= f_c2.label :sameAs, "Link to affiliation object", :class=>"control-label" %>
-                <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+          <% c0.creator.each_with_index do |c, c_index| %>
+            <%= f_c0.fields_for :creator, c do |f_c| %>
+              <% if c.agent.empty? %>
+                <% c.agent.build %>
               <% end %>
+              <% if c.agent[0].affiliation.empty? %>
+                <% c.agent[0].affiliation.build %>
+              <% end %>
+              <li>
+                <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
+                <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+
+                <label>
+                  <p><span class="small">Email</span>
+                    <%= f_c.text_field :email, :value => c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
+                  </p>
+                </label>
+
+                <label>
+                  <p><span class="small">Creator object</span>
+                    <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
+                  </p>
+                </label>
+
+                <label>
+                  <p><span class="small">Role</span>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), id: "creatorRole%d"%c_index %>
+                  </p>
+                </label>
+
+                <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
+                  <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
+                    <label>
+                      <p><span class="small">Affilition</span>
+                        <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
+                      </p>
+                    </label>
+
+                    <label>
+                      <p><span class="small">Link to affiliation object</span>
+                        <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                      </p>
+                    </label>
+                  <% end %>
+                <% end %>
+              </li>
             <% end %>
-            <% if c_index.to_s == "0" %>
-              <button class="adder btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">+<span class="accessible-hidden">add another <%=label%></span></button>
-              &nbsp;
-              <%= help_icon(:creator) %>
-            <% else %>
-              <button class="remover btn" name="additional_creator" id="creator_button_<%=c_index%>" type="button">-<span class="accessible-hidden">remove <%=label%></span></button>
-            <% end %>
-          </div>
+          <% end %>
         <% end %>
       <% end %>
-    <% end %>
-  <% end %>
-</div>
+    </ol>
+    <a href="#" class="add-field">Add another creator</a>
+  </div>
 
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Creator information</strong>
+    <p>Select a role (e.g. 'PI' or 'Author/creator') from the list and then
+    enter the name of a person involved in creating this dataset. If the person is
+    based at Oxford, it should auto-complete as you type so you can select the
+    correct name from the list displayed.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-citation"></div>
+      <p><strong>Completing this field helps with Citation</strong></p>
+    </div>
+  </aside>
+
+</div>

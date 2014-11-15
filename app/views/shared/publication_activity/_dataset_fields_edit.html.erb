@@ -1,7 +1,9 @@
-<legend>Publication information</legend>
+<h4>Publication information</h4>
+
 <% if publication.empty? %>
   <% publication.build %>
 <% end %>
+
 <% publication.each do |p| %>
   <%= f.fields_for :publication, p do |f_p| %>
     <% if p.hasDocument.empty? %>
@@ -12,26 +14,23 @@
     <% end %>
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :name, "Publisher name", :class=>"control-label" %>
-          <%= f_p2.text_field :name, :value => p2.name.first %>
-        </div>
-        <div class="field">
-          <%= f_p2.label :website, "Publisher website", :class=>"control-label" %>
-          <%= f_p2.text_field :website, :value => p2.website.first %>
-        </div>
+
+        <p class="small">Publisher name</p>
+        <%= f_p2.text_field :name, :value => p2.name.first %>
+
+        <p class="small">Publisher website</p>
+        <%= f_p2.text_field :website, :value => p2.website.first %>
+
       <% end %> 
     <% end %> 
-    <div class="field">
-      <%= f_p.label :datePublished, "Date published", :class=>"control-label" %>
-      <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
-    </div>
+
+    <p class="small">Date published</p>
+    <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
+
     <% p.hasDocument.each do |p2| %>
       <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
-          <%= f_p2.text_field :doi, :value => p2.doi.first %>
-        </div>
+        <p class="small">DOI</p>
+        <%= f_p2.text_field :doi, :value => p2.doi.first %>
       <% end #fields for each document %>
     <% end #each document %>
   <% end #fields for each publication %>

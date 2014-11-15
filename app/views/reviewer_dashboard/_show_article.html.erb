@@ -1,0 +1,43 @@
+<article class="review-article">
+  <div class="content">
+    <% # select the appropriate tag for submission type %>
+    <!-- <span class="tag tag-journal">Journal article</span>
+    <span class="tag tag-dataset">Dataset</span>
+    <span class="tag tag-thesis">Thesis</span>
+    <span class="tag tag-working-paper">Working paper</span>
+    <span class="tag tag-tech-report">Tech report</span>
+    <span class="tag tag-book">Book</span>
+    <span class="tag tag-conference">Conference</span>
+    <span class="tag tag-article">Article</span>
+    <span class="tag tag-book-section">Book section</span>
+    <span class="tag tag-general-item">General item</span>
+    <span class="tag tag-technical">Technical</span> -->
+    <% if !document.worktypeLabel.nil? %>
+      <% types = ['journal', 'dataset', 'thesis', 'working-paper', 'tech-report', 'book', 'conference', 'article', 'book-section', 'general-item', 'technical'] %>
+      <% if types.include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
+        <% tag = document.worktypeLabel.downcase.tr(" ", "-") %>
+      <% elsif ["technical-document", "technical-report"].include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
+        <% tag = "tech-report" %>
+      <% else %>
+        <% tag = "general-item" %>
+      <% end %>
+      <span class="tag tag-<%=tag%>"><%= document.worktypeLabel %></span>
+    <% end %>
+
+    <span class="small"><strong>Status:</strong> <%= document.submission_workflow_status %></span>
+    
+    <p><%= document.abstract %></p>
+    <aside class="info">
+      <div><strong>Depositor:</strong> <%= document.creators.map { |author| author["name"] }.join ", " %></div>
+      <div><strong>Date submitted:</strong> </div>
+      <div><strong>Date accepted:</strong> </div>
+      <div><strong>Reviewer:</strong> </div>
+      <div><strong>ORA ID:</strong> </div>
+    </aside>
+  </div>
+  <div class="buttons">
+    <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
+    <a href="<%= document_url(document.modelName, 'edit', document.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
+    <a href="<%= document_url(document.modelName, 'delete', document.id) %>" class="button button-small light-blue">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
+  </div>
+</article>

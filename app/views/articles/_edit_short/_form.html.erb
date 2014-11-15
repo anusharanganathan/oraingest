@@ -1,17 +1,11 @@
 <%= form_for(@article) do |f| %>
   <%= hidden_field_tag(:pid, @pid) %>
-  <div id="describe">
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
-          <%= render partial: "/articles/_edit_short/describe_fields_edit", as: :article, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
-          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  </div>
+
+  <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
+  <%= render partial: "/articles/_edit_short/describe_fields_edit", as: :article, :locals => { :f => f } %>
+  <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
+  <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
+
 
   <div id="creators">
     <div class="well">

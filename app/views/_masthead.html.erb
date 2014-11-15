@@ -26,10 +26,8 @@ limitations under the License.
       <li <%= 'class=active' if action_name == "about" %>><a href="/about/">About</a></li>
       <li <%= 'class=active' if action_name == "help" %>><a href="/help/">Help</a></li>
       <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>">Contact</a></li>
-      <li>
-        <div class="btn-group">
-          <%= render partial: '/user_util_links' %>
-        </div><!-- /.btn-group -->
+      <li class="user-menu">
+        <%= render partial: '/user_util_links' %>
       </li>
     </ul><!-- /.main-navigation -->
   </div><!-- /.container -->

@@ -50,8 +50,10 @@ $(function() {
    * is made. 
    * -----------------------------------------------------------*/
   $(document).on("click","input",function() {
-    var fieldset = $(this).parents("fieldset"),
+    var fieldset = $(this).parents("fieldset").first(),
         panel_id = $(this).parents("label").first().attr("panel");
+
+    console.log(panel_id);
     
     // Open expandable panel on click
     fieldset.find("*[panel!="+panel_id+"]").each(function(){

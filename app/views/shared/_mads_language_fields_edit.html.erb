@@ -1,23 +1,50 @@
-<div id="language" class="field">
-  <% if language.empty? %>
-   <% language.build %>
-  <% end %>
-  <%= f.fields_for :language do |l| %>
-      <%= l.label :languageLabel, "Language", :class=>"control-label" %>
-      <%= l.text_field :languageLabel, :value=>language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel" %>
-      <% if can? :review, :all %>
-        <%= l.label :languageCode, "Language code", :class=>"control-label" %>
-        <%= l.text_field :languageCode, :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
-        <%= l.label :languageAuthority, "Language authority", :class=>"control-label" %>
-        <%= l.text_field :languageAuthority, :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
-        <%= l.label :languageScheme, "Language scheme", :class=>"control-label" %>
-        <%= l.text_field :languageScheme, :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
-      <% else %>
-        <%= l.hidden_field :languageCode, :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
-        <%= l.hidden_field :languageAuthority, :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
-        <%= l.hidden_field :languageScheme, :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
-      <% end %>
-     
-  <% end %>
-</div>
+<% if language.empty? %>
+ <% language.build %>
+<% end %>
+<%= f.fields_for :language do |l| %>
+    <div class="fieldset">
+      <p class="small">Language</p>
+      <%= l.text_field :languageLabel, :style=>'width: 50%', :value=>language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel" %>
+      <aside class="tooltip">
+        <a href="" class="close-button">x</a>
+        <strong>Language</strong>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut viverra purus nibh.</p>
+      </aside>
+    </div>
+    <% if can? :review, :all %>
+      <div class="fieldset">
+        <p class="small">Language code</p>
+        <%= l.text_field :languageCode, :style=>'width: 200px', :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+        <aside class="tooltip">
+          <a href="" class="close-button">x</a>
+          <strong>Language code</strong>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut viverra purus nibh.</p>
+        </aside>
+      </div>
 
+      <div class="fieldset">
+        <p class="small">Language authority</p>
+        <%= l.text_field :languageAuthority, :style=>'width: 300px', :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+        <aside class="tooltip">
+          <a href="" class="close-button">x</a>
+          <strong>Language authority</strong>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut viverra purus nibh.</p>
+        </aside>
+      </div>
+
+      <div class="fieldset">
+        <p class="small">Language scheme</p>
+        <%= l.text_field :languageScheme, :style=>'width: 300px', :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+        <aside class="tooltip">
+          <a href="" class="close-button">x</a>
+          <strong>Language scheme</strong>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut viverra purus nibh.</p>
+        </aside>
+      </div>
+      
+    <% else %>
+      <%= l.hidden_field :languageCode, :value=>language[0].languageCode.first, :class=>"languageCode", id: "languageCode" %>
+      <%= l.hidden_field :languageAuthority, :value=>language[0].languageAuthority.first, :class=>"languageAuthority", id: "languageAuthority" %>
+      <%= l.hidden_field :languageScheme, :value=>language[0].languageScheme.first, :class=>"languageScheme", id: "languageScheme" %>
+    <% end %>
+<% end %>

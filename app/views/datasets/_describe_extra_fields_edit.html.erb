@@ -1,0 +1,124 @@
+<div class="fieldset">
+  <% if @dataset.temporal.empty? %>
+    <% @dataset.temporal.build %>
+  <% end %>
+  <p class="small">Temporal coverage of the data</p>
+  <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;' %> to 
+  <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;' %>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Temportal coverage</strong>
+    <p>Lorem ipsum...</p>
+  </aside>
+</div>
+
+<div class="fieldset">
+  <% if @dataset.dateCollected.empty? %>
+    <% @dataset.dateCollected.build %>
+  <% end %>
+  <p class="small">When was the data collected?</p>
+  <%= f.text_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;' %> to 
+  <%= f.text_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;' %>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Date collected</strong>
+    <p>Lorem ipsum...</p>
+  </aside>
+</div>
+
+<div class="padding-side-25">
+  <div class="bottom-border"></div>
+</div>
+
+<div class="fieldset">
+  <% if @dataset.spatial.empty? %>
+    <% @dataset.spatial.build %>
+  <% end %>
+  <p class="small">Geographical location or coverage of the data</p>
+  <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%' %>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Geographical location</strong>
+    <p>Lorem ipsum...</p>
+  </aside> 
+</div>
+
+<% if !@files.nil? && !@files.empty? %>
+  <%= f.hidden_field :medium, :value=>Sufia.config.data_medium["Digital"] %>
+<% else %>
+
+  <div class="padding-side-25">
+    <div class="bottom-border"></div>
+  </div>
+
+  <% if @dataset.medium[0] == Sufia.config.data_medium["Digital"] %>
+    <% showDigital = "inline" %>
+  <% else %>
+    <% showDigital = "none" %>
+  <% end %>
+  <div class="fieldset">
+    <p class="small">In which medium is your data stored?</p>
+    <label>
+      <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')" %>
+      <span></span> Analog
+    </label>
+    <label>
+      <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')" %><span></span> Digital
+    </label>
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Data medium</strong>
+      <p>Lorem ipsum...</p>
+    </aside>
+  </div>
+
+  <div class="fieldset">
+    <p class="small">Where is your data located?</p>
+    <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;" %>
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Data location</strong>
+      <p>Lorem ipsum...</p>
+    </aside>
+  </div>
+
+  <div id="digitalFields" style="display:<%=showDigital%>;">  
+    <div class="fieldset">
+      <p class="small">Approximate size of the data</p>
+      <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first, :style=>"width: 200px;" %>
+    
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Approximate size</strong>
+        <p>Lorem ipsum...</p>
+      </aside>
+    </div>
+    
+    <div class="fieldset">
+      <p class="small">Data format</p>
+      <%= f.text_field :format, :value=>@dataset.format.first, :style=>"width: 200px;" %>
+
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Data format</strong>
+        <p>Lorem ipsum...</p>
+      </aside>
+    </div>
+    
+    <div class="fieldset">
+      <p class="small">Version number</p>
+      <%= f.text_field :version, :value=>@dataset.version.first, :style=>"width: 200px;" %>
+
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Version number</strong>
+        <p>Lorem ipsum...</p>
+      </aside>
+    </div>
+  </div>
+<% end %>

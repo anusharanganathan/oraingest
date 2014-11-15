@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 <% if user_signed_in? %>
-   <%= render :partial => 'users/notify_link' %>
-  <a href="<%= sufia.profile_path(current_user) %>" class="btn btn-small " title="click for User Profile"><i class="icon-user">&nbsp;</i><%= current_user.name %></a>
-  <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="icon-caret-down" title="click for additional menu options"></span></a>
+  <%# render :partial => 'users/notify_link' %>
+  <a href="<%= sufia.profile_path(current_user) %>" title="click for User Profile">
+    Logged in as: <%= current_user.name %>
+  </a>
   <ul class="dropdown-menu">
       <% if false #Not displaying these links. Not used in ORA %>
         <li><%= link_to raw('<i class="icon-dashboard"></i> my dashboard'), sufia.dashboard_index_path, :id => 'dashboard_nav_link'  %></li>
@@ -30,5 +31,5 @@ limitations under the License.
       <li><%= link_to raw('<i class="icon-signout"></i> log out'), destroy_user_session_path, :id => 'logout_nav_link' %></li>
   </ul>
 <% else %>
-    <%= link_to raw('<i class="icon-signin"></i> Login'), new_user_session_path, :class => "btn btn-small" %>
+    <div class="login-link"><%= link_to raw('Login'), new_user_session_path %></div>
 <% end %>
