@@ -23,4 +23,4 @@
 //= require formUI
 //= require sufia/multiForm
 //= require ora
-
+//= require ora_form_progress
