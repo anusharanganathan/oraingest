@@ -1,7 +1,4 @@
-<h1>Update dataset</h1>
-
-<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
-<%= render partial: 'tabs' %>
+<h2 style="margin-left: 10px;">Update dataset</h2>
 
 <div>
     <% if @dataset.errors.any? %>
@@ -16,12 +13,87 @@
     <% end %>
 </div>
 
-<div class="tab-content">
-  <%= render partial: 'files_form' %>
-  <%= render partial: 'form' %>
 </div>
-<br/>
+<div class="gutter-container">
 
-<% path = { :new => new_dataset_path, :show => dataset_path(@pid), :edit => edit_dataset_path(@pid), :list => datasets_path } %>
-<%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+  <div class="col col3of4">
+    <%= render partial: 'tabs' %>
+  </div>
 
+  <div class="col col3of4">
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          1. Upload files
+        </div>
+        <div class="padding-25 no-pad-bottom">
+          <%= render partial: 'files_form' %>
+          <%= form_for(@dataset) do |f| %>
+            <% render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
+          <% end %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 2</strong> - About your data
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+    <%= render partial: 'form' %>
+  </div>
+
+  <div class="col col1of4">
+    <div class="tracker">
+      <h4>Your submission</h4>
+      <div class="chart" data-percent="82">
+        <div>
+          <span class="number">82%</span>
+          <span>Complete</span>
+        </div>
+      </div>
+
+      <p class="small">The graph below details different categories and 
+      how compete each of those categories are. The longer the line, 
+      the more accessible your document is.</p>
+
+      <div class="category-bars">
+        <div data-progress-link="citation" class="cat cat-citation">
+          <span>Citation</span>
+          <div class="bar">
+            <div class="percentage" style="width: 0%"></div>
+          </div>
+        </div>
+        <div data-progress-link="discoverability" class="cat cat-discoverability">
+          <span>Discoverability</span>
+          <div class="bar">
+            <div class="percentage" style="width: 0%"></div>
+          </div>
+        </div>
+        <div data-progress-link="funder" class="cat cat-funder">
+          <span>Funder Compliance</span>
+          <div class="bar">
+            <div class="percentage" style="width: 0%"></div>
+          </div>
+        </div>
+        <div data-progress-link="documentation" class="cat cat-documentation">
+          <span>Documentation</span>
+          <div class="bar">
+            <div class="percentage" style="width: 0%"></div>
+          </div>
+        </div>
+        <div data-progress-link="preservation" class="cat cat-preservation">
+          <span>Preservation</span>
+          <div class="bar">
+            <div class="percentage" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

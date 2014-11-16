@@ -1,4 +1,4 @@
-  <h2>Create dataset</h2>
+  <h2 style="margin-left: 10px;">Create dataset</h2>
 
   <div>
     <% if @dataset.errors.any? %>
@@ -22,37 +22,7 @@
   </div>
 
   <div class="col col3of4">
-
-    <section class="form-step">
-      <div class="content-box padding-0">
-        <div class="content-box-header">
-          1. Upload files
-        </div>
-        <div class="padding-25 no-pad-bottom">
-          <%= render partial: 'files_form' %>
-          <%= form_for(@dataset) do |f| %>
-            <% render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
-          <% end %>
-        </div>
-      </div>
-
-      <nav class="form-nav">
-        <div class="form-nav-prev">
-        </div>
-        <div class="form-nav-next">
-          <div class="float-left">
-            <strong>Continue to Step 2</strong> - About your data
-          </div>
-          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-        </div>
-      </nav>
-
-    </section>
-
     <%= render partial: 'form' %>
-
-    <% path = { :new => new_dataset_path, :list => datasets_path } %>
-    <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
   </div>
 
   <div class="col col1of4">

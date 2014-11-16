@@ -7,7 +7,7 @@
 	    <% url = "/deposit_agreement/" %>
 	   <% text = "ORA's deposit agreement" %>
 	  <% end %>
-	  <%= check_box_tag 'terms_of_service', 1, nil, {"data-activate" => 'activate-submit'} %>
+	  <%= check_box_tag 'terms_of_service', 1, nil, data: {"activate" => 'activate-submit', "progress" => "documentation"} %>
 	  <span></span>
 	  I have read and do agree to <%= link_to text, url, :target => "_blank" %>.  
 	</label>

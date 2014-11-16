@@ -58,7 +58,7 @@
   <p><%= @dataset.spatial.first.value.first %></p>
 <% end %>
 
-<% if !@dataset.medium.empty? && !@dataset.medium.first.empty?  %>
+<% if !@dataset.medium.empty? %>
   <h6>Data storage medium:</h6>
   <p>
   <% if @dataset.medium.first == Sufia.config.data_medium["Analog"] %>
