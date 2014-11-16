@@ -4,7 +4,7 @@
 <%= f.fields_for :language do |l| %>
     <div class="fieldset">
       <p class="small">Language</p>
-      <%= l.text_field :languageLabel, :style=>'width: 50%', :value=>language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel" %>
+      <%= l.text_field :languageLabel, :style=>'width: 50%', :value=>language[0].languageLabel.first, :class=>"languageLabel", id: "languageLabel", data: {"progress" => "discoverability"} %>
       <aside class="tooltip">
         <a href="" class="close-button">x</a>
         <strong>Language</strong>

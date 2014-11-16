@@ -8,7 +8,7 @@
   <div class="fieldset">
     <label>
       <p class="small">Assign a licence to your data</p>
-      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first) %>
+      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), data: {"progress" => "documentation"} %>
     </label>
 
     <aside class="tooltip">
@@ -27,9 +27,9 @@
     <label>
       <p class="small">Licence statement</p>
       <% if !article.license[0].nil? %>
-        <%= l.text_area :licenseStatement, :value=>article.license[0].licenseStatement.first %>
+        <%= l.text_area :licenseStatement, :value=>article.license[0].licenseStatement.first, data: {"progress" => "documentation"} %>
       <% else %>
-        <%= l.text_area :licenseStatement, :value=>"" %>
+        <%= l.text_area :licenseStatement, :value=>"", data: {"progress" => "documentation"} %>
       <% end %>
     </label>
 

@@ -40,7 +40,7 @@
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;" %>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"progress" => "documentation"} %>
       </label>
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
@@ -79,7 +79,7 @@
     <div class="fieldset">
       <label>
         <p class="small">Approximate file size of dataset</p>
-        <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first, :style=>"width: 200px;" %>
+        <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first, :style=>"width: 200px;", data: {"progress" => "documentation"} %>
       </label>
 
       <aside class="tooltip">
@@ -98,7 +98,7 @@
     <div class="fieldset">
       <label>
         <p class="small">File format</p>
-        <%= f.text_field :format, :value=>@dataset.format.first, :style=>"width: 200px;" %>
+        <%= f.text_field :format, :value=>@dataset.format.first, :style=>"width: 200px;", data: {"progress" => "documentation"} %>
       </label>
 
       <aside class="tooltip">
@@ -119,7 +119,7 @@
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;" %>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"progress" => "documentation"} %>
       </label>
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
