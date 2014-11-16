@@ -16,13 +16,12 @@ limitations under the License.
 
 <%# there has got to be a hipster ruby way to do this better %>
 <% if params[:f] %>
+	<h3>Current search</h3>
+	<span class="small">Filters:</span>
   <% params[:f].each do |k,v| %>
     <% v.each do |selected_facet| %>
       <% link_options = remove_facet_params(k, selected_facet, params).merge!Hash[:action=> "index"] %>
-      <div class="alert alert-warning">
-        <%= link_to 'X', url_for(link_options), {:class=>'close', :'data-dismiss' => "alert" } %>
-        <i class="icon-ok icon-large"></i> <strong><%= selected_facet %></strong>
-      </div>
+      <%= link_to selected_facet, url_for(link_options), {:class=>'active-filter', :'data-dismiss' => "alert" } %>
     <% end %>
   <% end %>
 <% end %>
