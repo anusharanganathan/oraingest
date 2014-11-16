@@ -26,51 +26,5 @@
   </div>
 
   <div class="col col1of4">
-    <div class="tracker">
-      <h4>Your submission</h4>
-      <div class="chart" data-percent="82">
-        <div>
-          <span class="number">82%</span>
-          <span>Complete</span>
-        </div>
-      </div>
-
-      <p class="small">The graph below details different categories and 
-      how compete each of those categories are. The longer the line, 
-      the more accessible your document is.</p>
-
-      <div class="category-bars">
-        <div data-progress-link="citation" class="cat cat-citation">
-          <span>Citation</span>
-          <div class="bar">
-            <div class="percentage" style="width: 0%"></div>
-          </div>
-        </div>
-        <div data-progress-link="discoverability" class="cat cat-discoverability">
-          <span>Discoverability</span>
-          <div class="bar">
-            <div class="percentage" style="width: 0%"></div>
-          </div>
-        </div>
-        <div data-progress-link="funder" class="cat cat-funder">
-          <span>Funder Compliance</span>
-          <div class="bar">
-            <div class="percentage" style="width: 0%"></div>
-          </div>
-        </div>
-        <div data-progress-link="documentation" class="cat cat-documentation">
-          <span>Documentation</span>
-          <div class="bar">
-            <div class="percentage" style="width: 0%"></div>
-          </div>
-        </div>
-        <div data-progress-link="preservation" class="cat cat-preservation">
-          <span>Preservation</span>
-          <div class="bar">
-            <div class="percentage" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <%= render :partial => 'shared/progress_tracker' %>
   </div>

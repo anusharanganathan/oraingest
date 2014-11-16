@@ -45,7 +45,7 @@
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
   
     </div>
-    <div class="padding-25">
+    <div class="padding-25 no-pad-top">
       <%= f.submit "Save dataset description", class: "button light-blue" %>
     </div>
   </div>
@@ -66,13 +66,17 @@
 
       <%= render partial: "shared/mads_keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
 
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
       <div class="fieldset">
         <% if @dataset.dateCollected.empty? %>
           <% @dataset.dateCollected.build %>
         <% end %>
         <p class="small">When was the data collected?</p>
-        <%= f.text_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;' %> to 
-        <%= f.text_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;' %>
+        <%= f.text_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.text_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -87,17 +91,13 @@
         </aside>
       </div>
 
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
       <div class="fieldset">
         <% if @dataset.temporal.empty? %>
           <% @dataset.temporal.build %>
         <% end %>
         <p class="small">Temporal coverage of the data</p>
-        <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;' %> to 
-        <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;' %>
+        <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -120,7 +120,7 @@
           <% @dataset.spatial.build %>
         <% end %>
         <p class="small">Geographical location or coverage of the data</p>
-        <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%' %>
+        <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -149,7 +149,7 @@
     <div class="expand-content">
       <div class="fieldset">
         <p class="small">Version number</p>
-        <%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px' %>
+        <%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -165,7 +165,7 @@
 
       <div class="fieldset">
         <p class="small">Abstract</p>
-        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%' %>
+        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -181,7 +181,7 @@
 
       <div class="fieldset" style="margin-bottom: 30px">
         <p class="small">Data management plan</p>
-        <input type="text" style="width: 50%"/>
+        <input type="text" style="width: 50%" data-progress="preservation"/>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -226,7 +226,7 @@
       <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator" } %>
 
     </div>
-    <div class="padding-25">
+    <div class="padding-25 no-pad-top">
       <%= f.submit "Save creator information", class: "button light-blue" %>
     </div>
   </div>
@@ -257,7 +257,7 @@
       <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
       <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
     </div>
-    <div class="padding-25">
+    <div class="padding-25 no-pad-top">
       <%= f.submit "Save information", class: "button light-blue" %>
     </div>
   </div>
@@ -287,7 +287,7 @@
       <%= hidden_field_tag(:pid, @pid) %>
       <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
     </div>
-    <div class="padding-25">
+    <div class="padding-25 no-pad-top">
       <%= f.submit "Save data information", class: "button light-blue" %>
     </div>
   </div>
@@ -352,7 +352,7 @@
       </aside>
     </div><!-- /fieldset -->
 
-    <div class="padding-25">
+    <div class="padding-25 no-pad-top">
       <%= f.submit "Save funder information", class: "button light-blue" %>
     </div>
 
