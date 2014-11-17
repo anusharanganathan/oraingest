@@ -9,17 +9,22 @@ jetty
 
 # Ignore bundler config
 /.bundle
+/vendor/bundle
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
 
 # Ignore all logfiles and tempfiles.
 rails_server.log
-/log/*.log
+/log/*
 /tmp
+
 #Ignore all of the cookies files
 .rtclientrc
 /rt_cookies/*
-#Committing Gemfile.lock before upgrading to sufia 4.0
+
+#Committing Gemfile.lock before upgrading to sufia 3.7.2
 #Gemfile.lock
 
+#Ignore public assets
+/public/assets/

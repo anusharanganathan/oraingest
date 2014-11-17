@@ -57,11 +57,26 @@ class Dataset < ActiveFedora::Base
     return {
       "name" => title, #self.title,
       "size" => size, #self.file_size,
-      "url" => "/datasets/#{pid}/#{dsid}", #"/dataset/#{noid}",
+      "url" => "/datasets/#{pid}/file/#{dsid}", #"/dataset/#{noid}",
       "thumbnail_url" => thumbnail_url(title, '48'),#self.pid,
-      "delete_url" => "deleteme", # generic_file_path(:id => id),
+      "delete_url" => "/datasets/#{pid}/file/#{dsid}", #"/dataset/#{noid}",
       "delete_type" => "DELETE"
     }
+  end
+
+  def datastream_opts(dsid)
+    opts = {}
+    #move to model??
+    #TODO: Check that its label is attributes.json and mime type is application/json and need to resque from parse
+    if self.datastreams.keys.include?(dsid) && dsid.start_with?("content")
+      opts = self.datastreams[dsid].content
+      begin
+        opts = JSON.parse(opts)
+      rescue
+        opts = {}
+      end
+    end
+    opts
   end
 
   def save_file(file, pid)
