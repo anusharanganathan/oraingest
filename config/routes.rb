@@ -7,7 +7,11 @@ OraHydra::Application.routes.draw do
   HydraHead.add_routes(self)
   Hydra::BatchEdit.add_routes(self)
 
-  devise_for :users
+  devise_for :users, skip: [:sessions]
+  devise_scope :user do
+    get "users/auth/webauth" => "login#login", as: :new_user_session
+    match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
+  end
   
   get 'deposit_agreement', to: 'static#deposit_agreement'
   get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
@@ -32,9 +36,15 @@ OraHydra::Application.routes.draw do
   delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
   get 'articles/:id/detailed/edit', to: 'articles#edit_detailed'
   
+  get 'articles/:id/file/:dsid', to: 'article_files#show'
+  delete 'articles/:id/file/:dsid', to: 'article_files#destroy'
+
   resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
   get 'datasets/:id/agreement', to: 'datasets#agreement'
+  
+  get 'datasets/:id/file/:dsid', to: 'dataset_files#show'
+  delete 'datasets/:id/file/:dsid', to: 'dataset_files#destroy'
 
   resources :dataset_agreements
 

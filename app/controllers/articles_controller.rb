@@ -25,11 +25,12 @@ require "utils"
 require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [:show, :edit, :update, :destroy, :revoke_permissions, :edit_detailed]
+  before_action :set_article, only: [:show, :edit, :edit_detailed, :update, :destroy, :revoke_permissions]
   include Blacklight::Catalog
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
+  include BlacklightAdvancedSearch::Controller
   include Sufia::Controller
   #include Sufia::FilesControllerBehavior
   # Include ORA search logic
@@ -84,7 +85,7 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
     @model = 'article'
@@ -148,15 +149,6 @@ class ArticlesController < ApplicationController
       format.html { redirect_to articles_url }
       format.json { head :no_content }
     end
-  end
-
-  def datastream
-    # To delete a datastream 
-    @article.datasteams[dsid].delete
-    parts = @article.hasPart
-    @article.hasPart = nil
-    @article.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
-    @article.save
   end
 
   def recent
@@ -276,12 +268,10 @@ class ArticlesController < ApplicationController
         saveAgain = false
         # Send email
         data = {
-          "name" => current_user.user_key,
-          "email_address" => current_user.user_key,
           "record_id" => @article.id,
           "record_url" => article_url(@article)
         }
-        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, "Article")
+        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Article")
         if ans
           article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
           @article.attributes = article_params

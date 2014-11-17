@@ -16,27 +16,40 @@
     <% end %>
   <% end %>
   <% article.hasPart.each_with_index do |hp, n| %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <legend><%= hp.identifier.first %>: description and rights</legend>
-          <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
-            <div class="field">
-              <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
-              <%= f_hp.label :type, "Type of file", :class=>"control-label" %>
-              <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
-            </div>
-            <div class="field">
-              <%= f_hp.label :description, "Description of file", :class=>"control-label" %>
-              <%= f_hp.text_field :description, :value => hp.description.first %>
-            </div>
-            <%= f_hp.fields_for :accessRights do |f_a| %>
-              <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights } %>
+    <% file_attrib = {} %>
+    <% @files.each do |file| %>
+      <% dsid = file['url'].split("/")[-1] %>
+      <% if hp.identifier.first == dsid %>
+        <% file_attrib = file %>
+      <% end %>
+    <% end %> 
+    <% unless file_attrib.empty? %>
+      <div class="well">
+        <div class="row">
+          <div class="control-group">
+            <legend>
+              <span><a href="<%=file_attrib['url']%>" title="<%=file_attrib['name']%>" rel= "<%=file_attrib['thumbnail_url']%> gallery" download= "<%file_attrib['name']%>" target="_blank"><%= file_attrib['name'] %></a> </span>
+              <span>(<%=ActionController::Base.helpers.number_to_human_size(file_attrib['size'], precision: 2)%>)</span>
+              <span class="label label-warning"><%= link_to 'Delete', file_attrib['delete_url'], method: :delete, data: { confirm: 'Are you sure?' } %></span>
+            </legend>
+            <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
+              <div class="field">
+                <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
+                <%= f_hp.label :type, "Type of file", :class=>"control-label" %>
+                <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
+              </div>
+              <div class="field">
+                <%= f_hp.label :description, "Description of file", :class=>"control-label" %>
+                <%= f_hp.text_field :description, :value => hp.description.first %>
+              </div>
+              <%= f_hp.fields_for :accessRights do |f_a| %>
+                <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights } %>
+              <% end %>
             <% end %>
-          <% end %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-<% end %>
+          </div><!-- /.control-group -->
+        </div> <!-- /.row -->
+      </div> <!-- /.well -->
+    <% end #unless file_attrib.empty? %>
+  <% end #each file %> 
+<% end #if files %>
 

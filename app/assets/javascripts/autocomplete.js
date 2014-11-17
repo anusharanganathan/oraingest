@@ -98,8 +98,9 @@ var autocompletePerson = {
     return false; 
   },
   select: function( event, ui ) {
-    $(this).val( ui.item.fullname );
-    $(this).attr("value", ui.item.fullname);
+    var pname = ui.item.firstname + " " + ui.item.lastname;
+    $(this).val( pname );
+    $(this).attr("value", pname);
     $(this).parent().find( ".creatorEmail" ).val( ui.item.oxford_email );
     $(this).parent().find( ".creatorAffiliation" ).val( ui.item.current_affiliation );
     return false;
@@ -108,7 +109,7 @@ var autocompletePerson = {
 
 var renderPerson = function ( ul, item ) {
   var line = ""
-  line = "<a><b>" + item.fullname + "</b><br/>" + item.oxford_email + "</a>";
+  line = "<a><b>" + item.firstname + " " + item.lastname + "</b><br/>" + item.oxford_email + "</a>";
   return $("<li></li>")
       .data("item.autocomplete", item)
       .append( line )

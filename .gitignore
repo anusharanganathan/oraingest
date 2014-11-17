@@ -16,7 +16,7 @@ jetty
 
 # Ignore all logfiles and tempfiles.
 rails_server.log
-/log/*.log
+/log/*
 /tmp
 
 #Ignore all of the cookies files

@@ -30,7 +30,7 @@ module Qa::Authorities
       query.push('cud\:cas\:oxford_email_text:*')
       query = query.join(" AND ")
       query = URI.escape(query)
-      return_fields="cud:cas:fullname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
+      return_fields="cud:cas:fullname,cud:cas:lastname,cud:cas:firstname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
       rows = 10 #This is not working
       query_url =  "http://10.0.0.203/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
       @raw_response = get_json(query_url)
@@ -126,6 +126,7 @@ module Qa::Authorities
           'firstname' => 'cud\:cas\:firstname_text',
           'oxford_email' => 'cud\:cas\:oxford_email_text',
           'sso_username' => 'cud\:cas\:sso_username_text',
+          'sso_username_exact' => 'cud\:cas\:sso_username',
           'current_affiliation' => 'cud\:cas\:current_affiliation'
           }
         end

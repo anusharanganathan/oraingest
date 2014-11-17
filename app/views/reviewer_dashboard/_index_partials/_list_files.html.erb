@@ -14,7 +14,16 @@
     <%= workflow_status_indicator(document) %>
   </td>
   <td width="5%">
-    <%= document['active_fedora_model_ssi'] %>
+    <% types = ['journal', 'dataset', 'thesis', 'working-paper', 'tech-report', 'book', 'conference', 'article', 'book-section', 'general-item', 'technical'] %>
+    <% if types.include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
+      <% tag = document.worktypeLabel.downcase.tr(" ", "-") %>
+    <% elsif ["technical-document", "technical-report"].include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
+      <% tag = "tech-report" %>
+    <% else %>
+      <% tag = "general-item" %>
+    <% end %>
+    <span class="tag tag-<%=tag%>"><%= document.worktypeLabel %></span><br/>
+    <span><%= document['active_fedora_model_ssi'] %></span>
   </td>
   <td width="5%" align="center">
     <%= document.depositor %>
