@@ -13,40 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
+<%= render partial: '/header' %>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <%= render :partial => "layouts/head_tag_content"%>
-  </head>
+<div class="container">
+  <%= yield %>
+</div>
 
-<body> 
-<div  id="wrapper"> 
-  <div class="container">
-    <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
-      <%= render :partial => '/flash_msg' %>
-      <div id="content-wrapper"> 
-        <div id="content" class="row">
-           <%= yield %>
-          <!-- 110 rows -->
-          <!-- <div class="span17">
-            <%#= yield :sidebar %>
-          </div> --><!-- /.span17 -->
-              <div class="span55">
-                <%= yield :column1 %>
-              </div><!-- /.span63 -->
+<div class="gutter-container">
+  <div class="col col1of2">
+  	<div class="content-box padding-25 overflow">
+    	<%= yield :column1 %>
+    </div>
+    <%= render partial: '/catalog/_action_partials/reviewer_dashboard' %>
+  </div>
+  <div class="col col1of2">
+  	<div class="content-box padding-25 overflow">
+    	<%= yield :column2 %>
+    </div>
+    <%= render partial: '/catalog/_action_partials/list_agreements' %>
+  </div>
+</div>
 
-              <div class="span55 offset2">
-                <%= yield :column2 %>
-              </div> <!-- /.span30 -->
-              
-        </div><!-- /#content -->
-      </div><!-- /#content-wrapper -->
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
-</div><!-- /#wrapper -->
 <%= render partial: '/footer' %>
-<div id="ajax-modal" class="modal hide" tabindex="-1"></div>
-</body>
-</html>

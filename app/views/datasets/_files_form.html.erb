@@ -1,13 +1,18 @@
-<div class="tab-pane active" id="local">
-  <% editpath = edit_dataset_path(@pid) %>
-  <%= render partial: 'shared/upload/agreement' %>
-  <%= render partial: 'shared/upload/alerts', :locals => { :editpath => editpath } %>
-  <%= form_for(@dataset, :html => {:multipart => true, :id => 'fileupload'}) do |f| %>
-    <div class="well">
+<% editpath = edit_dataset_path(@pid) %>
+
+<p class="arial">Read deposit licence</p>
+<%= render partial: 'shared/upload/tos_checkbox' %>
+<span class="small">Not accepting these deposit conditions will mean you are unable to proceed</span>
+<div class="bottom-border"></div>
+
+<h4>Select files to upload</h4>
+
+<%= render partial: 'shared/upload/alerts', :locals => { :editpath => editpath } %>
+<%= form_for(@dataset, :html => {:multipart => true, :id => 'fileupload'}) do |f| %>
+    <div class="file-uploads">
       <%= render partial: 'shared/upload/file_upload_fields' %>
     </div>
-  <% end %>
-  <%= render partial: 'shared/upload/script_templates', :locals => { :editpath => editpath } %>
-  <%= render partial: 'shared/upload/list_files' %>
-</div>
-
+<% end %>
+<%= render partial: 'shared/upload/script_templates', :locals => { :editpath => editpath } %>
+<%= render partial: 'shared/upload/list_files' %>
+<%= render partial: 'shared/upload/agreement' %>

@@ -1,0 +1,138 @@
+<% if !@files.nil? && !@files.empty? %>
+  <%= f.hidden_field :medium, :value=>Sufia.config.data_medium["Digital"] %>
+<% else %>
+
+  <% if @dataset.medium[0] == Sufia.config.data_medium["Digital"] %>
+    <% showDigital = "inline" %>
+  <% else %>
+    <% showDigital = "none" %>
+  <% end %>
+  <div class="fieldset">
+    <h4>Is your data in digital format?</h4>
+    <p class="small">Please complete this section only if you want to create just a record
+    about your dataset, and do not want to deposit the data files in ORA. In this case, the
+    data (either digital or physical) is located elsewhere.</p>
+
+    <fieldset class="small-text">
+      <label panel="dataset-format-digital">
+        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')" %><span></span> Yes
+      </label>
+      <label panel="dataset-format-physical">
+        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')" %>
+        <span></span> No
+      </label>
+    </fieldset>
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Data medium</strong>
+      <p>Please indicate whether the data you are describing are in the form of digital files, or whether they are physical notes or specimens etc.</p>
+
+      <div class="tooltip-extra">
+        <div class="circle circle-documentation"></div>
+        <p><strong>Completing this field helps with Documentation</strong></p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="expand-panel" id="dataset-format-digital">
+    <h5>Digital data information</h5>
+    <div class="fieldset">
+      <label>
+        <p class="small">Storage location</p>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"progress" => "documentation"} %>
+      </label>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Storage location</strong>
+        <p>Please indicated where the data are located. If the data are not available online please give details
+        of whom to contact to enquire about the data.</p>
+
+        <div class="tooltip-extra">
+          <div class="circle circle-documentation"></div>
+          <p><strong>Completing this field helps with Documentation</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+
+    <div class="fieldset">
+      <label>
+        <p class="small">DOI of dataset (if known)</p>
+        <input type="text" style="width: 150px"/>
+      </label>
+      <label>
+        <p class="small">URL of dataset (if known)</p>
+        <input type="text" style="width: 50%"/>
+      </label>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>DOI/URL of dataset</strong>
+        <p>Enter the DOI (Digital Object Identifier) or URL (web address) of the dataset if known.</p>
+
+        <div class="tooltip-extra">
+          <div class="circle circle-citation"></div>
+          <p><strong>Completing this field helps with Citation</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+
+    <div class="fieldset">
+      <label>
+        <p class="small">Approximate file size of dataset</p>
+        <%= f.text_field :digitalSize, :value=>@dataset.digitalSize.first, :style=>"width: 200px;", data: {"progress" => "documentation"} %>
+      </label>
+
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Approximate File size</strong>
+        <p>Please estimate the total size of the dataset, in terms of file size rather than number of
+        filesm e,g, '8MB', '5GB' etc.</p>
+
+        <div class="tooltip-extra">
+          <div class="circle circle-documentation"></div>
+          <p><strong>Completing this field helps with Documentation</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+
+    <div class="fieldset">
+      <label>
+        <p class="small">File format</p>
+        <%= f.text_field :format, :value=>@dataset.format.first, :style=>"width: 200px;", data: {"progress" => "documentation"} %>
+      </label>
+
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>File format</strong>
+        <p>Please specify the file formats of the data, e.g. .doc, .gif; .mp3; .mpeg; rich text; SPSS; .xls; .xml, etc.</p>
+
+        <div class="tooltip-extra">
+          <div class="circle circle-documentation"></div>
+          <p><strong>Completing this field helps with Documentation</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+  </div><!-- /expand-panel -->
+
+  <div class="expand-panel" id="dataset-format-physical">
+    <h5>Physical data information</h5>
+    <div class="fieldset">
+      <label>
+        <p class="small">Storage location</p>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"progress" => "documentation"} %>
+      </label>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Storage location</strong>
+        <p>Please indicated where the data are located. If the data are not available online please give details
+        of whom to contact to enquire about the data.</p>
+
+        <div class="tooltip-extra">
+          <div class="circle circle-documentation"></div>
+          <p><strong>Completing this field helps with Documentation</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+  </div><!-- /expand-panel -->
+
+<% end %>

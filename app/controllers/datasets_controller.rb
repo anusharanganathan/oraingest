@@ -45,6 +45,8 @@ class DatasetsController < ApplicationController
   #include Ora::Search::RequestHandlerDefaults
   include Ora::Search::SortFields
 
+  layout "sufia-two-column"    
+
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
   before_filter :authenticate_user!, :except => [:show, :citation]

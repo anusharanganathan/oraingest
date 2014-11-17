@@ -18,8 +18,8 @@ limitations under the License.
 
   <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
   <div class="row">
-    <%= render :partial => 'reviewer_dashboard/search_form' %>
-    <h2 class="heading1">Review Submissions</h2>
+    <%#= render :partial => 'reviewer_dashboard/search_form' %>
+    <h2 class="heading1">Review dashboard</h2>
   </div>
 
   <% extra_head_content << render_opensearch_response_metadata.html_safe %>
@@ -28,16 +28,26 @@ limitations under the License.
   <% end %>
 
   <%= render :partial => 'dashboard/did_you_mean' %>
-  <%= render :partial => 'reviewer_dashboard/facet_selected' %>
   
   <% render_pagination_info @response, :entry_name=>'item' %>
 
-  <%= render 'reviewer_dashboard/sort_and_per_page' %>
+  <div class="colfull" style="text-align: right; margin-bottom: 15px">
+    <hr />
+    <%= render 'sort_and_per_page' %>
+  </div>
+  
+  <%= render :partial=>'dashboard/facets' %>
 
-  <%= render :partial=>'reviewer_dashboard/document_list'  %>  
-  <% content_for :sidebar do %>
-    <%= render :partial=>'dashboard/facets' %>
-  <% end %>
+  <div class="col col5of6">
+    <% if params.has_key?("q") %>
+      <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
+    <% end %>
+
+    <%= render :partial => 'dashboard/did_you_mean' %>
+
+    <%= render :partial=>'reviewer_dashboard/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) } } %>  
+  </div>
+
 
   <% if false %> 
     <%= render 'dashboard/results_pagination' %>

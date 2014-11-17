@@ -1,34 +1,29 @@
 <% if !article.funding.nil? && !article.funding[0].nil? %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <div id="funding">
-          <p><strong>Funding Information:</strong></p>
-          <% article.funding[0].funder.each_with_index do |f, f_index| %>
-            <div>
-            <% if f.agent[0].name and f.agent[0].sameAs %>
-              <span><%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></span>
-            <% elsif f.agent[0].name %>
-              <span><%= f.agent[0].name.first %></span>
-            <% end %>
-            <% if f.funds %>
-              <span>funds <%= f.funds.first %></span>
-            <% end %>
-            <% if !f.awards.empty? && !f.awards[0].grantNumber.empty? && !f.awards[0].grantNumber.first.empty? %>
-              <span>(grant number:
-              <% f.awards.each do |f3| %>
-                <%= f3.grantNumber.first %>
-              <% end %>
-              ) </span>
-            <% end %>
-            <% if !f.annotation.empty? %>
-              <span>Acknowledgement note <%= f.annotation.first %></span>
-            <% end %>
-            </div>
+  <div class="accordian">
+    <div class="accordian-header">Funding Information</div>
+    <div class="accordian-content">
+      <% article.funding[0].funder.each_with_index do |f, f_index| %>
+        <% if f.agent[0].name and f.agent[0].sameAs %>
+          <p><span class="h6">Name of funder:</span> <%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></p>
+        <% elsif f.agent[0].name %>
+          <p><span class="h6">Name of funder:</span><%= f.agent[0].name.first %></p>
+        <% end %>
+        <% if f.funds %>
+          <p><span class="h6">Funds:</span> <%= f.funds.first %></p>
+        <% end %>
+        <% if !f.awards.empty? && !f.awards[0].grantNumber.empty? && !f.awards[0].grantNumber.first.empty? %>
+          <p><span class="h6">Grant number:</span> 
+          <% f.awards.each do |f3| %>
+            <%= f3.grantNumber.first %>
           <% end %>
-        </div> <!--/funding -->
-      </div> <!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+          </p>
+        <% end %>
+        <% if !f.annotation.empty? %>
+          <p><span class="h6">Acknowledgement note:</span> <%= f.annotation.first %></p>
+        <% end %>
+        <br/>
+      <% end %>
+    </div>
+  </div>
 <% end %>
 

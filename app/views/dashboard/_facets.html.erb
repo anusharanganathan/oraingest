@@ -15,10 +15,13 @@ limitations under the License.
 %>
 
 <% # main container for facets/limits menu -%>
-<div>
-  <div class="row" style="margin-top:85px;">&nbsp;</div>
-  <h3>Browse By</h3>
-  <ul class="nav nav-list" id="facets">
-    <%= render_facet_partials %>
-  </ul>
+<div class="col col1of6">
+	<aside class="filters">
+		<%= render :partial => 'reviewer_dashboard/facet_selected' %>
+
+		<ul id="facets">
+			<%= render_facet_partials %>
+		</ul>
+
+	</aside>
 </div>

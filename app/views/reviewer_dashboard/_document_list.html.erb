@@ -14,7 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
+<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
+
 <% # container for all documents in index view -%>
+<% if docs.blank? %>
+  <h3>  <%= msg %> </h3>
+<% else %>
+  <% docs.each do |document| %>
+    <%= render :partial => "show_article", :locals=>{:document => document } %>
+  <% end %>
+<% end %>
 <div id="documents" class="clear">
-  <%= render :partial => 'reviewer_dashboard/_index_partials/default_group', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil} %>
-</div>
+

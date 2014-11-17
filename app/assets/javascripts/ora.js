@@ -1,0 +1,193 @@
+/**!
+ * easyPieChart
+ * Lightweight plugin to render simple, animated and retina optimized pie charts
+ *
+ * @license
+ * @author Robert Fleischmann <rendro87@gmail.com> (http://robert-fleischmann.de)
+ * @version 2.1.5
+ **/
+!function(a,b){"object"==typeof exports?module.exports=b(require("jquery")):"function"==typeof define&&define.amd?define(["jquery"],b):b(a.jQuery)}(this,function(a){var b=function(a,b){var c,d=document.createElement("canvas");a.appendChild(d),"undefined"!=typeof G_vmlCanvasManager&&G_vmlCanvasManager.initElement(d);var e=d.getContext("2d");d.width=d.height=b.size;var f=1;window.devicePixelRatio>1&&(f=window.devicePixelRatio,d.style.width=d.style.height=[b.size,"px"].join(""),d.width=d.height=b.size*f,e.scale(f,f)),e.translate(b.size/2,b.size/2),e.rotate((-0.5+b.rotate/180)*Math.PI);var g=(b.size-b.lineWidth)/2;b.scaleColor&&b.scaleLength&&(g-=b.scaleLength+2),Date.now=Date.now||function(){return+new Date};var h=function(a,b,c){c=Math.min(Math.max(-1,c||0),1);var d=0>=c?!0:!1;e.beginPath(),e.arc(0,0,g,0,2*Math.PI*c,d),e.strokeStyle=a,e.lineWidth=b,e.stroke()},i=function(){var a,c;e.lineWidth=1,e.fillStyle=b.scaleColor,e.save();for(var d=24;d>0;--d)d%6===0?(c=b.scaleLength,a=0):(c=.6*b.scaleLength,a=b.scaleLength-c),e.fillRect(-b.size/2+a,0,c,1),e.rotate(Math.PI/12);e.restore()},j=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(a){window.setTimeout(a,1e3/60)}}(),k=function(){b.scaleColor&&i(),b.trackColor&&h(b.trackColor,b.lineWidth,1)};this.getCanvas=function(){return d},this.getCtx=function(){return e},this.clear=function(){e.clearRect(b.size/-2,b.size/-2,b.size,b.size)},this.draw=function(a){b.scaleColor||b.trackColor?e.getImageData&&e.putImageData?c?e.putImageData(c,0,0):(k(),c=e.getImageData(0,0,b.size*f,b.size*f)):(this.clear(),k()):this.clear(),e.lineCap=b.lineCap;var d;d="function"==typeof b.barColor?b.barColor(a):b.barColor,h(d,b.lineWidth,a/100)}.bind(this),this.animate=function(a,c){var d=Date.now();b.onStart(a,c);var e=function(){var f=Math.min(Date.now()-d,b.animate.duration),g=b.easing(this,f,a,c-a,b.animate.duration);this.draw(g),b.onStep(a,c,g),f>=b.animate.duration?b.onStop(a,c):j(e)}.bind(this);j(e)}.bind(this)},c=function(a,c){var d={barColor:"#ef1e25",trackColor:"#f9f9f9",scaleColor:"#dfe0e0",scaleLength:5,lineCap:"round",lineWidth:3,size:110,rotate:0,animate:{duration:1e3,enabled:!0},easing:function(a,b,c,d,e){return b/=e/2,1>b?d/2*b*b+c:-d/2*(--b*(b-2)-1)+c},onStart:function(){},onStep:function(){},onStop:function(){}};if("undefined"!=typeof b)d.renderer=b;else{if("undefined"==typeof SVGRenderer)throw new Error("Please load either the SVG- or the CanvasRenderer");d.renderer=SVGRenderer}var e={},f=0,g=function(){this.el=a,this.options=e;for(var b in d)d.hasOwnProperty(b)&&(e[b]=c&&"undefined"!=typeof c[b]?c[b]:d[b],"function"==typeof e[b]&&(e[b]=e[b].bind(this)));e.easing="string"==typeof e.easing&&"undefined"!=typeof jQuery&&jQuery.isFunction(jQuery.easing[e.easing])?jQuery.easing[e.easing]:d.easing,"number"==typeof e.animate&&(e.animate={duration:e.animate,enabled:!0}),"boolean"!=typeof e.animate||e.animate||(e.animate={duration:1e3,enabled:e.animate}),this.renderer=new e.renderer(a,e),this.renderer.draw(f),a.dataset&&a.dataset.percent?this.update(parseFloat(a.dataset.percent)):a.getAttribute&&a.getAttribute("data-percent")&&this.update(parseFloat(a.getAttribute("data-percent")))}.bind(this);this.update=function(a){return a=parseFloat(a),e.animate.enabled?this.renderer.animate(f,a):this.renderer.draw(a),f=a,this}.bind(this),this.disableAnimation=function(){return e.animate.enabled=!1,this},this.enableAnimation=function(){return e.animate.enabled=!0,this},g()};a.fn.easyPieChart=function(b){return this.each(function(){var d;a.data(this,"easyPieChart")||(d=a.extend({},b,a(this).data()),a.data(this,"easyPieChart",new c(this,d)))})}});
+$(function() {
+
+	/* -------------------------------------------------------------
+   * PIE CHART
+   * -------------------------------------------------------------
+   * Controls the pie chart which shows form submission progress
+   * -----------------------------------------------------------*/
+
+  // Initialize the pie chart on page load
+	$('.chart').easyPieChart({
+  	'trackColor' : '#C8C8C8',
+  	'barColor' : '#719AAA',
+  	'scaleColor' : false,
+  	'lineWidth' : 20,
+  	'size' : 180,
+  	'lineCap' : 'square',
+    'onStep': function (start, target, now) {
+      $(this.el).find('.percentage').text(~~now);
+    }
+  });
+
+  /* -------------------------------------------------------------
+   * ACCORDIAN
+   * -----------------------------------------------------------*/
+  $(document).on("click",".accordian-header",function(){
+    var accordian = $(this).parents(".accordian").first();
+    accordian.toggleClass("open");
+    accordian.find(".accordian-content").stop().slideToggle(400);
+  });
+
+  /* -------------------------------------------------------------
+   * EXPANDABLE PANELS
+   * -------------------------------------------------------------
+   * Show and hide extra form elements if a certian selection
+   * is made.
+   * -----------------------------------------------------------*/
+  $(document).on("click","input",function() {
+    var fieldset = $(this).parents("fieldset").first(),
+        panel_id = $(this).parents("label").first().attr("panel");
+
+    // Open expandable panel on click
+    fieldset.find("*[panel!="+panel_id+"]").each(function(){
+      var panel_id = $(this).attr("panel");
+      $("#"+panel_id)
+        .slideUp("slow")
+        .animate(
+          { opacity: 0 },
+          { queue: false, duration: 'slow' }
+        );
+    });
+
+    // Close other panels
+    $("#"+panel_id)
+      .slideDown("slow")
+      .animate(
+        { opacity: 1 },
+        { queue: false, duration: 'slow' }
+      );
+  });
+
+  /* -------------------------------------------------------------
+   * Hidden Form
+   * -------------------------------------------------------------
+   * Show and hide hidden form elements.
+   * -----------------------------------------------------------*/
+  $(document).on("click","*[data-action]",function(){
+    var action = $(this).attr("data-action"),
+        hidden_form;
+
+    // Show the hidden form
+    if(action === "show_form"){
+      hidden_form = $(this).parents(".file-content").first().find(".hidden-form");
+      hidden_form
+        .stop()
+        .slideDown("slow")
+        .animate(
+          { opacity: 1 },
+          { queue: false, duration: 'slow' }
+        );
+    }
+
+    // Hide the form
+    if(action === "hide_form"){
+      hidden_form = $(this).parents(".hidden-form").first();
+      hidden_form
+        .stop()
+        .slideUp("slow")
+        .animate(
+          { opacity: 0 },
+          { queue: false, duration: 'slow' }
+        );
+    }
+
+    return false;
+  });
+
+  /* -------------------------------------------------------------
+   * Form Steps Navigation
+   * -------------------------------------------------------------
+   * Navigation for moving onto other steps of the form
+   * -----------------------------------------------------------*/
+  function goto_form_step(index) {
+    var new_form = $("section.form-step:eq("+index+")"),
+        current_form = $("nav.form-steps li.current").index(),
+        navigation = $("nav.form-steps ol");
+
+    $("section.form-step:eq("+current_form+")").hide();
+    new_form.show();
+
+    navigation.find("li.current").removeClass("current");
+    navigation.find("li:eq("+index+")").addClass("current");
+
+    $('html,body').animate({
+      scrollTop: $("section.main-content").offset().top-40
+    },300);
+  }
+
+  $(document).on("click","nav.form-steps li:not(.current)",function(){
+    var this_index = $(this).index();
+    goto_form_step(this_index);
+  });
+
+  $(document).on("click","[data-action]",function(){
+    var action = $(this).attr("data-action"),
+        current_form = $("nav.form-steps li.current").index(),
+        index = null;
+    if(action === "next_step") index = current_form+1;
+    if(action === "prev_step") index = current_form-1;
+    if(index !== null) goto_form_step(index);
+  });
+
+  /* -------------------------------------------------------------
+   * Expandable Content
+   * -----------------------------------------------------------*/
+  $(document).on("click",".expand-header",function(){
+    var content = $(this).parent().find(".expand-content");
+    content.stop().slideToggle("slow");
+  });
+
+  /* -------------------------------------------------------------
+   * Filters
+   * -------------------------------------------------------------
+   * Actions for showing and hiding faceted filters
+   * -----------------------------------------------------------*/
+  $(document).on("click",".filters > ul > li > span",function(){
+    $(this).parent().toggleClass("open");
+  });
+
+  /* -------------------------------------------------------------
+   * Field Repeater
+   * -------------------------------------------------------------
+   * Gives the ability to add and remove clones of form elements
+   * -----------------------------------------------------------*/
+
+  // Collect the field to be cloned
+  $('.field-repeater').each(function(){
+    var clone = $(this).find("ol > li").first().clone();
+    $(this).data("field",clone);
+  });
+
+  // Add a new field
+  $(document).on("click",".field-repeater .add-field", function(){
+    var container = $(this).parents(".field-repeater").first(),
+        list = container.find("ol"),
+        items = list.find("li").length,
+        clone = container.data("field").clone(),
+        max = parseInt(container.attr("data-max-fields"));
+    if(!max) max = 3;
+    if(items < max) clone.hide().appendTo(list).fadeIn("slow");
+    if(items === (max-1)) container.find(".add-field").hide();
+    return false;
+  });
+
+  // Remove a field
+  $(document).on("click",".field-repeater .remove-field", function(){
+      var container = $(this).parents(".field-repeater").first(),
+          fieldrow = $(this).parents("li").first();
+      fieldrow.remove();
+      container.find(".add-field").show();
+      return false;
+  });
+
+
+});

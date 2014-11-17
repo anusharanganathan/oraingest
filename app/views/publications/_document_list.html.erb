@@ -18,19 +18,23 @@ limitations under the License.
 <% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
 
 <% # container for all documents in index view -%>
+<% if docs.blank? %>
+  <h3>  <%= msg %> </h3>
+<% else %>
+  <table class="article-table">
+    <thead>
+      <tr>
+        <th>Publication details</th>
+        <th width="150">Status and action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% docs.each do |document| %>
+        <% path = document_url(document.modelName, 'show', document.id) %>
+        <%= render :partial => "show_publication", :locals=>{:document => document } %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
 <div id="documents" class="clear">
 
-<div>
-  <% if docs.blank? %>
-    <h3>  <%= msg %> </h3>
-  <% else %>
-    <div id="recent_docs">
-      <table class="table table-bordered table-striped">
-        <% docs.each do |document| %>
-          <% path = document_url(document.modelName, 'show', document.id) %>
-          <%= render :partial => "show_publication", :locals=>{:document => document } %>
-        <% end %>
-      </table>
-    </div>
-  <% end %>
-</div>

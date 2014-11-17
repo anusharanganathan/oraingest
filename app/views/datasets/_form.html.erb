@@ -1,98 +1,391 @@
-<div class="tab-pane" id="describetab">
-  <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'describetab') %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
-          <%= render partial: "describe_fields_edit", as: :dataset, :locals => { :f => f } %>
-          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
-          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
-          <div class="actions">
-            <%= f.submit "Save dataset description", class: "btn btn-success" %>
-          </div><!-- /.actions -->
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-</div>
+<section class="form-step">
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      1. Upload files
+    </div>
+    <div class="padding-25 no-pad-bottom">
+      <%= render partial: 'files_form' %>
+      <%= form_for(@dataset) do |f| %>
+        <% render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
+      <% end %>
+    </div>
 
-<div class="tab-pane" id="creatorstab">
-  <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'creatorstab') %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator" } %>
-          <div class="actions">
-            <%= f.submit "Save creator information", class: "btn btn-success" %>
-          </div><!-- /.actions -->
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-</div>
+    <%# path = { :new => new_dataset_path, :list => datasets_path } %>
+    <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
+  </div>
 
-<div class="tab-pane" id="publicationtab">
-  <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'publicationtab') %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
-          <div class="actions">
-            <%= f.submit "Save publication information", class: "btn btn-success" %>
-          </div><!-- /.actions -->
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-</div>
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+    </div>
+    <div class="form-nav-next">
+      <div class="float-left">
+        <strong>Continue to Step 2</strong> - About your data
+      </div>
+      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+    </div>
+  </nav>
 
-<div class="tab-pane" id="funderstab">
+</section>
+<section class="form-step">
   <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'funderstab') %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
-          <div class="actions">
-            <%= f.submit "Save funder information", class: "btn btn-success" %>
-          </div><!-- /.actions -->
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-</div>
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      2. About your data
+    </div>
+    <div class="padding-0">
+        <%= hidden_field_tag(:pid, @pid) %>
+        <%= hidden_field_tag('redirect_tab', 'describetab') %>
 
-<div class="tab-pane" id="moreinfotab">
-  <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
-          <div class="actions">
-            <%= f.submit "Save information", class: "btn btn-success" %>
-          </div><!-- /.actions -->
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  <% end %>
-</div>
+        <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
+        <%= render partial: "describe_fields_edit", as: :dataset, :locals => { :f => f } %>
+        <div class="padding-side-25">
+          <div class="bottom-border"></div>
+        </div>
 
-<div class="tab-pane" id="rightstab">
+        <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
+  
+    </div>
+    <div class="padding-25 no-pad-top">
+      <%= f.submit "Save dataset description", class: "button light-blue" %>
+    </div>
+  </div>
+
+  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+  <p>Enhance your deposit by making your data more discoverable via search engines, and by linking your data to other items such as publications.</p>
+
+  <div class="content-box padding-0">
+    <div class="content-box-header expand-header">
+      Add subject, abstract, keywords and other descriptive information to your data
+    </div>
+    <div class="expand-content">
+      <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
+
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
+      <%= render partial: "shared/mads_keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
+
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
+      <div class="fieldset">
+        <% if @dataset.dateCollected.empty? %>
+          <% @dataset.dateCollected.build %>
+        <% end %>
+        <p class="small">When was the data collected?</p>
+        <%= f.text_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.text_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Date collected</strong>
+          <p>If applicable, enter the date(s) when your data were collected, e.g. '2014' or
+          '1998 - 2010' or '15/4/2005 - 30/9/2005'.</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-discoverability"></div>
+            <p><strong>Completing this field helps with Discoverability</strong></p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="fieldset">
+        <% if @dataset.temporal.empty? %>
+          <% @dataset.temporal.build %>
+        <% end %>
+        <p class="small">Temporal coverage of the data</p>
+        <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Temportal coverage</strong>
+          <p>If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'.</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-discoverability"></div>
+            <p><strong>Completing this field helps with Discoverability</strong></p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
+      <div class="fieldset">
+        <% if @dataset.spatial.empty? %>
+          <% @dataset.spatial.build %>
+        <% end %>
+        <p class="small">Geographical location or coverage of the data</p>
+        <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Geographical location</strong>
+          <p>If applicable, enter the geographical location to which your data related. You may enter it as a place name, country or general area (e.g. 'France'; 'New York'; 'New Forest') or as a geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085).</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-discoverability"></div>
+            <p><strong>Completing this field helps with Discoverability</strong></p>
+          </div>
+        </aside> 
+      </div>
+
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
+      <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
+    </div>
+  </div>
+
+  <div class="content-box padding-0">
+    <div class="content-box-header expand-header">
+      Add a description of your research
+    </div>
+    <div class="expand-content">
+      <div class="fieldset">
+        <p class="small">Version number</p>
+        <%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Version number</strong>
+          <p>If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here.</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-citation"></div>
+            <p><strong>Completing this field helps with Citation</strong></p>
+          </div>
+        </aside> 
+      </div>
+
+      <div class="fieldset">
+        <p class="small">Abstract</p>
+        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Abstract</strong>
+          <p>Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research.</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-documentation"></div>
+            <p><strong>Completing this field helps with Documentation</strong></p>
+          </div>
+        </aside> 
+      </div>
+
+      <div class="fieldset" style="margin-bottom: 30px">
+        <p class="small">Data management plan</p>
+        <input type="text" style="width: 50%" data-progress="preservation"/>
+
+        <aside class="tooltip">
+          <a href="#" class="close-button">x</a>
+          <strong>Data management plan</strong>
+          <p>Enter the web address (URL) of your research project's data management plan or, if you are including this information along with your uploaded files, please give the file name here.</p>
+
+          <div class="tooltip-extra">
+            <div class="circle circle-preservation"></div>
+            <p><strong>Completing this field helps with Preservation</strong></p>
+          </div>
+        </aside> 
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    </div>
+    <div class="form-nav-next">
+      <div class="float-left">
+        <strong>Continue to Step 3</strong> - About you
+      </div>
+      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+    </div>
+  </nav>
+
+  <% end %>
+</section>
+
+<section class="form-step">
   <%= form_for(@dataset) do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag('redirect_tab', 'rightstab') %>
-    <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      3. About you
+    </div>
+    <div class="padding-0">
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= hidden_field_tag('redirect_tab', 'creatorstab') %>
+
+      <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator" } %>
+
+    </div>
+    <div class="padding-25 no-pad-top">
+      <%= f.submit "Save creator information", class: "button light-blue" %>
+    </div>
+  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    </div>
+    <div class="form-nav-next">
+      <div class="float-left">
+        <strong>Continue to Step 4</strong> - Related publications
+      </div>
+      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+    </div>
+  </nav>
+
+  <% end %>
+</section>
+
+<section class="form-step">
+  <%= form_for(@dataset) do |f| %>
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      4. Related publications
+    </div>
+    <div class="padding-0">
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
+      <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
+    </div>
+    <div class="padding-25 no-pad-top">
+      <%= f.submit "Save information", class: "button light-blue" %>
+    </div>
+  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    </div>
+    <div class="form-nav-next">
+      <div class="float-left">
+        <strong>Continue to Step 5</strong> - Data located elsewhere
+      </div>
+      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+    </div>
+  </nav>
+    
+  <% end %>
+</section>
+
+<section class="form-step">
+  <%= form_for(@dataset) do |f| %>
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      5. Data located elsewhere
+    </div>
+    <div class="padding-0">
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
+    </div>
+    <div class="padding-25 no-pad-top">
+      <%= f.submit "Save data information", class: "button light-blue" %>
+    </div>
+  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    </div>
+    <div class="form-nav-next">
+      <div class="float-left">
+        <strong>Continue to Step 6</strong> - Funders and payment
+      </div>
+      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+    </div>
+  </nav>
+  <% end %>
+</section>
+
+<section class="form-step">
+  <%= form_for(@dataset) do |f| %>
+  <div class="content-box padding-0">
+    <div class="content-box-header">
+      6. Funders and payment
+    </div>
+    <div class="padding-25 no-pad-top">
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= hidden_field_tag('redirect_tab', 'funderstab') %>
+      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
+
+    <div class="bottom-border padding-side-25"></div>
+
+    <h4 class="padding-side-25">Archive service payment</h4>
+
+    <div class="fieldset">
+      <fieldset class="small-text">
+        <label><input type="radio" name="dataset-archive-service" value="1"/><span></span>Payment has been made already</label>
+        <label><input type="radio" name="dataset-archive-service" value="2"/><span></span>Payment has not yet been made; an invoice is required</label>
+        <label><input type="radio" name="dataset-archive-service" value="3"/><span></span>Payment not required; I am creating a record only and not depositing data</label>
+        <label><input type="radio" name="dataset-archive-service" value="4"/><span></span>I need help with this</label>
+      </fieldset>
+
+      <label style="margin-top: 20px;">
+        <p class="small">Further details</p>
+        <textarea></textarea>
+      </label>
+
+      <aside class="tooltip tooltip-wide">
+        <a href="#" class="close-button">x</a>
+        <strong>Archive service payment</strong>
+        <p>For 'Payment has already been made': Please give details below, including X5 ID if you have it.</p>
+        <p>For 'Payment has not yet been made; an invoice is requierd': Please give details of whom we should invoice. If your
+        publisher requires you cite the data underpinning your article (or other work) and your research is unfunded, you can
+        request to pay only the baseline fee (not storage charge).</p>
+        <p>For 'Payment not required; I am creating a record only and not depositing data': There is no charge for creating
+        a record about a dataset stored elsewhere; archiving charges only apply when data is deposited in ORA-Data. Please put
+        'n/a' or similar in the box below.</p>
+        <p>For 'I need help with this': Please give details below</p>
+        <div class="tooltip-extra">
+          <div class="circle circle-funder"></div>
+          <p><strong>Completing this field helps with Funder compliance</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+
+    <div class="padding-25 no-pad-top">
+      <%= f.submit "Save funder information", class: "button light-blue" %>
+    </div>
+
+  </div>
+
+  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+  <p>Enhance your deposit by making your data more discoverable via search engines, and by linking your data to other items such as publications.</p>
+
+  <div class="content-box padding-0">
+    <div class="content-box-header expand-header">
+      Liscence your data
+    </div>
+    <div class="expand-content">
+
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= hidden_field_tag('redirect_tab', 'rightstab') %>
+      <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
+
+    </div>
+  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-prev">
+      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    </div>
+  </nav>
+  
+  <% end %>
+</section>
+
+<section class="form-step">
+  <%= form_for(@dataset) do |f| %>
     <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
-    <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
     <div class="actions">
@@ -100,9 +393,9 @@
     </div><!-- /.actions -->
   <% end %>
   <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0], :pid => @pid} %>
-</div>
+</section>
 
-<div class="tab-pane" id="workflowtab">
+<section class="form-step">
   <%= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
@@ -117,5 +410,4 @@
       <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
     </div>
   <% end %>
-</div>
-
+</section>

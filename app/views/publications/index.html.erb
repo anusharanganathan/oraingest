@@ -16,29 +16,62 @@ limitations under the License.
 
   <% @page_title = application_name + " Publications" %>
 
-  <div class="accessible-hidden" id="current_user"><%=@user.user_key%></div>
-  <div class="row">
-    <h2 class="heading1">Publications</h2>
+  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+
+<% content_for :top do %>
+
+  <div class="col col1of2">
+    <h2>Publication submissions</h2>
   </div>
 
-  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
-  <% if params.has_key?("q") %>
-    <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
-  <% end %>
 
-  <%= render :partial => 'dashboard/did_you_mean' %>
-  <%= render :partial => 'reviewer_dashboard/facet_selected' %>
-  
+  <div class="col col1of2">
+    <div class="blue-bar">
+      <form action="#" method="post">
+        <div class="float-left">
+          <img src="/assets/ora/icons/plus.svg" class="icon"/>
+          Add a publication
+        </div>
+        <div class="float-right">
+          <select>
+            <option>Journal article</option>
+            <option>Something else</option>
+          </select>
+          <button type="submit" class="button button-small button-arrow">GO</button>
+        </div>
+      </form>
+    </div> <!-- /blue-bar -->
+  </div>
+
+  <div class="colfull" style="text-align: right; margin-bottom: 15px">
+    <hr />
+    <%= render 'publications/sort_and_per_page' %>
+  </div>
+
+<% end %>
+
+
+  <div class="col col5of6">
+    <% if params.has_key?("q") %>
+      <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
+    <% end %>
+
+    <%= render :partial => 'dashboard/did_you_mean' %>
+
+    <%= render :partial=>'publications/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil}  %>  
+  </div>
+
   <% render_pagination_info @response, :entry_name=>'item' %>
 
-  <%= render 'publications/sort_and_per_page' %>
+  <%= render 'dashboard/results_pagination' %>
 
-  <%= render :partial=>'publications/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil}  %>  
-	<% content_for :sidebar do %>
-	  <%= render :partial=>'dashboard/facets' %>
-	<%  end %>
 
-  <% if false %> 
-    <%= render 'dashboard/results_pagination' %>
-    <%= render :partial => 'users/activity_log', :locals => {:events => @events} %>
-  <% end %>
+
+
+
+
+<% content_for :sidebar do %>
+
+  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+
+<% end %>
