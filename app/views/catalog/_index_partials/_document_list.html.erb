@@ -1,8 +1,5 @@
-<div id="recent_docs">
-  <table class="table table-bordered table-striped">
-    <% recent_documents.each_with_index do |document, counter| %>
-      <%= render :partial => "catalog/_index_partials/recent_document", :locals => {:document => document, :counter => counter} %>
-    <% end %>
-  </table>
-</div>
-
+<ol start="<%=1+((@response.current_page-1)*@response.limit_value)%>">
+	<% recent_documents.each_with_index do |document, counter| %>
+	  <%= render :partial => "catalog/_index_partials/recent_document", :locals => {:document => document, :counter => counter} %>
+	<% end %>
+</ol>

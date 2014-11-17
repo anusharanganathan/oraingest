@@ -22,55 +22,178 @@
 <% end %>
 
 <%= f.fields_for :accessRights do |f_a| %>
-  <div class="field">
-    <%= f_a.label :embargoStatus, "Can this catalogue record be made visible?", :class=>"control-label" %>
-    <span><%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access") %> Yes</span>
-    <span><%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed") %> After a certain period</span>
-    <span><%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access") %> No</span>
-  </div>
-  
-  <div class="field">
-    <%= f_a.label :embargoDate, "What is the embargo end date?", :class=>"control-label" %>
+
+  <div class="bottom-border"></div>
+</div>
+<div class="fieldset">
+
+  <h4>Can this entire dataset be made freely available in ORA?</h4>
+  <p class="small">Can this dataset be made freely available</p>
+
+  <fieldset class="small-text">
+    <label>
+      <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"} %>
+      <span></span>Yes
+    </label>
+    <label panel='dataset-embargo'>
+      <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"} %>
+      <span></span>After a certain period
+    </label>
+    <label>
+      <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"} %>
+      <span></span>No
+    </label>
+  </fieldset>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Make freely available</strong>
+    <p>Select whether the file should be made openly available in ORA, or set an embargo if its
+    not to be made available either for a set period or in perpetuity. You should set this information
+    for each dataset file you upload.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-documentation"></div>
+      <p><strong>Completing this field helps with Documentation</strong></p>
+    </div>
+  </aside>
+</div>
+
+<div class="expand-panel" id="dataset-embargo">
+  <h5>What is the embargo date?</h5>
+
+  <div class="fieldset">
     <%= f_a.fields_for :embargoDate do |f_dt| %>
-      <div class="field" style="background-color:#ccc;">
       <%= f_dt.fields_for :end do |f_dt_end| %>
-        <%= f_dt_end.label :date, "Enter the embargo end date", :class=>"control-label" %>
-        <%= f_dt_end.text_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first %>
-      <% end %>
+      <div class="row">
+        <div class="col col1of3">
+          <label><input type="radio" name="dataset-embargo" data-progress="documentation" /><span></span>
+            Enter end date
+          </label>
+        </div>
+        <div class="col col2of3">
+          <%= f_dt_end.text_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:200px' %>
+        </div>
       </div>
-      <div class="field" style="background-color:#ddd;">
-      <%= f_dt.label :duration, "<b>OR</b> Enter the embargo period".html_safe, :class=>"control-label" %>
-      <%= f_dt.fields_for :duration do |f_dt_duration| %>
-        <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2", style: "width: 20px;" %>
-        <span> years and </span>
-        <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2", style: "width: 20px;" %>
-        <span> months starting from</span>
       <% end %>
-      <%= f_dt.fields_for :start do |f_dt_start| %>
-        <span><%= f_dt_start.radio_button :label, "Today", :checked => (startOption == "Today") %> today</span>
-        <span><%= f_dt_start.radio_button :label, "Publication date", :checked => (startOption == "Publication date") %> publication date</span>
-        <span><%= f_dt_start.radio_button :label, "", :checked => (startOption == "Date") %> date</span>
-        <%= f_dt_start.text_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first %>
-      <% end %>
+      <div class="row field-break">Or</div>
+
+      <div class="row">
+        <div class="col col1of3">
+          <label><input type="radio" name="dataset-embargo" data-progress="documentation" /><span></span>
+            Enter embargo period
+          </label>
+        </div>
+        <div class="col col2of3">
+          <%= f_dt.fields_for :duration do |f_dt_duration| %>
+            <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2", placeholder: "Years", style: "width: 70px; float: left; margin: 0; margin-right: 5px;" %>
+            <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2", placeholder: "Months", style: "width: 70px; margin: 0; float: left;" %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col col1of3">
+          <label class="indent">Starting from</label>
+        </div>
+        <div class="col col2of3">
+          <%= f_dt.fields_for :start do |f_dt_start| %>
+            <label>
+              <%= f_dt_start.radio_button :label, "Today", :checked => (startOption == "Today") %><span></span> Today
+            </label>
+            <label>
+              <%= f_dt_start.radio_button :label, "Publication date", :checked => (startOption == "Publication date") %><span></span> Publication date
+            </label>
+            <label>
+              <%= f_dt_start.radio_button :label, "", :checked => (startOption == "Date") %><span></span> Date
+            </label>
+            <%= f_dt_start.text_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first, :style=>'width: 200px' %>
+          <% end %>
+        </div>
       </div>
     <% end %>
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Embargo end date</strong>
+      <p>Enter either the precise date when the embargo should be lifted, in the form YYYY/MM/DD
+      (e.g. '26 Jule 2018'), or enter the period of embargo in years or months (e.g. '18 months'),
+      and the start date.</p>
+      <div class="tooltip-extra">
+        <div class="circle circle-documentation"></div>
+        <p><strong>Completing this field helps with Documentation</strong></p>
+      </div>
+    </aside>
   </div>
-  
-  <div class="field">
-    <%= f_a.label :embargoReason, "Reason for embargo", :class=>"control-label" %>
-    <% if !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
-      <%= f_a.text_field :embargoReason, :value => accessRights[0].embargoReason.first %>
-    <% else %>
-      <%= f_a.text_field :embargoReason %>
-    <% end %>
-  </div>
-  
-  <div class="field">
-    <%= f_a.label :embargoRelease, "Embargo release method", :class=>"control-label" %>
+
+  <h5>Embargo release method</h5>
+
+  <div class="fieldset">
     <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
       <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first) %>
     <% else %>
       <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods) %>
     <% end %>
-  </div>
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Release methods</strong>
+      <p>Please specify whether you want the embargo to be lifted automatically without
+      consulting you (or the data steward), or whether you wish to be consulted.</p>
+      <div class="tooltip-extra">
+        <div class="circle circle-funder"></div>
+        <p><strong>Completing this field helps with Funder compliance</strong></p>
+      </div>
+    </aside>
+  </div><!-- /fieldset -->
+
+  <h5>Reason for Embargo</h5>
+
+  <div class="fieldset">
+    <div class="row">
+      <% if !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
+        <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first %>
+      <% else %>
+        <%= f_a.text_area :embargoReason, :style=>'margin:0' %>
+      <% end %>
+    </div><!-- /row -->
+
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Reasons for Embargo</strong>
+      <p>Where access to the data needs to be restricted, please summarise the conditions (if any)
+      which must be satisfied for access to be granted.</p>
+      <div class="tooltip-extra">
+        <div class="circle circle-funder"></div>
+        <p><strong>Completing this field helps with Funder compliance</strong></p>
+      </div>
+    </aside>
+  </div><!-- /fieldset -->
+
+  <h5>Can this catalogue record be made visible?</h5>
+
+  <div class="fieldset" style="margin-bottom: 30px">
+    <div class="row">
+      <label>
+        <input type="radio" name="temp1"/><span></span> Yes
+      </label>
+      <label>
+        <input type="radio" name="temp1"/><span></span> No
+      </label>
+    </div><!-- /row -->
+
+    <aside class="tooltip tooltip-wide">
+      <a href="#" class="close-button">x</a>
+      <strong>Catalogue visibility</strong>
+      <p>The catalogue record for your dataset will normally be made openly accessible, even if the
+      data files are embargoed. In a small number of exceptional cases, it may be necessary to
+      embargo the record as well as the data files. State whether the catalogue record about your
+      data may be made publicly visible in ORA, or whether it needs to be hidden along with
+      your data files (i.e. embargoed).</p>
+      <div class="tooltip-extra">
+        <div class="circle circle-documentation"></div>
+        <p><strong>Completing this field helps with Documentation</strong></p>
+      </div>
+    </aside>
+  </div><!-- /fieldset -->
+
 <% end %>

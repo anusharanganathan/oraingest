@@ -3,18 +3,95 @@
 <% if false %>
   <h3><span class="label label-<%=@article.relationsMetadata.embargoClass%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
 <% end %>
-<%= render partial: "describe_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/publication_activity/article_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/relation_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/file_info_fields_show", :locals => { :article => @article } %>
-<%= render partial: "admin_fields_show", :locals => { :article => @article } %>
-<%= render partial: "shared/workflow_show", :locals => { :article => @article } %>
-<%= render partial: "shared/permissions_show", :locals => { :article => @article } %>
 
-<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
-<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+</div>
+<div class="gutter-container">
+	<div class="col col1of6">
+		<aside class="filters">
+			<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
+			<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+
+			<hr/>
+
+			<ul class="record-details">
+				<li class="status">
+					<img src="/assets/ora/icons/lock-open.svg"/>
+					Open access item
+				</li>
+				<li class="views">
+					<img src="/assets/ora/icons/read-blue.svg"/>
+					700 views
+				</li>
+				<li class="downloads">
+					<img src="/assets/ora/icons/download-blue.svg"/>
+					85 downloads
+				</li>
+			</ul>
+
+			<hr/>
+
+			<p class="small">The graph below shows how complete the metadata record is for this journal article.</p>
+
+			<div class="category-bars">
+				<div class="cat cat-citation">
+					<span>Citation</span>
+					<div class="bar">
+						<div style="width: 28%"></div>
+					</div>
+				</div>
+				<div class="cat cat-discoverability">
+					<span>Discoverability / Searchability</span>
+					<div class="bar">
+						<div style="width: 20%"></div>
+					</div>
+				</div>
+				<div class="cat cat-funder">
+					<span>Funder compliance</span>
+					<div class="bar">
+						<div style="width: 12%"></div>
+					</div>
+				</div>
+				<div class="cat cat-documentation">
+					<span>Documentation, assessment, access</span>
+					<div class="bar">
+						<div style="width: 22%"></div>
+					</div>
+				</div>
+				<div class="cat cat-preservation">
+					<span>Preservation</span>
+					<div class="bar">
+						<div style="width: 22%"></div>
+					</div>
+				</div>
+			</div>
+
+		</aside>
+	</div>
+
+	<div class="col col5of6">
+		<div class="content-box padding-0">
+			<div class="content-box-header green-bg font-26">
+				Journal article
+			</div>
+			<div class="padding-25 overflow">
+				<div class="record-content">
+					<%= render partial: "describe_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/publication_activity/article_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/funding_activity_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/relation_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "admin_fields_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/workflow_show", :locals => { :article => @article } %>
+					<%= render partial: "shared/permissions_show", :locals => { :article => @article } %>
+				</div>
+				<aside class="record-sidebar">
+					<h6>Downloads</h6>
+					<%= render partial: "shared/file_info_fields_show", :locals => { :article => @article } %>
+				</aside>
+			</div>
+		</div>
+	</div>
+</div>
 

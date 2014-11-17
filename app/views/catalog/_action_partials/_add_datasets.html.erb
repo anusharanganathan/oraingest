@@ -1,10 +1,16 @@
-<div class="actions">
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <h2><i class="icon-hdd icon-large"></i>&nbsp;&nbsp; Data</h2><hr/>
-        <a href="<%= new_dataset_path %>"><button class="btn btn-primary btn-large"><i class="icon-upload-alt"></i>&nbsp; Upload your data</button></a>
-      </div>
-    </div>
-  </div>
+<h2><img src="/assets/ora/icons/data.svg" class="icon"/>Data</h2>
+<div class="blue-bar">
+	<form action="<%= new_dataset_path %>" method="get">
+		<div class="float-left">
+			<img src="/assets/ora/icons/plus.svg" class="icon"/>
+			Upload data
+		</div>
+		<div class="float-right">
+			<select name="type">
+				<option>Data deposits</option>
+				<option>Other</option>
+			</select>
+			<button type="submit" class="button button-small button-arrow">GO</button>
+		</div>
+	</form>
 </div>

@@ -1,36 +1,33 @@
 <% if !article.creation.nil? && !article.creation[0].nil? && !article.creation[0].creator.empty? %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <div id="creation">
-          <% article.creation[0].creator.each_with_index do |c, c_index| %>
-            <div>
-            <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
-              <strong><%=link_to c.agent[0].name.first, c.agent[0].sameAs.first %></strong><br/>
-            <% elsif !c.agent[0].name.empty? %>
-               <strong><%= c.agent[0].name.first %></strong><br/>
-            <% end %>
-            <% if c.role %>
-              <% if Sufia.config.role_labels.include?(c.role.first) %>
-                <%= Sufia.config.role_labels[c.role.first] %><br/>
-              <% else %>
-                <%= c.role.first %>
-              <% end %>
-            <% end %>
-            <% if !c.agent[0].affiliation.empty? %>
-              <% c.agent[0].affiliation.each do |c2| %>
-                <% if !c2.name.empty? and !c2.sameAs.empty? %>
-                  <%=link_to c2.name.first, c2.sameAs.first %><br/>
-                <% elsif c2.name %>
-                  <%= c2.name.first %><br/>
-                <% end %>
-              <% end %>
-            <% end %>
-            </div>
-          <% end %>
-        </div><!-- /.creation -->
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
-<% end %>
+  <div class="accordian">
+    <div class="accordian-header">Creators</div>
+    <div class="accordian-content">
+      <% article.creation[0].creator.each_with_index do |c, c_index| %>
+        <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
+          <p><span class="h6">Name:</span> <%=link_to c.agent[0].name.first, c.agent[0].sameAs.first %></p>
+        <% elsif !c.agent[0].name.empty? %>
+           <p><span class="h6">Name:</span> <%= c.agent[0].name.first %></p>
+        <% end %>
 
+        <% if c.role %>
+          <% if Sufia.config.role_labels.include?(c.role.first) %>
+            <p><span class="h6">Role:</span> <%= Sufia.config.role_labels[c.role.first] %></p>
+          <% else %>
+            <p><span class="h6">Role:</span> <%= c.role.first %></p>
+          <% end %>
+        <% end %>
+
+        <% if !c.agent[0].affiliation.empty? %>
+          <% c.agent[0].affiliation.each do |c2| %>
+            <% if !c2.name.empty? and !c2.sameAs.empty? %>
+              <p><span class="h6">Affiliation:</span> <%=link_to c2.name.first, c2.sameAs.first %></p>
+            <% elsif c2.name %>
+              <p><span class="h6">Affiliation:</span> <%= c2.name.first %></p>
+            <% end %>
+          <% end %>
+        <% end %>
+        <br/>
+      <% end %>
+    </div>
+  </div>
+<% end %>

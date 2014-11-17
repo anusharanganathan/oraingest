@@ -8,34 +8,40 @@
 <% end %>
 
 <% if hasData %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <div id="relation">
-          <p><strong>Related resources:</strong></p>
-          <% article.qualifiedRelation.each do |r|%>
-            <div>
-            <% if !r.relation.empty? && !r.relation[0].empty? && !r.entity.nil? && !r.entity[0].nil? %>
-              <% if !r.entity[0].title.empty? && !r.entity[0].title[0].empty? %>
-                <span><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></span>
-              <% else %>
-                <span><%=link_to r.entity[0].id %></span>
-              <% end %><br/>
-              <% if !r.relation.empty? && !r.relation[0].empty? %>
-                <span><%= article.title.first %> <strong><%= r.relation.first %></strong> <%= r.entity[0].rdf_subject.to_s %></span>
-              <% end %>      
-              <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
-                <span><%= r.entity[0].description.first %></span>
-              <% end %>
-              <% if !r.entity[0].citation.empty? && !r.entity[0].citation[0].empty? %>
-                <span><%= r.entity[0].citation.first %></span>
-              <% end %>
-            <% end %>
-            <br/><br/></div>
+  <div class="accordian">
+    <div class="accordian-header">Related resources</div>
+    <div class="accordian-content">
+      <% article.qualifiedRelation.each do |r|%>
+        <% if !r.relation.empty? && !r.relation[0].empty? && !r.entity.nil? && !r.entity[0].nil? %>
+          <% if !r.entity[0].title.empty? && !r.entity[0].title[0].empty? %>
+            <h6>Title of related item:</h6>
+            <p><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></p>
+          <% else %>
+            <h6>Title of related item:</h6>
+            <p><%=link_to r.entity[0].id %></p>
           <% end %>
-        </div>
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
-<% end %>
 
+          <% if !r.relation.empty? && !r.relation[0].empty? %>
+            <h6>Relationship:</h6> 
+            <p><%= article.title.first %></p>
+            <p><%= r.relation.first %></p>
+            <p><%= r.entity[0].rdf_subject.to_s %></p>
+          <% end %>
+
+          <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
+            <h6>Description:</h6>
+            <p><%= r.entity[0].description.first %></p>
+          <% end %>
+
+          <% if !r.entity[0].citation.empty? && !r.entity[0].citation[0].empty? %>
+            <h6>Citation</h6>
+            <p><%= r.entity[0].citation.first %></p>
+          <% end %>
+
+          <br/>
+
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -1,9 +1,8 @@
 <% if can? :review, :all %>
-  <div class="actions">
-    <div class="row">
-      <div class="control-group">
-        <a href="<%= dataset_agreements_path %>"><button class="btn btn-large"><h2><i class="icon-heart-empty icon-large"></i>&nbsp;Data agreements</h2></button></a>
-      </div>
-    </div>
-  </div>
+<div class="content-box padding-0">
+	<a href="<%= dataset_agreements_path %>" class="full-content-link">
+		<img src="/assets/ora/icons/review.svg"/>
+		<span class="v-center">Data agreements</span>
+	</a>
+</div>
 <% end %>

@@ -1,25 +1,27 @@
 <% if (!article.oaStatus.empty? && !article.oaStatus[0].empty?) || (!article.apcPaid.empty? && !article.apcPaid[0].empty?) || (!article.oaReason.empty? && !article.oaReason[0].empty?) || (!article.refException.empty? && !article.refException[0].empty? ) %>
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <h3>Administration details - <small>APC's and Ref</small></h3>
-       <% if !article.oaStatus.empty? && !article.oaStatus.first.empty? %>
-         <div>Open access status: <%= article.oaStatus.first %></div>
-       <% end %>
-       <% if !article.apcPaid.empty? && !article.apcPaid.first.empty? %>
-         <% if article.apcPaid.first == "Yes" %>
-            <div>Article processing charge was paid for this article</div>
-         <% else %>
-            <div>Article processing charge was not paid for this article</div>
-         <% end %>
-       <% end %>
-       <% if !article.oaReason.empty? && !article.oaReason.first.empty? %>
-         <div>Basis of the APC: <%= article.oaReason.first %></div>
-       <% end %>
-       <% if !article.refException.empty? && !article.refException.first.empty? %>
-         <div>Ref exception: <%= article.refException.first %></div>
-       <% end %>
-    </div><!-- /.control-group -->
-  </div><!-- /.row -->
+<div class="accordian">
+  <div class="accordian-header">Administration details - <small>APC's and Ref</small></div>
+  <div class="accordian-content">
+    <% if !article.oaStatus.empty? && !article.oaStatus.first.empty? %>
+      <h6>Open access status:</h6>
+      <p><%= article.oaStatus.first %></p>
+    <% end %>
+    <% if !article.apcPaid.empty? && !article.apcPaid.first.empty? %>
+      <h6>Paid for:</h6>
+      <% if article.apcPaid.first == "Yes" %>
+        <p>Article processing charge was paid for this article</p>
+      <% else %>
+        <p>Article processing charge was not paid for this article</p>
+      <% end %>
+    <% end %>
+    <% if !article.oaReason.empty? && !article.oaReason.first.empty? %>
+      <h6>Basis of the APC:</h6>
+      <p><%= article.oaReason.first %></p>
+    <% end %>
+    <% if !article.refException.empty? && !article.refException.first.empty? %>
+      <h6>Ref exception:</h6>
+      <p><%= article.refException.first %></p>
+    <% end %>
+  </div>
 </div>
 <% end %>

@@ -1,0 +1,13 @@
+hydra
+  Apache site for Hydra running in dev environment in port 3000, with reverse proxy to port 80
+  located at /etc/apache2/sites-available/hydra
+hydra-apache
+  Apache site for Hydra running with passenger phusion
+  located at /etc/apache2/sites-available/hydra-apache
+krb5.conf
+  Kerberos config file
+  located at /etc/krb5.conf
+webauth.conf 
+  Config file for webauth module
+  located at /etc/apache2/mods-available/webauth.conf
+

@@ -8,8 +8,8 @@ module Ora
       @queue = queue
     end
   
-    def email_content(template, data)
-      @cont = ApplicationController.new.render_to_string :partial => template, :locals => { :data => data } rescue nil
+    def email_content(template, data, user)
+      @cont = ApplicationController.new.render_to_string :partial => template, :locals => { :data => data, :user => user } rescue nil
       return @cont
     end
 

@@ -1,7 +1,9 @@
-<legend>Publication information</legend>
+<h4 class="padding-side-25">Publication information</h4>
+
 <% if publication.empty? %>
   <% publication.build %>
 <% end %>
+
 <% publication.each do |p| %>
   <%= f.fields_for :publication, p do |f_p| %>
     <% if p.hasDocument.empty? %>
@@ -12,28 +14,58 @@
     <% end %>
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :name, "Publisher name", :class=>"control-label" %>
-          <%= f_p2.text_field :name, :value => p2.name.first %>
+
+        <div class="fieldset">
+          <p class="small">Publisher name</p>
+          <%= f_p2.text_field :name, :value => p2.name.first, data: {"progress" => "citation"} %>
+
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>Publisher name</strong>
+            <p>Enter the name of the body making the data publicly available. For data
+            produced at Oxford, this will usually be Oxford University.</p>
+            <div class="tooltip-extra">
+              <div class="circle circle-citation"></div>
+              <p><strong>Completing this field helps with Citation</strong></p>
+            </div>
+          </aside>
         </div>
-        <div class="field">
-          <%= f_p2.label :website, "Publisher website", :class=>"control-label" %>
-          <%= f_p2.text_field :website, :value => p2.website.first %>
+
+        <!--
+        <div class="fieldset">
+          <p class="small">Publisher website</p>
+          <%# f_p2.text_field :website, :value => p2.website.first %>
+
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>Publisher website</strong>
+            <p></p>
+            <div class="tooltip-extra">
+              <div class="circle circle-citation"></div>
+              <p><strong>Completing this field helps with Citation</strong></p>
+            </div>
+          </aside>
         </div>
+        -->
+
       <% end %> 
     <% end %> 
-    <div class="field">
-      <%= f_p.label :datePublished, "Date published", :class=>"control-label" %>
-      <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
-    </div>
-    <% p.hasDocument.each do |p2| %>
-      <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
-          <%= f_p2.text_field :doi, :value => p2.doi.first %>
+
+    <div class="fieldset">
+      <p class="small">Date published</p>
+      <%= f_p.date_field :datePublished, :value => p.datePublished.first, data: {"progress" => "citation"} %>
+
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Date published</strong>
+        <p>Enter the year the data have been or will be published, i.e. made publicly available.</p>
+        <div class="tooltip-extra">
+          <div class="circle circle-citation"></div>
+          <p><strong>Completing this field helps with Citation</strong></p>
         </div>
-      <% end #fields for each document %>
-    <% end #each document %>
+      </aside>
+    </div>
+
   <% end #fields for each publication %>
 <% end #each publication %>
 

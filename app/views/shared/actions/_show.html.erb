@@ -1,13 +1,3 @@
-<% if @model == "dataset_agreement" %>
-  <% label = "dataset agreement" %>
-  <% plural = "dataset agreements" %>
-<% else %>
-  <% label = @model %>
-  <% plural = @model.pluralize %>
-<% end %>
-<div class="actions">
-  <a href="<%= path[:edit] %>"><button class="btn btn-primary"><i class="icon-edit"></i>&nbsp; Edit <%=label%></button></a>
-  <a href="<%= path[:show] %>" data-method="delete" data-confirm="Are you sure?"><button class="btn btn-warning"><i class="icon-remove"></i>&nbsp; Delete <%=label%></button></a>
-  <a href="<%= path[:list] %>"><button class="btn btn-inverse"><i class="icon-list"></i>&nbsp; My <%=plural%></button></a>
-</div>
-
+<a href="<%= path[:list] %>" class="button button-small light-blue">Browse all records <img src="/assets/ora/icons/read.svg"/ class="icon icon-read"></a>
+<a href="<%= path[:edit] %>" class="button button-small light-blue">Edit <img src="/assets/ora/icons/edit.svg" class="icon icon-edit"/></a>
+<a href="<%= path[:show] %>" data-method="delete" data-confirm="Are you sure?" class="button button-small light-blue">Delete <img src="/assets/ora/icons/delete.svg" class="icon icon-delete"/></a>

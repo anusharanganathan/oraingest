@@ -1,9 +1,1 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <legend><%=@model.capitalize()%> access rights</legend>
-      <%= render partial: 'shared/embargo/embargo_fields_edit', as: :article, :locals => { :f => f, :accessRights => article.accessRights } %>
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
-
+<%= render partial: 'shared/embargo/embargo_fields_edit', as: :article, :locals => { :f => f, :accessRights => article.accessRights } %>

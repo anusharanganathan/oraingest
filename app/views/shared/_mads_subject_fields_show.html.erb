@@ -5,20 +5,19 @@
   <% end %>
 <% end %>
 <% if hasData %>
-  <div id="subject">
-    <p><strong>Subject:</strong></p>
-    <% article.subject.each do |s|%>
-      <div>
-        <% if !s.subjectAuthority.empty? && !s.subjectAuthority.first.empty? && !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
-          <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>
-          <% if !s.subjectScheme.empty? && !s.subjectScheme.first.empty? %>
-            <span>(<%= s.subjectScheme.first %>)</span>
-          <% end %>
-        <% elsif !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
-          <span><%= s.subjectLabel.first %></span>
+  <h6>Subject:</h6>
+  <p>
+  <% article.subject.each do |s|%>
+      <% if !s.subjectAuthority.empty? && !s.subjectAuthority.first.empty? && !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
+        <span><%=link_to s.subjectLabel.first, s.subjectAuthority.first %></span>
+        <% if !s.subjectScheme.empty? && !s.subjectScheme.first.empty? %>
+          <span>(<%= s.subjectScheme.first %>)</span>
         <% end %>
-      </div>
-    <% end %>
-  </div>
+      <% elsif !s.subjectLabel.empty? && !s.subjectLabel.first.empty? %>
+        <span><%= s.subjectLabel.first %></span>
+      <% end %>
+      <br/>
+  <% end %>
+  </p>
 <% end %>
 

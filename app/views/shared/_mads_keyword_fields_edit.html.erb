@@ -1,0 +1,20 @@
+<div class="fieldset">
+
+  <p>Keywords</p>
+
+  <div class="field-repeater" data-max-fields="10">
+    <ol>
+      <li>
+        <%= f.text_field :keyword, :name=>"dataset[keyword][]", :value=>@dataset.keyword.first, id: "keyword0" %>
+        <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+      </li>
+    </ol>
+    <a href="#" class="add-field">Add another keyword</a>
+  </div>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Keywords</strong>
+    <p>Enter your own keywords or phrases to describe your work.</p>
+  </aside>
+</div>

@@ -1,34 +1,32 @@
 <% if !@files.empty? %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <% @files.each do |file| %>
-          <legend>
-            <% if file['thumbnail_url'] %>
-              <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt="View file" /></span>
-            <% end %>
-            <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
-            <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
-          </legend>
-          <% dsid = file['url'].split("/")[-1] %>
-          <% select = nil %>
-          <% if !article.hasPart.empty? %>
-            <% article.hasPart.each do |hp| %>
-              <% if hp.identifier.first == dsid %>
-                <% select = hp %>
-              <% end %>
-            <% end %>
-          <% end %>
-          <% if !select.nil? %>
-            <% if !select.description.empty? %>
-              <div><%= select.description.first %></div>
-            <% end %>
-            <% if !select.accessRights.empty? %>
-              <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
-            <% end %>
-          <% end %>
+  <% @files.each do |file| %>
+    <a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank">
+      <% if file['thumbnail_url'] %>
+        <img src="/assets/<%=file['thumbnail_url']%>" alt="View file" />
+      <% end %>
+      <%= file['name'] %> 
+      (<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)
+    </a>
+
+    <% dsid = file['url'].split("/")[-1] %>
+    <% select = nil %>
+    <% if !article.hasPart.empty? %>
+      <% article.hasPart.each do |hp| %>
+        <% if hp.identifier.first == dsid %>
+          <% select = hp %>
         <% end %>
-      </div> <!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+      <% end %>
+    <% end %>
+    <% if !select.nil? %>
+      <% if !select.description.empty? %>
+        <div><%= select.description.first %></div>
+      <% end %>
+      <% if !select.accessRights.empty? %>
+        <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
+      <% end %>
+    <% end %>
+
+  <% end %>
+<% else %>
+  <p class="small">There are no downloads</p>
 <% end %>

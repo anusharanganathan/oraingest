@@ -1,9 +1,8 @@
 <% if can? :review, :all %>
-  <div class="actions">
-    <div class="row">
-      <div class="control-group">
-        <a href="<%= reviewer_dashboard_index_path %>"><button class="btn btn-large"><h2><i class="icon-dashboard icon-large"></i>&nbsp;&nbsp; Review submissions</h2></button></a>
-      </div>
-    </div>
-  </div>
+<div class="content-box padding-0">
+	<a href="<%= reviewer_dashboard_index_path %>" class="full-content-link">
+		<img src="/assets/ora/icons/review.svg"/>
+		<span class="v-center">Go to Reviewer dashboard</span>
+	</a>
+</div>
 <% end %>
