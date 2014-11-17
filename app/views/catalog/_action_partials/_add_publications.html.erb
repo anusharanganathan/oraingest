@@ -1,10 +1,16 @@
-<div class="actions">
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <h2><i class="icon-list icon-large"></i>&nbsp;&nbsp; Publications</h2><hr/>
-        <a href="<%= new_article_path %>"><button class="btn btn-primary btn-large"><i class="icon-edit"></i>&nbsp; Add an article</button></a>
-      </div>
-    </div>
-  </div>
+<h2><img src="/assets/ora/icons/details.svg" class="icon"/>Publications</h2>
+<div class="blue-bar">
+	<form action="<%= new_article_path %>" method="get">
+		<div class="float-left">
+			<img src="/assets/ora/icons/plus.svg" class="icon"/>
+			Add a publication
+		</div>
+		<div class="float-right">
+			<select name="type">
+				<option>Journal article</option>
+				<option>Something else</option>
+			</select>
+			<button type="submit" class="button button-small button-arrow">GO</button>
+		</div>
+	</form>
 </div>

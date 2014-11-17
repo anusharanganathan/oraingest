@@ -14,25 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<div id="masthead">
-  <%= render partial: '/logo' %>
-  <div class="navbar">
-    <div class="nav-inner">
-      <div class="container">
-        <ul class="nav pull-right">
-          <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/" class="top_nav">Home</a></li>
-          <li <%= 'class=active' if action_name == "about" %>><a href="/about/" class="top_nav">About</a></li>
-          <li <%= 'class=active' if action_name == "help" %>><a href="/help/" class="top_nav">Help</a></li>
-          <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>" class="top_nav">Contact</a></li>
-          <li>
-            <div class="btn-group">
-              <%= render partial: '/user_util_links' %>
-            </div><!-- /.btn-group -->
-          </li>
-        </ul><!-- /.nav /.pull-right -->
-      </div><!-- /.container -->
-    </div><!-- /.nav-inner -->
-  </div><!-- /.navbar -->
-  <%= render :partial => 'catalog/search_form' %>
-</div> <!-- /masthead -->
+<header class="header">
+  <div class="container full-height">
+    <%= render partial: '/logo' %>
+  </div>
+</header>
+<nav class="navigation">
+  <div class="container">
+    <ul class="main-navigation">
+      <li <%= 'class=active' if params[:controller] == "catalog" and action_name == "index" %>><a href="/">Home</a></li>
+      <li <%= 'class=active' if action_name == "about" %>><a href="/about/">About</a></li>
+      <li <%= 'class=active' if action_name == "help" %>><a href="/help/">Help</a></li>
+      <li <%= 'class=active' if params[:controller] == "contact_form" %>><a href="<%= sufia.contact_form_index_path %>">Contact</a></li>
+      <li class="user-menu">
+        <%= render partial: '/user_util_links' %>
+      </li>
+    </ul><!-- /.main-navigation -->
+  </div><!-- /.container -->
+</nav><!-- /.navigation -->
+
+<%#= render :partial => 'catalog/search_form' %>
 

@@ -13,31 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
+<%= render partial: '/header' %>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <%= render :partial => "layouts/head_tag_content"%>
-  </head>
+<div class="container">
+  <%= yield :top %>
+  <%= yield %>
+</div> <!-- /.container -->
 
-<body> 
-<div  id="wrapper"> 
-  <div class="container">
-    <div id="page-positioner">
-      <%= render :partial => '/masthead', :formats => [:html] %>
-      <%= render :partial => '/flash_msg' %>
-      <div id="content-wrapper"> 
-        <div id="content" class="row">
-          <!-- 110 rows -->
-          <div class="span110">
-            <%= yield %>
-          </div>
-        </div><!-- /#content -->
-      </div><!-- /#content-wrapper -->
-    </div><!-- /#page-positioner -->
-  </div><!-- /.container -->
-</div><!-- /#wrapper -->
 <%= render partial: '/footer' %>
-<div id="ajax-modal" class="modal hide" tabindex="-1"></div>
-</body>
-</html>

@@ -1,37 +1,65 @@
-<div id="relation" class="control-group">
-  <% if qualifiedRelation.empty? %>
-    <% qualifiedRelation.build %>
-  <% end %>
-  <% qualifiedRelation.each_with_index do |r, r_index| %>
-    <% if r.entity.empty? %>
-      <% r.entity.build %>
-    <% end %>
-    <%= f.fields_for "qualifiedRelation][#{r_index}", r do |f_r| %>
-      <div class="controls" id="relation_clone_<%=r_index%>">
-        <legend>Related item</legend>
-        <%= f_r.fields_for :entity, r.entity[0] do |f_e| %>
-          <%= f_e.label 'id', "URL of the related item", :class=>"control-label" %>
-          <%= f_e.text_field 'id', :value => r.entity[0].id, id: "relationId%d"% r_index %>
-          <%= f_e.label :title, "Title", :class=>"control-label" %>
-          <%= f_e.text_field :title, :value => r.entity[0].title.first, id: "relationTitle%d"% r_index %>
-          <%= f_e.label :description, "Description", :class=>"control-label" %>
-          <%= f_e.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
-          <%= f_e.label :citation, "Citation text", :class=>"control-label" %>
-          <%= f_e.text_field :citation, :value => r.entity[0].citation.first, id: "relationCitation%d"% r_index %>
-          <%= f_r.label :relation, "Type of relationship", :class=>"control-label" %>
-          <strong>this article</strong>
-          <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
-          <strong>Related item</strong>
-        <% end %>
-        <% if r_index.to_s == "0" %>
-          <button class="adder btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">+<span class="accessible-hidden">add another relation</span></button>
-          &nbsp;
-          <%= help_icon(:relation) %>
-        <% else %>
-          <button class="remover btn" name="additional_relation" id="relation_button_<%=r_index%>" type="button">-<span class="accessible-hidden">add another relation</span></button>
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+<% if qualifiedRelation.empty? %>
+  <% qualifiedRelation.build %>
+<% end %>
 
+<div class="fieldset">
+  <div class="field-repeater" data-max-fields="5">
+    <ol>
+    <% qualifiedRelation.each_with_index do |r, r_index| %>
+      <% if r.entity.empty? %>
+        <% r.entity.build %>
+      <% end %>
+      <%= f.fields_for "qualifiedRelation][#{r_index}", r do |f_r| %>
+        <%= f_r.fields_for :entity, r.entity[0] do |f_e| %>
+        <li>
+          <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index %>
+          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+
+          <label>
+            <p class="small">Type of relationship</p>
+            <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
+          </label>
+
+          <label>
+            <p class="small">Abstract or brief description of related item</p>
+            <%= f_e.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
+          </label>
+
+          <!-- <label>
+            <p class="small">DOI of related item</p>
+            <input type="text" style="width: 150px"/>
+          </label> -->
+
+          <label>
+            <p class="small">URL of related item</p>
+            <%= f_e.text_field 'id', :value => r.entity[0].id, style: "width: 50%", id: "relationId%d"% r_index %>
+          </label>
+
+          <label>
+            <p class="small">Citation of related item (if no URL or DOI)</p>
+            <%= f_e.text_field :citation, :value => r.entity[0].citation.first, style: "width: 50%", id: "relationCitation%d"% r_index %>
+          </label>
+
+        </li>
+        <% end %>
+      <% end %>
+    <% end %>
+    </ol>
+    <a href="#" class="add-field">Add related item</a>
+  </div>
+
+  <aside class="tooltip tooltip-wide">
+    <a href="#" class="close-button">x</a>
+    <strong>Related publications</strong>
+    <p>Enter the title of any related item, e.g. give the title of an article which your research data underpins.</p>
+    <p>Select the option that best describes the relationship between your dataset and the item you have indicated
+    as being related.</p>
+    <p>Add an abstract or brief description of the related item.</p>
+    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please
+    give a citation for it.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-discoverability"></div>
+      <p><strong>Completing this field helps with Discoverability / Searchability</strong></p>
+    </div>
+  </aside>
+</div><!-- /fieldset -->

@@ -14,36 +14,30 @@
 <% end %>
 
 <% if hasData %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <div id="publication">
-          <div><strong>Publication details</strong></div>
-            <% article.publication.each do |p| %>
-              <div>
-              <% if !p.datePublished.empty? && !p.datePublished[0].empty? %>
-                <p>Date published: <%= p.datePublished.first %></p>
-              <% end %>
-              <% if !p.hasDocument.nil? %>
-                <% p.hasDocument.each do |p2| %>
-                  <% if !p2.doi.empty? && !p2.doi[0].empty? %>
-                    <p>DOI: <%= p2.doi.first %></p>
-                  <% end %>
-                <% end #each document %>
-              <% end #hasDocument %> 
-              <% if !p.publisher.nil? %>
-                <% p.publisher.each do |p2| %>
-                  <% if !p2.name.empty? && !p2.website.empty? && !p2.name[0].empty? && !p2.website[0].empty? %>
-                    <p>Publisher: <%=link_to p2.name.first, p2.website.first %></p>
-                  <% elsif !p2.name.empty? && !p2.name[0].empty? %>
-                    <p>Publisher: <%= p2.name.first %></p>
-                  <% end %>
-                <% end #each publisher %>
-              <% end #publisher %>
-              </div>
-            <% end #each publication %>
-        </div>
-      </div><!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+<div class="accordian">
+  <div class="accordian-header">Publication details</div>
+  <div class="accordian-content">
+    <% article.publication.each do |p| %>
+    <% if !p.datePublished.empty? && !p.datePublished[0].empty? %>
+      <p><span class="h6">Date published:</span> <%= p.datePublished.first %></p>
+    <% end %>
+    <% if !p.hasDocument.nil? %>
+      <% p.hasDocument.each do |p2| %>
+        <% if !p2.doi.empty? && !p2.doi[0].empty? %>
+          <p><span class="h6">DOI:</span> <%= p2.doi.first %></p>
+        <% end %>
+      <% end #each document %>
+    <% end #hasDocument %> 
+    <% if !p.publisher.nil? %>
+      <% p.publisher.each do |p2| %>
+        <% if !p2.name.empty? && !p2.website.empty? && !p2.name[0].empty? && !p2.website[0].empty? %>
+          <p><span class="h6">Publisher:</span> <%=link_to p2.name.first, p2.website.first %></p>
+        <% elsif !p2.name.empty? && !p2.name[0].empty? %>
+          <p><span class="h6">Publisher:</span> <%= p2.name.first %></p>
+        <% end %>
+      <% end #each publisher %>
+    <% end #publisher %>
+  <% end #each publication %>
+  </div>
+</div>
 <% end #if data %>
