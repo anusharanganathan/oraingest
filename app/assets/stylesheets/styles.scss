@@ -1397,12 +1397,18 @@ section.form-step:first-of-type { display: block; }
 	background: #4F738A;
 }
 
+.filters ul {
+	padding-left: 0;
+	list-style: none;
+}
+
 .filters > ul {
 	display: block;
 	margin: 20px 0;
 	font-family: "Arial", sans-serif;
 	font-size: 12px;
 }
+
 
 .filters > ul > li {
 	display: block;
