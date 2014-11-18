@@ -38,7 +38,7 @@ body {
 
 /* Columns
 ------------------------------------------- */
-.col { 
+.col {
 	float: left;
 	padding: 0px 10px;
 	box-sizing: border-box;
@@ -171,6 +171,12 @@ h1, h2, h3, h4, h5, h6, hr {
 	margin: 15px 0;
 }
 
+ul {
+	list-style-type: disc;
+	padding-left: 1.5em;
+	color: #505050;
+}
+
 h2 {
 	font-size: 30px;
 	color: #3C3C3C;
@@ -275,6 +281,17 @@ a {
 
 a:hover { text-decoration: underline; }
 
+dl {
+	font-size: 14px;
+	color: #505050;
+	dt {
+		font-weight: bold;
+	}
+	dd {
+		margin-bottom: 15px;
+	}
+}
+
 /* Icons
 ------------------------------------------- */
 .icon {
@@ -282,11 +299,11 @@ a:hover { text-decoration: underline; }
 }
 
 .icon-back {
-	width: 0; 
-	height: 0; 
+	width: 0;
+	height: 0;
 	border-top: 5px solid transparent;
-	border-bottom: 6px solid transparent; 
-	border-right: 6px solid #4F738A; 
+	border-bottom: 6px solid transparent;
+	border-right: 6px solid #4F738A;
 	margin-right: 8px;
 }
 
@@ -361,13 +378,13 @@ a:hover { text-decoration: underline; }
 /* Header
 ------------------------------------------- */
 .header,
-.footer { 
+.footer {
 	position: relative;
-	background: #031D40; 
+	background: #031D40;
 }
 
-.header { 
-	height: 100px; 
+.header {
+	height: 100px;
 }
 
 .header .logo {
@@ -385,11 +402,16 @@ a:hover { text-decoration: underline; }
 ------------------------------------------- */
 .navigation {
 	font-weight: 300;
-	background: #719AAA; 
+	background: #719AAA;
 	height: 40px;
 }
 
 .navigation .container { overflow: visible; }
+
+.navigation ul {
+	list-style: none;
+	padding: 0;
+}
 
 .navigation .main-navigation li {
 	display: block;
@@ -443,8 +465,8 @@ a:hover { text-decoration: underline; }
 	border-top: 5px solid #fff;
 }
 
-.navigation .main-navigation li.user-menu ul { 
-	display: none; 
+.navigation .main-navigation li.user-menu ul {
+	display: none;
 	position: absolute;
 	top: 40px;
 	right: 0px;
@@ -492,7 +514,7 @@ ol li {
 
 ol li:before {
 	content: counter(li);
-  counter-increment: li; 
+  counter-increment: li;
 
   position: absolute;
   top: 0px;
@@ -678,7 +700,7 @@ p + input { margin-top: 0 !important; }
 	transition: background 0.3s ease-in-out;
 	-webkit-appearance: none;
 }
-	
+
 	/* Button Sizes */
 	.button-small {
 		font-size: 12px;
@@ -769,8 +791,8 @@ section.form-step:first-of-type { display: block; }
 
 /* Hidden Forms
 ------------------------------------------- */
-.hidden-form { 
-	display: none; 
+.hidden-form {
+	display: none;
 	opacity: 0;
 	text-align: left;
 	width: 100%;
@@ -803,11 +825,11 @@ section.form-step:first-of-type { display: block; }
 	top: -10px;
 	left: 7px;
 
-	width: 0; 
-	height: 0; 
+	width: 0;
+	height: 0;
 	border-left: 12px solid transparent;
 	border-right: 12px solid transparent;
-	
+
 	border-bottom: 10px solid #EDEFED;
 }
 
@@ -821,7 +843,7 @@ section.form-step:first-of-type { display: block; }
 	height: 0;
 	border-left: 12px solid transparent;
 	border-right: 12px solid transparent;
-	
+
 	border-bottom: 10px solid #F5F5F5;
 }
 
@@ -867,8 +889,8 @@ section.form-step:first-of-type { display: block; }
 .fieldset label:first-of-type { margin-top: 0; }
 .fieldset label:last-of-type { margin-bottom: 0; }
 
-.fieldset textarea { 
-	max-width: 70%; 
+.fieldset textarea {
+	max-width: 70%;
 	margin-bottom: 0;
 }
 
@@ -948,7 +970,7 @@ section.form-step:first-of-type { display: block; }
 }
 
 .field-repeater ol li input[type=text],
-.field-repeater ol li select { 
+.field-repeater ol li select {
 	width: 200px;
 	margin: 0;
 	margin-right: 8px;
@@ -1021,7 +1043,7 @@ section.form-step:first-of-type { display: block; }
 	background: #C8C8C8;
 	height: 100%;
 }
-	
+
 	.circle-citation,
 	.cat-citation .bar > div { background: #8B2331; }
 	.circle-discoverability,
@@ -1061,8 +1083,8 @@ section.form-step:first-of-type { display: block; }
 	font-size: 12px;
 	font-weight: bold;
 }
-.tooltip p { 
-	font-size: 12px; 
+.tooltip p {
+	font-size: 12px;
 	margin: 10px 0 0 0;
 }
 
@@ -1108,7 +1130,7 @@ section.form-step:first-of-type { display: block; }
 
 /* File Upload
 ------------------------------------------- */
-.file-uploads { 
+.file-uploads {
 	margin: 15px 0;
 }
 
@@ -1176,7 +1198,7 @@ section.form-step:first-of-type { display: block; }
 ------------------------------------------- */
 .search-header {
 	width: 620px;
-	margin-left: 160px; 
+	margin-left: 160px;
 }
 
 .search-header > img { margin-bottom: 10px; }
@@ -1206,7 +1228,7 @@ section.form-step:first-of-type { display: block; }
 
 .search-box button {
 	font-style: 16px;
-	font-weight: bold;	
+	font-weight: bold;
 	padding: 8.5px 20px;
 }
 
@@ -1288,6 +1310,7 @@ section.form-step:first-of-type { display: block; }
 
 .content-box h3 {
 	color: #666666;
+	line-height: 1.2em;
 }
 
 .content-box > *:first-child,
@@ -1326,8 +1349,8 @@ section.form-step:first-of-type { display: block; }
 
 .filters {}
 
-.filters > a.button { 
-	display: block; 
+.filters > a.button {
+	display: block;
 	margin-bottom: 5px;
 }
 
@@ -1446,15 +1469,15 @@ table {
 
 table th { width: 120px; }
 
-table th, table td { 
-	vertical-align: top; 
+table th, table td {
+	vertical-align: top;
 	padding: 5px 0;
 }
 
 table td input,
 table td select,
-table td textarea { 
-	margin: 0 !important; 
+table td textarea {
+	margin: 0 !important;
 	width: 300px !important;
 }
 
@@ -1500,9 +1523,9 @@ table td textarea {
 .article-table tbody tr:last-child td:after { display: none; }
 
 .article-table tbody td h4:first-child { margin-top: 0px; }
-.article-table tbody td p { 
+.article-table tbody td p {
 	font-family: "Arial", sans-serif;
-	font-size: 12px; 
+	font-size: 12px;
 }
 
 .article-table tbody td p:last-child { margin-bottom: 0; }
@@ -1616,7 +1639,7 @@ table td textarea {
 	font-size: 12px;
 }
 
-.record-content h3 { 
+.record-content h3 {
 	font-size: 24px;
 	line-height: 26px;
 }
@@ -1652,11 +1675,11 @@ table td textarea {
 }
 
 .record-details { margin: 0 !important; }
-.record-details li { 
+.record-details li {
 	position: relative;
 	font-family: "Arial", sans-serif;
 	font-size: 12px;
-	border: 0px !important; 
+	border: 0px !important;
 	padding-left: 60px;
 	margin: 20px 0;
 	color: #505050;
@@ -2001,12 +2024,12 @@ table td textarea {
 /* Footer
 ------------------------------------------- */
 .push,
-.footer { 
+.footer {
 	height: 66px;
 }
 
-.footer { 
-	padding: 11px 0; 
+.footer {
+	padding: 11px 0;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
@@ -2022,8 +2045,10 @@ table td textarea {
 	background: rgba(0,0,0,0.1);
 }
 
-.footer ul { 
-	float: right; 
+.footer ul {
+	float: right;
+	list-style: none;
+	padding: 0;
 }
 
 .footer ul li {

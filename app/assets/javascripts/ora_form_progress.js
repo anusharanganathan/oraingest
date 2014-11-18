@@ -1,6 +1,6 @@
 (function($) {
   /**
-   * Counts the totla number of complete inputs (complete counts as checked, 
+   * Counts the totla number of complete inputs (complete counts as checked,
    * selected, or non-empty
    */
   function countComplete($inputs) {
@@ -66,10 +66,24 @@
     });
   }
 
+  function toggleUploadForm() {
+    var terms_accepted = $("#terms_of_service").is(":checked");
+
+    if (terms_accepted) {
+      $("#file-table").show();
+      $("#file-upload-tos-warning").hide();
+    } else {
+      $("#file-table").hide();
+      $("#file-upload-tos-warning").show();
+    }
+  }
+
 
   /**
-   * Let's do this 
+   * Let's do this
    */
   $(document).on("change", "[data-progress]", updateProgress);
-  $(document).ready(updateProgress);
+  $(updateProgress);
+  $(document).on("change", "#terms_of_service", toggleUploadForm);
+  $(toggleUploadForm);
 })(jQuery);
