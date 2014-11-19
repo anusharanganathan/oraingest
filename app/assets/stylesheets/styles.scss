@@ -1670,6 +1670,15 @@ table td textarea {
 	-webkit-hyphens: auto;
 	   -moz-hyphens: auto;
 	        hyphens: auto;
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+.record-sidebar > a > .record_name {
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 .record-sidebar > a > img {
@@ -1678,6 +1687,14 @@ table td textarea {
 	top: 13px;
 	left: 0;
 	max-width: 30px;
+}
+
+.record-sidebar > a > .embargo-details {
+	display: block;
+	color: #505050;
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .record-details { margin: 0 !important; }
@@ -1705,6 +1722,8 @@ table td textarea {
 
 .record-details li.status > img { left: 10px; }
 .record-details li.downloads > img { left: 18px; }
+
+
 
 /* Accordian
 ------------------------------------------- */
@@ -2025,6 +2044,28 @@ table td textarea {
 	padding: 10px;
 	margin: 0;
 	margin-right: 20px;
+}
+
+/* Auto Complete
+------------------------------------------- */
+.ui-autocomplete {
+	background: #fff;
+	z-index: 999;
+	width: 300px;
+	border: 1px solid #ccc;
+	list-style: none;
+	padding: 0;
+}
+
+.ui-autocomplete li a {
+	display: block;
+	padding: 7px 10px;
+	border-bottom: 1px solid #f1f1f1;
+	cursor: pointer;
+}
+
+.ui-autocomplete li:last-child a {
+	border-bottom: none;
 }
 
 /* Footer
