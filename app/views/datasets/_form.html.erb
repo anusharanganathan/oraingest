@@ -5,7 +5,6 @@
     </div>
     <div class="padding-25 no-pad-bottom">
       <%= render partial: 'files_form' %>
-      <div class="bottom-border"></div>
     </div>
     <%= form_for(@dataset) do |f| %>
       <%= hidden_field_tag(:pid, @pid) %>
@@ -27,10 +26,11 @@
       <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
     </div>
   </nav>
-
 </section>
+
+<%= form_for(@dataset) do |f| %>
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
   <div class="content-box padding-0">
     <div class="content-box-header">
       2. About your data
@@ -44,9 +44,9 @@
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
   
     </div>
-    <div class="padding-25 no-pad-top">
-      <%= f.submit "Save dataset description", class: "button light-blue" %>
-    </div>
+    <!-- <div class="padding-25 no-pad-top">
+      <%#= f.submit "Save dataset description", class: "button light-blue" %>
+    </div> -->
   </div>
 
   <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
@@ -180,7 +180,8 @@
 
       <div class="fieldset" style="margin-bottom: 30px">
         <p class="small">Data management plan</p>
-        <input type="text" style="width: 50%" data-progress="preservation"/>
+        <%= f.text_field :hasDataManagementPlan, :value=>@dataset.hasDataManagementPlan.first, :style=>'width: 50%', data: {"progress" => "preservation"} %>
+       <!--  <input type="text" style="width: 50%" data-progress="preservation"/> -->
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -209,11 +210,11 @@
     </div>
   </nav>
 
-  <% end %>
+  <%# end %>
 </section>
 
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
   <div class="content-box padding-0">
     <div class="content-box-header">
       3. About you
@@ -225,9 +226,9 @@
       <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator" } %>
 
     </div>
-    <div class="padding-25 no-pad-top">
-      <%= f.submit "Save creator information", class: "button light-blue" %>
-    </div>
+    <!-- <div class="padding-25 no-pad-top">
+      <%#= f.submit "Save creator information", class: "button light-blue" %>
+    </div> -->
   </div>
 
   <nav class="form-nav">
@@ -242,11 +243,11 @@
     </div>
   </nav>
 
-  <% end %>
+  <%# end %>
 </section>
 
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
   <div class="content-box padding-0">
     <div class="content-box-header">
       4. Related publications
@@ -256,9 +257,9 @@
       <%= hidden_field_tag('redirect_tab', 'moreinfotab') %>
       <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
     </div>
-    <div class="padding-25 no-pad-top">
-      <%= f.submit "Save information", class: "button light-blue" %>
-    </div>
+    <!-- <div class="padding-25 no-pad-top">
+      <%#= f.submit "Save information", class: "button light-blue" %>
+    </div> -->
   </div>
 
   <nav class="form-nav">
@@ -273,11 +274,11 @@
     </div>
   </nav>
     
-  <% end %>
+  <%# end %>
 </section>
 
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
   <div class="content-box padding-0">
     <div class="content-box-header">
       5. Data located elsewhere
@@ -286,9 +287,9 @@
       <%= hidden_field_tag(:pid, @pid) %>
       <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
     </div>
-    <div class="padding-25 no-pad-top">
-      <%= f.submit "Save data information", class: "button light-blue" %>
-    </div>
+   <!--  <div class="padding-25 no-pad-top">
+      <%#= f.submit "Save data information", class: "button light-blue" %>
+    </div> -->
   </div>
 
   <nav class="form-nav">
@@ -302,11 +303,11 @@
       <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
     </div>
   </nav>
-  <% end %>
+  <%# end %>
 </section>
 
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
   <div class="content-box padding-0">
     <div class="content-box-header">
       6. Funders and payment
@@ -352,9 +353,9 @@
       </aside>
     </div><!-- /fieldset -->
 
-    <div class="padding-25 no-pad-top">
-      <%= f.submit "Save funder information", class: "button light-blue" %>
-    </div>
+    <!-- <div class="padding-25 no-pad-top">
+      <%#= f.submit "Save funder information", class: "button light-blue" %>
+    </div> -->
 
   </div>
 
@@ -380,24 +381,24 @@
     </div>
   </nav>
   
-  <% end %>
+  <%# end %>
 </section>
 
 <section class="form-step">
-  <%= form_for(@dataset) do |f| %>
+  <%#= form_for(@dataset) do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
     <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
-    <div class="actions">
-      <%= f.submit "Save rights and access", class: "btn btn-success" %>
-    </div><!-- /.actions -->
-  <% end %>
-  <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0], :pid => @pid} %>
+    <!-- <div class="actions">
+      <%#= f.submit "Save rights and access", class: "btn btn-success" %>
+    </div>--><!-- /.actions -->
+  <%# end %>
+  <%#= render partial: 'shared/permissions_delete', :locals => {:permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0], :pid => @pid} %>
 </section>
 
 <section class="form-step">
-  <%= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
+  <%#= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
     <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
@@ -406,9 +407,33 @@
     <% else %>
       <% buttonText = 'Submit for Review' %>
     <% end %>
-    <div class="row form-actions" id="workflow_submit">
-      <% txt = '<i class="icon-save"></i> %s'% buttonText %>
-      <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-    </div>
-  <% end %>
+    <!-- <div class="row form-actions" id="workflow_submit">
+      <%# txt = '<i class="icon-save"></i> %s'% buttonText %>
+      <%#= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+    </div> -->
+  <%# end %>
 </section>
+
+<nav class="form-nav" style="margin-top: 20px;">
+  <div class="form-nav-next" style="text-align: right">
+    <%= f.submit "Save", class: "button light-blue" %>
+
+    <%= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
+      <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
+      <% if can? :review, :all %>
+        <% buttonText = 'Save review changes' %>
+      <% else %>
+        <% buttonText = 'Submit for Review' %>
+      <% end %>
+      <!-- <div class="row form-actions" id="workflow_submit"> -->
+        <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+        <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+      <!-- </div> -->
+    <% end %>
+
+  </div>
+</nav>
+
+<% end %>

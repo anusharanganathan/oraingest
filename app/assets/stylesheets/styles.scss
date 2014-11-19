@@ -788,6 +788,8 @@ button, .button {
 ------------------------------------------- */
 section.form-step { display: none; }
 section.form-step:first-of-type { display: block; }
+form > section.form-step,
+form > section.form-step:first-of-type { display: none; }
 
 /* Hidden Forms
 ------------------------------------------- */
@@ -1139,8 +1141,6 @@ section.form-step:first-of-type { display: block; }
 	counter-reset: file-counter;
 }
 
-form#fileupload { margin: 0; }
-form#fileupload > div.progress { display: none; }
 
 .file-upload {
 	clear: both;
@@ -2136,9 +2136,10 @@ table td textarea {
 
 /* Progress bar */
 #fileupload .progress {
-  width: 200px;
+  width: 100px;
+  background-color: #F5F5F5;
   .bar {
-    background-color: red;
+    background-color: #719AAA;
     height: 20px;
   }
 }
