@@ -191,4 +191,27 @@ $(function() {
       return false;
   });
 
+  /* -------------------------------------------------------------
+   * Tracker Follow
+   * -------------------------------------------------------------
+   * Fixes the tracker
+   * -----------------------------------------------------------*/
+
+  var tracker = $("div.tracker"),
+      trackerY = tracker.offset().top;
+
+  $(document).on("scroll",function(){
+    var scrollY = $(window).scrollTop();
+    if((scrollY-10) >= trackerY){
+      tracker.css({
+        "position" : "fixed",
+        "top" : "20px"
+      });
+    }else{
+      tracker.css({
+        "position" : "relative",
+        "top" : "0px"
+      });
+    }
+  });
 });
