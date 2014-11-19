@@ -682,7 +682,7 @@ input.inline-input {
 
 p + input { margin-top: 0 !important; }
 
-.button {
+button, .button {
 	position: relative;
 	display: inline-block;
 	background: #4F738A;
@@ -873,6 +873,10 @@ section.form-step:first-of-type { display: block; }
 }
 
 .fieldset input[type=text]:first-child { margin: 0; }
+
+.fieldset input[type=text] {
+	max-width: 60%;
+}
 
 .fieldset h4 { margin-top: 0; }
 
@@ -1132,12 +1136,17 @@ section.form-step:first-of-type { display: block; }
 ------------------------------------------- */
 .file-uploads {
 	margin: 15px 0;
+	counter-reset: file-counter;
 }
+
+form#fileupload { margin: 0; }
+form#fileupload > div.progress { display: none; }
 
 .file-upload {
 	clear: both;
 	margin: 10px 0;
 	min-height: 40px;
+	counter-increment: file-counter;
 }
 
 .file-upload .file-number {
@@ -1152,6 +1161,10 @@ section.form-step:first-of-type { display: block; }
 	color: #fff;
 }
 
+.file-upload .file-number:after {
+	content: counter(file-counter);
+}
+
 .file-upload.inactive .file-number {
 	background: #C8C8C8;
 }
@@ -1159,6 +1172,7 @@ section.form-step:first-of-type { display: block; }
 .file-upload .file-content {
 	position: relative;
 	width: 596px;
+	min-height: 28px;
 	float: left;
 	background: #F5F5F5;
 	border-radius: 0px 5px 5px 0px;
@@ -1175,6 +1189,12 @@ section.form-step:first-of-type { display: block; }
 	left: 0;
 	line-height: 40px;
 	margin: 0 15px;
+}
+
+.file-upload .file-details > img {
+	height: 24px;
+	position: relative;
+	top: 8px;
 }
 
 .file-upload .file-options {
@@ -2109,3 +2129,15 @@ table td textarea {
 .footer ul li:last-of-type { margin-right: 0; }
 
 .footer ul li a { color: #fff; }
+
+
+
+/* Progress bar */
+#fileupload .progress {
+  width: 200px;
+  .bar {
+    background-color: red;
+    height: 20px;
+  }
+}
+

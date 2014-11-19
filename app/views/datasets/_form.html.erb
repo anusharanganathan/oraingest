@@ -5,10 +5,13 @@
     </div>
     <div class="padding-25 no-pad-bottom">
       <%= render partial: 'files_form' %>
-      <%= form_for(@dataset) do |f| %>
-        <% render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
-      <% end %>
+      <div class="bottom-border"></div>
     </div>
+    <%= form_for(@dataset) do |f| %>
+      <%= hidden_field_tag(:pid, @pid) %>
+      <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
+      <%# render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
+    <% end %>
 
     <%# path = { :new => new_dataset_path, :list => datasets_path } %>
     <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
@@ -37,10 +40,6 @@
         <%= hidden_field_tag('redirect_tab', 'describetab') %>
 
         <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
-        <%= render partial: "describe_fields_edit", as: :dataset, :locals => { :f => f } %>
-        <div class="padding-side-25">
-          <div class="bottom-border"></div>
-        </div>
 
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %>
   
@@ -316,6 +315,7 @@
       <%= hidden_field_tag(:pid, @pid) %>
       <%= hidden_field_tag('redirect_tab', 'funderstab') %>
       <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
+    </div>
 
     <div class="bottom-border padding-side-25"></div>
 
@@ -385,6 +385,7 @@
 
 <section class="form-step">
   <%= form_for(@dataset) do |f| %>
+    <%= hidden_field_tag(:pid, @pid) %>
     <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>

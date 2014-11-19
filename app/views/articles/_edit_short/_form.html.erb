@@ -1,74 +1,91 @@
 <%= form_for(@article) do |f| %>
   <%= hidden_field_tag(:pid, @pid) %>
 
-  <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
-  <%= render partial: "/articles/_edit_short/describe_fields_edit", as: :article, :locals => { :f => f } %>
-  <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
-  <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
+  <section class="form-step">
+    <div class="content-box padding-0">
+      <div class="content-box-header">
+        Deposit Article
+      </div>
+      <div class="padding-25 no-pad-bottom">
+        <%= render partial: 'articles/_edit_short/files_form' %>
+      
+      <div class="bottom-border"></div>
+    </div>
 
+    <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
 
-  <div id="creators">
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  </div>
+    <%= render partial: "/articles/_edit_short/describe_fields_edit", as: :article, :locals => { :f => f } %>
 
-  <div id="publication">
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  </div>
+    <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
 
-  <div id="funders">
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  </div>
+    <div class="bottom-border padding-side-25"></div>
 
-  <div id="moreinfo">
-    <div class="well">
-      <div class="row">
-        <div class="control-group">
-          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
-        </div><!-- /.control-group -->
-      </div> <!-- /.row -->
-    </div> <!-- /.well -->
-  </div>
+    <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
 
-  <div id="rights">
+    <div class="bottom-border padding-side-25"></div>
+
+    <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
+
+    <div class="bottom-border padding-side-25"></div>
+
+    <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
+
+    <div class="padding-side-25">
+      <div class="bottom-border"></div>
+      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
+    </div>
+
+    <div class="bottom-border padding-side-25"></div>
+
+    <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
+
+    <div class="bottom-border padding-side-25"></div>
+
+    <h4 class="padding-side-25">Publication rights</h4>
     <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
+
+    <div class="bottom-border padding-side-25"></div>
+
     <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
+
+    <div class="bottom-border padding-side-25"></div>
+
     <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @article } %>
-    <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
-    <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
-    <%= render partial: 'shared/permissions_delete', :locals => {:permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0], :pid => @pid} %>
+
+    <%# render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
+
+    <%# render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
+
+    <%# render partial: 'shared/permissions_delete', :locals => {:permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0], :pid => @pid} %>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Save article", class: "btn btn-success" %>
-  </div><!-- /.actions -->
+  <nav class="form-nav">
+    <div class="form-nav-next">
+      <%= f.submit "Save article", class: "button light-blue" %>
+    </div>
+  </nav>
+
 <% end %>
 
 <%= form_for @article, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
   <%= hidden_field_tag(:pid, @pid) %>
   <% buttonText = 'Submit for Review' %>
-  <div id="workflow">
-    <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @article } %>
+  
+  <div class="content-box padding-0" style="margin-top: 20px;">
+    <div class="content-box-header expand-header">
+      Review workflow
+    </div>
+    <div class="expand-content">
+      <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @article } %>
+    </div>
   </div>
-  <div class="row form-actions" id="workflow_submit">
-    <% txt = '<i class="icon-save"></i> %s'% buttonText %>
-    <%= button_tag txt.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-  </div>
+
+  <nav class="form-nav">
+    <div class="form-nav-next">
+      <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+      <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+    </div>
+  </nav>
+
 <% end %>
+</section>
