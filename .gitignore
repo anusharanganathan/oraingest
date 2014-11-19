@@ -28,3 +28,7 @@ rails_server.log
 
 #Ignore public assets
 /public/assets/
+
+# vim swap files
+*.swo
+*.swp
