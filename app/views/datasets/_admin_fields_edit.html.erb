@@ -1,44 +1,60 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <legend>Data management</legend>
-      <div class="fields">
-        <%= f.label :hasDataManagementPlan, "The URL of the data management plan for your research project", :class=>"control-label" %>
-        <%= f.text_field :hasDataManagementPlan, :value=>article.hasDataManagementPlan.first %>
+<div class="fieldset" style="margin-bottom: 30px">
+  <p class="small">Data management plan</p>
+  <%= f.text_field :hasDataManagementPlan, :value=>@dataset.hasDataManagementPlan.first, :style=>'width: 50%', data: {"progress" => "preservation"} %>
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Data management plan</strong>
+    <p>Enter the web address (URL) of your research project's data management plan or, if you are including this information along with your uploaded files, please give the file name here.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-preservation"></div>
+      <p><strong>Completing this field helps with Preservation</strong></p>
+    </div>
+  </aside> 
+</div>
+
+<% agreements = {} %>
+<% if !@relevant_user_agreements.nil? %>
+  <% agreements[""] = "Choose an option" %>
+  <% @relevant_user_agreements.each do |agreement| %>
+    <% agreements[agreement.id] = agreement.title %>
+  <% end %>
+  <% if !@dataset.hasRelatedAgreement.id.nil? and @dataset.hasRelatedAgreement.agreementType.first == "Individual" %>
+    <% agreements[@dataset.hasRelatedAgreement.id] = @dataset.hasRelatedAgreement.title.first %>
+  <% elsif !@principal_agreement.nil? || !@principal_agreement.empty? %>
+    <% agreements["new"] = "I'd like a new agreement" %> 
+  <% end %>
+<% end %>
+
+<% if agreements.length > 1 %>
+  <div class="fieldset" style="margin-bottom: 30px">
+    <p class="small">Select the agreement relevant to this dataset</p>
+    <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), :style=>'width: 50%', data: {"progress" => "preservation"}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Dataset agreement</strong>
+      <p>Listed here are the archiving plans previously agreed either by you or your department with the Bodleian. The archiving options for the data you are about to deposit will be governed by the agreement you select </p>
+      <div class="tooltip-extra">
+        <div class="circle circle-preservation"></div>
+        <p><strong>Completing this field helps with Preservation</strong></p>
       </div>
-      <% agreements = {} %>
-      <% if !@relevant_user_agreements.nil? %>
-        <% agreements[""] = "Choose an option" %>
-        <% @relevant_user_agreements.each do |agreement| %>
-          <% agreements[agreement.id] = agreement.title %>
-        <% end %>
-        <% if !@dataset.hasRelatedAgreement.id.nil? and @dataset.hasRelatedAgreement.agreementType.first == "Individual" %>
-          <% agreements[@dataset.hasRelatedAgreement.id] = @dataset.hasRelatedAgreement.title.first %>
-        <% elsif !@principal_agreement.nil? || !@principal_agreement.empty? %>
-          <% agreements["new"] = "I'd like a new agreement" %> 
-        <% end %>
-      <% end %>
-      <% if agreements.length > 1 %>
-        <div class="fields">
-          <%= f.label :hasAgreement, "Select the agreement relevant to this dataset", :class=>"control-label" %>
-          <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), {}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
-        </div>
-        <div class="control-group" id="relatedAgreement">
-          <% if article.hasAgreement.first %>
-            <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
-          <% end %>
-        </div>
-      <% else #TODO: Should this option be available only if principal agreement is available, if not what? %>
-        <div class="control-group" id="relatedAgreement">
-          <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
-        </div>
-      <% end %>
-      <% if can? :review, Dataset %>
-        <div class="fields">
-          <%= f.label :note, "Notes", :class=>"control-label" %>
-          <%= f.text_field :note, :value=>article.note.first %>
-        </div>
-      <% end #can review %>
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+    </aside> 
+  </div>
+  <% if article.hasAgreement.first %>
+    <div class="padding-0">
+      <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
+    </div>
+  <% end %>
+<% else #TODO: Should this option be available only if principal agreement is available, if not what? %>
+  <div class="padding-0">
+    <%= render partial: 'dataset_agreement_fields_edit', :locals => { :hasRelatedAgreement => @dataset.hasRelatedAgreement } %>
+  </div>
+<% end %>
+
+<% if can? :review, Dataset %>
+  <div class="padding-25 no-pad-top">
+    <p class="small">Add any notes</p>
+    <%= f.text_field :note, :value=>article.note.first, :style=>'width: 50%' %>
+  </div>
+<% end #can review %>
+
+

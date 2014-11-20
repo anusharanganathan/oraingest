@@ -25,17 +25,7 @@ limitations under the License.
 
 
   <div class="col col1of2">
-    <div class="blue-bar">
-      <form action="#" method="post">
-        <div class="float-left">
-          <img src="/assets/ora/icons/plus.svg" class="icon"/>
-          Deposit new dataset
-        </div>
-        <div class="float-right">
-          <button type="submit" class="button button-small button-arrow">GO</button>
-        </div>
-      </form>
-    </div> <!-- /blue-bar -->
+    <%= render :partial=>'/catalog/_action_partials/add_datasets' %>
   </div>
 
   <div class="colfull" style="text-align: right; margin-bottom: 15px">
@@ -47,7 +37,7 @@ limitations under the License.
 
 <% content_for :sidebar do %>
 
-  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+  <%#= render :partial => 'dashboard/facets' %>
 
 <% end %>
 
@@ -57,7 +47,7 @@ limitations under the License.
       <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= params[:q] %></strong></div>
     <% end %>
 
-    <%= render :partial=>'datasets/dataset_list', :locals => {:datasets => @datasets + @submitted_datasets, :facet_value => nil}  %>  
+    <%= render :partial=>'datasets/dataset_list', :locals => {:datasets => @datasets + @submitted_datasets, :facet_value => nil}  %>
   </div>
 
 

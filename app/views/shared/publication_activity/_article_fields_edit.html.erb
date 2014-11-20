@@ -1,7 +1,9 @@
-<legend>Publication information</legend>
+<h4 class="padding-side-25">Publication information</h4>
+
 <% if publication.empty? %>
   <% publication.build %>
 <% end %>
+
 <% publication.each do |p| %>
   <%= f.fields_for :publication, p do |f_p| %>
     <% if p.hasDocument.empty? %>
@@ -10,38 +12,98 @@
     <% if p.publisher.empty? %>
       <% p.publisher.build %>
     <% end %>
-    <div class="field">
-      <%= f_p.label :publicationStatus, "Publication status", :class=>"control-label" %>
+
+    <div class="fieldset">
+      <p class="small">Publication status</p>
       <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first) %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Publication status</strong>
+        <p>...</p>
+      </aside>
     </div>
-    <div class="field">
-      <%= f_p.label :reviewStatus, "Review status", :class=>"control-label" %>
+
+    <div class="fieldset">
+      <p class="small">Review status</p>
       <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first) %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Publication status</strong>
+        <p>...</p>
+      </aside>
     </div>
+
+    <div class="bottom-border padding-side-25"></div>
+
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :name, "Publisher name", :class=>"control-label" %>
-          <%= f_p2.text_field :name, :value => p2.name.first %>
+        <div class="fieldset">
+          <p class="small">Publisher name</p>
+          <%= f_p2.text_field :name, :value => p2.name.first, data: {"progress" => "citation"} %>
+
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>Publisher name</strong>
+            <p>Enter the name of the body making the data publicly available. For data
+            produced at Oxford, this will usually be Oxford University.</p>
+            <div class="tooltip-extra">
+              <div class="circle circle-citation"></div>
+              <p><strong>Completing this field helps with Citation</strong></p>
+            </div>
+          </aside>
         </div>
-        <div class="field">
-          <%= f_p2.label :website, "Publisher website", :class=>"control-label" %>
-          <%= f_p2.text_field :website, :value => p2.website.first %>
+
+        <div class="fieldset">
+          <p class="small">Publisher website</p>
+          <%= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "citation"} %>
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>Publisher website</strong>
+            <p>...</p>
+            <div class="tooltip-extra">
+              <div class="circle circle-citation"></div>
+              <p><strong>Completing this field helps with Citation</strong></p>
+            </div>
+          </aside>
         </div>
+
       <% end %> 
     <% end %> 
-    <div class="field">
-      <%= f_p.label :dateAccepted, "Date of acceptance", :class=>"control-label" %>
+
+    <div class="bottom-border padding-side-25"></div>
+
+    <div class="fieldset">
+      <p class="small">Date of acceptance</p>
       <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Date of acceptance</strong>
+        <p>...</p>
+      </aside>
     </div>
-    <div class="field">
-      <%= f_p.label :datePublished, "Date published", :class=>"control-label" %>
+
+    <div class="fieldset">
+      <p class="small">Date published</p>
       <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Date published</strong>
+        <p>...</p>
+      </aside>
     </div>
-    <div class="field">
-      <%= f_p.label :location, "Place of publication", :class=>"control-label" %>
+
+    <div class="fieldset">
+      <p class="small">Place of publication</p>
       <%= f_p.text_field :location, :value => p.location.first %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Place of publication</strong>
+        <p>...</p>
+      </aside>
     </div>
+
+    <div class="bottom-border padding-side-25"></div>
+
     <% p.hasDocument.each do |p2| %>
       <% if p2.journal.empty? %>
         <% p2.journal.build %>
@@ -49,57 +111,122 @@
       <% if p2.series.empty? %>
         <% p2.series.build %>
       <% end %>
+
       <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
-          <%= f_p2.text_field :doi, :value => p2.doi.first %>
+        <div class="fieldset">
+          <p class="small">DOI</p>
+          <%= f_p2.text_field :doi, :value => p2.doi.first, :style => "width: 150px;" %>
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>DOI</strong>
+            <p>...</p>
+          </aside>
         </div>
-        <div class="field">
-          <%= f_p2.label :uri, "URL for publisher copy of the document", :class=>"control-label" %>
+
+        <div class="fieldset">
+          <p class="small">URL for publisher copy of the document</p>
           <%= f_p2.text_field :uri, :value => p2.uri.first %>
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>URL for publisher</strong>
+            <p>...</p>
+          </aside>
         </div>
-        <div class="field">
-          <%= f_p2.label :identifier, "Article number", :class=>"control-label" %>
-          <%= f_p2.text_field :identifier, :value => p2.identifier.first %>
+
+        <div class="fieldset">
+          <p class="small">Article number</p>
+          <%= f_p2.text_field :identifier, :value => p2.identifier.first, :style => "width: 150px;" %>
+          <aside class="tooltip">
+            <a href="#" class="close-button">x</a>
+            <strong>Article number</strong>
+            <p>...</p>
+          </aside>
         </div>
+
+        <div class="bottom-border padding-side-25"></div>
+
         <% p2.series.each do |p3| %>
           <%= f_p2.fields_for :series, p3 do |f_p3| %>
-            <div class="field">
-              <%= f_p3.label :title, "Name of series" %>
+            <div class="fieldset">
+              <p class="small">Name of series</p>
               <%= f_p3.text_field :title, :value => p3.title.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Name of series</strong>
+                <p>...</p>
+              </aside>
             </div>
           <% end #fields for each series %>
         <% end #each series %>
+
+        <div class="bottom-border padding-side-25"></div>
+
         <% p2.journal.each do |p3| %>
           <%= f_p2.fields_for :journal, p3 do |f_p3| %>
-            <div class="field">
-              <%= f_p3.label :title, "Journal title", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Journal title</p>
               <%= f_p3.text_field :title, :value => p3.title.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Journal title</strong>
+                <p>...</p>
+              </aside>
             </div>
-            <div class="field">
-              <%= f_p3.label :issn, "Journal ISSN", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Journal ISSN</p>
               <%= f_p3.text_field :issn, :value => p3.issn.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Journal ISSN</strong>
+                <p>...</p>
+              </aside>
             </div>
-            <div class="field">
-              <%= f_p3.label :eissn, "Journal eISSN", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Journal eISSN</p>
               <%= f_p3.text_field :eissn, :value => p3.eissn.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Journal eISSN</strong>
+                <p>...</p>
+              </aside>
             </div>
-            <div class="field">
-              <%= f_p3.label :volume, "Journal volume", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Journal volume</p>
               <%= f_p3.text_field :volume, :value => p3.volume.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Journal volume</strong>
+                <p>...</p>
+              </aside>
             </div>
-            <div class="field">
-              <%= f_p3.label :issue, "Journal issue", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Journal issue</p>
               <%= f_p3.text_field :issue, :value => p3.issue.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Journal issue</strong>
+                <p>...</p>
+              </aside>
             </div>
-            <div class="field">
-              <%= f_p3.label :pages, "Page range", :class=>"control-label" %>
+
+            <div class="fieldset">
+              <p class="small">Page range</p>
               <%= f_p3.text_field :pages, :value => p3.pages.first %>
+              <aside class="tooltip">
+                <a href="#" class="close-button">x</a>
+                <strong>Page range</strong>
+                <p>...</p>
+              </aside>
             </div>
+
           <% end #fields for each journal %>
         <% end #each journal %>
       <% end #fields for each document %>
     <% end #each document %>
   <% end #fields for each publication %>
 <% end #each publication %>
-

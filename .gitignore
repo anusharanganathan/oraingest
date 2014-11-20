@@ -28,5 +28,10 @@ rails_server.log
 
 #Ignore public assets
 /public/assets/
-app/assets/fonts/
-vendor/assets/fonts
+/app/assets/fonts/
+/vendor/assets/fonts
+
+# vim swap files
+*.swo
+*.swp
+

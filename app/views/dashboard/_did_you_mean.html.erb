@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% if @response.response[:numFound] <= spell_check_max and @response.spelling.words.size > 0 %>
+<% if @response and @response.response[:numFound] <= spell_check_max and @response.spelling.words.size > 0 %>
   <div id="spell">
     <h4 class="suggest"><i>Did you mean to type
       <% @response.spelling.words.each_with_index do |word,index| -%>

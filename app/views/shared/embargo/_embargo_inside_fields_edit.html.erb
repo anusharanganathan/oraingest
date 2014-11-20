@@ -1,0 +1,110 @@
+<%= embargo_type = nil %>
+<h5>What is the embargo date?</h5>
+
+<div class="fieldset">
+  <%= f_a.fields_for :embargoDate do |f_dt| %>
+    <%= f_dt.fields_for :end do |f_dt_end| %>
+    <div class="row">
+      <div class="col col1of3">
+        <label><input type="radio" name="dataset-embargo[0]" data-progress="documentation" /><span></span>
+          Enter end date
+        </label>
+      </div>
+      <div class="col col2of3">
+        <%= f_dt_end.text_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:200px' %>
+      </div>
+    </div>
+    <% end %>
+    <div class="row field-break">Or</div>
+
+    <div class="row">
+      <div class="col col1of3">
+        <label><input type="radio" name="dataset-embargo[0]" data-progress="documentation" /><span></span>
+          Enter embargo period
+        </label>
+      </div>
+      <div class="col col2of3">
+        <%= f_dt.fields_for :duration do |f_dt_duration| %>
+          <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2", placeholder: "Years", style: "width: 70px; float: left; margin: 0; margin-right: 5px;" %>
+          <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2", placeholder: "Months", style: "width: 70px; margin: 0; float: left;" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col1of3">
+        <label class="indent">Starting from</label>
+      </div>
+      <div class="col col2of3">
+        <%= f_dt.fields_for :start do |f_dt_start| %>
+          <label>
+            <%= f_dt_start.radio_button :label, "Today", :checked => (startOption == "Today") %><span></span> Today
+          </label>
+          <label>
+            <%= f_dt_start.radio_button :label, "Publication date", :checked => (startOption == "Publication date") %><span></span> Publication date
+          </label>
+          <label>
+            <%= f_dt_start.radio_button :label, "", :checked => (startOption == "Date") %><span></span> Date
+          </label>
+          <%= f_dt_start.text_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first, :style=>'width: 200px' %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Embargo end date</strong>
+    <p>Enter either the precise date when the embargo should be lifted, in the form YYYY/MM/DD
+    (e.g. '26 Jule 2018'), or enter the period of embargo in years or months (e.g. '18 months'),
+    and the start date.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-documentation"></div>
+      <p><strong>Completing this field helps with Documentation</strong></p>
+    </div>
+  </aside>
+</div>
+
+<h5>Embargo release method</h5>
+
+<div class="fieldset">
+  <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first) %>
+  <% else %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods) %>
+  <% end %>
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Release methods</strong>
+    <p>Please specify whether you want the embargo to be lifted automatically without
+    consulting you (or the data steward), or whether you wish to be consulted.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-funder"></div>
+      <p><strong>Completing this field helps with Funder compliance</strong></p>
+    </div>
+  </aside>
+</div><!-- /fieldset -->
+
+<h5>Reason for Embargo</h5>
+
+<div class="fieldset">
+  <div class="row">
+    <% if !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first %>
+    <% else %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0' %>
+    <% end %>
+  </div><!-- /row -->
+
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Reasons for Embargo</strong>
+    <p>Where access to the data needs to be restricted, please summarise the conditions (if any)
+    which must be satisfied for access to be granted.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-funder"></div>
+      <p><strong>Completing this field helps with Funder compliance</strong></p>
+    </div>
+  </aside>
+</div><!-- /fieldset -->

@@ -311,7 +311,7 @@ module Ora
         elsif funder[:funds] == "Project"
           funder[:funds] = "info:fedora/#{params[:pid]}#project1"
         end
-        if funder[:annotation].empty?
+        if funder[:annotation].nil? || funder[:annotation].empty?
           funder[:annotation] = nil
         end
         article.funding[0].funder.build(funder)
@@ -450,7 +450,7 @@ module Ora
     end
     article.publication.build(params)
     article.publication[0].hasDocument = nil
-    if !params[:hasDocument_attributes].empty?
+    if !params[:hasDocument_attributes].nil? && !params[:hasDocument_attributes].empty?
       if (params[:hasDocument_attributes]["0"].except(:journal_attributes, :series_attributes).any? {|k,v| !v.nil? && !v.empty?}) or \
         (params[:hasDocument_attributes]["0"].has_key?(:journal_attributes) && \
           params[:hasDocument_attributes]["0"][:journal_attributes]["0"].any? {|k,v| !v.nil? && !v.empty?}) or \

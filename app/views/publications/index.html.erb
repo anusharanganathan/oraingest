@@ -26,21 +26,7 @@ limitations under the License.
 
 
   <div class="col col1of2">
-    <div class="blue-bar">
-      <form action="#" method="post">
-        <div class="float-left">
-          <img src="/assets/ora/icons/plus.svg" class="icon"/>
-          Add a publication
-        </div>
-        <div class="float-right">
-          <select>
-            <option>Journal article</option>
-            <option>Something else</option>
-          </select>
-          <button type="submit" class="button button-small button-arrow">GO</button>
-        </div>
-      </form>
-    </div> <!-- /blue-bar -->
+    <%= render :partial=>'/catalog/_action_partials/add_publications' %>
   </div>
 
   <div class="colfull" style="text-align: right; margin-bottom: 15px">
@@ -58,7 +44,7 @@ limitations under the License.
 
     <%= render :partial => 'dashboard/did_you_mean' %>
 
-    <%= render :partial=>'publications/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil}  %>  
+    <%= render :partial=>'publications/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil}  %>
   </div>
 
   <% render_pagination_info @response, :entry_name=>'item' %>
@@ -72,6 +58,6 @@ limitations under the License.
 
 <% content_for :sidebar do %>
 
-  <%= render :partial => 'reviewer_dashboard/facet_example' %>
+  <%= render :partial => 'dashboard/facets' %>
 
 <% end %>

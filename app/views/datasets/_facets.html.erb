@@ -13,25 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 %>
-<%= render partial: '/header' %>
 
-<div class="container">
-  <%= yield %>
+<% # main container for facets/limits menu -%>
+<div class="col col1of6">
+  <aside class="filters">
+    <h3>Current search</h3>
+    <span class="small">Filters:</span>
+    <ul id="facets">
+      <%= render_facet_partials %>
+    </ul>
+
+  </aside>
 </div>
-
-<div class="gutter-container">
-  <div class="col col1of2">
-  	<div class="content-box padding-25 overflow">
-    	<%= yield :column1 %>
-    </div>
-    <%= render partial: '/catalog/_action_partials/reviewer_dashboard' %>
-  </div>
-  <div class="col col1of2">
-  	<div class="content-box padding-25 overflow">
-    	<%= yield :column2 %>
-    </div>
-    <%# render partial: '/catalog/_action_partials/list_agreements' %>
-  </div>
-</div>
-
-<%= render partial: '/footer' %>

@@ -1,5 +1,4 @@
-$(function() {
-  
+$(setup_autocomplete);
   // don't navigate away from the field on tab when selecting an item
   //$( "#languageLabel" ).bind( "keydown", function( event ) {
   //    if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -8,20 +7,23 @@ $(function() {
   //      }
   //  })
   //$( "#languageLabel" ).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
-    
+
+function setup_autocomplete() {
   $( "input.languageLabel" ).each(function (i) {
+    if ($(this).data("aucomplete")) return;
     $(this).autocomplete(autocompleteLanguage).data("autocomplete")._renderItem = renderLanguage;
   });
 
   $("input.subjectLabel").each(function (i) {
+    if ($(this).data("aucomplete")) return;
     $(this).autocomplete(autocompleteSubject).data("autocomplete")._renderItem = renderSubject;
   });
 
   $( "input.creatorName" ).each(function (i) {
+    if ($(this).data("aucomplete")) return;
     $(this).autocomplete(autocompletePerson).data("autocomplete")._renderItem = renderPerson;
   });
-
-});
+}
 
 var autocompleteLanguage = {
   minLength: 2,
@@ -37,9 +39,9 @@ var autocompleteLanguage = {
   select: function( event, ui ) {
     $(this).val( ui.item.label );
     $(this).attr("value", ui.item.label);
-    $(this).parent().find( ".languageCode" ).val( ui.item.id );
-    $(this).parent().find( ".languageAuthority" ).val( ui.item.id.replace("info:lc", "http://id.loc.gov") );
-    $(this).parent().find( ".languageScheme" ).val( "iso639-2" );
+    $(this).parents('.expand-content').find( ".languageCode" ).val( ui.item.id );
+    $(this).parents('.expand-content').find( ".languageAuthority" ).val( ui.item.id.replace("info:lc", "http://id.loc.gov") );
+    $(this).parents('.expand-content').find( ".languageScheme" ).val( "iso639-2" );
     return false;
   }
 }
@@ -86,7 +88,7 @@ var renderSubject = function ( ul, item ) {
 }
 
 var autocompletePerson = {
-  minLength: 2,
+  minLength: 3,
   source: function( request, response ) {
     $.getJSON( "/qa/search/cud/fullname", {
       q: request.term

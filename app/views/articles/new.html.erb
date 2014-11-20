@@ -1,6 +1,5 @@
   <h2>Deposit article</h2>
-</div>
-<div class="gutter-container">
+
   <% if @article.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@article.errors.count, "error") %> prohibited this article from being saved:</h2>
@@ -12,24 +11,13 @@
     </div>
   <% end %>
 
+</div>
+<div class="gutter-container">
+
   <div class="col col3of4">
-    <section class="form-step">
-      <div class="content-box padding-0">
-        <div class="content-box-header">
-          Article deposit form
-        </div>
-        <div class="padding-25 no-pad-bottom">
+    <%= render partial: 'articles/_edit_short/form' %>
+  </div>
 
-          <%= render partial: 'articles/_edit_short/files_form' %>
-          <div class="bottom-border"></div>
-        </div>
-
-        <%= render partial: 'articles/_edit_short/form' %>
-
-        <% path = { :new => new_article_path, :list => articles_path } %>
-        <br/><%= render partial: "shared/actions/new",  :locals => { :path => path } %>
-
-        </div>
-      </div>
-    </section>
+  <div class="col col1of4">
+    <%= render :partial => 'shared/progress_tracker' %>
   </div>

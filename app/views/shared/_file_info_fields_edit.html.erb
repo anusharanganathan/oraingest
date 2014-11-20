@@ -1,55 +1,103 @@
 <% if @files %>
-  <% @files.each_with_index do |file, n| %>
-    <!-- get the file details -->
-    <% dsid = file['url'].split("/")[-1] %>
-    <% select = nil %>
-    <% if !article.hasPart.empty? %>
-      <% article.hasPart.each do |hp| %>
-        <% if hp.identifier.first == dsid %>
-          <% select = hp %>
+  <div class="padding-side-25">
+    <div class="bottom-border "></div>
+    <h4>Uploaded files</h4>
+    <div class="file-uploads">
+
+      <% @files.each_with_index do |file, n| %>
+        <!-- get the file details -->
+        <% dsid = file['url'].split("/")[-1] %>
+        <% select = nil %>
+        <% if !article.hasPart.empty? %>
+          <% article.hasPart.each do |hp| %>
+            <% if hp.identifier.first == dsid %>
+              <% select = hp %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <% if select.nil? %>
+          <% article.hasPart.build %>
+          <% article.hasPart[n].identifier = [dsid] %>
         <% end %>
       <% end %>
-    <% end %>
-    <% if select.nil? %>
-      <% article.hasPart.build %>
-      <% article.hasPart[n].identifier = [dsid] %>
-    <% end %>
-  <% end %>
-  <% article.hasPart.each_with_index do |hp, n| %>
-    <% file_attrib = {} %>
-    <% @files.each do |file| %>
-      <% dsid = file['url'].split("/")[-1] %>
-      <% if hp.identifier.first == dsid %>
-        <% file_attrib = file %>
-      <% end %>
-    <% end %> 
-    <% unless file_attrib.empty? %>
-      <div class="well">
-        <div class="row">
-          <div class="control-group">
-            <legend>
-              <span><a href="<%=file_attrib['url']%>" title="<%=file_attrib['name']%>" rel= "<%=file_attrib['thumbnail_url']%> gallery" download= "<%file_attrib['name']%>" target="_blank"><%= file_attrib['name'] %></a> </span>
-              <span>(<%=ActionController::Base.helpers.number_to_human_size(file_attrib['size'], precision: 2)%>)</span>
-              <span class="label label-warning"><%= link_to 'Delete', file_attrib['delete_url'], method: :delete, data: { confirm: 'Are you sure?' } %></span>
-            </legend>
-            <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
-              <div class="field">
-                <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
-                <%= f_hp.label :type, "Type of file", :class=>"control-label" %>
-                <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
-              </div>
-              <div class="field">
-                <%= f_hp.label :description, "Description of file", :class=>"control-label" %>
-                <%= f_hp.text_field :description, :value => hp.description.first %>
-              </div>
-              <%= f_hp.fields_for :accessRights do |f_a| %>
-                <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights } %>
-              <% end %>
-            <% end %>
-          </div><!-- /.control-group -->
-        </div> <!-- /.row -->
-      </div> <!-- /.well -->
-    <% end #unless file_attrib.empty? %>
-  <% end #each file %> 
-<% end #if files %>
 
+      <% article.hasPart.each_with_index do |hp, n| %>
+        <% file_attrib = {} %>
+        <% @files.each do |file| %>
+          <% dsid = file['url'].split("/")[-1] %>
+          <% if hp.identifier.first == dsid %>
+            <% file_attrib = file %>
+          <% end %>
+        <% end %>
+
+        <% unless file_attrib.empty? %>
+
+          <div class="file-upload">
+            <div class="file-number"></div>
+            <div class="file-content">
+
+              <div class="file-details">
+                <% if file_attrib['thumbnail_url'] %>
+                  <img src="/assets/<%=file_attrib['thumbnail_url']%>" alt: "View file") %>
+                <% end %>
+                
+                <a href="<%=file_attrib['url']%>" title="<%=file_attrib['name']%>" rel= "<%=file_attrib['thumbnail_url']%> gallery" download= "<%file_attrib['name']%>" target="_blank"><%= truncate(file_attrib['name'], :length=>35, :separatoe => "...") %></a>
+
+                <span>(<%=ActionController::Base.helpers.number_to_human_size(file_attrib['size'], precision: 2)%>)</span>
+
+              </div>
+
+              <div class="file-options">
+                <a href="#" data-action="show_form">Edit Details/Embargo</a><span>|</span>
+                <%= link_to 'Delete', file_attrib['delete_url'], method: :delete, data: { confirm: 'Are you sure?' } %>
+              </div>
+
+              <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
+                <div class="hidden-form">
+
+                  <h5 style="margin-top: 20px;">Type of file</h5>
+                  <div class="fieldset">
+                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
+                    <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
+                  </div>
+                  
+                  <h5>Description of file</h5>
+                  <div class="fieldset">
+                    <%= f_hp.text_field :description, :value => hp.description.first %>
+                  </div>
+
+                  <%= f_hp.fields_for :accessRights do |f_a| %>
+                    
+                    <% if hp.accessRights.empty? %>
+                      <% hp.accessRights.build %>
+                    <% end %>
+                    <% if hp.accessRights[0].embargoDate.empty? %>
+                      <% hp.accessRights[0].embargoDate.build %>
+                    <% end %>
+                    <% if hp.accessRights[0].embargoDate[0].start.empty? %>
+                      <% hp.accessRights[0].embargoDate[0].start.build %>
+                    <% end %>
+                    <% if hp.accessRights[0].embargoDate[0].duration.empty? %>
+                      <% hp.accessRights[0].embargoDate[0].duration.build %>
+                    <% end %>
+                    <% if hp.accessRights[0].embargoDate[0].end.empty? %>
+                      <% hp.accessRights[0].embargoDate[0].end.build %>
+                    <% end %>
+
+                    <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f_a => f_a, :accessRights => hp.accessRights, :embargoDate => hp.accessRights[0].embargoDate[0], :embargoRelease => nil, :startOption => nil } %>
+
+                    <button type="submit" class="button button-small light-blue">Save Details/Embargo</button>
+                  <% end %>
+                </div><!-- /.hidden-form -->
+              <% end %>
+
+            </div><!-- /.file-content -->
+          </div><!-- /.file-upload -->
+        <% end #unless file_attrib.empty? %>
+      <% end #each file %> 
+
+      <div style="clear: both;"></div>
+
+    </div><!-- /.file-uploads -->
+  </div>
+<% end #if files %>
