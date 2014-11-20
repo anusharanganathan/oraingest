@@ -191,6 +191,14 @@ $(function() {
       return false;
   });
 
+  $(document).on("click", "#file-table .cancel", function() { 
+    $(this).parents("tr").first().fadeTo(500, 0, function() { 
+      $(this).css("overflow", "hidden").slideUp(500, function() {
+        $(this).remove();
+      });
+    });
+  });
+
   /* -------------------------------------------------------------
    * Tracker Follow
    * -------------------------------------------------------------

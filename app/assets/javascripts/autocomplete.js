@@ -88,7 +88,7 @@ var renderSubject = function ( ul, item ) {
 }
 
 var autocompletePerson = {
-  minLength: 2,
+  minLength: 3,
   source: function( request, response ) {
     $.getJSON( "/qa/search/cud/fullname", {
       q: request.term
