@@ -175,23 +175,6 @@
           </div>
         </aside> 
       </div>
-
-      <div class="fieldset" style="margin-bottom: 30px">
-        <p class="small">Data management plan</p>
-        <%= f.text_field :hasDataManagementPlan, :value=>@dataset.hasDataManagementPlan.first, :style=>'width: 50%', data: {"progress" => "preservation"} %>
-       <!--  <input type="text" style="width: 50%" data-progress="preservation"/> -->
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Data management plan</strong>
-          <p>Enter the web address (URL) of your research project's data management plan or, if you are including this information along with your uploaded files, please give the file name here.</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-preservation"></div>
-            <p><strong>Completing this field helps with Preservation</strong></p>
-          </div>
-        </aside> 
-      </div>
     </div>
 
   </div>
@@ -345,10 +328,9 @@
       <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
       <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
       <% unless can? :review, :all %>
-        <!-- <div class="row form-actions" id="workflow_submit"> -->
         <% txt = '<i class="icon-save"></i> Submit for Review' %>
         <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      <!-- </div> -->
+      <% end %>
     <% end %>
 
   </div>
