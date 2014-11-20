@@ -1214,6 +1214,27 @@ form > section.form-step:first-of-type { display: none; }
 	color: #6AA2B8;
 }
 
+/* Progress bar */
+#file-table {
+  td {
+    vertical-align: middle;
+    button {
+      padding: 5px 15px;
+    }
+  }
+  tfoot button {
+    display: none;
+  }
+}
+#file-table .progress {
+  width: 100px;
+  background-color: #F5F5F5;
+  .bar {
+    background-color: #719AAA;
+    height: 20px;
+  }
+}
+
 /* Search Box
 ------------------------------------------- */
 .search-header {
@@ -2134,13 +2155,4 @@ table td textarea {
 
 
 
-/* Progress bar */
-#fileupload .progress {
-  width: 100px;
-  background-color: #F5F5F5;
-  .bar {
-    background-color: #719AAA;
-    height: 20px;
-  }
-}
 
