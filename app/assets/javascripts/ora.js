@@ -163,7 +163,8 @@ $(function() {
 
   // Collect the field to be cloned
   $('.field-repeater').each(function(){
-    var clone = $(this).find("ol > li").first().clone();
+    var clone = $(this).find("ol > li").first().clone(false);
+    clone.find("input[type=text]").val("");
     $(this).data("field",clone);
   });
 
@@ -177,6 +178,7 @@ $(function() {
     if(!max) max = 3;
     if(items < max) clone.hide().appendTo(list).fadeIn("slow");
     if(items === (max-1)) container.find(".add-field").hide();
+    setup_autocomplete();
     return false;
   });
 
@@ -189,5 +191,27 @@ $(function() {
       return false;
   });
 
+  /* -------------------------------------------------------------
+   * Tracker Follow
+   * -------------------------------------------------------------
+   * Fixes the tracker
+   * -----------------------------------------------------------*/
 
+  var tracker = $("div.tracker"),
+      trackerY = tracker.offset().top;
+
+  $(document).on("scroll",function(){
+    var scrollY = $(window).scrollTop();
+    if((scrollY-10) >= trackerY){
+      tracker.css({
+        "position" : "fixed",
+        "top" : "20px"
+      });
+    }else{
+      tracker.css({
+        "position" : "relative",
+        "top" : "0px"
+      });
+    }
+  });
 });

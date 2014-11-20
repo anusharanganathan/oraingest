@@ -1,53 +1,78 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
-      <legend>Review workflow</legend>
-    
-      <% unless article.workflows.first.nil? %>
-        <% wf = article.workflows.first %>
-        <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
-        <% if article.workflows.first.comments.empty? %>
-          <% article.workflows.first.comments.build %>
-        <% end %>
-      <% end %>
-    
-      <% unless can? :review, :all %>
-        <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" || article.workflows.first.current_status == "Referred" %>
-          <% buttonText = 'Submit for Review' %>
-          <% if article.workflows.empty? %>
-            <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
-          <% end %>
-          <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
-          <div class="fields">
-            <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
-            <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entries_description" %> 
-          </div>
-        <% end %>
-      <% else %>
-        <% buttonText = 'Save review changes' %>
-        <h3>Change Status</h3>
-        <%# article.workflows.each_with_index do |wf, wf_index| %>
-          <div class="fields">
-            <%= f.label "workflows_attributes_entries_attributes_status", "Status", :class=>"control-label" %>
-            <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :class=>'span20 select_perm', :id => "workflows_entries_status" %>
-          
-          </div>
-          <div class="fields">
-            <%= f.label "workflows_attributes_entries_attributes_reviewer_id", "Reviewer", :class=>"control-label" %>
-            <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id" %>
-          </div>
-          <div class="fields">
-            <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
-            <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description" %> 
-          </div>
-        <%# end %>
-        <h3>Add a comment</h3>
-        <div class="fields">
-          <%= f.label "workflows_attributes_comments_attributes_description", "Description", :class=>"control-label" %>
-          <%= f.text_field "workflows_attributes][comments_attributes][description", :value => "", :id => "workflows_comments_description" %>   
-        </div>
-      <% end %> 
-    </div><!-- /.control-group -->
-  </div><!-- /.row -->
-</div><!-- /.well -->
-<%= render partial: "shared/workflow_show", :locals => { :article => article } %>
+<% unless article.workflows.first.nil? %>
+  <% wf = article.workflows.first %>
+  <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+  <% if article.workflows.first.comments.empty? %>
+    <% article.workflows.first.comments.build %>
+  <% end %>
+<% end %>
+
+<% unless can? :review, :all %>
+  <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" || article.workflows.first.current_status == "Referred" %>
+    <% buttonText = 'Submit for Review' %>
+    <% if article.workflows.empty? %>
+      <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+    <% end %>
+    <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
+
+    <div class="fields">
+      <%= f.label "workflows_attributes_entries_attributes_description", "Comment", :class=>"control-label" %>
+      <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entries_description" %> 
+    </div>
+
+  <% end %>
+<% else %>
+  <% buttonText = 'Save review changes' %>
+  <h4 class="padding-side-25">Change Status</h4>
+  <%# article.workflows.each_with_index do |wf, wf_index| %>
+    <div class="fieldset">
+      <p class="small">Status</p>
+      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :class=>'span20 select_perm', :id => "workflows_entries_status" %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Status</strong>
+        <p>...</p>
+      </aside>
+    </div>
+
+    <div class="fieldset">
+      <p class="small">Reviewer</p>
+      <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id" %>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Reviewer</strong>
+        <p>...</p>
+      </aside>
+    </div>
+
+    <div class="fieldset">
+      <p class="small">Comment</p>
+      <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description" %> 
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Comment</strong>
+        <p>...</p>
+      </aside>
+    </div>
+  <%# end %>
+
+  <div class="bottom-border padding-side-25"></div>
+
+  <h4 class="padding-side-25">Add a comment</h4>
+
+  <div class="fieldset">
+    <p class="small">Description</p>
+    <%= f.text_field "workflows_attributes][comments_attributes][description", :value => "", :id => "workflows_comments_description" %>
+    <aside class="tooltip">
+      <a href="#" class="close-button">x</a>
+      <strong>Description</strong>
+      <p>...</p>
+    </aside>
+  </div>
+
+  <div class="bottom-border padding-side-25"></div>
+
+<% end %> 
+
+<div class="padding-25">
+  <%= render partial: "shared/workflow_show", :locals => { :article => article } %>
+</div>

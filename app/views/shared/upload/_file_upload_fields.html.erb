@@ -3,6 +3,7 @@
 <%= hidden_field_tag(:relative_path) %>
 <%= hidden_field_tag(:pid, @pid) %>
 <%= hidden_field_tag "file_coming_from", "local" %>
+<%= hidden_field_tag :terms_of_service, params[:terms_of_service] %>
 
   <!-- The table listing the files available for upload/download -->
 <!--   <table id="file-table" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
@@ -18,10 +19,10 @@
       <tr>
         <td colspan="5">
           <input type="file" name="files[]" multiple />
-          <button type="submit" id="main_upload_start">
+          <button type="submit" class="button-small light-blue" id="main_upload_start">
               <span>Start upload</span>
           </button>
-          <button type="reset">
+          <button type="reset" class="button-small light-blue">
               <span>Cancel upload</span>
           </button>
         </td>

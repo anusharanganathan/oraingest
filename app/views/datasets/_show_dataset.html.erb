@@ -15,9 +15,9 @@
       </td>
       <td>
         <h4 class="<%= "red-text" if (dataset.submission_workflow_status.downcase.eql? "draft") %>"><%= dataset.submission_workflow_status %></h4>
-        <a href="<%= dataset_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
-        <a href="<%= dataset_url(dataset.modelName, 'edit', dataset.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
-        <a href="<%= dataset_url(dataset.modelName, 'delete', dataset.id) %>" class="button button-small light-blue">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
+        <a href="<%= document_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
+        <a href="<%= document_url(dataset.modelName, 'edit', dataset.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
+        <a href="<%= document_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue" data-method="delete" data-confirm="Are you sure?">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
       </td>
     </tr>
 
