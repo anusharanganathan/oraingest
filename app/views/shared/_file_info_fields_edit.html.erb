@@ -55,15 +55,27 @@
               <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
                 <div class="hidden-form">
 
-                  <h5 style="margin-top: 20px;">Type of file</h5>
-                  <div class="fieldset">
-                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
-                    <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
-                  </div>
-                  
+                  <% if Sufia.config.attachment_types.has_key? (@model) %>
+                    <h5 style="margin-top: 20px;">Type of file</h5>
+                    <div class="fieldset">
+                      <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
+                    </div>
+                  <% end %>
+                 
+                 <div class="fieldset"> 
                   <h5>Description of file</h5>
-                  <div class="fieldset">
+                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
                     <%= f_hp.text_field :description, :value => hp.description.first %>
+                    <aside class="tooltip">
+                      <a href="#" class="close-button">x</a>
+                      <strong>Description of file</strong>
+                      <p>Can you tell us a little bit about the file you are uploading. Eg. is it your data management plan or a description about your data.</p>
+
+                      <div class="tooltip-extra">
+                        <div class="circle circle-documentation"></div>
+                        <p><strong>Completing this field helps with Documentation</strong></p>
+                      </div>
+                    </aside>
                   </div>
 
                   <%= f_hp.fields_for :accessRights do |f_a| %>
