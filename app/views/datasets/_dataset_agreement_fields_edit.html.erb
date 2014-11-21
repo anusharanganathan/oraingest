@@ -1,10 +1,10 @@
 <% if hasRelatedAgreement.agreementType.first == "Individual" %>
-  <h4 class="padding-side-25">Archive service payment</h4>
   <%= fields_for "dataset[hasRelatedAgreement]", hasRelatedAgreement do |f_a| %>
     <% if hasRelatedAgreement.invoice.empty? %>
       <% hasRelatedAgreement.invoice.build %>
     <% end %>
 
+    <h4 class="padding-side-25">Archive service payment</h4>
     <div class="fieldset">
       <%= f_a.hidden_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
       <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
@@ -41,9 +41,13 @@
       </aside>
     </div><!-- /fieldset -->
 
-    <h4>Nominate a data steward</h4>
+    <div class="padding-side-25">
+      <div class="bottom-border"></div>
+    </div>
+
+    <h4 class="padding-side-25">Nominate a data steward</h4>
     <div class="padding-0">
-      <%= render partial: 'shared/creation_activity_fields_data_steward_edit.html', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "During period of project" } %>
+      <%= render partial: 'shared/creation_activity_fields_data_steward_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "During period of project" } %>
     </div>
 
     <div class="padding-0">
