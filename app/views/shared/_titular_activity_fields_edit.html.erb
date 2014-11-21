@@ -25,11 +25,15 @@
                 <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "titularName%d"%c_index, :class=>"titularName" %>
                 <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
 
-                <label>
-                  <p><span class="small">Creator object</span>
-                    <%= f_c.text_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
-                  </p>
-                </label>
+                <% if can? :review, :all %>
+                  <label>
+                    <p><span class="small">Creator object</span>
+                      <%= f_c.text_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
+                    </p>
+                  </label>
+                <% else %>
+                  <%= f_c.hidden_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
+                <% end %>
 
                 <label>
                   <p><span class="small">Role</span>
@@ -45,11 +49,16 @@
                       </p>
                     </label>
 
-                    <label>
-                      <p><span class="small">Link to affiliation object</span>
-                        <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
-                      </p>
-                    </label>
+                    <% if can? :review, :all %>
+                      <label>
+                        <p><span class="small">Link to affiliation object</span>
+                          <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                        </p>
+                      </label>
+                    <% else %>
+                      <%= f_c2.hidden_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                    <% end %>
+
                   <% end %>
                 <% end %>
               </li>
