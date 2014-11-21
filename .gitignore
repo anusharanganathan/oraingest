@@ -35,3 +35,6 @@ rails_server.log
 *.swo
 *.swp
 
+# other temp files
+*~
+
