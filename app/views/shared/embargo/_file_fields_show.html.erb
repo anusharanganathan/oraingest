@@ -36,8 +36,12 @@
       <% end %>
       </div>
     <% end %>
-    <% if !hp.accessRights[0].embargoReason.empty? && !hp.accessRights[0].embargoReason.first.empty? %>
-      <div>Embargo reason: <%= hp.accessRights[0].embargoReason.first %></div>
+    <% if !hp.accessRights[0].embargoReason.empty? %>
+      <div>Embargo reason: 
+        <% hp.accessRights[0].embargoReason.each do |er| %>
+          <span><%=er%></span>
+        <% end %>
+      </div>
     <% end %>
     <% if !hp.accessRights[0].embargoRelease.empty? && !hp.accessRights[0].embargoRelease.first.empty?%>
        <div>Embargo release method: <%= hp.accessRights[0].embargoRelease.first %></div>

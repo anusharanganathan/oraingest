@@ -20,7 +20,7 @@
       <% hasData = true %>
     <% end %>
   <% end %>
-  <% if !article.accessRights[0].embargoReason.empty? && !article.accessRights[0].embargoReason.first.empty? %>
+  <% if !article.accessRights[0].embargoReason.empty? %>
     <% hasData = true %>
   <% end %>
   <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty? %>
@@ -64,8 +64,12 @@
           <% end %>
           </div>
         <% end %>
-        <% if !article.accessRights[0].embargoReason.empty? && !article.accessRights[0].embargoReason.first.empty? %>
-          <div>Embargo reason: <%= article.accessRights[0].embargoReason.first %></div>
+        <% if !article.accessRights[0].embargoReason.empty? %>
+          <div>Embargo reason: 
+            <% article.accessRights[0].embargoReason.each do |er| %>
+              <span><%=er%></span>
+            <% end %>
+          </div>
         <% end %>
         <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty?%>
            <div>Embargo release method: <%= article.accessRights[0].embargoRelease.first %></div>
