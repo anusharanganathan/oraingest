@@ -25,10 +25,11 @@
   <% end %>
 <% end %>
 
-<% if agreements.length > 1 %>
+<% if agreements.length > 2 %>
+  <%# TODO: The section will not work with the new design. Javascript onchange does not work. %>
   <div class="fieldset" style="margin-bottom: 30px">
     <p class="small">Select the agreement relevant to this dataset</p>
-    <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), :style=>'width: 50%', data: {"progress" => "preservation"}, {:onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)"} %>
+    <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), :style=>'width: 50%', data: {"progress" => "preservation"}, :onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)" %>
     <aside class="tooltip">
       <a href="#" class="close-button">x</a>
       <strong>Dataset agreement</strong>
