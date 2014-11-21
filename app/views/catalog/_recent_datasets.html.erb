@@ -1,7 +1,7 @@
-<% msg = 'Login to see your recently added datasets' if msg.blank? and current_user.blank? %>
+<% msg = '<a href="%s">Login</a> to see your recently added datasets'%new_user_session_path if msg.blank? and current_user.blank? %>
 <% msg = 'You have no datasets to display. Contribute some of your datasets!' if msg.blank? %>
 <% if recent_datasets.blank? %>
-<h3><%= msg %></h3>
+<p><%= raw(msg) %></p>
 <% else %>
 <h3>Latest data deposits</h3>
 <%= render :partial => "catalog/_index_partials/document_list", :locals => {:recent_documents => recent_datasets} %>
