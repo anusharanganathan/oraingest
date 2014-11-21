@@ -32,7 +32,7 @@ module Qa::Authorities
       query = URI.escape(query)
       return_fields="cud:cas:fullname,cud:cas:lastname,cud:cas:firstname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
       rows = 10 #This is not working
-      query_url = "http://10.0.0.203/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
+      query_url =  "http://10.0.0.203/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
       @raw_response = get_json(query_url)
       @response = parse_authority_response(@raw_response)
     end
@@ -183,25 +183,26 @@ module Qa::Authorities
       resp = {}
       data['attributes'].each do |field|
         if Cud.fields.has_key?(field["name"])
-          if (field["name"] == "cud:cas:current_affiliation")
-            #TODO: Need a better way of getting the affiliation data. CUD data is bad
-            aff = []
-            field["value"].each do |val|
-              if val.length > 2 && val.downcase != 'dars'
-                aff.push(val)
-              end
-            end
-            if !aff.empty?
-              val = aff.max_by(&:length)
-              resp[Cud.fields[field["name"]]] = val
-            else
-              resp[Cud.fields[field["name"]]] = ""
-            end
-          else
-            resp[Cud.fields[field["name"]]] = field["value"]
-          end
+          resp[Cud.fields[field["name"]]] = field["value"]
         end
       end
+      # Data['attributes'] no longer has affiliation information. They are passed seperately
+      aff = []
+      data['affiliations'].each do |field|
+        # field has the following keys - source, affiliation, status, startDate, endDate, lastUpdated, dateAdded
+        # The affiliations have endDate. If endDate < today - 1 year, we should not use that affiliation
+        endDate = Time.parse(field['endDate']["$date"]) rescue nil
+        if field['source'] != "UAS_DARS" && endDate && endDate > Time.now.ago(1.year)
+          aff.push(field["affiliation"])
+        end
+      end  
+      if !aff.empty?
+        val = aff.max_by(&:length)
+        resp["current_affiliation"] = val
+      else
+        resp["current_affiliation"] = ""
+      end
+      #TODO: If there are no affiliations, we should not use that person
       resp
     end
 
