@@ -90,7 +90,16 @@
 
 <div class="fieldset">
   <div class="row">
-    <% if !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
+    <% if Sufia.config.embargo_reasons.has_key? (@model) %>
+      <% Sufia.config.embargo_reasons[@model].each do |key, val| %>
+        <% if accessRights[0].embargoReason.include? val %>
+          <% hasIt = true %>
+        <% else %>
+          <% hasIt = false %>
+        <% end %>
+        <label><%= f_a.check_box(:embargoReason, {:multiple => true, :checked=>hasIt}, val, nil) %><span></span><%=key%></label>
+      <% end %>
+    <% elsif !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
       <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first %>
     <% else %>
       <%= f_a.text_area :embargoReason, :style=>'margin:0' %>
@@ -106,5 +115,5 @@
       <div class="circle circle-funder"></div>
       <p><strong>Completing this field helps with Funder compliance</strong></p>
     </div>
-  </aside>
+  </aside> 
 </div><!-- /fieldset -->

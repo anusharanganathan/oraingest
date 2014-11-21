@@ -147,13 +147,6 @@ Sufia.config do |config|
       "Rights agreement with publisher" => "Rights agreement with publisher",
       "Personal correspondence to serve as agreement" => "Personal correspondence to serve as agreement",
       "Publisher's APC or article charge request form" => "Publisher's APC or article charge request form"
-    },
-    "dataset" => {
-      "Content" => "Content",
-      "License agreement" => "License agreement",
-      "Rights agreement with publisher" => "Rights agreement with publisher",
-      "Personal correspondence to serve as agreement" => "Personal correspondence to serve as agreement",
-      "Publisher's APC or article charge request form" => "Publisher's APC or article charge request form"
     }
   }
 
@@ -182,6 +175,23 @@ Sufia.config do |config|
     "Access restricted until embargo end date",
     "Closed access",
   ]
+
+  config.embargo_reasons = {
+    "article" => {
+      "Publishers requirement" => "Publishers requirement", 
+      "Legal or ethical reasons" => "Legal or ethical reasons",
+      "Commercial confidentiality" => "Commercial confidentiality",
+      "National security" => "National security",
+      "Conditional access only" => "Conditional access only"
+    },
+    "dataset" => {
+      "Publishers requirement" => "Publishers requirement", 
+      "Legal or ethical reasons" => "Legal or ethical reasons",
+      "Commercial confidentiality" => "Commercial confidentiality",
+      "National security" => "National security",
+      "Conditional access only" => "Conditional access only"
+    }
+  }
 
   config.role_types = {
     "article" => {
@@ -288,6 +298,8 @@ Sufia.config do |config|
       "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
     },
   }
+
+
   # Map hostnames onto Google Analytics tracking IDs
   # config.google_analytics_id = 'UA-99999999-1'
  
