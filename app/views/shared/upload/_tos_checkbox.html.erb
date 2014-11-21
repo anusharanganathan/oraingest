@@ -2,10 +2,10 @@
 	<label> 
 	  <% if @model == "dataset" %>
 	    <% url = "/data_deposit_agreement/" %>
-	   	<% text = "ORA's deposit agreement for data" %>
+	   	<% text = "ORA's deposit licence for data" %>
 	  <% else %>
 	    <% url = "/deposit_agreement/" %>
-	   <% text = "ORA's deposit agreement" %>
+	   <% text = "ORA's deposit licence" %>
 	  <% end %>
 	  <%= check_box_tag 'terms_of_service', 1, nil, data: {"activate" => 'activate-submit', "progress" => "documentation"} %>
 	  <span></span>

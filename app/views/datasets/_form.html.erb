@@ -50,7 +50,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      Add subject, abstract, keywords and other descriptive information to your data
+      Add subject keywords, dates, geographical location and language information to your data
     </div>
     <div class="expand-content">
       <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
@@ -161,7 +161,7 @@
       </div>
 
       <div class="fieldset">
-        <p class="small">Abstract</p>
+        <p class="small">Abstract or brief description of research context</p>
         <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
 
         <aside class="tooltip">
@@ -284,7 +284,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      Liscence your data
+      Licence your data
     </div>
     <div class="expand-content">
 

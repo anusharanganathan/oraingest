@@ -14,7 +14,7 @@
         <%= f_r.fields_for :entity, r.entity[0] do |f_e| %>
         <li>
           <label>
-            <p class="small">Title of relationship</p>
+            <p class="small">Title of related item</p>
             <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index %>
             <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
           </label>

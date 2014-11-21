@@ -38,8 +38,10 @@ limitations under the License.
             <th>Issue type</th>
             <td>
               <% issue_types = ContactForm::ISSUE_TYPES.dup %>
-              <% issue_types.unshift(['Select an Issue Type', nil]) %>
-              <%= f.select 'category', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true } %>
+              <% issue_types = issue_types[0...-1] %>
+              <% issue_types.push(["General enquiry or request", "General enquiry or request"]) %>
+              <% issue_types.unshift(['Select an issue type', nil]) %>
+              <%= f.select 'category', options_for_select(issue_types), {}, {:class=> 'input-large', :required => true, :include_blank => false } %>
             </td>
           </tr>
           <tr>
