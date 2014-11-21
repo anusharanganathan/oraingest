@@ -320,7 +320,7 @@ module Ora
         # Clean the agent attributes for the funder and build
         funder[:agent_attributes]["0"]["id"] = "info:fedora/%s#funder%d" % [article.id, n]
         funder[:agent_attributes]["0"]["type"] = RDF::FRAPO.FundingAgency
-        if funder[:agent_attributes]["0"][:sameAs].empty?
+        if !funder[:agent_attributes]["0"].nil? && funder[:agent_attributes]["0"].has_key?("sameAs") && funder[:agent_attributes]["0"][:sameAs].empty?
           funder[:agent_attributes]["0"][:sameAs] = nil
         end
         article.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
