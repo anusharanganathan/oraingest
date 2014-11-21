@@ -6,11 +6,17 @@
     <div class="padding-25 no-pad-bottom">
       <%= render partial: 'files_form' %>
     </div>
+
+    <%# TODO: The form is starting in the middle of the section %>
     <%= form_for(@dataset) do |f| %>
       <%= hidden_field_tag(:pid, @pid) %>
       <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
+
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
+      </div>
+
       <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
-    <% end %>
 
     <%# path = { :new => new_dataset_path, :list => datasets_path } %>
     <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
@@ -28,17 +34,13 @@
   </nav>
 </section>
 
-<%= form_for(@dataset) do |f| %>
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
       2. About your data
     </div>
     <div class="padding-0">
-        <%= hidden_field_tag(:pid, @pid) %>
-
         <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
-
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %> 
     </div>
   </div>
@@ -104,10 +106,6 @@
         </aside>
       </div>
 
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
       <div class="fieldset">
         <% if @dataset.spatial.empty? %>
           <% @dataset.spatial.build %>
@@ -127,9 +125,11 @@
         </aside> 
       </div>
 
-      <div class="fieldset">
-        <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
+      <div class="padding-side-25">
+        <div class="bottom-border"></div>
       </div>
+
+      <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
 
       <div class="padding-side-25">
         <div class="bottom-border"></div>
@@ -303,37 +303,36 @@
   
 </section>
 
-<section class="form-step">
-  <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
-  <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
+<!-- <section class="form-step">
+  <%#= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
+  <%#= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
   <%#= render partial: 'shared/permissions_delete', :locals => {:permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0], :pid => @pid} %>
 </section>
 
 <section class="form-step">
-  <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
-  <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
-  <% if can? :review, :all %>
-    <% buttonText = 'Save review changes' %>
-  <% else %>
-    <% buttonText = 'Submit for Review' %>
-  <% end %>
-</section>
+  <%#= hidden_field_tag('redirect_tab', 'workflowtab') %>
+  <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
+  <%# if can? :review, :all %>
+    <%# buttonText = 'Save review changes' %>
+  <%# else %>
+    <%# buttonText = 'Submit for Review' %>
+  <%# end %>
+</section> -->
 
 <nav class="form-nav" style="margin-top: 20px;">
   <div class="form-nav-next" style="text-align: right">
     <%= f.submit "Save", class: "button light-blue" %>
+  <% end #TODO: This form end is being rejected. Fix this. Need to think about form flows  %>
 
-    <%= form_for @dataset, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
-      <%= hidden_field_tag(:pid, @pid) %>
-      <%= hidden_field_tag('redirect_tab', 'workflowtab') %>
+    <%#= form_for @dataset, :html => {:multipart => true, :class => 'inline', :id => 'workflow'} do |f| %>
+      <%#= hidden_field_tag(:pid, @pid) %>
       <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
-      <% unless can? :review, :all %>
-        <% txt = '<i class="icon-save"></i> Submit for Review' %>
-        <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      <% end %>
-    <% end %>
+      <%# unless can? :review, :all %>
+        <%# txt = '<i class="icon-save"></i> Submit for Review' %>
+        <%#= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
+      <%# end %>
+    <%# end %>
 
   </div>
 </nav>
 
-<% end %>
