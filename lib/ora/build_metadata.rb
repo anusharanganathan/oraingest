@@ -263,6 +263,9 @@ module Ora
     article.influence = nil
     influences = []
     params.each_with_index do |rel, rel_index|
+      if rel[:entity_attributes]["0"]['id'].start_with?('10.')
+        rel[:entity_attributes]["0"]['id'] = "http://dx.doi.org/#{rel[:entity_attributes]["0"]['id']}"
+      end
       influences.push(rel[:entity_attributes]["0"]['id'])
       rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [article.id, rel_index]
       article.qualifiedRelation.build(rel)
