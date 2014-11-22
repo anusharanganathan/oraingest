@@ -1,17 +1,6 @@
     <tr>
       <td>
-        <h4><%= dataset.title %></h4>
-        <p>
-          <strong>Data Steward: </strong>
-          <span style="color: red">Data stewards to go here - what's the field name?</span> 
-          <%= dataset.creators.map { |author| author["name"] }.join "; " %>
-        </p>
-        <% unless dataset.abstract.nil? %>
-          <p>
-            <strong>Abstract: </strong>
-            <%= dataset.abstract %>
-          </p>
-        <% end %>
+        <%= render :partial => "shared/show_document", :locals => {:document => dataset} %>
       </td>
       <td>
         <% if !dataset.submission_workflow_status.nil? && dataset.submission_workflow_status.downcase == "draft" %>

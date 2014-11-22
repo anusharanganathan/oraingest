@@ -1,0 +1,26 @@
+<h4><%= link_to truncate(document.title_or_label, :length => 28, :separator => ' '), document_url(document.modelName, 'show', document.id), :title => document.title_or_label  %></h4>
+<p>
+  <% if !document.creators.nil? && !document.creators.empty? %>
+    <div>
+      <h6 class="inline">Creator: </h6>
+      <p class="inline"><%= document.creators.map { |author| author["name"] }.join "; " %> </p>
+    </div>
+  <% end %>
+<% unless document.abstract.nil? %>
+    <div>
+      <h6 class="inline">Abstract: </h6>
+      <p class="inline"><%= document.abstract %></p>
+    </div>
+<% end %>
+<% if !document.dateAccepted_s.nil? %>
+    <div>
+      <h6 class="inline">Date accepted: </h6>
+      <p class="inline"><%= document.dateAccepted_s %></p>
+    </div>
+<% elsif !document.datePublished_s.nil? %>
+    <div>
+      <h6 class="inline">Date published: </h6>
+      <p class="inline"><%= document.datePublished_s %></p>
+    </div>
+<% end %>
+  </p>
