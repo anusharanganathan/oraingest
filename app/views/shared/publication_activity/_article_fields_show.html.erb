@@ -83,22 +83,22 @@
         <% end %>
         <% if !p2.journal.nil? %>
           <% p2.journal.each do |p3| %>
-            <% if !p3.title.empty? && !p3.title[0].empty? %>
+            <% if !p3.title.nil? && !p3.title.empty? && !p3.title[0].nil? && !p3.title[0].empty? %>
               <p><span class="h6">Journal title:</span> <%= p3.title.first %></p>
             <% end %>
-            <% if !p3.issn.empty? && !p3.issn[0].empty? %>
+            <% if !p3.issn.nil? && !p3.issn.empty? && !p3.issn[0].nil? && !p3.issn[0].empty? %>
               <p><span class="h6">Journal ISSN:</span> <%= p3.issn.first %></p>
             <% end %>
-            <% if !p3.eissn.empty? & !p3.eissn[0].empty? %>
+            <% if !p3.eissn.nil? && !p3.eissn.empty? & !p3.eissn[0].nil? && !p3.eissn[0].empty? %>
               <p><span class="h6">Journal eISSN:</span> <%= p3.eissn.first %></p>
             <% end %>
-            <% if !p3.volume.empty? & !p3.volume[0].empty? %>
+            <% if !p3.volume.nil? && !p3.volume.empty? & !p3.volume[0].nil? && !p3.volume[0].empty? %>
               <p><span class="h6">Journal volume:</span> <%= p3.volume.first %></p>
             <% end %>
-            <% if !p3.issue.empty? & !p3.issue[0].empty? %>
+            <% if !p3.issue.nil? && !p3.issue.empty? & !p3.issue[0].nil? && !p3.issue[0].empty? %>
               <p><span class="h6">Journal issue:</span> <%= p3.issue.first %></p>
             <% end %>
-            <% if !p3.pages.empty? & !p3.pages[0].empty? %>
+            <% if !p3.pages.nil? && !p3.pages.empty? & !p3.pages[0].nil? && !p3.pages[0].empty? %>
               <p><span class="h6">Page range:</span> <%= p3.pages.first %></p>
             <% end %>
           <% end #each journal %>
