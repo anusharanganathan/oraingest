@@ -18,7 +18,7 @@ Sufia.config do |config|
 
   config.subtypes = {
     "article" => {
-      "" => "",
+      "Select type" => "",
       "Article" => "Article",
       "Discussion paper" => "Discussion paper",
       "Journal article" => "Journal article",
@@ -35,7 +35,7 @@ Sufia.config do |config|
       "Other" => "Other"
     },
     "book" => {
-      "" => "",
+      "Select type" => "",
       "Book"=>"Book",
       "Book chapter" => "Book chapter",
       "Book review" => "Book review",
