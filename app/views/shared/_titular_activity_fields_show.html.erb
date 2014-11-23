@@ -1,5 +1,5 @@
 <% if !article.titularActivity.nil? && !article.titularActivity[0].nil? && !article.titularActivity[0].titular.empty? %>
-  <hr/>
+  <h4>Data stewards post project or for entire lifetime of the data</h5>
   <% article.titularActivity[0].titular.each_with_index do |c, c_index| %>
     <% if !c.agent[0].name.empty? and !c.agent[0].roleHeldBy.empty? %>
       <p><span class="h6">Held by:</span> <%=link_to c.agent[0].name.first, c.agent[0].roleHeldBy.first %></p>

@@ -1,5 +1,5 @@
 <% if !article.creation.nil? && !article.creation[0].nil? && !article.creation[0].creator.empty? %>
-  <hr/>
+  <h4>Data stewards during period of project</h4>
   <% article.creation[0].creator.each_with_index do |c, c_index| %>
     <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
       <p><span class="h6">Name:</span> <%=link_to c.agent[0].name.first, c.agent[0].sameAs.first %></p>
