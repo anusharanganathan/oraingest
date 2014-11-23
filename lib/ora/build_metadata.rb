@@ -448,8 +448,10 @@ module Ora
     id0 = "info:fedora/%s#publicationActivity" % article.id
     params['id'] = id0
     params[:type] = RDF::PROV.Activity
-    if !params[:publisher_attributes]["0"][:name].empty?
-      params[:wasAssociatedWith] = ["info:fedora/%s#publisher" % article.id]
+    if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
+      if !params[:publisher_attributes]["0"][:name].empty?
+        params[:wasAssociatedWith] = ["info:fedora/%s#publisher" % article.id]
+      end
     end
     article.publication.build(params)
     article.publication[0].hasDocument = nil
@@ -476,7 +478,7 @@ module Ora
       end
     end
     article.publication[0].publisher = nil
-    if !params[:publisher_attributes].empty?
+    if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
       params[:publisher_attributes]["0"].each do |k, v|
         params[:publisher_attributes]["0"][k] = nil if v.empty?
       end
