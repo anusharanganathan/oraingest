@@ -66,6 +66,7 @@
     <nav class="form-nav">
       <div class="form-nav-next">
         <% txt = '<i class="icon-save"></i> %s'% buttonText %>
+        <%= render partial: 'shared/workflow_submit', :locals => { :f => f, :article => @article} %>
         <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
       </div>
     </nav>
