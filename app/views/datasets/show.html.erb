@@ -31,10 +31,8 @@
 					<%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @dataset } %>
-					<% if @dataset.hasRelatedAgreement %>
-					  <%= render partial: "dataset_agreement_fields_show", :locals => { :dataset_agreement => @dataset.hasRelatedAgreement } %>
-					  <%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
-					<% end %>
+					<%= render partial: "dataset_agreement_fields_show", :locals => { :article => @dataset } %>
+					<%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
 				</div>
