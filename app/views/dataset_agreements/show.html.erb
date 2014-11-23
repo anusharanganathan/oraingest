@@ -10,5 +10,5 @@
 <%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset_agreement } %>
 
 <% path = { :new => new_dataset_agreement_path, :show => dataset_agreement_path(@dataset_agreement), :edit => edit_dataset_agreement_path(@dataset_agreement), :list => dataset_agreements_path } %>
-<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+<%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @dataset_agreement.workflows.first.current_status, :document_id => @dataset_agreement.id.to_s } %>
 

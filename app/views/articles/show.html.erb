@@ -9,7 +9,7 @@
 	<div class="col col1of6">
 		<aside class="filters">
 			<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => articles_path } %>
-			<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+			<%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @article.workflows.first.current_status } %>
 			<%#= TODO: Add stats and open access state, once published in ORA %>
 			<%#= render partial: "shared/access_logo_and_stats_show", :locals => { :article => @article } %>
 			<%#= TODO: Compute and add stats for fill factor by category %>
