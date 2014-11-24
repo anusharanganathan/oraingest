@@ -6,7 +6,7 @@
 <% end %>
       
 <% path = { :new => new_dataset_agreement_path, :show => dataset_agreement_path(@dataset_agreement), :edit => edit_dataset_agreement_path(@dataset_agreement), :list => dataset_agreements_path } %>
-<br/><%= render partial: "shared/actions/show", :locals => { :path => path } %><br/>
+<br/><%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @dataset_agreement.workflows.first.current_status, :document_id => @dataset_agreement.id.to_s } %><br/>
       
 <div class="well">
   <div class="row">

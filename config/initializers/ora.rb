@@ -18,7 +18,7 @@ Sufia.config do |config|
 
   config.subtypes = {
     "article" => {
-      "" => "",
+      "Select type" => "",
       "Article" => "Article",
       "Discussion paper" => "Discussion paper",
       "Journal article" => "Journal article",
@@ -35,7 +35,7 @@ Sufia.config do |config|
       "Other" => "Other"
     },
     "book" => {
-      "" => "",
+      "Select type" => "",
       "Book"=>"Book",
       "Book chapter" => "Book chapter",
       "Book review" => "Book review",
@@ -313,6 +313,9 @@ Sufia.config do |config|
   
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
+
+  config.contact_email = "ora@bodleian.ox.ac.uk"
+  config.from_email = "no-reply@bodleian.ox.ac.uk"
 
 end
 
