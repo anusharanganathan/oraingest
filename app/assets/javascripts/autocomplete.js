@@ -90,10 +90,13 @@ var renderSubject = function ( ul, item ) {
 var autocompletePerson = {
   minLength: 3,
   source: function( request, response ) {
-    $.getJSON( "/qa/search/cud/fullname", {
-      q: request.term
-    }, response);
-   //console.log("I have a response");
+    $.ajax({
+      url: '/qa/search/cud/fullname',
+      data: {q: request.term},
+      dataType: 'json',
+      success: response,
+      timeout: 3000 //3 second timeout
+    });
   },
   focus: function( event, ui ) {
     $(this).val( ui.item.auth );
@@ -117,3 +120,4 @@ var renderPerson = function ( ul, item ) {
       .append( line )
       .appendTo(ul);
 }
+
