@@ -322,18 +322,29 @@
 
 <nav class="form-nav" style="margin-top: 20px;">
   <div class="form-nav-next" style="text-align: right">
+
+    <% unless can? :review, :all %>
+      <% unless @dataset.workflows.first.nil? %>
+        <% wf = @dataset.workflows.first %>
+        <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+        <% if @dataset.workflows.first.comments.empty? %>
+          <% @dataset.workflows.first.comments.build %>
+        <% end %>
+      <% end %>
+    
+      <% if @dataset.workflows.empty? || @dataset.workflows.first.current_status == "Draft" || @dataset.workflows.first.current_status == "Referred" %>
+        <% if @dataset.workflows.empty? %>
+          <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+        <% end %>
+        <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "", :id => "workflows_entries_status" %>
+      <% end %>
+    <% end %>
+
     <%= f.submit "Save", class: "button light-blue" %>
-  <% end #TODO: This form end is being rejected. Fix this. Need to think about form flows  %>
-
-    <%#= form_for @dataset, :html => {:multipart => true, :class => 'inline', :id => 'workflow'} do |f| %>
-      <%#= hidden_field_tag(:pid, @pid) %>
-      <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
-      <%# unless can? :review, :all %>
-        <%# txt = '<i class="icon-save"></i> Submit for Review' %>
-        <%#= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      <%# end %>
-    <%# end %>
-
+    <% unless can? :review, :all %>
+      <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+    <% end %>
   </div>
 </nav>
 
+<% end #TODO: This form end is being rejected. DOn't think it can be fixed without a design rethink. The form seems to work though. %>

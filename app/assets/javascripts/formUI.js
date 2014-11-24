@@ -32,3 +32,8 @@ function displayDatasetAgreement(id, val) {
     })
   }
 }
+
+function setStatus() {
+ $("#workflows_entries_status").val("Submitted");
+}
+
