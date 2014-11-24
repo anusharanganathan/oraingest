@@ -314,5 +314,8 @@ Sufia.config do |config|
   # Specify the path to the file characterization tool:
   # config.fits_path = "fits.sh"
 
+  config.contact_email = "ora@bodleian.ox.ac.uk"
+  config.from_email = "no-reply@bodleian.ox.ac.uk"
+
 end
 
