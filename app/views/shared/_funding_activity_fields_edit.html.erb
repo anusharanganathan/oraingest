@@ -33,8 +33,11 @@
             <li>
               <% f1.agent.each do |f2| %>
                 <%= f_f1.fields_for :agent, f2 do |f_f2| %>
+                  <label>
+                  <span class="small">Name</span>
                   <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index %>
                   <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+                  </label>
 
                   <% f1.awards.each_with_index do |f2, f2_index| %>
                     <%= f_f1.fields_for :awards, f2 do |f_f2| %>

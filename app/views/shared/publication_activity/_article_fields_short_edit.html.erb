@@ -2,7 +2,7 @@
 <% if publication.empty? %>
   <% publication.build %>
 <% end %>
-<fieldset class="small-text padding-side-25">
+<fieldset class="small-text">
   <% publication.each do |p| %>
     <%= f.fields_for :publication, p do |f_p| %>
       <% if p.hasDocument.empty? %>

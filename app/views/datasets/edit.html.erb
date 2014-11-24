@@ -16,6 +16,9 @@
 </div>
 <div class="gutter-container">
 
+  <% path = { :new => new_dataset_path, :show => dataset_path(@pid), :edit => edit_dataset_path(@pid), :list => datasets_path } %>
+  <%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+
   <div class="col col3of4">
     <%= render partial: 'tabs' %>
   </div>
