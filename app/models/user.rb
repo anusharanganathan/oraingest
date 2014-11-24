@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
-  devise :remote_user_authenticatable, :database_authenticatable, :registerable,
+  #devise :remote_user_authenticatable, :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
@@ -25,34 +26,34 @@ class User < ActiveRecord::Base
     email
   end
 
-  def user_info
-    c = Qa::Authorities::Cud.new
-    ans = c.search(user_key, 'sso_username_exact')
-    if !ans.nil? && !ans[0].nil? && ans[0]['sso_username'] == user_key
-      return ans[0]
-    end
-    return nil
-  end
+  #def user_info
+  #  c = Qa::Authorities::Cud.new
+  #  ans = c.search(user_key, 'sso_username_exact')
+  #  if !ans.nil? && !ans[0].nil? && ans[0]['sso_username'] == user_key
+  #    return ans[0]
+  #  end
+  #  return nil
+  #end
 
-  def display_name
-    if self.user_info
-      if self.user_info['firstname'] and self.user_info['lastname']
-        return "#{self.user_info['firstname']} #{self.user_info['lastname']}"
-      elsif self.user_info['lastname']
-        return "#{self.user_info['lastname']}"
-      elsif self.user_info['firstname']
-        return "#{self.user_info['firstname']}"
-      end
-    end
-    return nil
-  end
+  #def display_name
+  #  if self.user_info
+  #    if self.user_info['firstname'] and self.user_info['lastname']
+  #      return "#{self.user_info['firstname']} #{self.user_info['lastname']}"
+  #    elsif self.user_info['lastname']
+  #      return "#{self.user_info['lastname']}"
+  #    elsif self.user_info['firstname']
+  #      return "#{self.user_info['firstname']}"
+  #    end
+  #  end
+  #  return nil
+  #end
 
-  def oxford_email
-    if self.user_info
-      return self.user_info['oxford_email']
-    end
-    return nil
-  end
+  #def oxford_email
+  #  if self.user_info
+  #    return self.user_info['oxford_email']
+  #  end
+  #  return nil
+  #end
   
   # Returns true if user has permission to act as a reviewer
   def reviewer?
