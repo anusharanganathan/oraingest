@@ -1,11 +1,7 @@
 <% editpath = edit_article_path(@pid) %>
 
-<p class="arial">Read deposit licence</p>
-<%= render partial: 'shared/upload/tos_checkbox' %>
-<span class="small">Not accepting these deposit conditions will mean you are unable to proceed</span>
-<div class="bottom-border"></div>
-
 <h4>Select files to upload</h4>
+<%= render partial: 'shared/upload/tos_checkbox' %>
 
 <%= render partial: 'shared/upload/alerts', :locals => { :editpath => editpath } %>
 <%= form_for(@article, :html => {:multipart => true, :id => 'fileupload'}) do |f| %>

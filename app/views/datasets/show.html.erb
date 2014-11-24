@@ -10,61 +10,10 @@
 		<aside class="filters">
 			<% path = { :new => new_dataset_path, :show => dataset_path(@dataset), :edit => edit_dataset_path(@dataset), :list => datasets_path } %>
 			<%= render partial: "shared/actions/show", :locals => { :path => path } %>
-
-			<hr/>
-
-			<ul class="record-details">
-				<li class="status">
-					<img src="/assets/ora/icons/lock-open.svg"/>
-					Open access item
-				</li>
-				<li class="views">
-					<img src="/assets/ora/icons/read-blue.svg"/>
-					700 views
-				</li>
-				<li class="downloads">
-					<img src="/assets/ora/icons/download-blue.svg"/>
-					85 downloads
-				</li>
-			</ul>
-
-			<hr/>
-
-			<p class="small">The graph below shows how complete the metadata record is for this journal article.</p>
-
-			<div class="category-bars">
-				<div class="cat cat-citation">
-					<span>Citation</span>
-					<div class="bar">
-						<div style="width: 28%"></div>
-					</div>
-				</div>
-				<div class="cat cat-discoverability">
-					<span>Discoverability / Searchability</span>
-					<div class="bar">
-						<div style="width: 20%"></div>
-					</div>
-				</div>
-				<div class="cat cat-funder">
-					<span>Funder compliance</span>
-					<div class="bar">
-						<div style="width: 12%"></div>
-					</div>
-				</div>
-				<div class="cat cat-documentation">
-					<span>Documentation, assessment, access</span>
-					<div class="bar">
-						<div style="width: 22%"></div>
-					</div>
-				</div>
-				<div class="cat cat-preservation">
-					<span>Preservation</span>
-					<div class="bar">
-						<div style="width: 22%"></div>
-					</div>
-				</div>
-			</div>
-
+                        <%#= TODO: Add stats and open access state, once published in ORA %>
+                        <%#= render partial: "shared/access_logo_and_stats_show", :locals => { :article => @article } %>
+                        <%#= TODO: Compute and add stats for fill factor by category %>
+                        <%#= render partial: "shared/fill_factor_by_category_show", :locals => { :article => @article } %>
 		</aside>
 	</div>
 

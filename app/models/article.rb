@@ -54,9 +54,9 @@ class Article < ActiveFedora::Base
     return {
       "name" => title, #self.title,
       "size" => size, #self.file_size,
-      "url" => "/articles/#{pid}/#{dsid}", #"/article/#{noid}",
+      "url" => "/articles/#{pid}/file/#{dsid}", #"/article/#{noid}",
       "thumbnail_url" => thumbnail_url(title, '48'),#self.pid,
-      "delete_url" => "deleteme", # generic_file_path(:id => id),
+      "delete_url" => "/articles/#{pid}/file/#{dsid}", #"/article/#{noid}",
       "delete_type" => "DELETE"
     }
   end

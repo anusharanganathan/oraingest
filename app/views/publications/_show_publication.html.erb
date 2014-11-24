@@ -1,22 +1,7 @@
     <tr>
       <td>
-        <h4><%= document.title %></h4>
-        <p>
-          <strong>Author: </strong>
-          <%= document.creators.map { |author| author["name"] }.join ", " %>
-        </p>
-        <% unless document.abstract.nil? %>
-          <p>
-            <strong>Abstract: </strong>
-            <%= document.abstract %>
-          </p>
-        <% end %>
-        <% unless document.worktypeLabel.nil? %>
-          <p>
-            <strong>Type:</strong>
-            <%= document.worktypeLabel %>
-          </p>
-        <% end %>
+        <%= render :partial => "shared/show_document", :locals => {:document => document} %>
+        <%= render partial: "articles/worktype_label_show", :locals => { :worktypeLabel => document.worktypeLabel } %>
       </td>
       <td>
         <h4 class="<%= "red-text" if (document.submission_workflow_status.downcase.eql? "draft") %>"><%= document.submission_workflow_status %></h4>

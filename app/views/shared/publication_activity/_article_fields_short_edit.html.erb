@@ -1,35 +1,36 @@
-<legend>Publication information</legend>
+<h4>Publication information</h4>
 <% if publication.empty? %>
   <% publication.build %>
 <% end %>
-<% publication.each do |p| %>
-  <%= f.fields_for :publication, p do |f_p| %>
-    <% if p.hasDocument.empty? %>
-      <% p.hasDocument.build %>
-    <% end %>
-    <div class="field">
-      <%= f_p.label :dateAccepted, "Date of acceptance", :class=>"control-label" %>
-      <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
-    </div>
-    <% p.hasDocument.each do |p2| %>
-      <% if p2.journal.empty? %>
-        <% p2.journal.build %>
+<fieldset class="small-text padding-side-25">
+  <% publication.each do |p| %>
+    <%= f.fields_for :publication, p do |f_p| %>
+      <% if p.hasDocument.empty? %>
+        <% p.hasDocument.build %>
       <% end %>
-      <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
-        <div class="field">
-          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
-          <%= f_p2.text_field :doi, :value => p2.doi.first %>
-        </div>
-        <% p2.journal.each do |p3| %>
-          <%= f_p2.fields_for :journal, p3 do |f_p3| %>
-            <div class="field">
-              <%= f_p3.label :title, "Journal title", :class=>"control-label" %>
-              <%= f_p3.text_field :title, :value => p3.title.first %>
-            </div>
-          <% end #fields for each journal %>
-        <% end #each journal %>
-      <% end #fields for each document %>
-    <% end #each document %>
-  <% end #fields for each publication %>
-<% end #each publication %>
-
+      <div class="field">
+        <%= f_p.label :dateAccepted, "Date of acceptance", :class=>"control-label" %>
+        <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
+      </div>
+      <% p.hasDocument.each do |p2| %>
+        <% if p2.journal.empty? %>
+          <% p2.journal.build %>
+        <% end %>
+        <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
+          <% p2.journal.each do |p3| %>
+            <%= f_p2.fields_for :journal, p3 do |f_p3| %>
+              <div class="field">
+                <%= f_p3.label :title, "Journal title", :class=>"control-label" %>
+                <%= f_p3.text_field :title, :value => p3.title.first %>
+              </div>
+            <% end #fields for each journal %>
+          <% end #each journal %>
+          <div class="field">
+            <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
+            <%= f_p2.text_field :doi, :value => p2.doi.first %>
+          </div>
+        <% end #fields for each document %>
+      <% end #each document %>
+    <% end #fields for each publication %>
+  <% end #each publication %>
+</fieldset>

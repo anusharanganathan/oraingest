@@ -16,7 +16,7 @@ jetty
 
 # Ignore all logfiles and tempfiles.
 rails_server.log
-/log/*.log
+/log/*
 /tmp
 
 #Ignore all of the cookies files
@@ -28,7 +28,13 @@ rails_server.log
 
 #Ignore public assets
 /public/assets/
+/app/assets/fonts/
+/vendor/assets/fonts
 
 # vim swap files
 *.swo
 *.swp
+
+# other temp files
+*~
+

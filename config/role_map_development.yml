@@ -3,6 +3,7 @@ uva-only:
 archivist:
   - archivist1@example.com
 reviewer:
+  - bodl1087
   - reviewer1@example.com
   - reviewer2@example.com
 financier:

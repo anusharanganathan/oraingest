@@ -1,26 +1,67 @@
-<legend>Details about the agreement</legend>
 <% if hasRelatedAgreement.agreementType.first == "Individual" %>
   <%= fields_for "dataset[hasRelatedAgreement]", hasRelatedAgreement do |f_a| %>
-    <div class="field">
-      <%= f_a.text_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
-      <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
-      <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first %>
-      <%= f_a.label :annotation, "Archiving payment option" %>
-      <%= f_a.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>hasRelatedAgreement.annotation.first) %>
-    </div>
     <% if hasRelatedAgreement.invoice.empty? %>
       <% hasRelatedAgreement.invoice.build %>
     <% end %>
-    <%= f_a.fields_for :invoice, hasRelatedAgreement.invoice.first do |f_i| %>
-      <div class="field">
-        <%= f_i.label :description, "Details for archiving payment option" %>
-        <%= f_i.text_field :description, :value=>hasRelatedAgreement.invoice.first.description.first %> 
-      </div>
-    <% end %>
-    <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "data steward" } %>
-    <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f_a, :titularActivity => hasRelatedAgreement.titularActivity } %>
+
+    <h4 class="padding-side-25">Archive service payment</h4>
+    <div class="fieldset">
+      <%= f_a.hidden_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
+      <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
+      <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first %>
+
+      <fieldset class="small-text">
+        <% Sufia.config.archiving_payment_options.each do |key, val| %>
+          <label><%= f_a.radio_button :annotation, val, :checked =>hasRelatedAgreement.annotation.first %><span></span><%=key%></label>
+        <% end %>
+      </fieldset>
+
+      <%= f_a.fields_for :invoice, hasRelatedAgreement.invoice.first do |f_i| %>
+        <label style="margin-top: 20px;">
+          <p class="small">Further details</p>
+          <%= f_i.text_area :description, :value=>hasRelatedAgreement.invoice.first.description.first, :style=>'width: 60%', data: {"progress" => "preservation"} %> 
+        </label>
+      <% end %>
+
+      <aside class="tooltip tooltip-wide">
+        <a href="#" class="close-button">x</a>
+        <strong>Archive service payment</strong>
+        <p>For 'Payment has already been made': Please give details below, including X5 ID if you have it.</p>
+        <p>For 'Payment has not yet been made; an invoice is requierd': Please give details of whom we should invoice. If your
+        publisher requires you cite the data underpinning your article (or other work) and your research is unfunded, you can
+        request to pay only the baseline fee (not storage charge).</p>
+        <p>For 'Payment not required; I am creating a record only and not depositing data': There is no charge for creating
+        a record about a dataset stored elsewhere; archiving charges only apply when data is deposited in ORA-Data. Please put
+        'n/a' or similar in the box below.</p>
+        <p>For 'I need help with this': Please give details below</p>
+        <div class="tooltip-extra">
+          <div class="circle circle-funder"></div>
+          <p><strong>Completing this field helps with Funder compliance</strong></p>
+        </div>
+      </aside>
+    </div><!-- /fieldset -->
+
+    <div class="padding-side-25">
+      <div class="bottom-border"></div>
+    </div>
+
+    <h4 class="padding-side-25">Nominate a data steward</h4>
+    <div class="padding-0">
+      <%= render partial: 'shared/creation_activity_fields_data_steward_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "During period of project" } %>
+    </div>
+
+    <div class="padding-0">
+      <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f_a, :titularActivity => hasRelatedAgreement.titularActivity } %>
+    </div>
+
   <% end %>
 <% else %>
-  <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
-  <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
+  <h4>Nominate a data steward</h4>
+  <div class="padding-0">
+    <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => hasRelatedAgreement, :label => "During period of project" } %>
+  </div>
+
+  <div class="padding-0">
+    <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => hasRelatedAgreement } %>
+  </div>
 <% end %>

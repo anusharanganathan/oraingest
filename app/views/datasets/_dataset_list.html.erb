@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 %>
 
-<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = '<a href="%s">Login</a> to see your recently added documents'%new_user_session_path if msg.blank? and current_user.blank? %>
 <% msg = 'You have no documents to display. Contribute some of your documents!' if msg.blank? %>
 
 <% # container for all documents in index view -%>
 <% if datasets.blank? %>
-  <h3>  <%= msg %> </h3>
+  <p>  <%= raw(msg) %> </p>
 <% else %>
   <table class="article-table">
     <thead>

@@ -1,13 +1,7 @@
-<h4 class="padding-side-25">Article processing fee and open access details</h4>
-
-<div class="fieldset">
-  <p class="small">Is this an open access article?</p>
-  <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), :style=>"width: 450px;" %>
-</div>
-
+<h4>Article processing charge</h4>
 <fieldset class="small-text padding-side-25">
   <p class="small">Does the article involve an article processing charge (either paid or to be paid)</p>
-  <label panel="dataset-charge">
+  <label>
     <%= f.radio_button :apcPaid, "Yes", :checked=>(article.apcPaid.first=='Yes') %>
     <span></span>Yes
   </label>
@@ -16,17 +10,3 @@
     <span></span>No
   </label>
 </fieldset>
-
-<div class="expand-panel" id="dataset-charge">
-
-  <div class="fieldset">
-    <%= f.label :oaReason, "What is the basis of the APC?", :class=>"control-label" %>
-    <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), :style=>"width: 550px;" %>
-  </div>
-
-  <div class="fieldset">
-    <%= f.label :refExcepotion, "REF Exception?", :class=>"control-label" %>
-    <%= f.text_field :refException, :value=>article.refException.first %>
-  </div>
-
-</div>

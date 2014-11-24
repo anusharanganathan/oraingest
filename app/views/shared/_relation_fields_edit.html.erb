@@ -13,8 +13,11 @@
       <%= f.fields_for "qualifiedRelation][#{r_index}", r do |f_r| %>
         <%= f_r.fields_for :entity, r.entity[0] do |f_e| %>
         <li>
-          <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index %>
-          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          <label>
+            <p class="small">Title of related item</p>
+            <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index %>
+            <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          </label>
 
           <label>
             <p class="small">Type of relationship</p>
@@ -23,16 +26,11 @@
 
           <label>
             <p class="small">Abstract or brief description of related item</p>
-            <%= f_e.text_field :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index %>
+            <%= f_e.text_area :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index, :style=>'width: 60%' %>
           </label>
 
-          <!-- <label>
-            <p class="small">DOI of related item</p>
-            <input type="text" style="width: 150px"/>
-          </label> -->
-
           <label>
-            <p class="small">URL of related item</p>
+            <p class="small">DOI or URL of related item</p>
             <%= f_e.text_field 'id', :value => r.entity[0].id, style: "width: 50%", id: "relationId%d"% r_index %>
           </label>
 

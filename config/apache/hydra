@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+	ServerName hydra.bodleian.ox.ac.uk
+        ProxyPreserveHost On
+	ProxyPass / http://0.0.0.0:3000/	
+	ProxyPassReverse / http://0.0.0.0:3000/	
+
+	<Location />
+	  Order allow,deny
+	  Allow from all
+	</Location>
+
+</VirtualHost>

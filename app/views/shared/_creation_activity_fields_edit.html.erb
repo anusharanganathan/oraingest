@@ -30,11 +30,15 @@
                   </p>
                 </label>
 
-                <label>
-                  <p><span class="small">Creator object</span>
-                    <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
-                  </p>
-                </label>
+                <% if can? :review, :all %>
+                  <label>
+                    <p><span class="small">Creator object</span>
+                      <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
+                    </p>
+                  </label>
+                <% else %>
+                  <%= f_c.hidden_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
+                <% end %>
 
                 <label>
                   <p><span class="small">Role</span>
@@ -45,16 +49,21 @@
                 <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
                   <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
                     <label>
-                      <p><span class="small">Affilition</span>
+                      <p><span class="small">Affiliation</span>
                         <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
                       </p>
                     </label>
 
-                    <label>
-                      <p><span class="small">Link to affiliation object</span>
-                        <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
-                      </p>
-                    </label>
+                    <% if can? :review, :all %>
+                      <label>
+                        <p><span class="small">Link to affiliation object</span>
+                          <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                        </p>
+                      </label>
+                    <% else %>
+                      <%= f_c2.hidden_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                    <% end %>
+
                   <% end %>
                 <% end %>
               </li>

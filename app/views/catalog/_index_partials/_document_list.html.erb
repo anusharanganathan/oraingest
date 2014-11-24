@@ -1,5 +1,11 @@
 <ol start="<%=1+((@response.current_page-1)*@response.limit_value)%>">
-	<% recent_documents.each_with_index do |document, counter| %>
-	  <%= render :partial => "catalog/_index_partials/recent_document", :locals => {:document => document, :counter => counter} %>
-	<% end %>
+  <% recent_documents.each_with_index do |document, counter| %>
+    <li>
+      <%= render :partial => "shared/show_document", :locals => {:document => document} %>
+      <% if document.modelName == "Article" %>
+        <%= render partial: "articles/worktype_label_show", :locals => { :worktypeLabel => document.worktypeLabel } %>
+      <% end %>
+      <span class="status">Status: <%= document.submission_workflow_status %></span>  
+    </li>
+  <% end %>
 </ol>

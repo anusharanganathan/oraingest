@@ -1,6 +1,6 @@
 <h1>Dataset agreements</h1>
 
-<% msg = 'Login to see your recently added documents' if msg.blank? and current_user.blank? %>
+<% msg = '<a href="%s">Login</a> to see your recently added documents'%new_user_session_path if msg.blank? and current_user.blank? %>
 <% msg = 'You have no signed or relevant agreements to display' if msg.blank? %>
 <% display_thumbs = true %>
 <% display_access = false %>
@@ -10,7 +10,7 @@
 
 <div>
   <% if @user_agreements.blank? && @relevant_user_agreements.blank? %>
-      <h3>  <%= msg %> </h3>
+    <p>  <%= raw(msg) %> </p>
   <% else %>
     <% if !@user_agreements.blank? %>
       <h3>Signed agreements</h3>

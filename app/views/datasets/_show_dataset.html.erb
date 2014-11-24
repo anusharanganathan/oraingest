@@ -1,20 +1,14 @@
     <tr>
       <td>
-        <h4><%= dataset.title %></h4>
-        <p>
-          <strong>Data Steward: </strong>
-          <span style="color: red">Data stewards to go here - what's the field name?</span> 
-          <%= dataset.creators.map { |author| author["name"] }.join "; " %>
-        </p>
-        <% unless dataset.abstract.nil? %>
-          <p>
-            <strong>Abstract: </strong>
-            <%= dataset.abstract %>
-          </p>
-        <% end %>
+        <%= render :partial => "shared/show_document", :locals => {:document => dataset} %>
       </td>
       <td>
-        <h4 class="<%= "red-text" if (dataset.submission_workflow_status.downcase.eql? "draft") %>"><%= dataset.submission_workflow_status %></h4>
+        <% if !dataset.submission_workflow_status.nil? && dataset.submission_workflow_status.downcase == "draft" %>
+          <% className = "red-text" %>
+        <% else %>
+          <% className = "" %>
+        <% end %>
+        <h4 class="<%=className%>"><%= dataset.submission_workflow_status %></h4>
         <a href="<%= document_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
         <a href="<%= document_url(dataset.modelName, 'edit', dataset.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
         <a href="<%= document_url(dataset.modelName, 'show', dataset.id) %>" class="button button-small light-blue" data-method="delete" data-confirm="Are you sure?">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>

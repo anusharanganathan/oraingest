@@ -1,7 +1,7 @@
-<%# data hash will have 'name', 'record_url', 'record_id' and 'email_address' %>
-<% if !data['name'].empty? && !data['record_url'].empty? %>
-Dear <%= data['name'] %>,
-Thanks you for submitting your record in My ORA. <%= data['record_url'] %> was recieved successfully and will be reviewed by ORA staff, before making it available in ORA (http://ora.ox.ac.uk).
+<%# data hash will have 'record_url' and 'record_id'. user will have all of the user properties. %>
+<% if user.display_name && !data['record_url'].empty? %>
+Dear <%= user.display_name %>,
+Thank you for submitting your record in My ORA. <%= data['record_url'] %> was recieved successfully and will be reviewed by ORA staff, before making it available in ORA (http://ora.ox.ac.uk).
 In the mean time your record will continue to be available in the My ORA interface.
 
 If you need to contact the ORA review team with any queries, just reply to this email, making sure you do not modify the subject.

@@ -115,6 +115,9 @@ GEM
       warden (~> 1.2.3)
     devise-guests (0.3.3)
       devise
+    devise-remote-user (0.4.0)
+      devise
+      rails (>= 3.2, < 5.0)
     diff-lcs (1.2.5)
     ensure_valid_encoding (0.5.3)
     equivalent-xml (0.5.1)
@@ -422,6 +425,7 @@ DEPENDENCIES
   debugger
   devise
   devise-guests (~> 0.3)
+  devise-remote-user
   factory_girl_rails (~> 4.2.1)
   font-awesome-sass-rails
   jbuilder (~> 1.2)

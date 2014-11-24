@@ -1,28 +1,6 @@
 <article class="review-article">
   <div class="content">
-    <% # select the appropriate tag for submission type %>
-    <!-- <span class="tag tag-journal">Journal article</span>
-    <span class="tag tag-dataset">Dataset</span>
-    <span class="tag tag-thesis">Thesis</span>
-    <span class="tag tag-working-paper">Working paper</span>
-    <span class="tag tag-tech-report">Tech report</span>
-    <span class="tag tag-book">Book</span>
-    <span class="tag tag-conference">Conference</span>
-    <span class="tag tag-article">Article</span>
-    <span class="tag tag-book-section">Book section</span>
-    <span class="tag tag-general-item">General item</span>
-    <span class="tag tag-technical">Technical</span> -->
-    <% if !document.worktypeLabel.nil? %>
-      <% types = ['journal', 'dataset', 'thesis', 'working-paper', 'tech-report', 'book', 'conference', 'article', 'book-section', 'general-item', 'technical'] %>
-      <% if types.include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
-        <% tag = document.worktypeLabel.downcase.tr(" ", "-") %>
-      <% elsif ["technical-document", "technical-report"].include?(document.worktypeLabel.downcase.tr(" ", "-")) %>
-        <% tag = "tech-report" %>
-      <% else %>
-        <% tag = "general-item" %>
-      <% end %>
-      <span class="tag tag-<%=tag%>"><%= document.worktypeLabel %></span>
-    <% end %>
+    <%= render partial: "articles/worktype_label_show", :locals => { :worktypeLabel => document.worktypeLabel } %> 
 
     <span class="small"><strong>Status:</strong> <%= document.submission_workflow_status %></span>
     

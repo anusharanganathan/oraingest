@@ -1,15 +1,27 @@
 <dl id="user_info">
-  <dt><i class="icon-facebook"></i> Facebook Handle</dt>
-  <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
+  <% if false %>
+    <dt><i class="icon-facebook"></i> Facebook Handle</dt>
+    <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 
-  <dt><i class="icon-twitter"></i> Twitter Handle</dt>
-  <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
+    <dt><i class="icon-twitter"></i> Twitter Handle</dt>
+    <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
  
-  <dt><i class="icon-google-plus"></i> Google+ Handle</dt>
-  <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+    <dt><i class="icon-google-plus"></i> Google+ Handle</dt>
+    <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
+  <% end %>
  
-  <dt><i class="icon-envelope-alt"></i> Email</dt>
+  <dt><i class="icon-tag"></i> &nbsp;&nbsp;SSO ID</dt>
   <dd><%= mail_to user.email %></dd>
+
+  <% if user.display_name %>
+    <dt><i class="icon-user"></i> Name</dt>
+    <dd><%= user.display_name %></dd>
+  <% end %>
+
+  <% if user.oxford_email %>
+    <dt><i class="icon-envelope-alt"></i> Email ID</dt>
+    <dd><%= user.oxford_email %></dd>
+  <% end %>
 
   <% if user.chat_id %>
     <dt><i class="icon-bullhorn"></i> Chat ID</dt>

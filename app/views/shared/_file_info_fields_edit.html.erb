@@ -55,15 +55,28 @@
               <%= f.fields_for "hasPart][#{n}", hp do |f_hp| %>
                 <div class="hidden-form">
 
-                  <h5 style="margin-top: 20px;">Type of file</h5>
-                  <div class="fieldset">
-                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
-                    <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
-                  </div>
-                  
+                  <% if Sufia.config.attachment_types.has_key? (@model) %>
+                    <h5 style="margin-top: 20px;">Type of file</h5>
+                    <div class="fieldset">
+                      <%= f_hp.select :type, options_for_select(Sufia.config.attachment_types[@model], :selected => hp.type.first) %>
+                    </div>
+                  <% end %>
+                 
+                 <div class="fieldset"> 
                   <h5>Description of file</h5>
-                  <div class="fieldset">
+                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
                     <%= f_hp.text_field :description, :value => hp.description.first %>
+                    <aside class="tooltip">
+                      <a href="#" class="close-button">x</a>
+                      <strong>Description of file</strong>
+                      <p>Please use this field to let us know whether the file you are uploading contains important supporting documentation for your data.
+                          E.g. is it your data management plan, or your data documentation?</p>
+
+                      <div class="tooltip-extra">
+                        <div class="circle circle-documentation"></div>
+                        <p><strong>Completing this field helps with Documentation</strong></p>
+                      </div>
+                    </aside>
                   </div>
 
                   <%= f_hp.fields_for :accessRights do |f_a| %>
@@ -83,10 +96,10 @@
                     <% if hp.accessRights[0].embargoDate[0].end.empty? %>
                       <% hp.accessRights[0].embargoDate[0].end.build %>
                     <% end %>
-
+                    <%= f_a.hidden_field :embargoStatus, :value => "Embargoed" %>
                     <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f_a => f_a, :accessRights => hp.accessRights, :embargoDate => hp.accessRights[0].embargoDate[0], :embargoRelease => nil, :startOption => nil } %>
 
-                    <button type="submit" class="button button-small light-blue">Save Details/Embargo</button>
+                    <!-- <button type="submit" class="button button-small light-blue">Save Details/Embargo</button> -->
                   <% end %>
                 </div><!-- /.hidden-form -->
               <% end %>
@@ -101,3 +114,4 @@
     </div><!-- /.file-uploads -->
   </div>
 <% end #if files %>
+

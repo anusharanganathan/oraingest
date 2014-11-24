@@ -263,6 +263,9 @@ module Ora
     article.influence = nil
     influences = []
     params.each_with_index do |rel, rel_index|
+      if rel[:entity_attributes]["0"]['id'].start_with?('10.')
+        rel[:entity_attributes]["0"]['id'] = "http://dx.doi.org/#{rel[:entity_attributes]["0"]['id']}"
+      end
       influences.push(rel[:entity_attributes]["0"]['id'])
       rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [article.id, rel_index]
       article.qualifiedRelation.build(rel)
@@ -320,7 +323,7 @@ module Ora
         # Clean the agent attributes for the funder and build
         funder[:agent_attributes]["0"]["id"] = "info:fedora/%s#funder%d" % [article.id, n]
         funder[:agent_attributes]["0"]["type"] = RDF::FRAPO.FundingAgency
-        if funder[:agent_attributes]["0"][:sameAs].empty?
+        if !funder[:agent_attributes]["0"].nil? && funder[:agent_attributes]["0"].has_key?("sameAs") && funder[:agent_attributes]["0"][:sameAs].empty?
           funder[:agent_attributes]["0"][:sameAs] = nil
         end
         article.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
@@ -445,8 +448,10 @@ module Ora
     id0 = "info:fedora/%s#publicationActivity" % article.id
     params['id'] = id0
     params[:type] = RDF::PROV.Activity
-    if !params[:publisher_attributes]["0"][:name].empty?
-      params[:wasAssociatedWith] = ["info:fedora/%s#publisher" % article.id]
+    if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
+      if !params[:publisher_attributes]["0"][:name].empty?
+        params[:wasAssociatedWith] = ["info:fedora/%s#publisher" % article.id]
+      end
     end
     article.publication.build(params)
     article.publication[0].hasDocument = nil
@@ -473,7 +478,7 @@ module Ora
       end
     end
     article.publication[0].publisher = nil
-    if !params[:publisher_attributes].empty?
+    if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
       params[:publisher_attributes]["0"].each do |k, v|
         params[:publisher_attributes]["0"][k] = nil if v.empty?
       end

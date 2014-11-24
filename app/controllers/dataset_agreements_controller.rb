@@ -30,6 +30,7 @@ class DatasetAgreementsController < ApplicationController
   # Extend Blacklight::Catalog with Hydra behaviors (primarily editing).
   include Hydra::Controller::ControllerBehavior
   include BlacklightAdvancedSearch::ParseBasicQ
+  include BlacklightAdvancedSearch::Controller
   include Sufia::Controller
   #include Sufia::FilesControllerBehavior
   # Include ORA search logic
@@ -85,7 +86,7 @@ class DatasetAgreementsController < ApplicationController
   end
 
   def new
-    @pid = Sufia::Noid.noidify(Sufia::IdService.mint)
+    @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset_agreement = DatasetAgreement.new
     @model = 'dataset_agreement'

@@ -1,48 +1,86 @@
-<div id="titular" class="control-group">
-  <% label = "Titular data steward" %>
+<div class="fieldset">
   <% if titularActivity.empty? %>
     <% titularActivity.build %>
   <% end %>
-  <% titularActivity.each do |c0| %>
-    <%= f.fields_for :titularActivity, c0 do |f_c0| %>
-      <% if c0.titular.empty? %>
-        <% c0.titular.build %>
-      <% end %>
-      <% c0.titular.each_with_index do |c, c_index| %>
-        <%= f_c0.fields_for :titular, c do |f_c| %>
-          <% if c.agent.empty? %>
-            <% c.agent.build %>
+  <h5>Post project or for entire lifetime of the data</h5>
+
+  <div class="field-repeater">
+    <ol>
+      <% titularActivity.each do |c0| %>
+        <%= f.fields_for :titularActivity, c0 do |f_c0| %>
+          <% if c0.titular.empty? %>
+            <% c0.titular.build %>
           <% end %>
-          <% if c.agent[0].affiliation.empty? %>
-            <% c.agent[0].affiliation.build %>
-          <% end %>
-          <div class="controls" id="titular_clone_<%=c_index%>">
-            <legend><%=label.capitalize%> information</legend>
-            <%= f_c.label :name, "Title of role held by %s"% label.downcase, :class=>"control-label" %>
-            <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "titularName%d"%c_index, :class=>"titularName" %>
-            <%= f_c.label :roleHeldBy, "Link to person object currently holding this role", :class=>"control-label" %>
-            <%= f_c.text_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
-            <%= f_c.label :role, "Role", :class=>"control-label" %>
-            <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), id: "titularRole%d"%c_index %>
-            <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
-              <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
-                <%= f_c2.label :name, "Affiliation", :class=>"control-label" %>
-                <%= f_c2.text_field :name, :value => c2.name.first, id: "titularAffiliation%dName%d"% [c_index, c2_index], :class=>"titularAffiliation" %>
-                <%= f_c2.label :sameAs, "Link to affiliation object", :class=>"control-label" %>
-                <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
+          <% c0.titular.each_with_index do |c, c_index| %>
+            <%= f_c0.fields_for :titular, c do |f_c| %>
+              <% if c.agent.empty? %>
+                <% c.agent.build %>
               <% end %>
+              <% if c.agent[0].affiliation.empty? %>
+                <% c.agent[0].affiliation.build %>
+              <% end %>
+
+              <li>
+                <p><span class="small">Data steward name</span>
+                <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "titularName%d"%c_index, :class=>"titularName" %>
+                <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+
+                <% if can? :review, :all %>
+                  <label>
+                    <p><span class="small">Creator object</span>
+                      <%= f_c.text_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
+                    </p>
+                  </label>
+                <% else %>
+                  <%= f_c.hidden_field :roleHeldBy, :value => c.agent[0].roleHeldBy.first, id: "titularSameAs%d"%c_index  %>
+                <% end %>
+
+                <label>
+                  <p><span class="small">Role</span>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), id: "titularRole%d"%c_index %>
+                  </p>
+                </label>
+
+                <% c.agent[0].affiliation.each_with_index do |c2, c2_index| %>
+                  <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
+                    <label>
+                      <p><span class="small">Affiliation</span>
+                        <%= f_c2.text_field :name, :value => c2.name.first, id: "titularAffiliation%dName%d"% [c_index, c2_index], :class=>"titularAffiliation" %>
+                      </p>
+                    </label>
+
+                    <% if can? :review, :all %>
+                      <label>
+                        <p><span class="small">Link to affiliation object</span>
+                          <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                        </p>
+                      </label>
+                    <% else %>
+                      <%= f_c2.hidden_field :sameAs, :value => c2.sameAs.first, id: "titularAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                    <% end %>
+
+                  <% end %>
+                <% end %>
+              </li>
             <% end %>
-            <% if c_index.to_s == "0" %>
-              <button class="adder btn" name="additional_titular" id="titular_button_<%=c_index%>" type="button">+<span class="accessible-hidden">add another <%=label%></span></button>
-              &nbsp;
-              <%= help_icon(:titular) %>
-            <% else %>
-              <button class="remover btn" name="additional_titular" id="titular_button_<%=c_index%>" type="button">-<span class="accessible-hidden">remove <%=label%></span></button>
-            <% end %>
-          </div>
+          <% end %>
         <% end %>
       <% end %>
-    <% end %>
-  <% end %>
-</div>
+    </ol>
+    <a href="#" class="add-field">Add another data steward</a>
+  </div>
 
+  <aside class="tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong>Data steward for post-project</strong>
+    <p>Select a role (e.g. 'PI') who will steward the data in the long term and
+    enter the name of a person currently serving that role. This person should ideally be 
+    based at Oxford and their it should auto-complete as you type so you can select the
+    correct name from the list displayed.</p>
+    <div class="tooltip-extra">
+      <div class="circle circle-preservation"></div>
+      <p><strong>Completing this field helps with Preservation</strong></p>
+    </div>
+  </aside>
+
+</div>

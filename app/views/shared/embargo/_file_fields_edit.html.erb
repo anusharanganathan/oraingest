@@ -47,7 +47,16 @@
 </div>
 <div class="field">
   <%= label_tag "article[hasPart][#{n}][accessRights][][embargoReason]", "Reason for embargo", :class=>"control-label" %>
-  <% if !hp.accessRights.empty? and !hp.accessRights[0].embargoReason.empty? %>
+  <% if Sufia.config.embargo_reasons.has_key? (@model) %>
+    <% Sufia.config.embargo_reasons[@model].each do |key, val| %>
+      <% if hp.accessRights[0].embargoReason.include? val %>
+        <% hasIt = true %>
+      <% else %>
+        <% hasIt = false %>
+      <% end %>
+      <label><%= check_box_tag("article[hasPart][#{n}][accessRights][][embargoReason][]", {:multiple => true, :checked=>hasIt}, val, nil) %><span></span><%=key%></label>
+    <% end %>
+  <% elsif !hp.accessRights.empty? and !hp.accessRights[0].embargoReason.empty? %>
     <%= text_field_tag "article[hasPart][#{n}][accessRights][][embargoReason]", hp.accessRights[0].embargoReason.first %>
   <% else %>
     <%= text_field_tag "article[hasPart][#{n}][accessRights][][embargoReason]" %>

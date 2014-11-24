@@ -2,7 +2,7 @@
   <p><%= link_to truncate(document.title_or_label, :length => 28, :separator => ' '), document_url(document.modelName, 'show', document.id), :title => document.title_or_label  %>
   <br/>
   <% document.creators.each do |c| %>
-    <%# render :partial => 'catalog/_index_partials/creator', :locals => {:creator=>c} %>
+    <% render :partial => 'catalog/_index_partials/creator', :locals => {:creator=>c} %>
   <% end %>
   </p>
   <span class="status">Status: <%= document.submission_workflow_status %></span>
