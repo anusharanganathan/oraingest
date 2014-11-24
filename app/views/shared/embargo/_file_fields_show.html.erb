@@ -1,5 +1,5 @@
 <div class="control-group">
-  <!-- <legend>Access rights for article</legend> -->
+  <!-- <legend>Access rights for <%#= @model.downcase %></legend> -->
   <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
     <% if !hp.accessRights[0].embargoStatus.empty? && !hp.accessRights[0].embargoStatus[0].empty? %>
       <div>Embargo status: <%= hp.accessRights[0].embargoStatus.first %></div>

@@ -1,0 +1,18 @@
+<% unless article.workflows.first.nil? %>
+  <% wf = article.workflows.first %>
+  <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+  <% if article.workflows.first.comments.empty? %>
+    <% article.workflows.first.comments.build %>
+  <% end %>
+<% end %>
+
+<% unless can? :review, :all %>
+  <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" || article.workflows.first.current_status == "Referred" %>
+    <% buttonText = 'Submit for Review' %>
+    <% if article.workflows.empty? %>
+      <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+    <% end %>
+    <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
+  <% end %>
+<% end %> 
+

@@ -37,10 +37,7 @@ limitations under the License.
           <tr style="height: 45px;">
             <th>Issue type</th>
             <td>
-              <% issue_types = ContactForm::ISSUE_TYPES.dup %>
-              <% issue_types = issue_types[0...-1] %>
-              <% issue_types.push(["General enquiry or request", "General enquiry or request"]) %>
-              <%= f.select 'category', options_for_select(issue_types), {:include_blank => 'Select an issue type'}, {:class=> 'input-large', :required => true } %>
+              <%= f.select 'category', options_for_select(ContactForm::ISSUE_TYPES), {:include_blank => "Select type of issue"}, {:class=> 'input-large', :required => true } %>
             </td>
           </tr>
           <tr>
@@ -78,4 +75,3 @@ limitations under the License.
     </div>
   <% end %>
 </div>
-

@@ -9,7 +9,7 @@
 	<div class="col col1of6">
 		<aside class="filters">
 			<% path = { :new => new_dataset_path, :show => dataset_path(@dataset), :edit => edit_dataset_path(@dataset), :list => datasets_path } %>
-			<%= render partial: "shared/actions/show", :locals => { :path => path } %>
+			<%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @dataset.workflows.first.current_status, :document_id => @dataset.id.to_s } %>
                         <%#= TODO: Add stats and open access state, once published in ORA %>
                         <%#= render partial: "shared/access_logo_and_stats_show", :locals => { :article => @article } %>
                         <%#= TODO: Compute and add stats for fill factor by category %>
@@ -31,10 +31,8 @@
 					<%= render partial: "shared/relation_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/rights_activity_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @dataset } %>
-					<% if @dataset.hasRelatedAgreement %>
-					  <%= render partial: "dataset_agreement_fields_show", :locals => { :dataset_agreement => @dataset.hasRelatedAgreement } %>
-					  <%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
-					<% end %>
+					<%= render partial: "dataset_agreement_fields_show", :locals => { :article => @dataset } %>
+					<%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
 				</div>
