@@ -178,14 +178,14 @@ Sufia.config do |config|
 
   config.embargo_reasons = {
     "article" => {
-      "Publishers requirement" => "Publishers requirement", 
+      "Publisher's requirement" => "Publishers requirement", 
       "Legal or ethical reasons" => "Legal or ethical reasons",
       "Commercial confidentiality" => "Commercial confidentiality",
       "National security" => "National security",
       "Conditional access only" => "Conditional access only"
     },
     "dataset" => {
-      "Publishers requirement" => "Publishers requirement", 
+      "Publisher's requirement" => "Publishers requirement", 
       "Legal or ethical reasons" => "Legal or ethical reasons",
       "Commercial confidentiality" => "Commercial confidentiality",
       "National security" => "National security",
