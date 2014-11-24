@@ -36,7 +36,7 @@
 <% end %>
 
 <% if !@dataset.temporal.nil? && !@dataset.temporal.first.nil? && !@dataset.temporal.first.start.empty? && !@dataset.temporal.first.start.first.empty? %>
-  <h6>Temporal coverage of the data:</h6>
+  <h6>Time period covered by the data:</h6>
   <p><%= @dataset.temporal.first.start.first %>
   <% if !@dataset.temporal.first.end.empty? && !@dataset.temporal.first.end.first.empty? %>
     to <%= @dataset.temporal.first.end.first %>
@@ -89,3 +89,4 @@
   <p><span class="h6">Version number:</span>
   <%= @dataset.version.first %></p>
 <% end %>
+
