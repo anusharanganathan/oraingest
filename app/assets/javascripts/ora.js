@@ -103,6 +103,13 @@ $(function() {
     return false;
   });
 
+  // Show licence form thingy
+  $("select#dataset_license_licenseLabel").on("change",function(){
+    var val = $(this).val();
+    if(val === "Prepared licences" || val == "Bespoke licence") $("#license-statement").show();
+    else $("#license-statement").hide();
+  });
+
   /* -------------------------------------------------------------
    * Form Steps Navigation
    * -------------------------------------------------------------
@@ -208,7 +215,7 @@ $(function() {
   var tracker = $("div.tracker"),
       trackerY = tracker.offset().top;
 
-  $(document).on("scroll",function(){
+  function fixTracker() {
     var scrollY = $(window).scrollTop();
     if((scrollY-10) >= trackerY){
       tracker.css({
@@ -221,5 +228,8 @@ $(function() {
         "top" : "0px"
       });
     }
-  });
+  }
+
+  fixTracker();
+  $(document).on("scroll",fixTracker);
 });

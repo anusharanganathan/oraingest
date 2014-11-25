@@ -14,6 +14,9 @@
 
 <div class="gutter-container">
 
+  <% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => publications_path } %>
+  <%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+
   <div class="col col3of4">
     <%= render partial: 'articles/_edit_short/form' %>
   </div>
@@ -21,7 +24,4 @@
   <div class="col col1of4">
     <%= render :partial => 'shared/progress_tracker' %>
   </div>
-
-  <% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => articles_path } %>
-  <%# render partial: "shared/actions/edit", :locals => { :path => path } %>
 

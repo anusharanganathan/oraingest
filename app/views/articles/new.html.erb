@@ -1,4 +1,6 @@
   <h2>Deposit article</h2>
+  <% path = { :list => publications_path } %>
+  <br/><%= render partial: "shared/actions/new", :locals => { :path => path } %>
 
   <% if @article.errors.any? %>
     <div id="error_explanation">

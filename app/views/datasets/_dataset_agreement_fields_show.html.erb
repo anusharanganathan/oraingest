@@ -2,13 +2,15 @@
   <div class="accordian-header">Dataset archiving options</div>
   <div class="accordian-content">
     <% if can? :review, :all %>
-      <% path = dataset_agreement_path(article.hasRelatedAgreement.id) %>
-      <% if !article.hasRelatedAgreement.title.empty? or !article.hasRelatedAgreement.title.first.start_with "Agreement for" %>
-        <h6>Agreement for:</h6>
-        <p><a href="<%=path%>"><%= article.hasRelatedAgreement.title.first %></a></p>
-      <% else %>
-        <h6>Agreement for:</h6>
-        <p><a href="<%=path%>">Dataset agreement</a></p>
+      <% unless article.hasRelatedAgreement.nil? %>
+        <% path = dataset_agreement_path(article.hasRelatedAgreement.id) %>
+        <% if !article.hasRelatedAgreement.title.empty? or !article.hasRelatedAgreement.title.first.start_with "Agreement for" %>
+          <h6>Agreement for:</h6>
+          <p><a href="<%=path%>"><%= article.hasRelatedAgreement.title.first %></a></p>
+        <% else %>
+          <h6>Agreement for:</h6>
+          <p><a href="<%=path%>">Dataset agreement</a></p>
+        <% end %>
       <% end %>
     <% end %>
 

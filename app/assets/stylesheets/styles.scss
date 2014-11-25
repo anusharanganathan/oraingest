@@ -319,9 +319,9 @@ dl {
 }
 
 .icon-remove:after {
-	content: 'X';
+	content: '-';
 	font-family: "Arial", sans-serif;
-	font-size: 10px;
+	font-size: 12px;
 	color: #fff;
 }
 
@@ -1942,6 +1942,8 @@ table td textarea {
 	color: #4F738A;
 	cursor: pointer;
 }
+
+.form-steps.extra-step ol li { width: 14.2%; }
 
 .form-steps ol li:after {
 	display: none;
