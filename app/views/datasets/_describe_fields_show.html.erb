@@ -78,7 +78,8 @@
 
 <% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
   <p><span class="h6">Approximate data size:</span>
-  <%= ActionController::Base.helpers.number_to_human_size(@dataset.digitalSize.first, precision: 2) %></p>
+  <%= @dataset.digitalSize.first %></p>
+  <%#= ActionController::Base.helpers.number_to_human_size(@dataset.digitalSize.first, precision: 2) %><!-- </p> -->
 <% end %>
 <% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
   <p><span class="h6">Data format:</span>
