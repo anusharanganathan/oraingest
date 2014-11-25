@@ -1,13 +1,13 @@
 class StaticController < ApplicationController
   rescue_from AbstractController::ActionNotFound, with: :render_404
 
-  def deposit_agreement
+  def deposit_licence
     respond_to do |format|
       format.html
     end
   end
 
-  def data_deposit_agreement
+  def data_deposit_licence
     respond_to do |format|
       format.html
     end
