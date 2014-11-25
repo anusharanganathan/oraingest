@@ -13,8 +13,8 @@ OraHydra::Application.routes.draw do
   #  match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
   #end
   
-  get 'deposit_agreement', to: 'static#deposit_agreement'
-  get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
+  get 'deposit_licence', to: 'static#deposit_licence'
+  get 'data_deposit_licence', to: 'static#data_deposit_licence'
 
   resources 'reviewer_dashboard', :only=>:index do
     collection do
