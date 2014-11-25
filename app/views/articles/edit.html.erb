@@ -14,7 +14,7 @@
 
 <div class="gutter-container">
 
-  <% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => articles_path } %>
+  <% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => publications_path } %>
   <%= render partial: "shared/actions/edit", :locals => { :path => path } %>
 
   <div class="col col3of4">
