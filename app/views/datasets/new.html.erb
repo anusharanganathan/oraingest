@@ -1,4 +1,6 @@
   <h2 style="margin-left: 10px;">Create dataset</h2>
+  <% path = { :list => datasets_path } %>
+  <br/><%= render partial: "shared/actions/new", :locals => { :path => path } %>
 
   <% if @dataset.errors.any? %>
     <div id="error_explanation">
