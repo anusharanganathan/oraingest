@@ -60,7 +60,7 @@ gem 'unicorn'
 gem "bootstrap-sass"
 gem "devise"
 gem "devise-guests", "~> 0.3"
-#gem 'devise-remote-user'
+gem 'devise-remote-user'
 gem "unicode", :platforms => [:mri_18, :mri_19]
 
 gem 'qa'

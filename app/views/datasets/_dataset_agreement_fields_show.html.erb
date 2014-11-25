@@ -17,17 +17,19 @@
       <%= article.hasDataManagementPlan.first %></p>
     <% end %>
     
-    <% if !article.hasRelatedAgreement.annotation.empty? && !article.hasRelatedAgreement.annotation.first.empty? %>
-      <h6>Archiving payment option:</h6>
-      <p><%= article.hasRelatedAgreement.annotation.first %></p>
-    </p>
+    <% unless article.hasRelatedAgreement.nil? %>
+      <% if !article.hasRelatedAgreement.annotation.nil? && !article.hasRelatedAgreement.annotation.empty? && !article.hasRelatedAgreement.annotation.first.nil? && !article.hasRelatedAgreement.annotation.first.empty? %>
+        <h6>Archiving payment option:</h6>
+        <p><%= article.hasRelatedAgreement.annotation.first %></p>
+      </p>
+      <% end %>
+      
+      <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
+        <h6>Archiving payment option details:</h6>
+        <p><%= article.hasRelatedAgreement.invoice.first.description.first %></p>
+      <% end #Invoice details%>
+      <%= render partial: "shared/creation_agreement_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
+      <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
     <% end %>
-    
-    <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
-      <h6>Archiving payment option details:</h6>
-      <p><%= article.hasRelatedAgreement.invoice.first.description.first %></p>
-    <% end #Invoice details%>
-    <%= render partial: "shared/creation_agreement_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
-    <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
   </div>
 </div> 

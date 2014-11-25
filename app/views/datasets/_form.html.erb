@@ -77,8 +77,7 @@
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
           <strong>Date collected</strong>
-          <p>If applicable, enter the date(s) when your data were collected, e.g. '2014' or
-          '1998 - 2010' or '15/4/2005 - 30/9/2005'.</p>
+          <p>If applicable, enter the date or time period when you collected or produced your data, e.g. '2014' or '15/4/2005’ or  '1998 - 2010.</p>
 
           <div class="tooltip-extra">
             <div class="circle circle-discoverability"></div>
@@ -117,7 +116,8 @@
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
           <strong>Geographical location</strong>
-          <p>If applicable, enter the geographical location to which your data related. You may enter it as a place name, country or general area (e.g. 'France'; 'New York'; 'New Forest') or as a geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085).</p>
+          <p>If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area
+              (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085).</p>
 
           <div class="tooltip-extra">
             <div class="circle circle-discoverability"></div>
@@ -258,7 +258,7 @@
     </div>
     <div class="form-nav-next">
       <div class="float-left">
-        <strong>Continue to Step 6</strong> - Funders and payment
+        <strong>Continue to Step 6</strong> - Funders and licences
       </div>
       <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
     </div>
@@ -268,7 +268,7 @@
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
-      6. Funders and payment
+      6. Funders and licences
     </div>
     <div class="padding-25 no-pad-top no-pad-bottom">
       <%= hidden_field_tag(:pid, @pid) %>
@@ -320,18 +320,29 @@
 
 <nav class="form-nav" style="margin-top: 20px;">
   <div class="form-nav-next" style="text-align: right">
+
+    <% unless can? :review, :all %>
+      <% unless @dataset.workflows.first.nil? %>
+        <% wf = @dataset.workflows.first %>
+        <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+        <% if @dataset.workflows.first.comments.empty? %>
+          <% @dataset.workflows.first.comments.build %>
+        <% end %>
+      <% end %>
+    
+      <% if @dataset.workflows.empty? || @dataset.workflows.first.current_status == "Draft" || @dataset.workflows.first.current_status == "Referred" %>
+        <% if @dataset.workflows.empty? %>
+          <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+        <% end %>
+        <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "", :id => "workflows_entries_status" %>
+      <% end %>
+    <% end %>
+
     <%= f.submit "Save", class: "button light-blue" %>
-  <% end #TODO: This form end is being rejected. Fix this. Need to think about form flows  %>
-
-    <%#= form_for @dataset, :html => {:multipart => true, :class => 'inline', :id => 'workflow'} do |f| %>
-      <%#= hidden_field_tag(:pid, @pid) %>
-      <%#= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
-      <%# unless can? :review, :all %>
-        <%# txt = '<i class="icon-save"></i> Submit for Review' %>
-        <%#= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      <%# end %>
-    <%# end %>
-
+    <% unless can? :review, :all %>
+      <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+    <% end %>
   </div>
 </nav>
 
+<% end #TODO: This form end is being rejected. DOn't think it can be fixed without a design rethink. The form seems to work though. %>

@@ -5,12 +5,12 @@
       Add a publication
     </div>
     <div class="float-right">
-      <!-- <select name="type">
+      <select name="type">
         <option>Journal article</option>
-        <option>Something else</option>
-      </select> -->
-      <% types = Sufia.config.subtypes["article"].reject{|_,v| v.empty?} %>
-      <%= select_tag "typeLabel", options_for_select(types, :selected=>"Journal article") %>
+        <!-- <option>Author accepted manuscript</option> -->
+      </select>
+      <%# types = Sufia.config.subtypes["article"].reject{|_,v| v.empty?} %>
+      <%#= select_tag "typeLabel", options_for_select(types, :selected=>"Journal article") %>
       <button type="submit" class="button button-small button-arrow">GO</button>
     </div>
   </form>
