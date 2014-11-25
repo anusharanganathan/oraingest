@@ -76,5 +76,5 @@ group :development, :test do
   #gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'capybara', '~>2.1.0'
-  gem "debugger"
+#  gem "debugger"
 end
