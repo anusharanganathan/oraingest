@@ -56,16 +56,17 @@ class ArticlesController < ApplicationController
 
   # Catch permission errors
   rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-    if exception.action == :edit
-      #redirect_to action: 'show', alert: "You do not have sufficient privileges to edit this document"
-      redirect_to action: 'show'
+    if exception.action != :show && exception.action != :index
+      redirect_to action: 'show', alert: "You do not have sufficient privileges to modify this publication record"
+      #redirect_to action: 'show'
+    elsif exception.action == :show
+      redirect_to publications_path, alert: "You do not have sufficient privileges to read this publication record"
     elsif current_user and current_user.persisted?
-      #redirect_to action: 'index', alert: exception.message
-      redirect_to action: 'index'
+      redirect_to publications_path, alert: exception.message
     else
       session["user_return_to"] = request.url
-      #redirect_to new_user_session_url, :alert => exception.message
-      redirect_to new_user_session_url
+      redirect_to new_user_session_url, :alert => exception.message
+      #redirect_to new_user_session_url
     end
   end
 
@@ -122,9 +123,6 @@ class ArticlesController < ApplicationController
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
     end
-
-     #format.html { redirect_to action: 'show', id: @article.id }
-     #format.json { render action: 'show', status: :created, location: @article }
   end
 
   def update

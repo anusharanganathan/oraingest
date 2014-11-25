@@ -29,16 +29,15 @@ class ArticleFilesController < ApplicationController
 
   # Catch permission errors
   rescue_from Hydra::AccessDenied, CanCan::AccessDenied do |exception|
-    if exception.action == :edit
-      #redirect_to action: 'show', alert: "You do not have sufficient privileges to edit this document"
-      redirect_to action: 'show'
+    if exception.action != :show
+      redirect_to action: 'show', alert: "You do not have sufficient privileges to delete this file"
+    elsif exception.action == :show
+      redirect_to action: publications_path, alert: "You do not have sufficient privileges to view or download this file"
     elsif current_user and current_user.persisted?
-      #redirect_to action: 'index', alert: exception.message
-      redirect_to action: 'index'
+      redirect_to action: publications_path, alert: exception.message
     else
       session["user_return_to"] = request.url
-      #redirect_to new_user_session_url, :alert => exception.message
-      redirect_to new_user_session_url
+      redirect_to new_user_session_url, :alert => exception.message
     end
   end
 
