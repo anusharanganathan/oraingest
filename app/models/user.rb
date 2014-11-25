@@ -48,13 +48,13 @@ class User < ActiveRecord::Base
   #  return nil
   #end
 
-  #def oxford_email
-  #  if self.user_info
-  #    return self.user_info['oxford_email']
-  #  end
-  #  return nil
-  #end
-  
+  def oxford_email
+    #if self.user_info
+    #  return self.user_info['oxford_email']
+    #end
+    return nil
+  end
+ 
   # Returns true if user has permission to act as a reviewer
   def reviewer?
     # self.groups.include?("reviewer")
