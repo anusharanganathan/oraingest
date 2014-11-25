@@ -47,26 +47,26 @@
     </div>
   
     <!-- Form submit (save) -->
-    <nav class="form-nav">
-      <div class="form-nav-next">
+    <nav class="form-nav" style="margin-top: 20px;">
+      <div class="form-nav-next" style="text-align: right">
         <%= f.submit "Save article", class: "button light-blue" %>
+        <% unless @article.workflows.first.nil? %>
+          <% wf = @article.workflows.first %>
+          <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
+          <% if @article.workflows.first.comments.empty? %>
+            <% @article.workflows.first.comments.build %>
+          <% end %>
+        <% end %>
+        <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" || @article.workflows.first.current_status == "Referred" %>
+          <% if @article.workflows.empty? %>
+            <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+          <% end %>
+          <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "", :id => "workflows_entries_status" %>
+          <%= f.submit "Submit for review", class: "button light-blue", :onclick => "setStatus()" %>
+        <% end %>
       </div>
     </nav>
   
-  <% end %>
-
-  <!--- Submit button -->
-  <%= form_for @article, :html => {:multipart => true, :class => 'form-horizontal', :id => 'workflow'} do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <% buttonText = 'Submit for Review' %>
-    
-    <nav class="form-nav">
-      <div class="form-nav-next">
-        <% txt = '<i class="icon-save"></i> %s'% buttonText %>
-        <%= render partial: 'shared/workflow_submit', :locals => { :f => f, :article => @article} %>
-        <%= button_tag txt.html_safe, :type => 'submit', :class => 'button light-blue', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
-      </div>
-    </nav>
   <% end %>
 
 </section>
