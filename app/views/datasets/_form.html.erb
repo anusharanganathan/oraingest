@@ -270,13 +270,11 @@
     <div class="content-box-header">
       6. Funders and licences
     </div>
-    <div class="padding-25 no-pad-top">
+    <div class="padding-25 no-pad-top no-pad-bottom">
       <%= hidden_field_tag(:pid, @pid) %>
       <%= hidden_field_tag('redirect_tab', 'funderstab') %>
       <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
     </div>
-
-    <div class="bottom-border padding-side-25"></div>
 
   </div>
 

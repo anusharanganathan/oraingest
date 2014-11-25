@@ -11,12 +11,15 @@
     <% subject.each_with_index do |s, s_index| %>
       <%= f.fields_for "subject][", s do |f_s| %>
         <li>
+          <label>
+          <span class="small">Subject title:</span>
           <%= f_s.text_field :subjectLabel, :value => s.subjectLabel.first, :class=>"subjectLabel", id: "subjectLabel%d"% s_index %>
           <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          </label>
 
           <% if can? :review, :all %>
             <label>
-              <span class="small">Suject authority: </span>
+              <span class="small">Subject authority: </span>
               <%= f_s.text_field :subjectAuthority, :value => s.subjectAuthority.first, :class=>"subjectAuthority", id: "subjectAuthority%d"% s_index %>
             </label>
 

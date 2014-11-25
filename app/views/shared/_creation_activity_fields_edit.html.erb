@@ -21,8 +21,11 @@
                 <% c.agent[0].affiliation.build %>
               <% end %>
               <li>
+                <label>
+                <span class="small">Name</span>
                 <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
                 <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+                </label>
 
                 <label>
                   <p><span class="small">Email</span>

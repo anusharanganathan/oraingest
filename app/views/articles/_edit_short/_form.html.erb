@@ -21,6 +21,7 @@
     <div class="padding-side-25"> 
       <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
     </div>
+  </div>
   
     <!-- Expander -->
     <div class="content-box padding-0" style="margin-top: 20px;">
@@ -30,21 +31,17 @@
       <div class="expand-content">
 
         <!-- funder info -->
-        <div class="bottom-border"> 
-          <div class="padding-side-25"> 
-            <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
-          </div>
+        <div class="padding-side-25"> 
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
         </div>
+        <div class="bottom-border padding-side-25"></div>
 
         <!-- creator info -->
-        <div class="bottom-border"> 
-          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
-        </div>
+        <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
+        <div class="bottom-border padding-side-25"></div>
   
         <!-- Related item -->
-        <div class="bottom-border"> 
-          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
-        </div>
+        <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
 
       </div>
     </div>

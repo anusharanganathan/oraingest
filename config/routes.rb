@@ -7,11 +7,11 @@ OraHydra::Application.routes.draw do
   HydraHead.add_routes(self)
   Hydra::BatchEdit.add_routes(self)
 
-  devise_for :users, skip: [:sessions]
-  devise_scope :user do
-    get "users/auth/webauth" => "login#login", as: :new_user_session
-    match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
-  end
+  devise_for :users#, skip: [:sessions]
+  #devise_scope :user do
+  #  get "users/auth/webauth" => "login#login", as: :new_user_session
+  #  match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
+  #end
   
   get 'deposit_agreement', to: 'static#deposit_agreement'
   get 'data_deposit_agreement', to: 'static#data_deposit_agreement'
