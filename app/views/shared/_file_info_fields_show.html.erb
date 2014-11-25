@@ -8,7 +8,6 @@
       <%= file['name'] %>
       (<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)
       </span>
-      <span class="embargo-details">Embargo details</span>
     </a>
 
     <% dsid = file['url'].split("/")[-1] %>
@@ -25,6 +24,7 @@
         <div><%= select.description.first %></div>
       <% end %>
       <% if !select.accessRights.empty? %>
+        <span class="embargo-details">Embargo details</span>
         <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
       <% end %>
     <% end %>
