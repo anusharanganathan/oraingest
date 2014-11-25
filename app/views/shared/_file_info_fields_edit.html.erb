@@ -97,7 +97,7 @@
                       <% hp.accessRights[0].embargoDate[0].end.build %>
                     <% end %>
                     <%= f_a.hidden_field :embargoStatus, :value => "Embargoed" %>
-                    <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f_a => f_a, :accessRights => hp.accessRights, :embargoDate => hp.accessRights[0].embargoDate[0], :embargoRelease => nil, :startOption => nil } %>
+                    <%= render partial: 'shared/embargo/embargo_fields_edit', as: :article, :locals => { :f => f, :accessRights => article.accessRights, :embargo_type => "file" } %>
 
                     <!-- <button type="submit" class="button button-small light-blue">Save Details/Embargo</button> -->
                   <% end %>
