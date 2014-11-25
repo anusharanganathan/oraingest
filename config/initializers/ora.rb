@@ -117,7 +117,6 @@ Sufia.config do |config|
       "Open Government Licence (OGL)" => "Open Government Licence (OGL)",
       "OGL non commercial" => "OGL non commercial",
       "CC0 (CC Zero)" => "CC0 (CC Zero)",
-      "Prepared licences" => "Prepared licences",
       "Bespoke licence" => "Bespoke licence"
     }
   }
