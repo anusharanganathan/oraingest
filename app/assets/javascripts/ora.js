@@ -48,7 +48,7 @@ $(function() {
         panel_id = $(this).parents("label").first().attr("panel");
 
     // Open expandable panel on click
-    fieldset.find("*[panel!="+panel_id+"]").each(function(){
+    fieldset.find("[panel!="+panel_id+"]").each(function(){
       var panel_id = $(this).attr("panel");
       $("#"+panel_id)
         .slideUp("slow")
@@ -72,7 +72,7 @@ $(function() {
    * -------------------------------------------------------------
    * Show and hide hidden form elements.
    * -----------------------------------------------------------*/
-  $(document).on("click","*[data-action]",function(){
+  $(document).on("click","[data-action]",function(){
     var action = $(this).attr("data-action"),
         hidden_form;
 
