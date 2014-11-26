@@ -6,8 +6,9 @@ class PublicationsController < ApplicationController
   # Remove the solr_search_params_logic that we don't want applied 
   # (No advanced search & Don't apply the Hydra gated discovery, which filters out all things that don't list you in their permissions.)
   # See: https://github.com/projectblacklight/blacklight/wiki/Extending-or-Modifying-Blacklight-Search-Behavior
-  PublicationsController.solr_search_params_logic = CatalogController.solr_search_params_logic - [:add_advanced_parse_q_to_solr, :add_advanced_search_to_solr, :add_access_controls_to_solr_params]
+  PublicationsController.solr_search_params_logic = CatalogController.solr_search_params_logic - [:add_advanced_parse_q_to_solr, :add_advanced_search_to_solr]
   # Add query filter
+
   #solr_search_params_logic << :exclude_draft_and_approved
    
   self.copy_blacklight_config_from(CatalogController)
