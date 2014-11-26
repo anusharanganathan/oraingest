@@ -68,8 +68,8 @@ var autocompleteSubject = {
   select: function( event, ui ) {
     $(this).val( ui.item.auth );
     $(this).attr("value", ui.item.auth);
-    $(this).parent().find( ".subjectAuthority" ).val( "http://id.worldcat.org/fast/" + ui.item.id );
-    $(this).parent().find( ".subjectScheme" ).val( "FAST" );
+    $(this).parent().parent().find( ".subjectAuthority" ).val( "http://id.worldcat.org/fast/" + ui.item.id );
+    $(this).parent().parent().find( ".subjectScheme" ).val( "FAST" );
     return false;
   }
 }
