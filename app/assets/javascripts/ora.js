@@ -214,6 +214,22 @@ $(function() {
     $(this).datepicker(options).attr("type", "text");
   });
 
+  $(document).on("focus", "input[type=text],input[type=date],textarea", function() {
+    if ($(this).val() == $(this).attr("data-default-value")) {
+      $(this).val("");
+    }
+  });
+
+  $(document).on("blur", "input[type=text],input[type=date],textarea", function() {
+    var default_value = $(this).attr("data-default-value");
+    if (typeof default_value == "undefined") {
+      return;
+    }
+    if ($(this).val() == "") {
+      $(this).val(default_value);
+    }
+  });
+
   /* -------------------------------------------------------------
    * Tracker Follow
    * -------------------------------------------------------------
