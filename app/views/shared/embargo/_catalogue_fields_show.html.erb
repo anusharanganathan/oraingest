@@ -28,54 +28,56 @@
   <% end %>
 <% end %>
 <% if hasData %>
-  <div class="well">
-    <div class="row">
-      <div class="control-group">
-        <legend>Access rights for <%= @model.downcase %></legend>
+  <div class="accordian">
+    <div class="accordian-header">Visibility of catalogue record</div>
+      <div class="accordian-content">
         <% if !article.accessRights[0].embargoStatus.empty? && !article.accessRights[0].embargoStatus.first.empty? %>
-          <div>Embargo status: <%= article.accessRights[0].embargoStatus.first %></div>
+          <h6>Embargo status:</h6>
+          <p><%= article.accessRights[0].embargoStatus.first %></p>
         <% end %>
         <% if !article.accessRights[0].embargoDate.nil? && !article.accessRights[0].embargoDate[0].nil? %>
-          <div>Embargo end date: 
+          <h6>Embargo end date:</h6>
           <% if dateEnd %>
+            <p>
             <% if !dateEnd.date.empty? && !dateEnd.date.first.empty? %>
               <%= dateEnd.date.first %>
             <% end %>
             <% if !dateEnd.label.empty? && !dateEnd.label.first.empty? %>
               (<%= article.accessRights[0].embargoDate[0].end[0].label.first %>)
             <% end %>
+            </p>
           <% end %>
           <% if dateDuration %>
+            <p>
             <% if !dateDuration.years.empty? && !dateDuration.years.first.empty? %>
-              <br/><%= dateDuration.years.first %> years
+              <%= dateDuration.years.first %> years
             <% end %>
             <% if !dateDuration.months.empty? && !dateDuration.months.first.empty? %>
               <%= dateDuration.months.first %> months
             <% end %>
-            from
+            </p>
           <% end %>
           <% if dateStart %>
+            <p>from
             <% if !dateStart.date.empty? && !dateStart.date.first.empty? %>
               <%= dateStart.date.first %>
             <% end %>
             <% if !dateStart.label.empty? && !dateStart.label.first.empty? %>
               (<%= dateStart.label.first %>)
             <% end %>
+            </p>
           <% end %>
-          </div>
         <% end %>
         <% if !article.accessRights[0].embargoReason.empty? %>
-          <div>Embargo reason: 
+          <h6>Embargo reason:</h6>
             <% article.accessRights[0].embargoReason.each do |er| %>
-              <span><%=er%></span>
+              <p><%=er%></p>
             <% end %>
-          </div>
         <% end %>
         <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty?%>
-           <div>Embargo release method: <%= article.accessRights[0].embargoRelease.first %></div>
+           <h6>Embargo release method:</h6><p><%= article.accessRights[0].embargoRelease.first %></p>
         <% end %>
-      </div> <!-- /.control-group -->
-    </div> <!-- /.row -->
-  </div> <!-- /.well -->
+    </div>
+  </div>
 <% end %>
 
