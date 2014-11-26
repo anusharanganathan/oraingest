@@ -69,5 +69,8 @@ module OraHydra
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    #Adding default header for IE
+    config.action_dispatch.default_headers.merge!('X-UA-Compatible' => 'IE=edge')
   end
 end
