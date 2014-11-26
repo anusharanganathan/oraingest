@@ -1,16 +1,18 @@
-<% if @response.total_pages == 1 %>
-  <div class="pager"> 
-    <%= paginate @response, :outer_window => 2, :theme => 'blacklight', :route_set=> sufia %>
-    <div class="clearfix"></div>
-  </div><!-- /pager -->
-
-  <nav class="pagination">
-		<ul>
-			<li class="prev"><a href="#">Previous<span class="icon icon-arrow-right"></span></a></li>
-			<li><a href="#">1</a></li>
-			<li class="active"><a href="#">2</a></li>
-			<li><a href="#">3</a></li>
-			<li class="next"><a href="#">Next<span class="icon icon-arrow-right"></span></a></li>
-		</ul>
-	</nav>
+<% if false %>
+  <% if @response.total_pages > 1 %>
+    <div class="pager"> 
+      <%= paginate @response, :outer_window => 2, :theme => 'blacklight', :route_set=> sufia %>
+      <div class="clearfix"></div>
+    </div><!-- /pager -->
+  
+    <nav class="pagination">
+      <ul>
+        <li class="prev"><a href="#">Previous<span class="icon icon-arrow-right"></span></a></li>
+        <li><a href="#">1</a></li>
+        <li class="active"><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li class="next"><a href="#">Next<span class="icon icon-arrow-right"></span></a></li>
+      </ul>
+    </nav>
+  <% end %>
 <% end %>
