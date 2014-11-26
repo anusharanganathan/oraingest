@@ -1,15 +1,22 @@
 module RDF
   class ORA < RDF::Vocabulary("http://vocab.ox.ac.uk/ora#")
-    property :DataSteward
-    property :DataStorageAgreement
-    property :TitularAgent
     property :affiliation
+    property :annotation
+    # copyright
+    property :copyrightNote
+    property :rightsHolderGroup
+    # payment
+    property :apcPaid
+    property :monetaryValue
+    property :monetaryStatus
+    # OA and ref related
+    property :oaReason
+    property :oaStatus
+    property :refException
+    #Dataset agreement related terms
     property :agreementStatus
     property :agreementType
-    property :annotation
-    property :apcPaid
-    property :author
-    property :copyrightNote
+    #Data related
     property :dateCollected
     property :dataContributor
     property :dataSteward
@@ -17,12 +24,18 @@ module RDF
     property :dataStorageSilo
     property :digitalSize
     property :digitalSizeAllocated
+    property :locator
+    property :storageAgreement
+    # Embargo related
     property :embargoStatus
     property :embargoStart
     property :embargoEnd
     property :embargoReason
     property :embargoRelease
-    property :examiner
+    # Prov ontology associations
+    property :DataSteward
+    property :DataStorageAgreement
+    property :TitularAgent
     property :hadCreationActivity
     property :hadPublicationActivity
     property :hadTitularActivity
@@ -31,16 +44,27 @@ module RDF
     property :hasDataManagementPlan
     property :hasInvoice
     property :isPartOfSeries
-    property :locator
-    property :monetaryValue
-    property :monetaryStatus
-    property :oaReason
-    property :oaStatus
-    property :refException
+    #wrokflow
     property :reviewStatus
-    property :rightsHolderGroup
-    property :storageAgreement
-    property :supervisor
+    #Thesis
     property :thesisDegreeLevel
+    # roles
+    property :adapter
+    property :author
+    property :copyrightHolder
+    property :depositor
+    property :editor
+    property :examiner
+    property :funder
+    property :headOfDepartment
+    property :headOfFaculty
+    property :headOfResearchGroup
+    property :performer
+    property :principalInvestigator
+    property :researcher
+    property :reviewer
+    property :sponsor
+    property :supervisor
+    property :translator
   end
 end
