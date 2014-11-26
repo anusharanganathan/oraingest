@@ -24,3 +24,4 @@
 //= require sufia/multiForm
 //= require ora
 //= require ora_form_progress
+//= require jquery.ui.datepicker
