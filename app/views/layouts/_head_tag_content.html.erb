@@ -1,3 +1,7 @@
+
+<!-- Disabled compatability mode. This must be the first meta tag -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
 <%= csrf_meta_tag %>
 
 <meta charset="utf-8" />
@@ -18,5 +22,6 @@
     <%= yield(:local_js) %>
   });
 </script>
+
 
 <%= render :partial => '/ga', :formats => [:html] %>
