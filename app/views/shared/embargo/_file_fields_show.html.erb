@@ -1,50 +1,51 @@
 <div class="control-group">
-  <!-- <legend>Access rights for <%#= @model.downcase %></legend> -->
   <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
     <% if !hp.accessRights[0].embargoStatus.empty? && !hp.accessRights[0].embargoStatus[0].empty? %>
-      <div>Embargo status: <%= hp.accessRights[0].embargoStatus.first %></div>
+      <h6>Embargo status:</h6>
+      <span class="small"><%= hp.accessRights[0].embargoStatus.first %></span>
     <% end %>
     <% if !hp.accessRights[0].embargoDate.nil? && !hp.accessRights[0].embargoDate[0].nil? %>
       <% dateEnd = hp.accessRights[0].embargoDate[0].end %>
       <% dateDuration = hp.accessRights[0].embargoDate[0].duration %>
       <% dateStart = hp.accessRights[0].embargoDate[0].start %>
       <% if !dateEnd.nil? && !dateEnd[0].nil? && (!dateEnd[0].label.empty? || dateEnd[0].date.empty?) %>
-        <div>Embargo end date: 
+        <h6>Embargo end date:</h6>
         <% if !dateEnd[0].date.empty? && !dateEnd[0].date[0].empty? %>
-          <%= dateEnd.first.date.first %>
+          <span class="small"><%= dateEnd.first.date.first %></span>
         <% end %>
         <% if !dateEnd[0].label.empty? && !dateEnd[0].label[0].empty? %>
-          (<%= dateEnd[0].label.first %>)
+          <span class="small">(<%= dateEnd[0].label.first %>)</span>
         <% end %>
+        </span>
       <% end %>
       <% if !dateDuration.nil? && !dateDuration[0].nil? && (!dateDuration[0].years.empty? || !dateDuration[0].months.empty?) %>
         <% if !dateDuration[0].years.empty? && !dateDuration[0].years[0].empty? %>
-          <br/><%= dateDuration[0].years.first %> years
+          <br/>
+          <span class="small"><%= dateDuration[0].years.first %> years</span>
         <% end %>
         <% if !dateDuration[0].months.empty? && !dateDuration[0].months[0].empty? %>
-          <%= dateDuration[0].months.first %> months
+          <span class="small"><%= dateDuration[0].months.first %> months</span>
         <% end %>
-        from
+        <span class="small">from</span>
       <% end %>
       <% if !dateStart.nil? && !dateStart[0].nil? && (!dateStart[0].label.empty? || !dateStart[0].date.empty?) %>
         <% if !dateStart[0].date.empty? && !dateStart[0].date[0].empty? %>
-          <%= dateStart[0].date.first %>
+          <span class="small"><%= dateStart[0].date.first %></span>
         <% end %>
         <% if !dateStart[0].label.empty? && !dateStart[0].label[0].empty? %>
-          (<%= dateStart[0].label.first %>)
+          <span class="small">(<%= dateStart[0].label.first %>)</span>
         <% end %>
       <% end %>
-      </div>
     <% end %>
     <% if !hp.accessRights[0].embargoReason.empty? %>
-      <div>Embargo reason: 
+      <h6>Embargo reason:</h6>
         <% hp.accessRights[0].embargoReason.each do |er| %>
-          <span><%=er%></span>
+          <span class="small"><%=er%></span>
         <% end %>
-      </div>
     <% end %>
     <% if !hp.accessRights[0].embargoRelease.empty? && !hp.accessRights[0].embargoRelease.first.empty?%>
-       <div>Embargo release method: <%= hp.accessRights[0].embargoRelease.first %></div>
+       <h6>Embargo release method:</h6>
+       <span class="small"><%= hp.accessRights[0].embargoRelease.first %></span>
     <% end %>
   <% end %>
 </div> <!-- /.control-group -->

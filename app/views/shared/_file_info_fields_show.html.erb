@@ -21,12 +21,13 @@
     <% end %>
     <% if !select.nil? %>
       <% if !select.description.empty? %>
-        <div><%= select.description.first %></div>
+        <h6><%= select.description.first %></h6>
       <% end %>
       <% if !select.accessRights.empty? %>
-        <span class="embargo-details">Embargo details</span>
+        <!-- <span class="embargo-details">Embargo details</span> -->
         <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
       <% end %>
+      <hr/>
     <% end %>
   <% end %>
 <% else %>
