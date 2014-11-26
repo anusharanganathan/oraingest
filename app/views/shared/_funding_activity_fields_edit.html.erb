@@ -12,7 +12,7 @@
     <% funding.build %>
   <% end %>
 
-  <% funding_types = {"Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
+  <% funding_types = {"Select an option"=>nil, "Creator"=>"Creator", "Article" => "Article",  "Project" =>"Project"} %>
 
   <div class="field-repeater padding-25 no-pad-top" data-max-fields="10">
     <ol>
@@ -52,7 +52,7 @@
               <% end %>
 
               <label>
-                <span class="small">Who or what was funded?</span>
+                <span class="small">Who received the funding?</span>
                 <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), id: "funderFunds%d"% f1_index %>
               </label>
 
