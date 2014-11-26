@@ -17,7 +17,7 @@
 
         <div class="fieldset">
           <p class="small">Publisher name</p>
-          <%= f_p2.text_field :name, :value => p2.name.first || "University of Oxford", data: {"progress" => "citation"} %>
+          <%= f_p2.text_field :name, :value => p2.name.first || "University of Oxford", data: {"progress" => "citation", "default-value" => "University of Oxford"} %>
 
           <aside class="tooltip">
             <a href="#" class="close-button">x</a>
@@ -52,7 +52,7 @@
 
     <div class="fieldset">
       <p class="small">Year published</p>
-      <%= f_p.date_field :datePublished, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation"} %>
+      <%= f_p.date_field :datePublished, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
 
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
