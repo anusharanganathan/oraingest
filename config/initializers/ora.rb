@@ -205,9 +205,31 @@ Sufia.config do |config|
       "Contributor" => RDF::DC.contributor
     },
     "dataset" => {
+      "Select a role" => nil,
+      "Adapter" => RDF::ORA.adapter,
+      "Contributor" => RDF::DC.contributor,
+      "Copyright holder" => RDF::ORA.copyrightHolder,
       "Creator" => RDF::DC.creator,
-      "Cwner" => RDF::BIBO.owner,
-      "Contributor" => RDF::DC.contributor
+      "Depositor" => RDF::ORA.depositor,
+      "Editor" => RDF::ORA.editor,
+      "Examiner" => RDF::ORA.examiner,
+      "Funder" => RDF::ORA.funder,
+      "Performer" => RDF::ORA.performer,
+      "Principal Investigator" => RDF::ORA.principalInvestigator,
+      "Publisher" => RDF::DC.publisher,
+      "Researcher" => RDF::ORA.researcher,
+      "Reviewer" => RDF::ORA.reviewer,
+      "Sponsor" => RDF::ORA.sponsor,
+      "Supervisor" => RDF::ORA.supervisor,
+      "Translator" => RDF::ORA.translator
+    },
+    "data_steward" => {
+      "Select a role" => nil,
+      "Principal Investigator" => RDF::ORA.principalInvestigator,
+      "Creator" => RDF::DC.creator,
+      "Head of Department" => RDF::ORA.headOfDepartment,
+      "Head of Faculty" => RDF::ORA.headOfFaculty,
+      "Head of Research Group" => RDF::ORA.headOfResearchGroup,  
     },
     "dataset_agreement" => {
       "Data steward" => RDF::ORA.DataSteward
@@ -215,14 +237,29 @@ Sufia.config do |config|
   }
 
   config.role_labels = {
+    RDF::ORA.adapter.to_s => "Adapter",
     RDF::ORA.author.to_s => "Author",
     RDF::DC.contributor.to_s => "Contributor",
+    RDF::ORA.copyrightHolder.to_s => "Copyright holder",
     RDF::DC.creator.to_s => "Creator",
     RDF::ORA.DataSteward.to_s => "Data steward",
+    RDF::ORA.depositor.to_s => "Depositor",
+    RDF::ORA.editor.to_s => "Editor",
     RDF::BIBO.editor.to_s => "Editor",
     RDF::ORA.examiner.to_s => "Examiner",
+    RDF::ORA.funder.to_s => "Funder",
+    RDF::ORA.headOfDepartment.to_s => "Head of Department",
+    RDF::ORA.headOfFaculty.to_s => "Head of Faculty",
+    RDF::ORA.headOfResearchGroup.to_s => "Head of Research Group",
     RDF::BIBO.owner.to_s => "Owner",
-    RDF::ORA.supervisor.to_s => "Supervisor"
+    RDF::ORA.performer.to_s => "Performer",
+    RDF::ORA.principalInvestigator.to_s => "Principal Investigator",
+    RDF::DC.publisher.to_s => "Publisher",
+    RDF::ORA.researcher.to_s => "Researcher",
+    RDF::ORA.reviewer.to_s => "Reviewer",
+    RDF::ORA.sponsor.to_s => "Sponsor",
+    RDF::ORA.supervisor.to_s => "Supervisor",
+    RDF::ORA.translator.to_s => "Translator"
   }
 
   config.oa_types = {

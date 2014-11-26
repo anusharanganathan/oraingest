@@ -23,6 +23,10 @@
 
 <%= f.fields_for :accessRights do |f_a| %>
 
+<% panel_id = SecureRandom.uuid %>
+
+
+
 <div class="fieldset">
 
   <h4>Can this ORA catalogue record be made freely available?</h4>
@@ -32,7 +36,7 @@
       <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"} %>
       <span></span>Yes
     </label>
-    <label panel='dataset-embargo'>
+    <label panel='dataset-embargo-<%= panel_id %>'>
       <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"} %>
       <span></span>After a certain period
     </label>
@@ -69,8 +73,8 @@
 <% end %>
 </div>
 
-<div class="expand-panel" id="dataset-embargo">
-
+<div class="expand-panel" id="dataset-embargo-<%= panel_id %>">
+*
   <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f => f, :f_a => f_a, :accessRights => accessRights, :startOption => startOption } %>
   
 <% if false %>

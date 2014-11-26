@@ -45,7 +45,7 @@
 
                 <label>
                   <p><span class="small">Role</span>
-                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), id: "creatorRole%d"%c_index %>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types["data_steward"], :selected=>c.role.first), id: "creatorRole%d"%c_index %>
                   </p>
                 </label>
 
