@@ -106,8 +106,8 @@ var autocompletePerson = {
     var pname = ui.item.firstname + " " + ui.item.lastname;
     $(this).val( pname );
     $(this).attr("value", pname);
-    $(this).parent().find( ".creatorEmail" ).val( ui.item.oxford_email );
-    $(this).parent().find( ".creatorAffiliation" ).val( ui.item.current_affiliation );
+    $(this).parent().parent().find( ".creatorEmail" ).val( ui.item.oxford_email );
+    $(this).parent().parent().find( ".creatorAffiliation" ).val( ui.item.current_affiliation );
     return false;
   }
 }
