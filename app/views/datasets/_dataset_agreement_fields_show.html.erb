@@ -1,37 +1,61 @@
-<div class="accordian">
-  <div class="accordian-header">Dataset archiving options</div>
-  <div class="accordian-content">
-    <% if can? :review, :all %>
-      <% unless article.hasRelatedAgreement.nil? %>
-        <% path = dataset_agreement_path(article.hasRelatedAgreement.id) %>
-        <% if !article.hasRelatedAgreement.title.empty? or !article.hasRelatedAgreement.title.first.start_with "Agreement for" %>
-          <h6>Agreement for:</h6>
-          <p><a href="<%=path%>"><%= article.hasRelatedAgreement.title.first %></a></p>
-        <% else %>
-          <h6>Agreement for:</h6>
-          <p><a href="<%=path%>">Dataset agreement</a></p>
+<% hasData = false %>
+<% if !article.hasRelatedAgreement.nil? && !article.hasRelatedAgreement.id.empty? %>
+  <% if can? :review, :all %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.hasRelatedAgreement.annotation.nil? && !article.hasRelatedAgreement.annotation.empty? && !article.hasRelatedAgreement.annotation.first.nil? && !article.hasRelatedAgreement.annotation.first.empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.hasRelatedAgreement.creation.nil? && !article.hasRelatedAgreement.creation[0].nil? && !article.hasRelatedAgreement.creation[0].creator.empty? %>
+    <% hasData = true %>
+  <% end %>
+  <% if !article.hasRelatedAgreement.titularActivity.nil? && !article.hasRelatedAgreement.titularActivity[0].nil? && !article.hasRelatedAgreement.titularActivity[0].titular.empty? %>
+    <% hasData = true %>
+  <% end %>
+<% end %>
+<% if !article.hasDataManagementPlan.nil? && !article.hasDataManagementPlan.empty? && !article.hasDataManagementPlan.first.empty? %>
+  <% hasData = true %>
+<% end %>
+
+<% if hasData %>
+  <div class="accordian">
+    <div class="accordian-header">Dataset archiving options</div>
+    <div class="accordian-content">
+      <% if can? :review, :all %>
+        <% unless article.hasRelatedAgreement.nil? %>
+          <% path = dataset_agreement_path(article.hasRelatedAgreement.id) %>
+          <% if !article.hasRelatedAgreement.title.empty? or !article.hasRelatedAgreement.title.first.start_with "Agreement for" %>
+            <h6>Agreement for:</h6>
+            <p><a href="<%=path%>"><%= article.hasRelatedAgreement.title.first %></a></p>
+          <% else %>
+            <h6>Agreement for:</h6>
+            <p><a href="<%=path%>">Dataset agreement</a></p>
+          <% end %>
         <% end %>
       <% end %>
-    <% end %>
-
-    <% if !article.hasDataManagementPlan.empty? && !article.hasDataManagementPlan.first.empty? %>
-      <p><span class="h6">Data management plan:</span>
-      <%= article.hasDataManagementPlan.first %></p>
-    <% end %>
-    
-    <% unless article.hasRelatedAgreement.nil? %>
-      <% if !article.hasRelatedAgreement.annotation.nil? && !article.hasRelatedAgreement.annotation.empty? && !article.hasRelatedAgreement.annotation.first.nil? && !article.hasRelatedAgreement.annotation.first.empty? %>
-        <h6>Archiving payment option:</h6>
-        <p><%= article.hasRelatedAgreement.annotation.first %></p>
-      </p>
+  
+      <% if !article.hasDataManagementPlan.empty? && !article.hasDataManagementPlan.first.empty? %>
+        <p><span class="h6">Data management plan:</span>
+        <%= article.hasDataManagementPlan.first %></p>
       <% end %>
       
-      <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
-        <h6>Archiving payment option details:</h6>
-        <p><%= article.hasRelatedAgreement.invoice.first.description.first %></p>
-      <% end #Invoice details%>
-      <%= render partial: "shared/creation_agreement_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
-      <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
-    <% end %>
-  </div>
-</div> 
+      <% unless article.hasRelatedAgreement.nil? %>
+        <% if !article.hasRelatedAgreement.annotation.nil? && !article.hasRelatedAgreement.annotation.empty? && !article.hasRelatedAgreement.annotation.first.nil? && !article.hasRelatedAgreement.annotation.first.empty? %>
+          <h6>Archiving payment option:</h6>
+          <p><%= article.hasRelatedAgreement.annotation.first %></p>
+        </p>
+        <% end %>
+        
+        <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
+          <h6>Archiving payment option details:</h6>
+          <p><%= article.hasRelatedAgreement.invoice.first.description.first %></p>
+        <% end #Invoice details%>
+        <%= render partial: "shared/creation_agreement_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
+        <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
+      <% end %>
+    </div>
+  </div> 
+<% end %>
