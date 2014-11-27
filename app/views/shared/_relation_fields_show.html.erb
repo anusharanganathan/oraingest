@@ -22,10 +22,8 @@
           <% end %>
 
           <% if !r.relation.empty? && !r.relation[0].empty? %>
-            <h6>Relationship:</h6> 
-            <p><%= article.title.first %></p>
-            <p><%= r.relation.first %></p>
-            <p><%= r.entity[0].rdf_subject.to_s %></p>
+            <h6>Relationship:</h6>
+            <p><%= link_to r.relation.first %></p>
           <% end %>
 
           <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
@@ -45,3 +43,4 @@
     </div>
   </div>
 <% end %>
+

@@ -22,7 +22,8 @@ class ContactForm < MailForm::Base
     {
       :subject => "Contact Form:#{subject}",
       :to => Sufia.config.contact_email, 
-      :from => Sufia.config.from_email
+      :from => "Contact Form:#{email}"
     }
   end
 end
+
