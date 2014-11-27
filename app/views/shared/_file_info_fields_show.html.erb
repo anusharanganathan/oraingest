@@ -8,6 +8,7 @@
       <%= file['name'] %>
       (<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)
       </span>
+      <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => file } %>
       <span class="embargo-details">Embargo details</span>
     </a>
 

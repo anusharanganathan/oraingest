@@ -21,7 +21,6 @@
     <div class="padding-side-25"> 
       <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
     </div>
-  </div>
   
     <!-- Expander -->
     <div class="content-box padding-0" style="margin-top: 20px;">
@@ -47,7 +46,7 @@
     </div>
   
     <!-- Form submit (save) -->
-    <nav class="form-nav">
+    <nav class="form-nav" style="float: left; margin-top: 1em;">
       <div class="form-nav-next">
         <%= f.submit "Save article", class: "button light-blue" %>
       </div>
@@ -60,7 +59,7 @@
     <%= hidden_field_tag(:pid, @pid) %>
     <% buttonText = 'Submit for Review' %>
     
-    <nav class="form-nav">
+    <nav class="form-nav" style="float: right; margin-top: 1em;">
       <div class="form-nav-next">
         <% txt = '<i class="icon-save"></i> %s'% buttonText %>
         <%= render partial: 'shared/workflow_submit', :locals => { :f => f, :article => @article} %>

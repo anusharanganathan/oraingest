@@ -172,6 +172,7 @@ $(function() {
   $('.field-repeater').each(function(){
     var clone = $(this).find("ol > li").first().clone(false);
     clone.find("input[type=text]").val("");
+    clone.find("input[type=text]").attr("value", "");
     $(this).data("field",clone);
   });
 
@@ -181,11 +182,25 @@ $(function() {
         list = container.find("ol"),
         items = list.find("li").length,
         clone = container.data("field").clone(),
-        max = parseInt(container.attr("data-max-fields"));
+        max = parseInt(container.attr("data-max-fields")),
+        next_id = 0;
+    $(this).closest(".field-repeater").find("[name]").each(function() {
+      var name = $(this).attr("name"),
+         id = 0;
+      if (name) {
+        var match = name.match(/\[[0-9]+\]/);
+        if (match) {
+          id = parseInt(match[0].replace(/\[|\]/g, ""), 10);
+        }
+      }
+      if (id > next_id) next_id = id;
+    });
+    next_id += 1;
     if(!max) max = 3;
     if(items < max) clone.hide().appendTo(list).fadeIn("slow");
     if(items === (max-1)) container.find(".add-field").hide();
     setup_autocomplete();
+    clone.find("[name]").attr("name", function() { return $(this).attr("name").replace(/\[[0-9]+\]/, '[' + next_id + ']'); });
     return false;
   });
 
