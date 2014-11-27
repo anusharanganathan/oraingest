@@ -206,6 +206,14 @@ $(function() {
     });
   });
 
+  $("input[type='date']").each(function() {
+    var options = {};
+    if ($(this).attr("name").match(/dateAccepted/)) {
+      options.minDate = 0;
+    }
+    $(this).datepicker(options).attr("type", "text");
+  });
+
   /* -------------------------------------------------------------
    * Tracker Follow
    * -------------------------------------------------------------

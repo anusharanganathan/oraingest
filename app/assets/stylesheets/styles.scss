@@ -2160,3 +2160,49 @@ table td textarea {
 
 
 
+/* Date picker
+------------------------------------------- */
+#ui-datepicker-div {
+  background: #F5F5F5;
+  border: 1px solid #C8C8C8;
+
+  .ui-datepicker-title {
+    font-weight: bold;
+  }
+
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    cursor: pointer;
+    &.ui-state-disabled {
+      display: none;
+    }
+  }
+
+  .ui-datepicker-next {
+    right: 12px;
+  }
+
+  .ui-datepicker-calendar td {
+    a, span {
+      text-align: center;
+    }
+    span {
+      color: #999;
+    }
+    a:hover {
+      background: #E6E6E6;
+    }
+  }
+
+
+  .ui-datepicker-prev-hover,
+  .ui-datepicker-next-hover {
+    top: 2px !important;
+  }
+  .ui-datepicker-prev-hover {
+    left: 2px !important;
+  }
+  .ui-datepicker-next-hover {
+    right: 12px !important;
+  }
+}
