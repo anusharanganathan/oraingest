@@ -72,9 +72,11 @@
     if (terms_accepted) {
       $("#file-table").show();
       $("#file-upload-tos-warning").hide();
+      $(".fileupload-buttonbar").show();
     } else {
       $("#file-table").hide();
       $("#file-upload-tos-warning").show();
+      $(".fileupload-buttonbar").hide();
     }
   }
 

@@ -1214,6 +1214,10 @@ form > section.form-step:first-of-type { display: none; }
     button {
       padding: 5px 15px;
     }
+    &.start,
+    &.cancel {
+      display: none;
+    }
   }
   tfoot button {
     display: none;
