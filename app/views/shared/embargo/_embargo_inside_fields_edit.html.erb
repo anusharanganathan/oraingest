@@ -11,7 +11,7 @@
         </label>
       </div>
       <div class="col col2of3">
-        <%= f_dt_end.text_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:200px' %>
+        <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:200px' %>
       </div>
     </div>
     <% end %>

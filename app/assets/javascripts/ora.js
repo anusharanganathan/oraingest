@@ -214,6 +214,9 @@ $(function() {
     if ($(this).attr("name").match(/dateAccepted/)) {
       options.maxDate = 0;
     }
+    if ($(this).attr("name").match(/embargoDate/)) {
+      options.minDate = 0;
+    }
     $(this).datepicker(options).attr("type", "text");
   });
 
