@@ -80,26 +80,7 @@
                   </div>
 
                   <%= f_hp.fields_for :accessRights do |f_a| %>
-                    
-                    <% if hp.accessRights.empty? %>
-                      <% hp.accessRights.build %>
-                    <% end %>
-                    <% if hp.accessRights[0].embargoDate.empty? %>
-                      <% hp.accessRights[0].embargoDate.build %>
-                    <% end %>
-                    <% if hp.accessRights[0].embargoDate[0].start.empty? %>
-                      <% hp.accessRights[0].embargoDate[0].start.build %>
-                    <% end %>
-                    <% if hp.accessRights[0].embargoDate[0].duration.empty? %>
-                      <% hp.accessRights[0].embargoDate[0].duration.build %>
-                    <% end %>
-                    <% if hp.accessRights[0].embargoDate[0].end.empty? %>
-                      <% hp.accessRights[0].embargoDate[0].end.build %>
-                    <% end %>
-                    <%= f_a.hidden_field :embargoStatus, :value => "Embargoed" %>
-                    <%= render partial: 'shared/embargo/embargo_fields_edit', as: :article, :locals => { :f => f, :accessRights => article.accessRights, :embargo_type => "file" } %>
-
-                    <!-- <button type="submit" class="button button-small light-blue">Save Details/Embargo</button> -->
+                    <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights, :embargo_type => "file" } %>
                   <% end %>
                 </div><!-- /.hidden-form -->
               <% end %>
