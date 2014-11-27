@@ -208,8 +208,11 @@ $(function() {
 
   $("input[type='date']").each(function() {
     var options = {};
+
+    options.dateFormat = 'dd/mm/yy';
+    options.firstDay = 1;
     if ($(this).attr("name").match(/dateAccepted/)) {
-      options.minDate = 0;
+      options.maxDate = 0;
     }
     $(this).datepicker(options).attr("type", "text");
   });
