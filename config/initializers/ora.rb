@@ -293,7 +293,8 @@ Sufia.config do |config|
   config.archiving_payment_options = {
     "Payment has already been made for archiving the data" => "Paid",
     "Raise me an inoice for archiving the data" => "To be invoiced",
-    "My publisher requires I cite the data and my research is unfunded" => "Unfunded research"
+    "Payment is not required" => "Unfunded research",
+    "I need help with this" => "Payment help"
   }
 
   config.workflow_status = {
