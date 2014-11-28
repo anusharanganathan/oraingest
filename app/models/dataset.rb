@@ -85,7 +85,7 @@ class Dataset < ActiveFedora::Base
     if pid.include?('sufia:')
       pid = pid.gsub('sufia:', '')
     end
-    directory = "/data/%s" % pid
+    directory = File.join(Sufia.config.data_root_dir, pid)
     FileUtils::mkdir_p(directory) 
     # create the file path
     path = File.join(directory, name)
