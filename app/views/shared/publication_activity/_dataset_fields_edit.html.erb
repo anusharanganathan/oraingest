@@ -52,7 +52,7 @@
 
     <div class="fieldset">
       <p class="small">Year published</p>
-      <%= f_p.date_field :datePublished, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
+      <%= f_p.text_field :datePublished, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
 
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
