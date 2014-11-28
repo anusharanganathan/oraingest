@@ -387,14 +387,7 @@ dl {
 }
 
 .header .logo {
-	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
-	width: 105px;
-	height: 64px;
+  margin-top: 6px;
 }
 
 /* Navigation
@@ -1220,6 +1213,10 @@ form > section.form-step:first-of-type { display: none; }
     margin: 3px;
     button {
       padding: 5px 15px;
+    }
+    &.start,
+    &.cancel {
+      display: none;
     }
   }
   tfoot button {

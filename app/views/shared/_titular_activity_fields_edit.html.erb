@@ -21,9 +21,10 @@
               <% end %>
 
               <li>
-                <p><span class="small">Name</span>
-                <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "titularName%d"%c_index, :class=>"titularName" %>
+                <label><span class="small">Name</span>
+                <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "titularName%d"%c_index, :class=>"creatorName" %>
                 <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+                </label>
 
                 <% if can? :review, :all %>
                   <label>
@@ -45,7 +46,7 @@
                   <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
                     <label>
                       <p><span class="small">Affiliation</span>
-                        <%= f_c2.text_field :name, :value => c2.name.first, id: "titularAffiliation%dName%d"% [c_index, c2_index], :class=>"titularAffiliation" %>
+                        <%= f_c2.text_field :name, :value => c2.name.first, id: "titularAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
                       </p>
                     </label>
 
