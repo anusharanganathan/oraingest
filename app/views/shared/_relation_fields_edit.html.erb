@@ -3,7 +3,7 @@
 <% end %>
 
 <div class="fieldset">
-  <h4>Related publications</h4>
+  <h4>Related publications and dataset</h4>
   <div class="field-repeater" data-max-fields="5">
     <ol>
     <% qualifiedRelation.each_with_index do |r, r_index| %>
@@ -49,13 +49,11 @@
 
   <aside class="tooltip tooltip-wide">
     <a href="#" class="close-button">x</a>
-    <strong>Related publications</strong>
-    <p>Enter the title of any related item, e.g. give the title of an article which your research data underpins.</p>
-    <p>Select the option that best describes the relationship between your dataset and the item you have indicated
-    as being related.</p>
+    <strong>Related publications and dataset</strong>
+    <p>Enter the title of any related item, e.g. a dataset which underpins your publication.</p>
+    <p>Select the option that best describes the relationship between your publication and the item you have indicated as being related.</p>
     <p>Add an abstract or brief description of the related item.</p>
-    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please
-    give a citation for it.</p>
+    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please give a citation for it.</p>
     <div class="tooltip-extra">
       <div class="circle circle-discoverability"></div>
       <p><strong>Completing this field helps with Discoverability / Searchability</strong></p>
