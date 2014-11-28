@@ -15,12 +15,20 @@
         <% if !r.relation.empty? && !r.relation[0].empty? && !r.entity.nil? && !r.entity[0].nil? %>
           <% if !r.entity[0].title.empty? && !r.entity[0].title[0].empty? %>
             <h6>Title of related item:</h6>
-            <p><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></p>
-          <% else %>
-            <h6>Title of related item:</h6>
-            <p><%=link_to r.entity[0].id %></p>
+            <% if r.entity[0].rdf_subject.to_s.include?("externalRelation") %>
+              <p><%=r.entity[0].title.first%></p>
+            <% else %>
+              <p><%=link_to r.entity[0].title.first, r.entity[0].rdf_subject.to_s %></p>
+            <% end %>
           <% end %>
-
+          <% if !r.entity[0].identifier.empty? && !r.entity[0].identifier[0].empty? %>
+            <h6>DOI or URL of related item:</h6>
+            <% if r.entity[0].rdf_subject.to_s.include?("externalRelation") %>
+              <p><%=r.entity[0].identifier.first%></p>
+            <% else %>
+              <p><%=link_to r.entity[0].identifier.first, r.entity[0].rdf_subject.to_s %></p>
+            <% end %>
+          <% end %>
           <% if !r.relation.empty? && !r.relation[0].empty? %>
             <h6>Relationship:</h6>
             <p><%= link_to r.relation.first %></p>
