@@ -1,13 +1,13 @@
-#require 'devise_remote_user'
+require 'devise_remote_user'
 
-#DeviseRemoteUser.configure do |config|
-#  #config.env_key = lambda { |env| "#{env['REMOTE_USER']}@stanford.edu" }
-#  config.env_key = 'REMOTE_USER'
-#  config.auto_create = true
-#  config.auto_update = true
-#  #config.attribute_map = {webauth_groups: 'WEBAUTH_LDAPPRIVGROUP'}
-#  config.attribute_map = {email: 'mail'}
-#end
+DeviseRemoteUser.configure do |config|
+  #config.env_key = lambda { |env| "#{env['REMOTE_USER']}@stanford.edu" }
+  config.env_key = 'REMOTE_USER'
+  config.auto_create = true
+  config.auto_update = true
+  #config.attribute_map = {webauth_groups: 'WEBAUTH_LDAPPRIVGROUP'}
+  config.attribute_map = {email: 'mail'}
+end
 
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
@@ -255,5 +255,5 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = "/my_engine/users/auth"
 
-  config.secret_key = '78ea6dadcac1d3be3d18a1d8b2d39b888a41489416a48b353b541860eacd155bc064e8e61c1f2ae4ee5d1906c98f078237c19300b7375a88d0472424263061c4'  
+  config.secret_key = '31080b34d9cbc4fe3e2ad2738fa3b972da9bb040117b2d7cf34656a2e65d101deb49ddc0dac67e87c5fd03c0130df1ca841704a38994da165f89729a1c998ca4'  
 end
