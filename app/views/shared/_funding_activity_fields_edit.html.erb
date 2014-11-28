@@ -51,7 +51,7 @@
               <% end %>
 
               <label>
-                <span class="small">Who received the funding?</span>
+                <span class="small">Who or what was funded?</span>
                 <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), id: "funderFunds%d"% f1_index %>
               </label>
 
@@ -64,3 +64,4 @@
     <a href="#" class="add-field">Add another funder</a>
   </div>
 </div>
+
