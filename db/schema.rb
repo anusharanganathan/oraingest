@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.datetime "updated_at"
   end
 
-  add_index "checksum_audit_logs", ["pid", "dsid"], name: "by_pid_and_dsid"
+  add_index "checksum_audit_logs", ["pid", "dsid"], name: "by_pid_and_dsid", using: :btree
 
   create_table "conversations", force: true do |t|
     t.string   "subject",    default: ""
@@ -46,15 +46,15 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.string "term"
   end
 
-  add_index "domain_terms", ["model", "term"], name: "terms_by_model_and_term"
+  add_index "domain_terms", ["model", "term"], name: "terms_by_model_and_term", using: :btree
 
   create_table "domain_terms_local_authorities", id: false, force: true do |t|
     t.integer "domain_term_id"
     t.integer "local_authority_id"
   end
 
-  add_index "domain_terms_local_authorities", ["domain_term_id", "local_authority_id"], name: "dtla_by_ids2"
-  add_index "domain_terms_local_authorities", ["local_authority_id", "domain_term_id"], name: "dtla_by_ids1"
+  add_index "domain_terms_local_authorities", ["domain_term_id", "local_authority_id"], name: "dtla_by_ids2", using: :btree
+  add_index "domain_terms_local_authorities", ["local_authority_id", "domain_term_id"], name: "dtla_by_ids1", using: :btree
 
   create_table "follows", force: true do |t|
     t.integer  "followable_id",                   null: false
@@ -66,8 +66,8 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.datetime "updated_at"
   end
 
-  add_index "follows", ["followable_id", "followable_type"], name: "fk_followables"
-  add_index "follows", ["follower_id", "follower_type"], name: "fk_follows"
+  add_index "follows", ["followable_id", "followable_type"], name: "fk_followables", using: :btree
+  add_index "follows", ["follower_id", "follower_type"], name: "fk_follows", using: :btree
 
   create_table "local_authorities", force: true do |t|
     t.string "name"
@@ -79,8 +79,8 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.string  "uri"
   end
 
-  add_index "local_authority_entries", ["local_authority_id", "label"], name: "entries_by_term_and_label"
-  add_index "local_authority_entries", ["local_authority_id", "uri"], name: "entries_by_term_and_uri"
+  add_index "local_authority_entries", ["local_authority_id", "label"], name: "entries_by_term_and_label", using: :btree
+  add_index "local_authority_entries", ["local_authority_id", "uri"], name: "entries_by_term_and_uri", using: :btree
 
   create_table "notifications", force: true do |t|
     t.string   "type"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.string   "attachment"
   end
 
-  add_index "notifications", ["conversation_id"], name: "index_notifications_on_conversation_id"
+  add_index "notifications", ["conversation_id"], name: "index_notifications_on_conversation_id", using: :btree
 
   create_table "receipts", force: true do |t|
     t.integer  "receiver_id"
@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.datetime "updated_at",                                 null: false
   end
 
-  add_index "receipts", ["notification_id"], name: "index_receipts_on_notification_id"
+  add_index "receipts", ["notification_id"], name: "index_receipts_on_notification_id", using: :btree
 
   create_table "searches", force: true do |t|
     t.text     "query_params"
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.string   "user_type"
   end
 
-  add_index "searches", ["user_id"], name: "index_searches_on_user_id"
+  add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "single_use_links", force: true do |t|
     t.string   "downloadKey"
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.string "url"
   end
 
-  add_index "subject_local_authority_entries", ["lowerLabel"], name: "entries_by_lower_label"
+  add_index "subject_local_authority_entries", ["lowerLabel"], name: "entries_by_lower_label", using: :btree
 
   create_table "trophies", force: true do |t|
     t.integer  "user_id"
@@ -183,8 +183,8 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.datetime "groups_last_update"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "version_committers", force: true do |t|
     t.string   "obj_id"
