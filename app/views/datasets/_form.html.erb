@@ -73,8 +73,8 @@
           <% @dataset.dateCollected.build %>
         <% end %>
         <p class="small">When was the data collected?</p>
-        <%= f.date_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
-        <%= f.date_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+        <%= f.date_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.date_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>
@@ -342,3 +342,4 @@
 </nav>
 
 <% end %>
+
