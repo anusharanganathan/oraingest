@@ -31,11 +31,7 @@
 
           <label>
             <p class="small">DOI or URL of related item</p>
-            <% if !r.entity[0].identifier.nil? && !r.entity[0].identifier.empty? && r.entity[0].identifier.first %>
-              <%= f_e.text_field 'id', :value => r.entity[0].identifier.first, style: "width: 50%", id: "relationId%d"% r_index %>
-            <% else %>
-              <%= f_e.text_field 'id', :value => r.entity[0].id.to_s, style: "width: 50%", id: "relationId%d"% r_index %>
-            <% end %>
+            <%= f_e.text_field :identifier, :value => r.entity[0].identifier.first, style: "width: 50%", id: "relationId%d"% r_index %>
           </label>
 
           <label>
