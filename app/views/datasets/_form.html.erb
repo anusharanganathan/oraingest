@@ -20,6 +20,7 @@
 
     <%# path = { :new => new_dataset_path, :list => datasets_path } %>
     <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
+    <% end %>
   </div>
 
   <nav class="form-nav">
@@ -34,6 +35,7 @@
   </nav>
 </section>
 
+<%= form_for(@dataset) do |f| %>
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
@@ -339,5 +341,4 @@
   </div>
 </nav>
 
-<% end #TODO: This form end is being rejected. DOn't think it can be fixed without a design rethink. The form seems to work though. %>
-
+<% end %>

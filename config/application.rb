@@ -70,6 +70,5 @@ module OraHydra
 
     #Adding default header for IE
     config.action_dispatch.default_headers.merge!('X-UA-Compatible' => 'IE=edge')
-
   end
 end

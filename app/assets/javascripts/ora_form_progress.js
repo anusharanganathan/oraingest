@@ -10,7 +10,12 @@
         if (this.checked) {
           valid_count += 1;
         }
-      } else if (!!$(this).val()) {
+      } else if ($(this).prop("tagName") == "SELECT") {
+        if ($(this).find(":selected").text() != "") {
+          valid_count += 1;
+        }
+        
+      }else if (!!$(this).val()) {
         valid_count += 1;
       }
     });
@@ -75,9 +80,24 @@
     } else {
       $("#file-table").hide();
       $("#file-upload-tos-warning").show();
+      $(".fileupload-buttonbar").hide();
     }
   }
 
+
+  function bindUploadCallbacks() {
+    $(".fileupload-buttonbar").hide();
+    $("#fileupload").bind("fileuploadadd", function() {
+      $(".fileupload-buttonbar").show();
+    });
+    $("#fileupload").bind("fileuploadstopped", function() {
+      $(".fileupload-buttonbar").hide();
+    });
+  }
+
+  $(document).on("click", ".fileupload-buttonbar .cancel", function() {
+    $(this).parents(".fileupload-buttonbar").hide();
+  });
 
   /**
    * Let's do this
@@ -86,4 +106,5 @@
   $(updateProgress);
   $(document).on("change", "#terms_of_service", toggleUploadForm);
   $(toggleUploadForm);
+  $(bindUploadCallbacks);
 })(jQuery);
