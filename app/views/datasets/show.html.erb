@@ -34,7 +34,9 @@
 					<%= render partial: "admin_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @dataset } %>
 					<%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
-					<%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
+                                        <% if can? :review, :all %>
+						<%= render partial: "shared/permissions_show", :locals => { :article => @dataset } %>
+					<% end %>
 				</div>
 				<aside class="record-sidebar">
 					<h6>Downloads</h6>
