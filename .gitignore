@@ -38,3 +38,5 @@ rails_server.log
 # other temp files
 *~
 
+#Ignore ome config files
+/config/initializers/secret_token.rb
