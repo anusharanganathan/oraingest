@@ -75,16 +75,19 @@
     var terms_accepted = $("#terms_of_service").is(":checked");
 
     if (terms_accepted) {
-      $("#file-table").show();
+      $("#main_import_start").removeAttr("disabled");
       $("#file-upload-tos-warning").hide();
+      //$("#file-table").show();
+      //$(".fileupload-buttonbar").show();
     } else {
-      $("#file-table").hide();
+      $("#main_import_start").attr("disabled", "disabled");
       $("#file-upload-tos-warning").show();
-      $(".fileupload-buttonbar").hide();
+      //$("#file-table").hide();
+      //$(".fileupload-buttonbar").hide();
     }
   }
 
-
+  /* Hide the start upload and cancel upload button bars */
   function bindUploadCallbacks() {
     $(".fileupload-buttonbar").hide();
     $("#fileupload").bind("fileuploadadd", function() {
@@ -106,5 +109,5 @@
   $(updateProgress);
   $(document).on("change", "#terms_of_service", toggleUploadForm);
   $(toggleUploadForm);
-  $(bindUploadCallbacks);
+  //$(bindUploadCallbacks);
 })(jQuery);
