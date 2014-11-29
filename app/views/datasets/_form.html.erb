@@ -12,7 +12,7 @@
       <%#= form_for(@dataset) do |f| %>
         <%#= hidden_field_tag(:pid, @pid) %>
         <%#= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
-        <%= render partial: 'shared/file_show', :locals => { :article => @dataset } %>
+        <%= render partial: 'shared/upload/list_files' %>
         <div class="padding-side-25">
           <div class="bottom-border"></div>
         </div>
