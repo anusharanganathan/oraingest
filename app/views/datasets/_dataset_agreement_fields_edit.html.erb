@@ -12,7 +12,7 @@
 
       <fieldset class="small-text">
         <% Sufia.config.archiving_payment_options.each do |key, val| %>
-          <label><%= f_a.radio_button :annotation, val, :checked =>hasRelatedAgreement.annotation.first %><span></span><%=key%></label>
+          <label><%= f_a.radio_button :annotation, val, :checked =>(hasRelatedAgreement.annotation.first==val) %><span></span><%=key%></label>
         <% end %>
       </fieldset>
 
