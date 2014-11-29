@@ -308,6 +308,7 @@ dl {
 }
 
 .icon-remove {
+	content: 'X';
 	background: #719AAA;
 	border-radius: 50%;
 	width: 15px;
@@ -318,7 +319,7 @@ dl {
 }
 
 .icon-remove:after {
-	content: 'X';
+	content: '-';
 	font-family: "Arial", sans-serif;
 	font-size: 12px;
 	color: #fff;
@@ -1210,7 +1211,7 @@ form > section.form-step:first-of-type { display: none; }
 #file-table {
   td {
     vertical-align: middle;
-    margin: 3px;
+    /* margin: 3px; */
     button {
       padding: 5px 15px;
     }
@@ -1698,7 +1699,7 @@ table td textarea {
 .record-sidebar > a {
 	position: relative;
 	display: block;
-        height: 30px;
+        /* height: 30px; */
 	font-family: "Arial", sans-serif;
 	font-size: 12px;
 	padding: 8px 0px 8px 38px;
