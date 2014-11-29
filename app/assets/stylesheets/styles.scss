@@ -1215,13 +1215,12 @@ form > section.form-step:first-of-type { display: none; }
     button {
       padding: 5px 15px;
     }
-    &.start,
-    &.cancel {
+    &.start {
       display: none;
     }
   }
   tfoot button {
-    display: none;
+    display: block;
   }
 }
 #file-table .progress {
@@ -2202,4 +2201,20 @@ table td textarea {
   .ui-datepicker-next-hover {
     right: 12px !important;
   }
+}
+
+/* Adding style for disabled buttons and input boxes */
+button[disabled]:active, button[disabled],
+input[type="reset"][disabled]:active,
+input[type="reset"][disabled],
+input[type="button"][disabled]:active,
+input[type="button"][disabled],
+select[disabled] > input[type="button"],
+select[disabled] > input[type="button"]:active,
+input[type="submit"][disabled]:active,
+input[type="submit"][disabled] {
+  // padding: 0px 6px 0px 6px; 
+  // border: 2px outset ButtonFace;
+  background: #cccccc;
+  cursor: inherit;
 }

@@ -214,8 +214,8 @@ $(function() {
   });
 
   $(document).on("click", "#file-table .cancel", function() { 
-    $(this).parents("tr").first().fadeTo(500, 0, function() { 
-      $(this).css("overflow", "hidden").slideUp(500, function() {
+    $(this).parents("tr").first().fadeTo(50, 0, function() { 
+      $(this).css("overflow", "hidden").slideUp(50, function() {
         $(this).remove();
       });
     });
