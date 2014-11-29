@@ -77,6 +77,7 @@
     if (terms_accepted) {
       $("#main_import_start").removeAttr("disabled");
       $("#file-upload-tos-warning").hide();
+      $(".fileupload-buttonbar > .tooltip").hide();
       //$("#file-table").show();
       //$(".fileupload-buttonbar").show();
     } else {
@@ -98,9 +99,9 @@
     });
   }
 
-  $(document).on("click", ".fileupload-buttonbar .cancel", function() {
-    $(this).parents(".fileupload-buttonbar").hide();
-  });
+  //$(document).on("click", ".fileupload-buttonbar .cancel", function() {
+  //  $(this).parents(".fileupload-buttonbar").hide();
+  //});
 
   /**
    * Let's do this
