@@ -183,7 +183,7 @@ $(function() {
         items = list.find("li").length,
         clone = container.data("field").clone(),
         max = parseInt(container.attr("data-max-fields")),
-        next_id = 0;
+        next_id = items -1;
     $(this).closest(".field-repeater").find("[name]").each(function() {
       var name = $(this).attr("name"),
          id = 0;
@@ -196,7 +196,7 @@ $(function() {
       if (id > next_id) next_id = id;
     });
     next_id += 1;
-    if(!max) max = 3;
+    if(!max) max = 10;
     if(items < max) clone.hide().appendTo(list).fadeIn("slow");
     if(items === (max-1)) container.find(".add-field").hide();
     setup_autocomplete();
