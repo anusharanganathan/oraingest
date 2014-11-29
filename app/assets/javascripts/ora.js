@@ -201,6 +201,7 @@ $(function() {
     if(items === (max-1)) container.find(".add-field").hide();
     setup_autocomplete();
     clone.find("[name]").attr("name", function() { return $(this).attr("name").replace(/\[[0-9]+\]/, '[' + next_id + ']'); });
+    clone.find("[name]").attr("id", function() { return $(this).attr("id").replace(/[0-9]/, next_id); });
     return false;
   });
 
