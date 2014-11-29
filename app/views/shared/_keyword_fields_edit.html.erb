@@ -5,9 +5,17 @@
   <div class="field-repeater" data-max-fields="10">
     <ol>
       <li>
-        <%= f.text_field :keyword, :name=>"dataset[keyword][]", :value=>@dataset.keyword.first, id: "keyword0" %>
+        <%= f.text_field :keyword, :multiple => true, :value=>keyword.first, id: "keyword0" %>
         <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
       </li>
+      <% kcount = 1 %>
+      <% for k in keyword.from(1) %>
+        <li>
+          <%= f.text_field :keyword, :multiple => true, :value=>k, id: "keyword%d"%kcount %>
+          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+        </li>
+        <% kcount += 1 %>
+      <% end %>
     </ol>
     <a href="#" class="add-field">Add another keyword</a>
   </div>
