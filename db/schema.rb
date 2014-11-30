@@ -195,4 +195,8 @@ ActiveRecord::Schema.define(version: 20130702152043) do
     t.datetime "updated_at"
   end
 
+  add_foreign_key "notifications", "conversations", name: "notifications_on_conversation_id"
+
+  add_foreign_key "receipts", "notifications", name: "receipts_on_notification_id"
+
 end
