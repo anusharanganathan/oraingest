@@ -311,7 +311,7 @@ Sufia.config do |config|
   }
 
   config.rt_server = 'https://support.bodleian.ox.ac.uk/'
-  config.rt_queue = 'oraq'
+  config.rt_queue = 'ora.system'
 
   config.email_options = {
     # occurence 
