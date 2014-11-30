@@ -1,10 +1,10 @@
 development:
   user: fedoraAdmin
-  password: j4P50K0s050^tuFy
+  password: XmhELPyelqj1m0TK
   url: http://127.0.0.1:8080/fedora
 test: &TEST  
   user: fedoraAdmin
-  password: j4P50K0s050^tuFy
+  password: XmhELPyelqj1m0TK
   url: http://127.0.0.1:8080/fedora
 production:
   user: fedoraAdmin
