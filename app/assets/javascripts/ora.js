@@ -183,7 +183,7 @@ $(function() {
         items = list.find("li").length,
         clone = container.data("field").clone(),
         max = parseInt(container.attr("data-max-fields")),
-        next_id = 0;
+        next_id = items -1;
     $(this).closest(".field-repeater").find("[name]").each(function() {
       var name = $(this).attr("name"),
          id = 0;
@@ -196,11 +196,12 @@ $(function() {
       if (id > next_id) next_id = id;
     });
     next_id += 1;
-    if(!max) max = 3;
+    if(!max) max = 10;
     if(items < max) clone.hide().appendTo(list).fadeIn("slow");
     if(items === (max-1)) container.find(".add-field").hide();
     setup_autocomplete();
     clone.find("[name]").attr("name", function() { return $(this).attr("name").replace(/\[[0-9]+\]/, '[' + next_id + ']'); });
+    clone.find("[name]").attr("id", function() { return $(this).attr("id").replace(/[0-9]/, next_id); });
     return false;
   });
 
@@ -214,8 +215,8 @@ $(function() {
   });
 
   $(document).on("click", "#file-table .cancel", function() { 
-    $(this).parents("tr").first().fadeTo(500, 0, function() { 
-      $(this).css("overflow", "hidden").slideUp(500, function() {
+    $(this).parents("tr").first().fadeTo(50, 0, function() { 
+      $(this).css("overflow", "hidden").slideUp(50, function() {
         $(this).remove();
       });
     });

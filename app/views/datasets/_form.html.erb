@@ -7,22 +7,18 @@
       <%= render partial: 'files_form' %>
     </div>
 
-    <%# TODO: The form is starting in the middle of the section %>
-    <%= form_for(@dataset) do |f| %>
-      <%= hidden_field_tag(:pid, @pid) %>
-      <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
-
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
-      <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
-
-    <%# path = { :new => new_dataset_path, :list => datasets_path } %>
-    <%# render partial: "shared/actions/new",  :locals => { :path => path } %>
-    <% end %>
+    <div class="padding-0">
+      <%# NOTE: The form is starting in the middle of the section %>
+      <%#= form_for(@dataset) do |f| %>
+        <%#= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
+        <%= render partial: 'shared/upload/list_files' %>
+        <div class="padding-side-25">
+          <div class="bottom-border"></div>
+        </div>
+        <%#= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @dataset } %>
+    </div>
   </div>
-
+<div>
   <nav class="form-nav">
     <div class="form-nav-prev">
     </div>
@@ -33,9 +29,11 @@
       <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
     </div>
   </nav>
+</div>
 </section>
 
 <%= form_for(@dataset) do |f| %>
+<%= hidden_field_tag(:pid, @pid) %>
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
@@ -62,7 +60,7 @@
         <div class="bottom-border"></div>
       </div>
 
-      <%= render partial: "shared/mads_keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
+      <%= render partial: "shared/keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
 
       <div class="padding-side-25">
         <div class="bottom-border"></div>
@@ -93,8 +91,8 @@
           <% @dataset.temporal.build %>
         <% end %>
         <p class="small">Time period covered by the data</p>
-        <%= f.date_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 70px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
-        <%= f.date_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 70px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+        <%= f.date_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.date_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
 
         <aside class="tooltip">
           <a href="#" class="close-button">x</a>

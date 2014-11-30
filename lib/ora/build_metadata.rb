@@ -41,9 +41,11 @@ module Ora
       unless params.kind_of?(Array)
         params = [params]
       end
-      # Workflow needs to have same id. We are not creating a new workflow, but just an entry
-      #TODO: Rather than assuming first workflow, select first workflow with identifier MediatedSubmission
-      params[0][:id] = article.workflows.first.rdf_subject.to_s
+      if !article.workflows.nil? && article.workflows.first
+        # Workflow needs to have same id. We are not creating a new workflow, but just an entry
+        #TODO: Rather than assuming first workflow, select first workflow with identifier MediatedSubmission
+        params[0][:id] = article.workflows.first.rdf_subject.to_s
+      end
       if params[0].has_key?(:entries_attributes)
         # Validate entries is array
         unless params[0][:entries_attributes].kind_of?(Array)
@@ -266,11 +268,14 @@ module Ora
     article.influence = nil
     influences = []
     params.each_with_index do |rel, rel_index|
-      if !rel[:entity_attributes]["0"]['id'].nil? && rel[:entity_attributes]["0"]['id'].start_with?('10.')
-        rel[:entity_attributes]["0"]['id'] = "http://dx.doi.org/#{rel[:entity_attributes]["0"]['id']}"
-      end
-      if rel[:entity_attributes]["0"]['id'].nil? || rel[:entity_attributes]["0"]['id'].empty? || !rel[:entity_attributes]["0"]['id'].start_with?('http')
+      if rel[:entity_attributes]["0"]['identifier'].nil? || rel[:entity_attributes]["0"]['identifier'].empty?
         rel[:entity_attributes]["0"]['id'] = "info:fedora/#{article.id}#externalRelation#{rel_index.to_s}"
+      elsif rel[:entity_attributes]["0"]['identifier'].start_with?('10.')
+        rel[:entity_attributes]["0"]['id'] = "http://dx.doi.org/#{rel[:entity_attributes]["0"]['id']}"
+      elsif !rel[:entity_attributes]["0"]['identifier'].start_with?('http')
+        rel[:entity_attributes]["0"]['id'] = "info:fedora/#{article.id}#externalRelation#{rel_index.to_s}"
+      else
+        rel[:entity_attributes]["0"]['id'] = rel[:entity_attributes]["0"]['identifier']
       end
       influences.push(rel[:entity_attributes]["0"]['id'])
       rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [article.id, rel_index]

@@ -185,6 +185,8 @@ class ExternalRelations
   attr_accessor :title, :description, :type, :citation
 
   map_predicates do |map|
+    #-- identifier - to record ids given which aren't URIs -- 
+    map.identifier(:in => RDF::DC)
     #-- title --
     map.title(:in => RDF::DC)
     #-- description --

@@ -88,7 +88,7 @@ var renderSubject = function ( ul, item ) {
 }
 
 var autocompletePerson = {
-  minLength: 3,
+  minLength: 5,
   source: function( request, response ) {
     $.ajax({
       url: '/qa/search/cud/fullname',

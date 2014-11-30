@@ -32,7 +32,7 @@
 </div>
 <div class="field date" style="background-color:#ccc;">
   <%= label_tag "article[hasPart][#{n}][accessRights][][embargoDate][][end][][date]", "Enter the embargo end date", :class=>"control-label" %>
-  <%= text_field_tag "article[hasPart][#{n}][accessRights][][embargoDate][][end][][date]", hp.accessRights[0].embargoDate[0].end[0].date.first %>
+  <%= date_field_tag "article[hasPart][#{n}][accessRights][][embargoDate][][end][][date]", hp.accessRights[0].embargoDate[0].end[0].date.first, style: "width: 100px;" %>
 </div>
 <div class="field date" style="background-color:#ddd;">
   <%= label_tag "article[hasPart][#{n}][accessRights][][embargoDate][][duration][]", "<b>OR</b> Enter the embargo period".html_safe, :class=>"control-label" %>
@@ -43,7 +43,7 @@
   <span><%= radio_button_tag "article[hasPart][#{n}][accessRights][][embargoDate][][start][][label]", "Today", (startOption == "Today") %> today</span>
   <span><%= radio_button_tag "article[hasPart][#{n}][accessRights][][embargoDate][][start][][label]", "Publication date", (startOption == "Publication date") %> publication date</span>
   <span><%= radio_button_tag "article[hasPart][#{n}][accessRights][][embargoDate][][start][][label]", "", (startOption == "Date") %> date</span>
-  <%= text_field_tag "article[hasPart][#{n}][accessRights][][embargoDate][][start][][date]", hp.accessRights[0].embargoDate[0].start[0].date.first %>
+  <%= date_field_tag "article[hasPart][#{n}][accessRights][][embargoDate][][start][][date]", hp.accessRights[0].embargoDate[0].start[0].date.first, style: "width: 100px;" %>
 </div>
 <div class="field">
   <%= label_tag "article[hasPart][#{n}][accessRights][][embargoReason]", "Reason for embargo", :class=>"control-label" %>

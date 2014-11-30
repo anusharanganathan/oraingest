@@ -21,7 +21,8 @@
 // ORA custom
 //= require autocomplete
 //= require formUI
-//= require sufia/multiForm
+//= require multiForm
+//= require fileupload
 //= require ora
 //= require ora_form_progress
 //= require jquery.ui.datepicker
