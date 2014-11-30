@@ -10,7 +10,6 @@
     <div class="padding-0">
       <%# NOTE: The form is starting in the middle of the section %>
       <%#= form_for(@dataset) do |f| %>
-        <%#= hidden_field_tag(:pid, @pid) %>
         <%#= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
         <%= render partial: 'shared/upload/list_files' %>
         <div class="padding-side-25">
@@ -34,6 +33,7 @@
 </section>
 
 <%= form_for(@dataset) do |f| %>
+<%= hidden_field_tag(:pid, @pid) %>
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
