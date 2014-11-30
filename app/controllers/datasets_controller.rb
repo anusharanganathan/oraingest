@@ -316,12 +316,12 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       format.html {
-        render :json => [@dataset.to_jq_upload(file.original_filename, file.size, @dataset.id, datastream_id)],
+        render :json => [@dataset.to_jq_upload(file.original_filename, file.size, @dataset.id, dsid)],
         :content_type => 'text/html',
         :layout => false
       }
       format.json {
-        render :json => [@dataset.to_jq_upload(file.original_filename, file.size, @dataset.id, datastream_id)]
+        render :json => [@dataset.to_jq_upload(file.original_filename, file.size, @dataset.id, dsid)]
       }
     end
   rescue ActiveFedora::RecordInvalid => af
@@ -405,7 +405,7 @@ class DatasetsController < ApplicationController
   end
 
   def contents
-    choicesUsed = @dataset.datastreams.keys.select { |key| key.match(/^content\d+/) and @dataset.datastreams[key].content != nil }
+    choicesUsed = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
     files = []
     for dsid in choicesUsed
       opts = @dataset.datastream_opts(dsid)
@@ -458,12 +458,8 @@ class DatasetsController < ApplicationController
   end
 
   def datastream_id
-    choicesUsed = @dataset.datastreams.keys.select { |key| key.match(/^content\d+/) and @dataset.datastreams[key].content != nil }
-    begin
-      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
-    rescue
-      "content01"
-    end
+    #choicesUsed = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
+    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
   end
 
   private
