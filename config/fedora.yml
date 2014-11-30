@@ -8,7 +8,7 @@ test: &TEST
   url: http://127.0.0.1:8080/fedora
 production:
   user: fedoraAdmin
-  password: 8MlairQ5OlhF0DBM
+  password: XmhELPyelqj1m0TK
   url: http://127.0.0.1:8080/fedora
 cucumber:
   <<: *TEST
