@@ -22,6 +22,6 @@ production:
   adapter: mysql2
   database: hydra
   username: hydraUser
-  password: Fp#psDgZn5W1cG|Z
+  password: WqahYveGRwNYZN6z
   pool: 5
   timeout: 5000
