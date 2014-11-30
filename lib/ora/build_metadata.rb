@@ -41,9 +41,11 @@ module Ora
       unless params.kind_of?(Array)
         params = [params]
       end
-      # Workflow needs to have same id. We are not creating a new workflow, but just an entry
-      #TODO: Rather than assuming first workflow, select first workflow with identifier MediatedSubmission
-      params[0][:id] = article.workflows.first.rdf_subject.to_s
+      if !article.workflows.nil? && article.workflows.first
+        # Workflow needs to have same id. We are not creating a new workflow, but just an entry
+        #TODO: Rather than assuming first workflow, select first workflow with identifier MediatedSubmission
+        params[0][:id] = article.workflows.first.rdf_subject.to_s
+      end
       if params[0].has_key?(:entries_attributes)
         # Validate entries is array
         unless params[0][:entries_attributes].kind_of?(Array)
