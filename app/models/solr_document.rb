@@ -195,6 +195,10 @@ class SolrDocument
   def digitalSize_local
     Array(self[Solrizer.solr_name('admin_metadata__digitalSize', :stored_searchable)]).first
   end
+
+  def depositor
+    get(Solrizer.solr_name("depositor", :stored_searchable))
+  end
  
   def submission_workflow_status 
     get(Solrizer.solr_name("MediatedSubmission_status", :symbol))
@@ -209,7 +213,7 @@ class SolrDocument
   end
   
   def submission_workflow_all_reviewer_ids
-    get(Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol))
+    Array(Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol))
   end
   
   def digitalSizeAllocated 
