@@ -202,6 +202,11 @@ $(function() {
     setup_autocomplete();
     clone.find("[name]").attr("name", function() { return $(this).attr("name").replace(/\[[0-9]+\]/, '[' + next_id + ']'); });
     clone.find("[name]").attr("id", function() { return $(this).attr("id").replace(/[0-9]/, next_id); });
+    clone.find('a').attr("data-method", function() { 
+      if ($(this).attr("data-method") == "delete") {
+        $(this).replaceWith('<a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>');
+      }
+    });
     return false;
   });
 

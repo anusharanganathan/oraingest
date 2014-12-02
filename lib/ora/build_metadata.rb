@@ -21,19 +21,18 @@ module Ora
   end
 
   def validatePermissionsToRevoke(params, depositor)
-    params['permissions_attributes'].each do |p|
-      if p["type"].downcase != "group" && p["name"] != depositor
-        if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
-          p["type"] = "user"
-          p["_destroy"] = true
-        else
-          params['permissions_attributes'].delete(p)
-        end #check name and access exists
-      else
-        params['permissions_attributes'].delete(p)
+    newParams = {"permissions_attributes" => []}
+    if params.has_key?("type") && !params["type"].empty? && params.has_key?("name") && !params["name"].empty? && params.has_key?("access") && !params["access"].empty?
+      if params["type"].downcase != "group" && params["name"] != depositor
+        p = {}
+        p["type"] = "user"
+        p["name"] = params["name"]
+        p["access"] = params["access"]
+        p["_destroy"] = true
+        newParams['permissions_attributes'] << p
       end # check not type = group and not depositor
-    end # loop each permission
-    params
+    end #check type, name and access exists
+    newParams
   end
 
   def validateWorkflow(params, depositor, article)
