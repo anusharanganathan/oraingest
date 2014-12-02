@@ -8,7 +8,7 @@
 <div class="gutter-container">
 	<div class="col col1of6">
 		<aside class="filters">
-			<% path = { :new => new_article_path, :show => article_path(@article), :edit => edit_article_path(@article), :list => publications_path } %>
+			<% path = { :new => new_article_path, :show => article_path(@article), :edit => document_url("Article", "edit", @article.id), :list => publications_path } %>
 			<%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @article.workflows.first.current_status, :document_id => @article.id.to_s } %>
 			<%#= TODO: Add stats and open access state, once published in ORA %>
 			<%#= render partial: "shared/access_logo_and_stats_show", :locals => { :article => @article } %>
