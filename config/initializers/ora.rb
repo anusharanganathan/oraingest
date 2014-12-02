@@ -107,7 +107,8 @@ Sufia.config do |config|
       "CC Attribution-ShareAlike (CC BY-SA 2.5)" => "CC Attribution-ShareAlike (CC BY-SA 2.5)",
       "GPL v2" => "GPL v2",
       "LGPL v2.1" => "LGPL v2.1",
-      "MIT licence" => "MIT licence"
+      "MIT licence" => "MIT licence",
+      "Bespoke licence" => "Bespoke licence"
     },
     "dataset" => {
       "" => "",
