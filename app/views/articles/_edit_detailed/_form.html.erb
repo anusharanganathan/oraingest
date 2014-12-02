@@ -92,7 +92,7 @@
     <%= hidden_field_tag('redirect_tab', 'rightstab') %>
     <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
     <%= render partial: "articles/_edit_detailed/admin_fields_edit", :locals => { :f => f, :article => @article } %>
-    <%= render partial: 'shared/embargo/catalogue_fields_edit', :locals => { :f => f, :article => @article } %>
+    <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f, :accessRights => @article.accessRights, :embargo_type => "metadata" } %>
     <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
     <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
     <div class="actions">
