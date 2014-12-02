@@ -375,6 +375,17 @@ dl {
 	.tag-general-item 		{ background: #aaad00; }
 	.tag-technical 		{ background: #4f5858; }
 
+	.tag-draft	{ background: #99CCFF; }
+	.tag-submitted	{ background: #006699; }
+	.tag-assigned	{ background: #FF3399; }
+	.tag-claimed	{ background: #FF9933; }
+	.tag-approved	{ background: #009900; }
+	.tag-escalated	{ background: #CC3300; }
+	.tag-referred	{ background: #336699; }
+	.tag-rejected	{ background: #660033; }
+	.tag-published	{ background: #00CC99; }
+	.tag-unassigned	{ background: #996633; }
+
 /* Header
 ------------------------------------------- */
 .header,
@@ -1653,6 +1664,7 @@ table td textarea {
 
 .review-article .buttons {
 	position: absolute;
+	top: 0px;
 	bottom: 0px;
 	right: 3px;
 	width: 96px;
