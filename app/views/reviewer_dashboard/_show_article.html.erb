@@ -1,16 +1,28 @@
 <article class="review-article">
   <div class="content">
     <%= render partial: "articles/worktype_label_show", :locals => { :worktypeLabel => document.worktypeLabel } %> 
-
-    <span class="small"><strong>Status:</strong> <%= document.submission_workflow_status %></span>
-    
-    <p><%= document.abstract %></p>
+    <%= render partial: "shared/status_label_show", :locals => { :status => document.submission_workflow_status } %> 
+    <div><strong><%= link_to truncate(document.title_or_label, :length => 28, :separator => ' '), document_url(document.modelName, 'show', document.id), :title => document.title_or_label  %></strong></div>
+    <% if !document.creators.nil? && !document.creators.empty? %>
+      <div class="small">
+        <strong>Creator: </strong>
+        <%= document.creators.map { |author| author["name"] }.join "; " %>
+      </div>
+    <% end %>
+    <% unless document.abstract.nil? %>
+      <div class="small">
+        <strong>Abstract: </strong>
+        <%= truncate(document.abstract, :length => 170,  :separator => ' ') do "..." end %>
+      </div>
+    <% end %>
     <aside class="info">
-      <div><strong>Depositor:</strong> <%= document.creators.map { |author| author["name"] }.join ", " %></div>
-      <div><strong>Date submitted:</strong> </div>
-      <div><strong>Date accepted:</strong> </div>
-      <div><strong>Reviewer:</strong> </div>
-      <div><strong>ORA ID:</strong> </div>
+      <div><strong>Depositor:</strong> <%= document.depositor %></div>
+      <% if !document.dateAccepted_s.nil? %>
+          <div><strong>Date accepted: </strong><%= document.dateAccepted_s %></div>
+      <% elsif !document.datePublished_s.nil? %>
+          <div><strong>Date published:</strong><%= document.datePublished_s %></div>
+      <% end %>
+      <div><strong>Reviewer:</strong><%= document.submission_workflow_current_reviewer_id %> </div>
     </aside>
   </div>
   <div class="buttons">
