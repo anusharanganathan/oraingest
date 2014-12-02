@@ -71,11 +71,11 @@ class ArticlesController < ApplicationController
   end
 
   def index
-    #@articles = Article.all
+    redirect_to publications_path
     #Grab users recent documents
-    recent_me_not_draft
-    recent_me_draft
-    @model = 'article'
+    #recent_me_not_draft
+    #recent_me_draft
+    #@model = 'article'
   end
 
   def show
@@ -95,7 +95,7 @@ class ArticlesController < ApplicationController
   def edit
     authorize! :edit, params[:id]
     if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
-       authorize! :review, params[:id]
+      authorize! :review, params[:id]
     end
     @pid = params[:id]
     @files = contents
@@ -144,7 +144,7 @@ class ArticlesController < ApplicationController
     end
     @article.destroy
     respond_to do |format|
-      format.html { redirect_to articles_url }
+      format.html { redirect_to publications_path }
       format.json { head :no_content }
     end
   end
