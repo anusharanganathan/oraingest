@@ -1,0 +1,11 @@
+<% if !status.nil? %>
+  <% #Colours defined in css %>
+  <% states = ['draft', 'submitted', 'assigned', 'claimed', 'approved', 'escalated', 'referred', 'rejected', 'published', 'unassigned'] %>
+  <% if states.include?(status.downcase) %>
+    <% tag = status.downcase %>
+  <% else %>
+    <% tag = "unassigned" %>
+  <% end %>
+  <span class="tag tag-<%=tag%>"><%= status %></span>
+<% end %>
+
