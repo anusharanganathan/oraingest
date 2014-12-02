@@ -242,10 +242,11 @@ class ArticlesController < ApplicationController
   end
 
   def revoke_permissions
-    if params.has_key?(:article) && params[:article].has_key?(:permissions_attributes)
-      article_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
+    authorize! :destroy, params[:id]
+    if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
+      new_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
       respond_to do |format|
-        if @article.update(article_params)
+        if @article.update(new_params)
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
           format.json { head :no_content }
         else

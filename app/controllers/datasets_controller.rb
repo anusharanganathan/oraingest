@@ -330,10 +330,11 @@ class DatasetsController < ApplicationController
   end
 
   def revoke_permissions
-    if params.has_key?(:dataset) && params[:dataset].has_key?(:permissions_attributes)
-      dataset_params = Ora.validatePermissionsToRevoke(params[:dataset], @dataset.workflowMetadata.depositor[0])
+    authorize! :destroy, params[:id]
+    if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
+      new_params = Ora.validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
       respond_to do |format|
-        if @dataset.update(dataset_params)
+        if @dataset.update(new_params)
           format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
           format.json { head :no_content }
         else

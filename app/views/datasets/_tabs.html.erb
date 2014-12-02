@@ -9,13 +9,16 @@
   <li><a href="#workflowtab" data-toggle="tab"><i class="icon-flag"></i>Workflow</a></li>
 </ul> -->
 
-<nav class="form-steps">
-	<ol>
-		<li class="current">Upload<br/> files<span></span></li>
-		<li>About<br/> your data<span></span></li>
-		<li>About<br/> you<span></span></li>
-		<li>Related<br/> publications<span></span></li>
-		<li>Data archiving<br/> options<span></span></li>
-		<li>Funders and<br/> licences<span></span></li>
-	</ol>
+<nav class="form-steps extra-step">
+  <ol>
+    <li class="current">Upload<br/> files<span></span></li>
+    <li>About<br/> your data<span></span></li>
+    <li>About<br/> you<span></span></li>
+    <li>Related<br/> publications<span></span></li>
+    <li>Data archiving<br/> options<span></span></li>
+    <li>Funders and<br/> licences<span></span></li>
+    <% if can? :review, :all %>
+      <li>Review<br/> workflow<span></span></li>
+    <% end %>
+  </ol>
 </nav>
