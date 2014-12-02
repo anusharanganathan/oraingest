@@ -9,7 +9,7 @@
 <% unless document.abstract.nil? %>
     <div>
       <h6 class="inline">Abstract: </h6>
-      <p class="inline"><%= document.abstract %></p>
+      <p class="inline"><%= truncate(document.abstract, :length => 170,  :separator => ' ') do "..." end %></p>
     </div>
 <% end %>
 <% if !document.dateAccepted_s.nil? %>
