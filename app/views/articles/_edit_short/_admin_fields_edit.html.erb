@@ -9,4 +9,8 @@
     <%= f.radio_button :apcPaid, "No", :checked=>(article.apcPaid.first=='No') %>
     <span></span>No
   </label>
+  <label>
+    <%= f.radio_button :apcPaid, "Don't know", :checked=>(article.apcPaid.first=="Don't know") %>
+    <span></span>Don't know
+  </label>
 </fieldset>
