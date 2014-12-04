@@ -279,6 +279,11 @@ a {
 	text-decoration: none;
 }
 
+a.disabled {
+   pointer-events: none;
+   cursor: default;
+}
+
 a:hover { text-decoration: underline; }
 
 dl {
@@ -1833,7 +1838,7 @@ table td textarea {
 ------------------------------------------- */
 
 .pagination {
-	margin: 15px 0;
+	margin: 20px 0 0 0;
 	clear: both;
 }
 
