@@ -355,7 +355,6 @@ Sufia.config do |config|
   config.contact_email = "ora@bodleian.ox.ac.uk"
   config.from_email = "no-reply@bodleian.ox.ac.uk"
   config.data_root_dir = "/data/oradeposit/"
-  config.cud_base_url = "http://localhost:9595" 
-  #config.cud_base_url = "http://10.0.0.203"
+  config.cud_base_url = "http://dams-auth.bodleian.ox.ac.uk" #"http://10.0.0.203"
 end
 
