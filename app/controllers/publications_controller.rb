@@ -14,9 +14,6 @@ class PublicationsController < ApplicationController
   self.copy_blacklight_config_from(CatalogController)
   
   configure_blacklight do |config|
-    # Extra Facets
-    config.add_facet_field "active_fedora_model_ssi", :label => "Type", :limit => 10#, :pivot => [Solrizer.solr_name("desc_metadata__type", :symbol)]
-
     # Extra Index Fields
     config.add_index_field solr_name("MediatedSubmission_date_submitted", :dateable), :label => "Date Submitted"
   end
