@@ -7,6 +7,7 @@ module Ora
           # solr fields to be displayed in the index (search results) view
           #   The ordering of the field names is the order of the display
           config.add_index_field solr_name("MediatedSubmission_status", :symbol), :label => "Workflow Status"
+          config.add_index_field solr_name("MediatedSubmission_date_submitted", :dateable), :label => "Date Submitted"
           config.add_index_field solr_name("desc_metadata__title", :stored_searchable, type: :string), :label => "Title"
           config.add_index_field solr_name("desc_metadata__subtitle", :stored_searchable, type: :string), :label => "Subtitle"
           config.add_index_field solr_name("desc_metadata__description", :stored_searchable, type: :string), :label => "Description"
