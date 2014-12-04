@@ -4,7 +4,9 @@
         <%= render partial: "articles/worktype_label_show", :locals => { :worktypeLabel => document.worktypeLabel } %>
       </td>
       <td>
-        <h4 class="<%= "red-text" if (document.submission_workflow_status.downcase.eql? "draft") %>"><%= document.submission_workflow_status %></h4>
+        <% if !document.submission_workflow_status.nil? %>
+          <h4 class="<%= "red-text" if (document.submission_workflow_status.downcase.eql? "draft") %>"><%= document.submission_workflow_status %></h4>
+        <% end %>
         <%= render :partial => "shared/show_document_buttons", :locals => {:document => document} %>
       </td>
     </tr>
