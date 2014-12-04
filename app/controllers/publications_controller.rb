@@ -13,11 +13,6 @@ class PublicationsController < ApplicationController
    
   self.copy_blacklight_config_from(CatalogController)
   
-  configure_blacklight do |config|
-    # Extra Index Fields
-    config.add_index_field solr_name("MediatedSubmission_date_submitted", :dateable), :label => "Date Submitted"
-  end
-  
   private
   
   # Limits search results just to GenericFile and Collection objects
