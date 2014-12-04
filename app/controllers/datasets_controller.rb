@@ -65,10 +65,11 @@ class DatasetsController < ApplicationController
       redirect_to action: 'show', alert: "You do not have sufficient privileges to modify this dataset"
       #redirect_to action: 'show'
     elsif exception.action == :show
-      redirect_to action: 'index', alert: "You do not have sufficient privileges to view this dataset"
+      redirect_to list_datasets_path, alert: "You do not have sufficient privileges to view this dataset"
+      #redirect_to action: 'index', alert: "You do not have sufficient privileges to view this dataset"
     elsif current_user and current_user.persisted?
-      redirect_to action: 'index', alert: exception.message
-      #redirect_to action: 'index'
+      redirect_to list_datasets_path, alert: exception.message
+      #redirect_to action: 'index', alert: exception.message
     else
       session["user_return_to"] = request.url
       redirect_to new_user_session_url, :alert => exception.message
@@ -77,11 +78,12 @@ class DatasetsController < ApplicationController
   end
 
   def index
+    redirect_to list_datasets_path
     #@datasets = Dataset.all
     #Grab users recent documents
-    recent_me_not_draft
-    recent_me_draft
-    @model = 'dataset'
+    #recent_me_not_draft
+    #recent_me_draft
+    #@model = 'dataset'
   end
 
   def show
@@ -199,37 +201,37 @@ class DatasetsController < ApplicationController
     render :partial => "dataset_agreement_fields_edit", :locals => { :hasRelatedAgreement => @agreement }
   end
 
-  def recent
-    if user_signed_in?
-      # grab other people's documents
-      (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
-                                        :sort=>sort_field, :rows=>5)
-    else 
-      # grab any documents we do not know who you are
-      (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>5)
-    end
-  end
+  #def recent
+  #  if user_signed_in?
+  #    # grab other people's documents
+  #    (_, @recent_documents) = get_search_results(:q =>filter_not_mine,
+  #                                      :sort=>sort_field, :rows=>5)
+  #  else 
+  #    # grab any documents we do not know who you are
+  #    (_, @recent_documents) = get_search_results(:q =>'', :sort=>sort_field, :rows=>5)
+  #  end
+  #end
 
-  def recent_me
-    if user_signed_in?
-      (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
-                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
-    end
-  end
+  #def recent_me
+  #  if user_signed_in?
+  #    (_, @recent_user_documents) = get_search_results(:q =>filter_mine,
+  #                                      :sort=>sort_field, :rows=>50, :fields=>"*:*")
+  #  end
+  #end
 
-  def recent_me_draft
-    if user_signed_in?
-      (_, @datasets) = get_search_results(:q =>filter_mine_draft,
-                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
-    end
-  end
+  #def recent_me_draft
+  #  if user_signed_in?
+  #    (_, @datasets) = get_search_results(:q =>filter_mine_draft,
+  #                                      :sort=>sort_field, :rows=>50, :fields=>"*:*")
+  #  end
+  #end
 
-  def recent_me_not_draft
-    if user_signed_in?
-      (_, @submitted_datasets) = get_search_results(:q =>filter_mine_not_draft,
-                                        :sort=>sort_field, :rows=>50, :fields=>"*:*")
-    end
-  end
+  #def recent_me_not_draft
+  #  if user_signed_in?
+  #    (_, @submitted_datasets) = get_search_results(:q =>filter_mine_not_draft,
+  #                                      :sort=>sort_field, :rows=>50, :fields=>"*:*")
+  #  end
+  #end
 
   def relevant_agreements
     # All people including the data steward should be listed in the contributor, if allowed to contribute
@@ -511,21 +513,21 @@ class DatasetsController < ApplicationController
     Solrizer.solr_name("desc_metadata__agreementType", :symbol)
   end
 
-  def filter_not_mine 
-    "{!lucene q.op=AND #{depositor}:-#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
-  end
+  #def filter_not_mine 
+  #  "{!lucene q.op=AND #{depositor}:-#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
+  #end
 
-  def filter_mine
-    "{!lucene q.op=AND #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
-  end
+  #def filter_mine
+  #  "{!lucene q.op=AND #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
+  #end
 
-  def filter_mine_draft
-    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
-  end
+  #def filter_mine_draft
+  #  "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
+  #end
 
-  def filter_mine_not_draft
-    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
-  end
+  #def filter_mine_not_draft
+  #  "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
+  #end
 
   def filter_relevant_agreement
     # All people including the data steward should be listed in the contributor, if allowed to contribute
