@@ -8,27 +8,34 @@
   <%= render 'home' %>
 <% else %>
 
-  <% content_for :sidebar do %>
-    <%= render :partial=>'facets' %>
+  <% @page_title = application_name + " Search Results" %>
+  <% extra_head_content << render_opensearch_response_metadata.html_safe %>
+
+  <% content_for :top do %>
+    <div class="col col1of2">
+      <h2>Search Results</h2>
+    </div>
+
+    <%# render 'constraints', :localized_params=>params %>
+
+    <div class="colfull" style="text-align: right; margin-bottom: 15px">
+      <hr />
+      <%= render 'sort_and_per_page' %>
+      <%= render 'dashboard/results_pagination' %>
+    </div>
   <% end %>
 
-  <% @page_title = application_name + " Search Results" %>
+  <div class="col col5of6">
+    <% if params.has_key?("q") %>
+      <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= render_constraints(params) %></strong></div>	
+    <% end %>
+    <%= render :partial => 'did_you_mean' %>
+    
+    <%= render :partial => 'document_list' %>
 
-  <h3>Search Results</h3>
-  <div class="alert alert-info"><i class="icon-search icon-large"></i> You searched for: <strong><%= render_constraints(params) %></strong></div>	
-  <%= render :partial => 'did_you_mean' %>
-  <%= render :partial => 'facet_selected' %>
-  <%# render 'constraints', :localized_params=>params %>
-  
-  <div class="row"> 
-    <%= render 'sort_and_per_page' %>
-  </div>
-  
-  <%= render 'results_pagination' %>
-  
-  <%= render :partial => 'document_list' %>
-
-  <%= render 'results_pagination' %>
+  <% content_for :sidebar do %>
+    <%= render :partial=>'dashboard/facets' %>
+  <% end %>
 
 <% end %>
 
