@@ -8,20 +8,11 @@
     <div class="wrapper">
       <%= render :partial => '/masthead', :formats => [:html] %>
       <%= render :partial => '/flash_msg' %>
-        <section class="main-content">
-          <div class="container">
-            <header class="content-header">
-            <a href="/">
-            <%= image_tag "ora/core/logo-myora.svg", alt: "MyOra", class: "float-left" %>
-            </a>
-              <!-- TODO: should be a partial which is used elsewhere too? -->
-              <!-- TODO: Hiding search form until we fix the design of the search results page -->
-              <!-- <aside class="search">
-                <form action="" method="post">
-                  <input type="search" type="search" placeholder="Type keywords here" />
-                  <button type="submit" class="button">Search</button>
-                </form>
-              </aside> -->
-            </header>
-          </div>
+      <section class="main-content">
+        <div class="container">
+          <header class="content-header">
+            <a href="/"><%= image_tag "ora/core/logo-myora.svg", alt: "MyOra", class: "float-left" %></a>
+            <%= render :partial=>'catalog/search_form' %>
+          </header>
+        </div>
 
