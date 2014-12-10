@@ -802,6 +802,12 @@ form > section.form-step:first-of-type { display: none; }
 	margin: 0px 0px 20px 25px;
 }
 
+/* Form errors
+------------------------------------------- */
+form .error {
+  color: red;
+}
+
 /* Expand Panel
 ------------------------------------------- */
 .expand-panel {

@@ -115,7 +115,7 @@ $(function() {
    * -------------------------------------------------------------
    * Navigation for moving onto other steps of the form
    * -----------------------------------------------------------*/
-  function goto_form_step(index) {
+  function goto_form_step(index, callback) {
     var new_form = $("section.form-step:eq("+index+")"),
         current_form = $("nav.form-steps li.current").index(),
         navigation = $("nav.form-steps ol");
@@ -128,7 +128,11 @@ $(function() {
 
     $('html,body').animate({
       scrollTop: $("section.main-content").offset().top-40
-    },300);
+    },300, function() {
+      if ($.isFunction(callback)) {
+        callback();
+      }
+    });
   }
 
   $(document).on("click","nav.form-steps li:not(.current)",function(){
@@ -244,6 +248,38 @@ $(function() {
       $(this).val(default_value);
     }
   });
+
+  /* -------------------------------------------------------------
+   * Highlight mandatory form field which hasn't been filled out
+   * -----------------------------------------------------------*/
+  $("section.form-step").each(function(index) {
+    $(this).data("form-step-index", index);
+  });
+    
+  function highlight_field($field) {
+    var form_section = $field.closest("section.form-step");
+    if (form_section.length) {
+      goto_form_step(form_section.data("form-step-index"), function () { $field.focus(); });
+    } else {
+      $field.focus();
+    }
+  }
+
+  $(".ora-validate-form").validate({
+    invalidHandler: function(e, validator) {
+      var errors = validator.numberOfInvalids();
+      $(".invalid").removeClass("invalid");
+      if (errors) {
+        var element = validator.errorList[0].element;
+        highlight_field($(element));
+      }
+    },
+    ignore: ".ignore",
+    focusInvalid: false,
+    onsubmit: true,
+    onfocusout: true,
+    debug: true
+  })
 
   /* -------------------------------------------------------------
    * Tracker Follow
