@@ -277,9 +277,17 @@ $(function() {
     ignore: ".ignore",
     focusInvalid: false,
     onsubmit: true,
-    onfocusout: true,
-    debug: true
-  })
+    onfocusout: true
+  });
+
+  // allow for form validation bypassing
+  $(document).on("click", "[data-submit-without-validation='true']", function(e) {
+    if (!e.isTrigger) {
+      $(".ora-validate-form").validate().settings.ignore = "*";
+      $(this).trigger("click");
+    }
+  });
+
 
   /* -------------------------------------------------------------
    * Tracker Follow
