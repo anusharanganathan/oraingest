@@ -31,7 +31,7 @@
 
 <div class="fieldset">
   <p class="small">Documentation about your dataset and processes</p>
-  <%= f.text_area :isDocumentedBy, :value=>@dataset.isDocumentedBy.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
+  <%= f.text_area :isDocumentedBy, :required => true, :value=>@dataset.isDocumentedBy.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
 
   <aside class="tooltip tooltip-wide">
     <a href="#" class="close-button">x</a>
