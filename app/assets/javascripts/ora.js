@@ -296,6 +296,8 @@ $(function() {
   $(document).on("click", "[data-submit-without-validation='true']", function(e) {
     if (!e.isTrigger) {
       $(".ora-validate-form").validate().settings.ignore = "*";
+      $("#workflows_entries_status").val($(this).attr("data-default-value"));
+      $("#workflows_entries_status").attr("value", $(this).attr("data-default-value"));
       $(this).trigger("click");
     }
   });
