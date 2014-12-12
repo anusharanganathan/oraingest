@@ -2,26 +2,44 @@
   <div class="accordian">
     <div class="accordian-header">Funding Information</div>
     <div class="accordian-content">
-      <% article.funding[0].funder.each_with_index do |f, f_index| %>
-        <% if f.agent[0].name and f.agent[0].sameAs %>
-          <p><span class="h6">Name of funder:</span> <%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></p>
-        <% elsif f.agent[0].name %>
-          <p><span class="h6">Name of funder:</span><%= f.agent[0].name.first %></p>
+      <% article.funding.each do |f0| %>
+        <% if f0.hasFundingAward %>
+          <p><span class="h6">Is the research the result of a funding award?:</span> <%= f0.hasFundingAward.first %></p>
         <% end %>
-        <% if f.funds %>
-          <p><span class="h6">Funds:</span> <%= f.funds.first %></p>
-        <% end %>
-        <% if !f.awards.empty? && !f.awards[0].grantNumber.empty? && !f.awards[0].grantNumber.first.empty? %>
-          <p><span class="h6">Grant number:</span> 
-          <% f.awards.each do |f3| %>
-            <%= f3.grantNumber.first %>
+        <% if !f0.funder.nil? %>
+          <% f0.funder.each do |f| %>
+            <% if f.agent[0].name and f.agent[0].sameAs %>
+              <p><span class="h6">Name of funder:</span> <%=link_to f.agent[0].name.first, f.agent[0].sameAs.first %></p>
+            <% elsif f.agent[0].name %>
+              <p><span class="h6">Name of funder:</span><%= f.agent[0].name.first %></p>
+            <% end %>
+            <% if f.funds %>
+              <p><span class="h6">Funds:</span> 
+              <% #TODO: Fix this assumption once it is fixed in edit form %>
+              <% if f.funds.first == "info:fedora/#{article.id.to_s}" %>
+                Article
+              <% elsif f.funds.first == "info:fedora/#{article.id.to_s}#creator1" %>
+                Creator
+              <% elsif f.funds.first == "info:fedora/#{article.id.to_s}#project1" %>
+                Project
+              <% else %>
+                <%= f.funds.first %>
+              <% end %>
+              </p>
+            <% end %>
+            <% if !f.awards.empty? && !f.awards[0].grantNumber.empty? && !f.awards[0].grantNumber.first.empty? %>
+              <p><span class="h6">Grant number:</span> 
+              <% f.awards.each do |f3| %>
+                <%= f3.grantNumber.first %>
+              <% end %>
+              </p>
+            <% end %>
+            <% if !f.annotation.empty? %>
+              <p><span class="h6">Acknowledgement note:</span> <%= f.annotation.first %></p>
+            <% end %>
+            <br/>
           <% end %>
-          </p>
         <% end %>
-        <% if !f.annotation.empty? %>
-          <p><span class="h6">Acknowledgement note:</span> <%= f.annotation.first %></p>
-        <% end %>
-        <br/>
       <% end %>
     </div>
   </div>
