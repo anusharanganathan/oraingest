@@ -17,6 +17,7 @@ class FundingActivity
   rdf_type rdf_type RDF::PROV.Activity
   map_predicates do |map|
     map.wasAssociatedWith(:in => RDF::PROV)
+    map.hasFundingAward(:in => RDF::ORA)
     map.funder(:to => "qualifiedAssociation", :in => RDF::PROV, class_name:"QualifiedFundingAssociation")
   end
   accepts_nested_attributes_for :funder
