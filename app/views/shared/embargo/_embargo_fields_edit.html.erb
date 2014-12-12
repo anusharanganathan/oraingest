@@ -38,15 +38,15 @@
 
   <fieldset class="small-text">
     <label>
-      <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"} %>
+      <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"}, :class => "required"  %>
       <span></span>Yes
     </label>
     <label panel='dataset-embargo-<%= panel_id %>'>
-      <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"} %>
+      <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required" %>
       <span></span>After a certain period
     </label>
     <label>
-      <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"} %>
+      <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"}, :class => "required" %>
       <span></span>No
     </label>
   </fieldset>
