@@ -65,7 +65,7 @@
 <div class="field">
   <%= label_tag "article[hasPart][#{n}][accessRights][][embargoRelease]", "Embargo release method", :class=>"control-label" %>
   <% if !hp.accessRights.empty? and !hp.accessRights[0].embargoRelease.empty? %>
-    <%= select_tag "article[hasPart][#{n}][accessRights][][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods, :selected=>hp.accessRights[0].embargoRelease.first) %>
+    <%= select_tag "article[hasPart][#{n}][accessRights][][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods, :selected=>hp.accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' } %>
   <% else %>
     <%= select_tag "article[hasPart][#{n}][accessRights][][embargoRelease]", options_for_select(Sufia.config.embargo_release_methods) %>
   <% end %>
