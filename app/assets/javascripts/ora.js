@@ -289,7 +289,14 @@ $(function() {
     ignore: ".ignore",
     focusInvalid: false,
     onsubmit: true,
-    onfocusout: true
+    onfocusout: true,
+    errorPlacement: function (error, element) {
+      if (element.is("input:radio")) {
+        error.insertBefore(element.parent()); 
+      } else { 
+        error.insertAfter(element); 
+      } 
+    }
   });
 
   // allow for form validation bypassing
