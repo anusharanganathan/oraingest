@@ -15,7 +15,7 @@
 
     <div class="fieldset">
       <p class="small">Publication status</p>
-      <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first) %>
+      <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first), { :include_blank => 'Select status' } %>
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
         <strong>Publication status</strong>
@@ -25,7 +25,7 @@
 
     <div class="fieldset">
       <p class="small">Review status</p>
-      <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first) %>
+      <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first), { :include_blank => 'Select status' } %>
       <aside class="tooltip">
         <a href="#" class="close-button">x</a>
         <strong>Publication status</strong>

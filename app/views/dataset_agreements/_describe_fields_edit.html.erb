@@ -29,7 +29,7 @@
 
 <div class="field">
   <%= f.label :annotation, "Archiving payment option" %>
-  <%= f.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>@dataset_agreement.annotation.first) %>
+  <%= f.select :annotation, options_for_select(Sufia.config.archiving_payment_options, :selected=>@dataset_agreement.annotation.first), { :include_blank => 'Select an option' } %>
 </div>
 <% if @dataset_agreement.invoice.empty? %>
   <% @dataset_agreement.invoice.build %>
@@ -62,7 +62,7 @@
 <% if can? :review, DatasetAgreement %> 
   <div class="field">
     <%= f.label :agreementType, "Type of agreement" %>
-    <%= f.select :agreementType, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.agreementType.first) %>
+    <%= f.select :agreementType, options_for_select(Sufia.config.agreement_types, :selected=>@dataset_agreement.agreementType.first), { :include_blank => 'Select type of agreement' } %>
   </div>
   <div class="field">
     <%= f.label :dataStorageSilo, "Silo allocated for storage" %>
