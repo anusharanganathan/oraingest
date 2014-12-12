@@ -7,7 +7,7 @@
     <div class="fieldset">
       <p class="small">Type</p>
       <%# t.label :typeLabel, "Type", :class=>"control-label" %>
-      <%= t.select :typeLabel, options_for_select(Sufia.config.subtypes[@model], :selected=>worktype[0].typeLabel.first) %>
+      <%= t.select :typeLabel, options_for_select(Sufia.config.subtypes[@model], :selected=>worktype[0].typeLabel.first), { :include_blank => 'Select a type' } %>
 
       <aside class="tooltip">
         <a href="" class="close-button">x</a>

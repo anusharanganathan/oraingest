@@ -68,9 +68,9 @@
 
 <div class="fieldset">
   <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first) %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' } %>
   <% else %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods) %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods), { :include_blank => 'Select release method' } %>
   <% end %>
 
   <aside class="tooltip">

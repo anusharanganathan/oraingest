@@ -5,7 +5,7 @@
       <legend>Article processing fee and open access details</legend>
       <div class="fields">
         <%= f.label :oaStatus, "Is this an open access article?", :class=>"control-label" %>
-        <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), :style=>"width: 450px;" %>
+        <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), { :include_blank => 'Select a status' }, :style=>"width: 450px;" %>
       </div>
           
       <div class="fields">
@@ -16,7 +16,7 @@
       
       <div class="fields">
         <%= f.label :oaReason, "What is the basis of the APC?", :class=>"control-label" %>
-        <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), :style=>"width: 550px;" %>
+        <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), { :include_blank => 'Select a reason' }, :style=>"width: 550px;" %>
       </div>
       
       <div class="fields">

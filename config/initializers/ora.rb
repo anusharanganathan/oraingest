@@ -18,7 +18,6 @@ Sufia.config do |config|
 
   config.subtypes = {
     "article" => {
-      "Select type" => "",
       "Article" => "Article",
       "Discussion paper" => "Discussion paper",
       "Journal article" => "Journal article",
@@ -35,7 +34,6 @@ Sufia.config do |config|
       "Other" => "Other"
     },
     "book" => {
-      "Select type" => "",
       "Book"=>"Book",
       "Book chapter" => "Book chapter",
       "Book review" => "Book review",
@@ -72,7 +70,6 @@ Sufia.config do |config|
   }
 
   config.publication_status = {
-    "" => "",
     "Accepted" => "Accepted",
     "In Press" => "In Press",
     "Not published" => "Not published",
@@ -81,7 +78,6 @@ Sufia.config do |config|
   }
 
   config.review_status = {
-    "" => "",
     "Peer reviewed" => "Peer reviewed",
     "Reviewed" => "Reviewed",
     "Under review" => "Under review",
@@ -89,7 +85,6 @@ Sufia.config do |config|
   }
 
   config.rights_holder_group = {
-    "" => "",
     "Sole authorship" => "Sole authorship",
     "Joint authorship" => "Joint authorship",
     "Other party" => "Other party",
@@ -98,7 +93,6 @@ Sufia.config do |config|
 
   config.licenses = {
     "article" => {
-      "" => "",
       "CC Attribution (CC BY 2.5)" => "CC Attribution (CC BY 2.5)",
       "CC Attribution-NoDerivs (CC BY-ND 2.5)" => "CC Attribution-NoDerivs (CC BY-ND 2.5)",
       "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)" => "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)",
@@ -111,7 +105,6 @@ Sufia.config do |config|
       "Bespoke licence" => "Bespoke licence"
     },
     "dataset" => {
-      "" => "",
       "ODC Attribution for data/databases (ODC-By)" => "ODC Attribution for data/databases (ODC-By)",
       "ODC Attribution Share-Alike for data/databases (ODC-ODbL)" => "ODC Attribution Share-Alike for data/databases (ODC-ODbL)",
       "ODC Public Domain for data/databases (PDDL)" => "ODC Public Domain for data/databases (PDDL)",
@@ -151,7 +144,6 @@ Sufia.config do |config|
   }
 
   config.relationship_types = {
-    "" => "",
     "is a part of" => RDF::DC::isPartOf,
     "has constituent part" => RDF::DC::hasPart,
     "is a format of" => RDF::DC::isFormatOf, 
@@ -165,7 +157,6 @@ Sufia.config do |config|
   }
 
   config.embargo_release_methods = {
-    "" => "",
     "Automatically lift the embargo" => "Automatically lift the embargo",
     "Consult me before lift of embargo" => "Consult me before lift of embargo"
   }
@@ -206,7 +197,6 @@ Sufia.config do |config|
       "Contributor" => RDF::DC.contributor
     },
     "dataset" => {
-      "Select a role" => nil,
       "Adapter" => RDF::ORA.adapter,
       "Contributor" => RDF::DC.contributor,
       "Copyright holder" => RDF::ORA.copyrightHolder,
@@ -225,7 +215,6 @@ Sufia.config do |config|
       "Translator" => RDF::ORA.translator
     },
     "data_steward" => {
-      "Select a role" => nil,
       "Principal Investigator" => RDF::ORA.principalInvestigator,
       "Creator" => RDF::DC.creator,
       "Head of Department" => RDF::ORA.headOfDepartment,
@@ -264,7 +253,6 @@ Sufia.config do |config|
   }
 
   config.oa_types = {
-    "" => "",
     "Article available freely on the publisher's website" => "Article available freely on the publisher's website",
     "Article should be made available freely in ORA" => "Article should be made available freely in ORA",
     "Article available freely on the subject repository (like pubMed / arXiv)" => "Article available freely on a subject repository (like pubMed / arXiv)",
@@ -273,7 +261,6 @@ Sufia.config do |config|
   }
 
   config.oa_reason = {
-    "" => "",
     "To publish in an open access journal which requires a charge" => "To publish in an open access journal which requires a charge",
     "To forgo the embargo period and make my article available as open access immediately" => "To forgo the embargo period and make my article available as open access immediately",
     "To make a special case for the article to be open access" => "To make a special case for the article to be open access",
@@ -299,7 +286,6 @@ Sufia.config do |config|
   }
 
   config.workflow_status = {
-    "Select a status" => "",
     "Draft" => "Draft",
     "Submitted" => "Submitted",
     "Assigned" => "Assigned",

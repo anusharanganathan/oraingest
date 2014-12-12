@@ -21,7 +21,7 @@
 
           <label>
             <p class="small">Type of relationship</p>
-            <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), id: "relationType%d"% r_index %>
+            <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), { :include_blank => 'Select the relation' }, id: "relationType%d"% r_index %>
           </label>
 
           <label>
