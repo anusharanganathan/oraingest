@@ -13,10 +13,10 @@ module RDF
     property :oaReason
     property :oaStatus
     property :refException
-    #Dataset agreement related terms
+    # Dataset agreement related terms
     property :agreementStatus
     property :agreementType
-    #Data related
+    # Data related
     property :dateCollected
     property :dataContributor
     property :dataSteward
@@ -44,9 +44,9 @@ module RDF
     property :hasDataManagementPlan
     property :hasInvoice
     property :isPartOfSeries
-    #wrokflow
+    # workflow
     property :reviewStatus
-    #Thesis
+    # Thesis
     property :thesisDegreeLevel
     # roles
     property :adapter
@@ -66,5 +66,7 @@ module RDF
     property :sponsor
     property :supervisor
     property :translator
+    # funding
+    property :hasFundingAward
   end
 end

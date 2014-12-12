@@ -289,26 +289,33 @@ module Ora
 
   def buildFundingActivity(params, article)
     article.funding = nil
-    # has to have name of funder and whom the funder funds
+    id0 = "info:fedora/%s#fundingActivity" % article.id
+    vals = {'id' => id0, :wasAssociatedWith => [], :hasFundingAward => nil}
+    awardCount = 0
+    # Funder has to have name of funder and whom the funder funds
     funders = params[:funder_attributes].values()
     funders.each do |funder|
-      #funder = params[:funder_attributes]["#{n}"]
       if funder.nil? || funder.empty? || !funder.has_key?(:agent_attributes)
-        #params[:funder_attributes].delete(funder)
         funders.delete(funder)
       elsif funder[:agent_attributes]["0"][:name].empty? and funder[:funds].empty?
-        #params[:funder_attributes].delete(funder)
         funders.delete(funder)
       end
     end
-    id0 = "info:fedora/%s#fundingActivity" % article.id
-    vals = {'id' => id0, :wasAssociatedWith=> []}
-    awardCount = 0
-    if funders.length > 0
+    # Funding award has to be either yes or no
+    if params.has_key?(:hasFundingAward) && (params[:hasFundingAward] == "yes" || params[:hasFundingAward] == "no")
+      vals[:hasFundingAward] = params[:hasFundingAward]
+    end
+    # Build funding activity
+    if !vals[:hasFundingAward].nil? && vals[:hasFundingAward] == "no"
+      vals[:wasAssociatedWith] = nil
+      vals[:funder] = nil
+      article.funding.build(vals)
+    elsif funders.length > 0
       funders.each_with_index do |funder, n|
         b1 = "info:fedora/%s#funder%d" % [article.id, n]
         vals[:wasAssociatedWith].push(b1)
       end
+      vals[:hasFundingAward] = "yes"
       article.funding.build(vals)
       article.funding[0].funder = nil
       #(0..params[:funder_attributes].length-1).each do |n|
@@ -316,14 +323,9 @@ module Ora
         # Clean the funder attributes and build
         funder["id"] = "info:fedora/%s#fundingAssociation%d" % [article.id, n]
         funder["role"] = RDF::FRAPO.FundingAgency
-        #TODO: Need to be more smart about these Ids. These assumptions are wrong
-        if funder[:funds] == "Author"
-          funder[:funds] = "info:fedora/#{params[:pid]}#creator1"
-        elsif funder[:funds] == "Publication"
-          funder[:funds] = "info:fedora/#{params[:pid]}"
-        elsif funder[:funds] == "Project"
-          funder[:funds] = "info:fedora/#{params[:pid]}#project1"
-        end
+        #TODO: Need to be smart about Ids for funder[:funds]. 
+        #  Should point to existing author or project in metadata.
+        #  Add check here for funder[:funds]
         if funder[:annotation].nil? || funder[:annotation].empty?
           funder[:annotation] = nil
         end
@@ -350,6 +352,10 @@ module Ora
           awardCount += 1
         end
       end
+    elsif !vals[:hasFundingAward].nil?
+      vals[:wasAssociatedWith] = nil
+      vals[:funder] = nil
+      article.funding.build(vals)
     end
     article
   end
