@@ -16,56 +16,61 @@ funding_types = {
   <% end %>
   <%= f.fields_for :funding, f0 do |f_f0| %>
     <h4>Is your research the result of a funding award?</h4>
-
-    <fieldset class="small-text">
-      <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "required" %><span></span>Yes</label>
-      <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "required" %><span></span>No</label>
-    </fieldset>
-
-    <div class="expand-panel" id="dataset-funding">
-      <h5>Funder information</h5>
-      <div class="field-repeater padding-25 no-pad-top" data-max-fields="10">
-        <ol>
-          <% f0.funder.each_with_index do |f1, f1_index| %>
-            <% if f1.agent.empty? %>
-              <% f1.agent.build %>
-            <% end %>
-            <% if f1.awards.empty? %>
-              <% f1.awards.build %>
-            <% end %>
-            <%= f_f0.fields_for :funder, f1 do |f_f1| %>
-              <li>
-                <% f1.agent.each do |f2| %>
-                  <%= f_f1.fields_for :agent, f2 do |f_f2| %>
-                    <label>
-                    <span class="small">Name</span>
-                    <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, required: true %>
-                    <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
-                    </label>
-
-                    <% f1.awards.each_with_index do |f2, f2_index| %>
-                      <%= f_f1.fields_for :awards, f2 do |f_f2| %>
-                        <label>
-                          <span class="small">Grant number:</span>
-                          <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], required: true %>
-                        </label>
+    <div class="fieldset">
+      <fieldset class="small-text">
+        <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "required" %><span></span>Yes</label>
+        <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "required" %><span></span>No</label>
+      </fieldset>
+      <div class="expand-panel" id="dataset-funding">
+        <h5>Funder information</h5>
+        <div class="field-repeater padding-25 no-pad-top" data-max-fields="10">
+          <ol>
+            <% f0.funder.each_with_index do |f1, f1_index| %>
+              <% if f1.agent.empty? %>
+                <% f1.agent.build %>
+              <% end %>
+              <% if f1.awards.empty? %>
+                <% f1.awards.build %>
+              <% end %>
+              <%= f_f0.fields_for :funder, f1 do |f_f1| %>
+                <li>
+                  <% f1.agent.each do |f2| %>
+                    <%= f_f1.fields_for :agent, f2 do |f_f2| %>
+                      <label>
+                      <span class="small">Name</span>
+                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, required: true %>
+                      <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+                      </label>
+                      <% f1.awards.each_with_index do |f2, f2_index| %>
+                        <%= f_f1.fields_for :awards, f2 do |f_f2| %>
+                          <label>
+                            <span class="small">Grant number:</span>
+                            <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], required: true %>
+                          </label>
+                        <% end %>
                       <% end %>
                     <% end %>
-                    
                   <% end %>
-                <% end %>
-
-                <label>
-                  <span class="small">Who or what was funded?</span>
-                  <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, required: true %>
-                </label>
-
-              </li>
+                  <label>
+                    <span class="small">Who or what was funded?</span>
+                    <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, required: true %>
+                  </label>
+                </li>
+              <% end %>
             <% end %>
-          <% end %>
-        </ol>
-        <a href="#" class="add-field">Add another funder</a>
+          </ol>
+          <a href="#" class="add-field">Add another funder</a>
+        </div>
       </div>
+      <aside class="tooltip">
+        <a href="#" class="close-button">x</a>
+        <strong>Is your research the result of a funding award?</strong>
+        <p>If your research was the result of a funding award, please select 'yes'. You can then enter your funder's name and sponsor number, and indicate what was sponsored, e.g. whether it was an individual researcher's post, or a whole (or part of a) research project.
+        <div class="tooltip-extra">
+          <div class="circle circle-funder"></div>
+          <p><strong>Completing this field helps with Funder Compliance</strong></p>
+        </div>
+      </aside>
     </div>
   <% end %>
 <% end %>
