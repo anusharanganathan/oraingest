@@ -17,9 +17,6 @@ class ReviewerDashboardController < ApplicationController
     # Extra Facets
     config.add_facet_field "MediatedSubmission_current_reviewer_id_ssim", :label => "Current Reviewer", :limit => 5
     config.add_facet_field "MediatedSubmission_all_reviewer_ids_ssim", :label => "All Reviewers", :limit => 5
-    
-    # Extra Index Fields
-    config.add_index_field solr_name("MediatedSubmission_date_submitted", :dateable), :label => "Date Submitted"
   end
   
   private
