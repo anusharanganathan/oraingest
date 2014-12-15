@@ -13,7 +13,7 @@
   <%# article.workflows.each_with_index do |wf, wf_index| %>
     <div class="field">
       <label>Status</label>
-      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), { :include_blank => 'Select a status' }, :class=>'span20 select_perm', :id => "workflows_entries_status" %>
+      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :prompt => 'Select a status' , :class=>'span20 select_perm', :id => "workflows_entries_status" %>
       <!-- <aside class="tooltip">
         <a href="#" class="close-button">x</a>
         <strong>Status</strong>
