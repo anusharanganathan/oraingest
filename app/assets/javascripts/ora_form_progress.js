@@ -103,20 +103,6 @@
   //  $(this).parents(".fileupload-buttonbar").hide();
   //});
 
-  function bindUploadCallbacks() {
-    $(".fileupload-buttonbar").hide();
-    $("#fileupload").bind("fileuploadadd", function() {
-      $(".fileupload-buttonbar").show();
-    });
-    $("#fileupload").bind("fileuploadstopped", function() {
-      $(".fileupload-buttonbar").hide();
-    });
-  }
-
-  $(document).on("click", ".fileupload-buttonbar .cancel", function() {
-    $(this).parents(".fileupload-buttonbar").hide();
-  });
-
   /**
    * Let's do this
    */
