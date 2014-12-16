@@ -4,7 +4,7 @@
       1. Upload files
     </div>
     <div class="padding-25 no-pad-bottom">
-      <%= render partial: 'files_form' %>
+      <%= render partial: '/shared/upload/files_form', :locals => {:record => @dataset, :editpath => edit_dataset_path(@pid)} %>
     </div>
 
     <div class="padding-0">
