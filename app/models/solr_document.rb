@@ -213,7 +213,11 @@ class SolrDocument
   end
   
   def submission_workflow_all_reviewer_ids
-    Array(Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol))
+    Array(self[Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol)])
+  end
+  
+  def submission_workflow_all_email_threads
+    Array(self[Solrizer.solr_name("MediatedSubmission_all_email_threads", :symbol)])
   end
   
   def digitalSizeAllocated 
