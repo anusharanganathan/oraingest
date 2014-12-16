@@ -1,9 +1,12 @@
 uva-only:
 reviewer:
-  bodl1087
-  bodl1072
-  bodl2154
-  bodl2556
+  - bodl1087 #Anusha
+  - bodl1072 #Jason
+  - bodl2421 #David
+  - bodl2556 #Tuula
+  - bodl0798 #Sally
+  - bodl2154 #Sarah
+  - sann1070 #Amanda
 financier:
-  bodl1087
+  - bodl1087
 public:
