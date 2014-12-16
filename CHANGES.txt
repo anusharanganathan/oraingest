@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.0.1
+------------------
+
+- Replaced CUD IP with domain name
+- Added sso ids to rolemap
+
 1.0.0 - Unreleased
 ------------------
 
