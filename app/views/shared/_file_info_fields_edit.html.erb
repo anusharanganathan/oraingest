@@ -52,23 +52,22 @@
                   <% end %>
                   <div class="fieldset"> 
                     <h5>Description of file</h5>
-                      <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
-                      <%= f_hp.text_field :description, :value => hp.description.first %>
-                      <aside class="tooltip">
-                        <a href="#" class="close-button">x</a>
-                        <strong>Description of file</strong>
-                        <p>Please use this field to let us know whether the file you are uploading contains important supporting documentation for your data.
-                          E.g. is it your data management plan, or your data documentation?</p>
-                        <div class="tooltip-extra">
-                          <div class="circle circle-documentation"></div>
-                          <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-                        </div>
-                      </aside>
-                    </div>
-                    <%= f_hp.fields_for :accessRights do |f_a| %>
-                      <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights, :embargo_type => "file" } %>
-                    <% end %>
-                  </div><!-- /.fieldset -->
+                    <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
+                    <%= f_hp.text_field :description, :value => hp.description.first %>
+                    <aside class="tooltip">
+                      <a href="#" class="close-button">x</a>
+                      <strong>Description of file</strong>
+                      <p>Please use this field to let us know whether the file you are uploading contains important supporting documentation for your data.
+                        E.g. is it your data management plan, or your data documentation?</p>
+                      <div class="tooltip-extra">
+                        <div class="circle circle-documentation"></div>
+                        <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
+                      </div>
+                    </aside>
+                  </div>
+                  <%= f_hp.fields_for :accessRights do |f_a| %>
+                    <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights, :embargo_type => "file" } %>
+                  <% end %>
                 </div><!-- /.hidden-form -->
               <% end %>
             </div><!-- /.file-content -->
