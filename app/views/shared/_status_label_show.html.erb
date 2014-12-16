@@ -6,6 +6,8 @@
   <% else %>
     <% tag = "unassigned" %>
   <% end %>
-  <span class="tag tag-<%=tag%>"><%= status %></span>
+<% else %>
+  <% tag = "unassigned" %>
 <% end %>
+<span class="tag tag-<%=tag%>"><%= status %></span>
 
