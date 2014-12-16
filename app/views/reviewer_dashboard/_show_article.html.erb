@@ -16,13 +16,21 @@
       </div>
     <% end %>
     <aside class="info">
-      <div><strong>Depositor:</strong> <%= document.depositor %></div>
+      <div><strong>Depositor: </strong><%= document.depositor %></div>
       <% if !document.dateAccepted_s.nil? %>
           <div><strong>Date accepted: </strong><%= document.dateAccepted_s %></div>
       <% elsif !document.datePublished_s.nil? %>
-          <div><strong>Date published:</strong><%= document.datePublished_s %></div>
+          <div><strong>Date published: </strong><%= document.datePublished_s %></div>
       <% end %>
-      <div><strong>Reviewer:</strong><%= document.submission_workflow_current_reviewer_id %> </div>
+      <div><strong>Reviewer: </strong><%= document.submission_workflow_current_reviewer_id %> </div>
+      <% if !document.submission_workflow_all_email_threads.nil? %>
+        <div><strong>RT tickets: </strong>
+        <% document.submission_workflow_all_email_threads.each do |email| %>
+          <% link = "#{Sufia.config.rt_server}Ticket/Display.html?id=#{email}" %>
+          <a href="<%=link%>"><%=email%></a>
+        <% end %>
+        </div>
+      <% end %>
     </aside>
   </div>
   <div class="buttons">
