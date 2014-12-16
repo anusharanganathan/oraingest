@@ -8,5 +8,8 @@
     <% tag = "general-item" %>
   <% end %>
   <span class="tag tag-<%=tag%>"><%= worktypeLabel %></span>
+<% else %>
+  <% tag = "publication" %>
+  <span class="tag tag-<%=tag%>">Publication</span>
 <% end %>
 
