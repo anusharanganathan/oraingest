@@ -1,0 +1,20 @@
+<% 
+types = {
+  "citation" => "Citation", 
+  "discoverability" => "Discoverability", 
+  "funder" => "Funder compliance", 
+  "documentation" => "Documentation, access & re-use", 
+  "preservation" => "Preservation"
+} 
+%>
+<% if types.keys().include?(tipType) %>
+  <aside class="tooltip tooltip">
+    <a href="#" class="close-button">x</a>
+    <strong><%=tipTitle%></strong>
+    <p><%=raw(tipDescription)%></p>
+    <div class="tooltip-extra">
+      <div class="circle circle-<%=tipType%>"></div>
+      <p><strong>Completing this field helps with <%=types[tipType]%></strong></p>
+    </div>
+  </aside>
+<% end %>
