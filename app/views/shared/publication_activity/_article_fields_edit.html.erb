@@ -15,22 +15,14 @@
 
     <div class="fieldset">
       <p class="small">Publication status</p>
-      <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first), { :include_blank => 'Select status' } %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Publication status</strong>
-        <p>...</p>
-      </aside>
+      <%= f_p.select :publicationStatus, options_for_select(Sufia.config.publication_status, :selected=>p.publicationStatus.first), { :include_blank => 'Select status' }, data: {"progress" => "discoverability"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Publication status" , :tipDescription => "What is the status of your publication, with respect to it being published?" } %>
     </div>
 
     <div class="fieldset">
       <p class="small">Review status</p>
-      <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first), { :include_blank => 'Select status' } %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Publication status</strong>
-        <p>...</p>
-      </aside>
+      <%= f_p.select :reviewStatus, options_for_select(Sufia.config.review_status, :selected=>p.reviewStatus.first), { :include_blank => 'Select status' }, data: {"progress" => "discoverability"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Review status" , :tipDescription => "Has your publication been through a reviewed process and if yes, what is the status?" } %>
     </div>
 
     <div class="bottom-border padding-side-25"></div>
@@ -40,31 +32,14 @@
         <div class="fieldset">
           <p class="small">Publisher name</p>
           <%= f_p2.text_field :name, :value => p2.name.first, data: {"progress" => "citation"} %>
-
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>Publisher name</strong>
-            <p>Enter the name of the body making the data publicly available.
-                For data produced at Oxford, this will usually be the University of Oxford.</p>
-            <div class="tooltip-extra">
-              <div class="circle circle-citation"></div>
-              <p><strong>Completing this field helps with Citation</strong></p>
-            </div>
-          </aside>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. 
+          For data produced at Oxford, this will usually be the University of Oxford." } %>
         </div>
 
         <div class="fieldset">
           <p class="small">Publisher website</p>
-          <%= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "citation"} %>
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>Publisher website</strong>
-            <p>...</p>
-            <div class="tooltip-extra">
-              <div class="circle circle-citation"></div>
-              <p><strong>Completing this field helps with Citation</strong></p>
-            </div>
-          </aside>
+          <%= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "documentation"} %>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know your publisher's website, add it here." } %>
         </div>
 
       <% end %> 
@@ -74,32 +49,20 @@
 
     <div class="fieldset">
       <p class="small">Date of acceptance</p>
-      <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Date of acceptance</strong>
-        <p>...</p>
-      </aside>
+      <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first, data: {"progress" => "funder"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "Date of acceptance" , :tipDescription => "What is the date your publication was accepted for publication" } %>
     </div>
 
     <div class="fieldset">
       <p class="small">Date published</p>
-      <%= f_p.date_field :datePublished, :value => p.datePublished.first %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Date published</strong>
-        <p>...</p>
-      </aside>
+      <%= f_p.date_field :datePublished, :value => p.datePublished.first, data: {"progress" => "citation"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Date published" , :tipDescription => "What is the date your publication was published" } %>
     </div>
 
     <div class="fieldset">
       <p class="small">Place of publication</p>
-      <%= f_p.text_field :location, :value => p.location.first %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Place of publication</strong>
-        <p>...</p>
-      </aside>
+      <%= f_p.text_field :location, :value => p.location.first, data: {"progress" => "documentation"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Place of publication" , :tipDescription => "If your publisher is a large multi-national with multiple locations, where was your publication published?" } %>
     </div>
 
     <div class="bottom-border padding-side-25"></div>
@@ -115,32 +78,20 @@
       <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
         <div class="fieldset">
           <p class="small">DOI</p>
-          <%= f_p2.text_field :doi, :value => p2.doi.first, :style => "width: 150px;" %>
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>DOI</strong>
-            <p>...</p>
-          </aside>
+          <%= f_p2.text_field :doi, :value => p2.doi.first, :style => "width: 150px;", data: {"progress" => "citation"} %>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => "What is the DOI of your publication?" } %>
         </div>
 
         <div class="fieldset">
           <p class="small">URL for publisher copy of the document</p>
-          <%= f_p2.text_field :uri, :value => p2.uri.first %>
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>URL for publisher</strong>
-            <p>...</p>
-          </aside>
+          <%= f_p2.text_field :uri, :value => p2.uri.first, data: {"progress" => "discoverability"} %>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "URL of publisher copy" , :tipDescription => "If the DOI is not available for your publication, do you know the URL where the publisher's version of the publication is available online?" } %>
         </div>
 
         <div class="fieldset">
           <p class="small">Article number</p>
-          <%= f_p2.text_field :identifier, :value => p2.identifier.first, :style => "width: 150px;" %>
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>Article number</strong>
-            <p>...</p>
-          </aside>
+          <%= f_p2.text_field :identifier, :value => p2.identifier.first, :style => "width: 150px;", data: {"progress" => "discoverability"} %>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Article number" , :tipDescription => "If your publication is an online only publication, do you know it's article number given by the publisher?" } %>
         </div>
 
         <div class="bottom-border padding-side-25"></div>
@@ -148,13 +99,9 @@
         <% p2.series.each do |p3| %>
           <%= f_p2.fields_for :series, p3 do |f_p3| %>
             <div class="fieldset">
-              <p class="small">Name of series</p>
-              <%= f_p3.text_field :title, :value => p3.title.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Name of series</strong>
-                <p>...</p>
-              </aside>
+              <p class="small">Title of series</p>
+              <%= f_p3.text_field :title, :value => p3.title.first, data: {"progress" => "discoverability"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Series" , :tipDescription => "If your publication is published as a part of a series, add the title of the series here" } %>
             </div>
           <% end #fields for each series %>
         <% end #each series %>
@@ -166,62 +113,38 @@
 
             <div class="fieldset">
               <p class="small">Journal title</p>
-              <%= f_p3.text_field :title, :value => p3.title.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Journal title</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :title, :value => p3.title.first, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Journal title" , :tipDescription => "If your publication is published in a journal, add the name of the journal here" } %>
             </div>
 
             <div class="fieldset">
               <p class="small">Journal ISSN</p>
-              <%= f_p3.text_field :issn, :value => p3.issn.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Journal ISSN</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :issn, :value => p3.issn.first, data: {"progress" => "discoverability"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Journal ISSN" , :tipDescription => "If your publication is published in a journal, add the ISSN fo the journal here" } %>
             </div>
 
             <div class="fieldset">
               <p class="small">Journal eISSN</p>
-              <%= f_p3.text_field :eissn, :value => p3.eissn.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Journal eISSN</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :eissn, :value => p3.eissn.first, data: {"progress" => "discoverability"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Journal eISSN" , :tipDescription => "If your publication is published in an online journal, add the eISSN fo the journal here" } %>
             </div>
 
             <div class="fieldset">
               <p class="small">Journal volume</p>
-              <%= f_p3.text_field :volume, :value => p3.volume.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Journal volume</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :volume, :value => p3.volume.first, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Journal volume" , :tipDescription => "If your publication is published in a journal, add the volume number or name here" } %>
             </div>
 
             <div class="fieldset">
               <p class="small">Journal issue</p>
-              <%= f_p3.text_field :issue, :value => p3.issue.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Journal issue</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :issue, :value => p3.issue.first, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Journal issue" , :tipDescription => "If your publication is published in a journal, add the issue number or name here" } %>
             </div>
 
             <div class="fieldset">
               <p class="small">Page range</p>
-              <%= f_p3.text_field :pages, :value => p3.pages.first %>
-              <aside class="tooltip">
-                <a href="#" class="close-button">x</a>
-                <strong>Page range</strong>
-                <p>...</p>
-              </aside>
+              <%= f_p3.text_field :pages, :value => p3.pages.first, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Page range" , :tipDescription => "If your publication is published in a journal, add the page number or range within the issue in whihc it is published" } %>
             </div>
 
           <% end #fields for each journal %>
