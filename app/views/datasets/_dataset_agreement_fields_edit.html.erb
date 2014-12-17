@@ -12,32 +12,18 @@
 
       <fieldset class="small-text">
         <% Sufia.config.archiving_payment_options.each do |key, val| %>
-          <label><%= f_a.radio_button :annotation, val, :checked =>(hasRelatedAgreement.annotation.first==val), :class => "required" %><span></span><%=key%></label>
+          <label><%= f_a.radio_button :annotation, val, :checked =>(hasRelatedAgreement.annotation.first==val), :class => "required", data: {"progress" => "preservation"} %><span></span><%=key%></label>
         <% end %>
       </fieldset>
-
       <%= f_a.fields_for :invoice, hasRelatedAgreement.invoice.first do |f_i| %>
         <label style="margin-top: 20px;">
           <p class="small">Further details</p>
           <%= f_i.text_area :description, :value=>hasRelatedAgreement.invoice.first.description.first, :style=>'width: 60%', data: {"progress" => "preservation"} %> 
         </label>
       <% end %>
-
-      <aside class="tooltip tooltip-wide">
-        <a href="#" class="close-button">x</a>
-        <strong>Archive service payment</strong>
-        <p>Please see the ‘Charges’ section of the 
-            <a href="http://ox.libguides.com/ora-data-charges">ORA-Data help guide</a> for full details of the cost model.</p>
-        <p>
-            If payment has already been made, please give details below, including your X5 ID if you have it.
-            If payment has not already been made, please give details of whom we should invoice. If payment is not required
-            (e.g. you are just creating a catalogue record about data deposited elsewhere) or you would like help with this,
-            please let us know in the box below.</p>
-        <div class="tooltip-extra">
-          <div class="circle circle-funder"></div>
-          <p><strong>Completing this field helps with Funder compliance</strong></p>
-        </div>
-      </aside>
+      <% desc = '<p>Please see the ‘Charges’ section of the <a href="http://ox.libguides.com/ora-data-charges">ORA-Data help guide</a> for full details of the cost model.</p>
+        <p> If payment has already been made, please give details below, including your X5 ID if you have it. If payment has not already been made, please give details of whom we should invoice. If payment is not required (e.g. you are just creating a catalogue record about data deposited elsewhere) or you would like help with this, please let us know in the box below.</p>' %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "preservation" , :tipTitle => "Archive service payment" , :tipDescription => desc } %>
     </div><!-- /fieldset -->
 
     <div class="padding-side-25">

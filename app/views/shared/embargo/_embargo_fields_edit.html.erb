@@ -48,30 +48,27 @@
     </fieldset>
   
     <% if embargo_type == "metadata" %>
-        <aside class="tooltip tooltip-wide">
-          <a href="#" class="close-button">x</a>
-          <strong>Catalogue visibility</strong>
-          <p>The catalogue record for your dataset will normally be made publicly visible and openly accessible, even if the data files themselves are embargoed.
+      <% if @model == "dataset" %>
+        <% desc = "The catalogue record for your dataset will normally be made publicly visible and openly accessible, even if the data files themselves are embargoed.
               In a small number of exceptional cases, it may be necessary to embargo and hide from public view the record as well as the data files.
-              Please let us know which you would prefer.</p>
-          <div class="tooltip-extra">
-            <div class="circle circle-documentation"></div>
-            <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-          </div>
-        </aside>
+              Please let us know which you would prefer." %>
+      <% elsif @model == "thesis" %>
+        <% desc = "The catalogue record for your thesis will normally be made publicly visible and openly accessible, even if your thesis is embargoed.
+              In a small number of exceptional cases, it may be necessary to embargo and hide from public view the record as well as the files.
+              Please let us know which you would prefer." %>
+      <% else %>
+        <% desc = "The catalogue record for your publication will normally be made publicly visible and openly accessible, even if the publication is embargoed.
+              In a small number of exceptional cases, it may be necessary to embargo and hide from public view the record as well as the files.
+              Please let us know which you would prefer." %>
+      <% end %>
+      <% tipTitle = "Catalogue visibility" %>
     <% else %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Make freely available</strong>
-        <p>Select whether the file should be made openly available in ORA, or set an embargo if its
+      <% desc = "Select whether the file should be made openly available in ORA, or set an embargo if its
         not to be made available either for a set period or in perpetuity. You should set this information
-        for each dataset file you upload.</p>
-        <div class="tooltip-extra">
-          <div class="circle circle-documentation"></div>
-          <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-        </div>
-      </aside>
+        for each file you upload." %>
+      <% tipTitle = "File availability" %>
     <% end %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => tipTitle , :tipDescription => desc } %>
   </div>
   <div class="expand-panel" id="dataset-embargo-<%= panel_id %>">
     <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f => f, :f_a => f_a, :accessRights => accessRights, :startOption => startOption } %>

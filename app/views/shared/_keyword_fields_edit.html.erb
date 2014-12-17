@@ -5,13 +5,13 @@
   <div class="field-repeater" data-max-fields="10">
     <ol>
       <li>
-        <%= f.text_field :keyword, :multiple => true, :value=>keyword.first, id: "keyword0" %>
+        <%= f.text_field :keyword, :multiple => true, :value=>keyword.first, id: "keyword0", data: {"progress" => "discoverability"} %>
         <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
       </li>
       <% kcount = 1 %>
       <% for k in keyword.from(1) %>
         <li>
-          <%= f.text_field :keyword, :multiple => true, :value=>k, id: "keyword%d"%kcount %>
+          <%= f.text_field :keyword, :multiple => true, :value=>k, id: "keyword%d"%kcount, data: {"progress" => "discoverability"} %>
           <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
         </li>
         <% kcount += 1 %>
@@ -19,10 +19,5 @@
     </ol>
     <a href="#" class="add-field">Add another keyword</a>
   </div>
-
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Keywords</strong>
-    <p>Enter your own keywords or phrases to describe your work.</p>
-  </aside>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Keywords" , :tipDescription => "Enter your own keywords or phrases to describe your work." } %>
 </div>

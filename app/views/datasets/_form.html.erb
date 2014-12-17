@@ -42,7 +42,7 @@
   </div>
 
   <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your data more discoverable via search engines, and by linking your data to other items such as publications.</p>
+  <p>Enhance your deposit by making your data more discoverable via search engines.</p>
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
@@ -68,17 +68,7 @@
         <p class="small">When was the data collected?</p>
         <%= f.date_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
         <%= f.date_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Date collected</strong>
-          <p>If applicable, enter the date or time period when you collected or produced your data, e.g. '2014' or '15/4/2005’ or  '1998 - 2010.</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-discoverability"></div>
-            <p><strong>Completing this field helps with Discoverability</strong></p>
-          </div>
-        </aside>
+        <%= render partial: '/shared/tooltip', :locals => {:tipType =>'discoverability', :tipTitle => 'Date collected', :tipDescription =>"If applicable, enter the date or time period when you collected or produced your data, e.g. '2014' or '15/4/2005’ or  '1998 - 2010." } %>
       </div>
 
       <div class="fieldset">
@@ -88,17 +78,7 @@
         <p class="small">Time period covered by the data</p>
         <%= f.date_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
         <%= f.date_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Time period covered by the data.</strong>
-          <p>If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'.</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-discoverability"></div>
-            <p><strong>Completing this field helps with Discoverability</strong></p>
-          </div>
-        </aside>
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Time period covered by the data." , :tipDescription => "If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'." } %>
       </div>
 
       <div class="fieldset">
@@ -107,29 +87,10 @@
         <% end %>
         <p class="small">Geographical location or coverage of the data</p>
         <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Geographical location</strong>
-          <p>If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area
-              (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085).</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-discoverability"></div>
-            <p><strong>Completing this field helps with Discoverability</strong></p>
-          </div>
-        </aside> 
-      </div>
-
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Geographical location" , :tipDescription => "If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085)." } %>
       </div>
 
       <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
-
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
 
       <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
     </div>
@@ -143,33 +104,13 @@
       <div class="fieldset">
         <p class="small">Version number</p>
         <%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Version number</strong>
-          <p>If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here.</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-citation"></div>
-            <p><strong>Completing this field helps with Citation</strong></p>
-          </div>
-        </aside> 
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Version number" , :tipDescription => "If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here." } %>
       </div>
 
       <div class="fieldset">
         <p class="small">Abstract or brief description of research context</p>
         <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
-
-        <aside class="tooltip">
-          <a href="#" class="close-button">x</a>
-          <strong>Abstract</strong>
-          <p>Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research.</p>
-
-          <div class="tooltip-extra">
-            <div class="circle circle-documentation"></div>
-            <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-          </div>
-        </aside> 
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." } %>
       </div>
     </div>
 
@@ -274,7 +215,7 @@
   </div>
 
   <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your data more discoverable via search engines, and by linking your data to other items such as publications.</p>
+  <p>Enhance your deposit by making your data more discoverable via search engines.</p>
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
