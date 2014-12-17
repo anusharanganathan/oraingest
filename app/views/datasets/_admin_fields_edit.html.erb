@@ -1,15 +1,7 @@
 <div class="fieldset" style="margin-bottom: 30px">
   <p class="small">Data management plan</p>
   <%= f.text_field :hasDataManagementPlan, :value=>@dataset.hasDataManagementPlan.first, :style=>'width: 50%', data: {"progress" => "preservation"} %>
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Data management plan</strong>
-    <p>Enter the web address (URL) of your research project's data management plan or, if you are including this information along with your uploaded files, please give the file name here.</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-preservation"></div>
-      <p><strong>Completing this field helps with Preservation</strong></p>
-    </div>
-  </aside> 
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "preservation" , :tipTitle => "Data management plan" , :tipDescription => "Enter the web address (URL) of your research project's data management plan or, if you are including this information along with your uploaded files, please give the file name here." } %>
 </div>
 
 <% agreements = {} %>
@@ -30,15 +22,7 @@
   <div class="fieldset" style="margin-bottom: 30px">
     <p class="small">Select the agreement relevant to this dataset</p>
     <%= f.select :hasAgreement, options_for_select(agreements.invert, :selected=>article.hasAgreement.first), :style=>'width: 50%', data: {"progress" => "preservation"}, :onchange => "displayDatasetAgreement(\"#{@pid}\", this.value)" %>
-    <aside class="tooltip">
-      <a href="#" class="close-button">x</a>
-      <strong>Dataset agreement</strong>
-      <p>Listed here are the archiving plans previously agreed either by you or your department with the Bodleian. The archiving options for the data you are about to deposit will be governed by the agreement you select </p>
-      <div class="tooltip-extra">
-        <div class="circle circle-preservation"></div>
-        <p><strong>Completing this field helps with Preservation</strong></p>
-      </div>
-    </aside> 
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "preservation" , :tipTitle => "Dataset agreement" , :tipDescription => "Listed here are the archiving plans previously agreed either by you or your department with the Bodleian. The archiving options for the data you are about to deposit will be governed by the agreement you select." } %>
   </div>
   <% if article.hasAgreement.first %>
     <div class="padding-0">

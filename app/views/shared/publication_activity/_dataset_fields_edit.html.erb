@@ -14,53 +14,24 @@
     <% end %>
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-
         <div class="fieldset">
           <p class="small">Publisher name</p>
           <%= f_p2.text_field :name, :required => true, :value => p2.name.first || "University of Oxford", data: {"progress" => "citation", "default-value" => "University of Oxford"} %>
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>Publisher name</strong>
-            <p>Enter the name of the body making the data publicly available. For data produced at Oxford, this will usually be the University of Oxford.</p>
-            <div class="tooltip-extra">
-              <div class="circle circle-citation"></div>
-              <p><strong>Completing this field helps with Citation</strong></p>
-            </div>
-          </aside>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. For data produced at Oxford, this will usually be the University of Oxford." } %>
         </div>
-
         <!--
         <div class="fieldset">
           <p class="small">Publisher website</p>
-          <%# f_p2.text_field :website, :value => p2.website.first %>
-
-          <aside class="tooltip">
-            <a href="#" class="close-button">x</a>
-            <strong>Publisher website</strong>
-            <p></p>
-            <div class="tooltip-extra">
-              <div class="circle circle-citation"></div>
-              <p><strong>Completing this field helps with Citation</strong></p>
-            </div>
-          </aside>
+          <%#= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "documentation"} %>
+          <%#= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know the publisher's website, add it here." } %>
         </div>
         -->
-
-      <% end %> 
-    <% end %> 
-
+      <% end %>
+    <% end %>
     <div class="fieldset">
       <p class="small">Year published</p>
       <%= f_p.text_field :datePublished, :required => true, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Year published</strong>
-        <p>Enter the year the data have been or will be published, i.e. made publicly available.</p>
-        <div class="tooltip-extra">
-          <div class="circle circle-citation"></div>
-          <p><strong>Completing this field helps with Citation</strong></p>
-        </div>
-      </aside>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Year published" , :tipDescription => "Enter the year the data have been or will be published, i.e. made publicly available." } %>
     </div>
 
   <% end #fields for each publication %>

@@ -15,28 +15,28 @@
         <li>
           <label>
             <p class="small">Title of related item</p>
-            <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index %>
+            <%= f_e.text_field :title, :value => r.entity[0].title.first, style: "width: 40%", id: "relationTitle%d"% r_index, data: {"progress" => "discoverability"} %>
             <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
           </label>
 
           <label>
             <p class="small">Type of relationship</p>
-            <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), { :include_blank => 'Select the relation' }, id: "relationType%d"% r_index %>
+            <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), { :include_blank => 'Select the relation' }, id: "relationType%d"% r_index, data: {"progress" => "discoverability"} %>
           </label>
 
           <label>
             <p class="small">Abstract or brief description of related item</p>
-            <%= f_e.text_area :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index, :style=>'width: 60%' %>
+            <%= f_e.text_area :description, :value => r.entity[0].description.first, id: "relationDescription%d"% r_index, :style=>'width: 60%', data: {"progress" => "discoverability"} %>
           </label>
 
           <label>
             <p class="small">DOI or URL of related item</p>
-            <%= f_e.text_field :identifier, :value => r.entity[0].identifier.first, style: "width: 50%", id: "relationId%d"% r_index %>
+            <%= f_e.text_field :identifier, :value => r.entity[0].identifier.first, style: "width: 50%", id: "relationId%d"% r_index, data: {"progress" => "discoverability"} %>
           </label>
 
           <label>
             <p class="small">Citation of related item (if no URL or DOI)</p>
-            <%= f_e.text_field :citation, :value => r.entity[0].citation.first, style: "width: 50%", id: "relationCitation%d"% r_index %>
+            <%= f_e.text_field :citation, :value => r.entity[0].citation.first, style: "width: 50%", id: "relationCitation%d"% r_index, data: {"progress" => "discoverability"} %>
           </label>
 
         </li>
@@ -46,17 +46,9 @@
     </ol>
     <a href="#" class="add-field">Add related item</a>
   </div>
-
-  <aside class="tooltip tooltip-wide">
-    <a href="#" class="close-button">x</a>
-    <strong>Related publications and dataset</strong>
-    <p>Enter the title of any related item, e.g. a dataset which underpins your publication.</p>
+  <% desc = "<p>Enter the title of any related item, e.g. a dataset which underpins your publication.</p>
     <p>Select the option that best describes the relationship between your publication and the item you have indicated as being related.</p>
     <p>Add an abstract or brief description of the related item.</p>
-    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please give a citation for it.</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-discoverability"></div>
-      <p><strong>Completing this field helps with Discoverability / Searchability</strong></p>
-    </div>
-  </aside>
+    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please give a citation for it.</p>" %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Related publications and dataset" , :tipDescription => desc } %>
 </div><!-- /fieldset -->

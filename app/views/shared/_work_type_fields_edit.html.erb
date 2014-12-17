@@ -5,16 +5,15 @@
 <%= f.fields_for :worktype do |t| %>
   <% if Sufia.config.subtypes[@model].length > 1 %>
     <div class="fieldset">
-      <p class="small">Type</p>
+      <% if @model == "article" %>
+        <% label = "publication" %>
+      <% else %>
+        <% label = @model %>
+      <% end %>
+      <p class="small">Type of <%=label%></p>
       <%# t.label :typeLabel, "Type", :class=>"control-label" %>
-      <%= t.select :typeLabel, options_for_select(Sufia.config.subtypes[@model], :selected=>worktype[0].typeLabel.first), { :include_blank => 'Select a type' } %>
-
-      <aside class="tooltip">
-        <a href="" class="close-button">x</a>
-        <strong>Type</strong>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut viverra purus nibh.</p>
-      </aside>
-
+      <%= t.select :typeLabel, options_for_select(Sufia.config.subtypes[@model], :selected=>worktype[0].typeLabel.first), { :include_blank => 'Select a type' }, data: {"progress" => "discoverability"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Type of #{label}" , :tipDescription => "You can further classify your #{label} by selecting a type here." } %>
     </div>
   <% elsif !worktype[0].typeLabel.nil? && !worktype[0].typeLabel.first.nil? %>
     <%= t.hidden_field :typeLabel, :value => worktype[0].typeLabel.first %>
