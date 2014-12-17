@@ -23,20 +23,20 @@
               <li>
                 <label>
                 <span class="small">Name</span>
-                <%= f_c.text_field :name, :required => true, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName" %>
+                <%= f_c.text_field :name, :required => true, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName", data: {"progress" => "citation"} %>
                 <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
                 </label>
 
                 <label>
                   <p><span class="small">Email</span>
-                    <%= f_c.text_field :email, :value => c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail" %>
+                    <%= f_c.text_field :email, :value => c.agent[0].email.first, id: "creatorEmail%d"%c_index, :class=>"creatorEmail", data: {"progress" => "documentation"} %>
                   </p>
                 </label>
 
                 <% if can? :review, :all %>
                   <label>
                     <p><span class="small">Creator object</span>
-                      <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index  %>
+                      <%= f_c.text_field :sameAs, :value => c.agent[0].sameAs.first, id: "creatorSameAs%d"%c_index, data: {"progress" => "documentation"}  %>
                     </p>
                   </label>
                 <% else %>
@@ -45,7 +45,7 @@
 
                 <label>
                   <p><span class="small">Role</span>
-                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), { :include_blank => 'Select a role' }, id: "creatorRole%d"%c_index %>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), { :include_blank => 'Select a role' }, id: "creatorRole%d"%c_index, data: {"progress" => "discoverability"} %>
                   </p>
                 </label>
 
@@ -53,14 +53,14 @@
                   <%= f_c.fields_for :affiliation, c2 do |f_c2| %>
                     <label>
                       <p><span class="small">Affiliation</span>
-                        <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation" %>
+                        <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation", data: {"progress" => "discoverability"} %>
                       </p>
                     </label>
 
                     <% if can? :review, :all %>
                       <label>
                         <p><span class="small">Link to affiliation object</span>
-                          <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
+                          <%= f_c2.text_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index], data: {"progress" => "documentation"} %>
                         </p>
                       </label>
                     <% else %>
@@ -77,18 +77,20 @@
     </ol>
     <a href="#" class="add-field">Add another creator</a>
   </div>
-
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Creator information</strong>
-    <p>Please enter the name of a person involved in creating this dataset and select a role (e.g. ‘Principal Investigator’) from the list.
+  <% if @model == "dataset" %>
+    <% desc = "Please enter the name of a person involved in creating this dataset and select a role (e.g. ‘Principal Investigator’) from the list.
         If the person is based at Oxford, their name should auto-complete as you type so you can select the correct name from the list displayed
-        (their email address and departmental affiliation should also auto-complete).</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-citation"></div>
-      <p><strong>Completing this field helps with Citation</strong></p>
-    </div>
-  </aside>
+        (their email address and departmental affiliation should also auto-complete)." %>
+  <% elsif @model == "thesis" %>
+    <% desc = "Please enter the name of a person who wrote this thesis and select a role from the list.
+        If the person is based at Oxford, their name should auto-complete as you type so you can select the correct name from the list displayed
+        (their email address and departmental affiliation should also auto-complete)." %>
+  <% else %>
+    <% desc = "Please enter the name of a person involved in this publication and select a role from the list.
+        If the person is based at Oxford, their name should auto-complete as you type so you can select the correct name from the list displayed
+        (their email address and departmental affiliation should also auto-complete)." %>
+  <% end %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Creator information" , :tipDescription => desc } %>
 
 </div>
 

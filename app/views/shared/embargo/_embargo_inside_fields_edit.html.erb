@@ -51,38 +51,28 @@
       </div>
     </div>
   <% end %>
-
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Embargo end date</strong>
-    <p>Please enter either the the precise date when the embargo should be lifted, in the form DD/MM/YYYY (e.g. ’26/06/2018),
-        or enter the required length of embargo in years and months (e.g. ’1 year 6 months’) and select a start date.</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-documentation"></div>
-      <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-    </div>
-  </aside>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Embargo end date" , :tipDescription => "Please enter either the the precise date when the embargo should be lifted, in the form DD/MM/YYYY (e.g. ’26/06/2018), or enter the required length of embargo in years and months (e.g. ’1 year 6 months’) and select a start date." } %>
 </div>
 
 <h5>Embargo release method</h5>
 
 <div class="fieldset">
   <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' } %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' }, data: {"progress" => "funder"} %>
   <% else %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods), { :include_blank => 'Select release method' } %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods), { :include_blank => 'Select release method' }, data: {"progress" => "funder"} %>
   <% end %>
-
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Release methods</strong>
-    <p>Please specify whether you want the embargo to be lifted automatically without
-    consulting you (or the data steward), or whether you wish to be consulted.</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-funder"></div>
-      <p><strong>Completing this field helps with Funder compliance</strong></p>
-    </div>
-  </aside>
+  <% if @model == "dataset" %>
+    <% desc = "Please specify whether you want the embargo to be lifted automatically without
+    consulting you (or the data steward), or whether you wish to be consulted." %>
+  <% elsif @model == "thesis" %>
+    <% desc = "Please specify whether you want the embargo to be lifted automatically without 
+    consulting you (or your supervisor), or whether you wish to be consulted." %>
+  <% else %>
+    <% desc = "Please specify whether you want the embargo to be lifted automatically without 
+    consulting you, or whether you wish to be consulted." %>
+  <% end %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "Release method" , :tipDescription => desc } %>
 </div><!-- /fieldset -->
 
 <h5>Reason for Embargo</h5>
@@ -99,20 +89,18 @@
         <label><%= f_a.check_box(:embargoReason, {:multiple => true, :checked=>hasIt}, val, nil) %><span></span><%=key%></label>
       <% end %>
     <% elsif !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
-      <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first, data: {"progress" => "funder"} %>
     <% else %>
-      <%= f_a.text_area :embargoReason, :style=>'margin:0' %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0', data: {"progress" => "funder"} %>
     <% end %>
   </div><!-- /row -->
-
-  <aside class="tooltip">
-    <a href="#" class="close-button">x</a>
-    <strong>Reason for Embargo</strong>
-    <p>Please let us know the main reason why access to your data needs to be restricted.</p>
-    <div class="tooltip-extra">
-      <div class="circle circle-funder"></div>
-      <p><strong>Completing this field helps with Funder compliance</strong></p>
-    </div>
-  </aside> 
+  <% if @model == "dataset" %>
+    <% desc = "Please let us know the main reason why access to your data needs to be restricted" %>
+  <% elsif @model == "thesis" %>
+    <% desc = "Please let us know the main reason why access to your thesis needs to be restricted" %>
+  <% else %>
+    <% desc = "Please let us know the main reason why access to your publication needs to be restricted" %>
+  <% end %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "Reason for Embargo" , :tipDescription => desc } %>
 </div><!-- /fieldset -->
 

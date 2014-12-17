@@ -10,17 +10,9 @@
       <p class="small">Assign a licence to your data</p>
       <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
     </label>
-
-    <aside class="tooltip">
-      <a href="#" class="close-button">x</a>
-      <strong>Assign a license</strong>
-      <p>Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text of
-      any bespoke licence, access terms and conditions.</p>
-      <div class="tooltip-extra">
-        <div class="circle circle-documentation"></div>
-        <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-      </div>
-    </aside>
+    <% desc = "Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text of
+      any bespoke licence, access terms and conditions." %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Assign a license", :tipDescription => desc } %>
   </div>
 
   <div class="fieldset" style="display: none;" id="license-statement">
@@ -32,15 +24,7 @@
         <%= l.text_area :licenseStatement, :value=>"", data: {"progress" => "documentation"} %>
       <% end %>
     </label>
-
-    <aside class="tooltip">
-      <a href="#" class="close-button">x</a>
-      <strong>Licence statement</strong>
-      <p>Please enter (or paste in) the text of any bespoke licence, access terms and conditions.</p>
-      <div class="tooltip-extra">
-        <div class="circle circle-documentation"></div>
-        <p><strong>Completing this field helps with Documentation, access & re-use</strong></p>
-      </div>
-    </aside>
+    <% desc = "Please enter (or paste in) the text of any bespoke licence, access terms and conditions." %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Licence statement", :tipDescription => desc } %>
   </div>
 <% end %>

@@ -9,49 +9,32 @@
 
   <h4>Update workflow</h4>
 
-  <fieldset class="small-text">
   <%# article.workflows.each_with_index do |wf, wf_index| %>
-    <div class="field">
+    <div class="fieldset">
       <label>Status</label>
-      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :prompt => 'Select a status' , :class=>'span20 select_perm', :id => "workflows_entries_status" %>
-      <!-- <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Status</strong>
-        <p>...</p>
-      </aside> -->
+      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :prompt => 'Select a status' , :class=>'span20 select_perm', :id => "workflows_entries_status", data: {"progress" => "documentation"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
     </div>
 
-    <div class="field">
+    <div class="fieldset">
       <label>Reviewer</label>
-      <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id" %>
-      <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Reviewer</strong>
-        <p>...</p>
-      </aside>
+      <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id", data: {"progress" => "documentation"} %>
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
     </div>
 
-    <div class="field">
-      <label>Comment</label>
-      <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description" %> 
-      <!-- <aside class="tooltip">
-        <a href="#" class="close-button">x</a>
-        <strong>Comment</strong>
-        <p>...</p>
-      </aside> -->
+    <div class="fieldset">
+      <label>Comment on workflow status</label>
+      <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description", data: {"progress" => "documentation"} %> 
+      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment on workflow status" , :tipDescription => "Add a comment, if needed, regarding the workflow status you have just selected." } %>
     </div>
   <%# end %>
 
   <h4>Add a comment</h4>
 
-  <div class="field">
-    <label>Description</label>
-    <%= f.text_field "workflows_attributes][comments_attributes][description", :value => "", :id => "workflows_comments_description" %>
-    <!-- <aside class="tooltip">
-      <a href="#" class="close-button">x</a>
-      <strong>Description</strong>
-      <p>...</p>
-    </aside> -->
+  <div class="fieldset">
+    <label>Record a comment</label>
+    <%= f.text_field "workflows_attributes][comments_attributes][description", :value => "", :id => "workflows_comments_description", data: {"progress" => "documentation"} %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment" , :tipDescription => "Here you can record a generic comment or add notes for future reference." } %>
   </div>
 
 <% end %> 
