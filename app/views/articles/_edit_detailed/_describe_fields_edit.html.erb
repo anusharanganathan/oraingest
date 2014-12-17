@@ -1,41 +1,27 @@
-<div class="field">
-  <%= f.label :title %>
-  <%= f.text_field :title, :value=>@article.title.first %>
+<div class="fieldset">
+  <p class="small">Title</p>
+  <%= f.text_field :title, :value=>@article.title.first, :required=>true, :style=>'width: 60%', data: {"progress" => "citation"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation", :tipTitle => "Title", :tipDescription =>"Enter the title by which your publication should be known and cited." } %>
 </div>
 
-<div class="field">
-  <%= f.label :subtitle %>
-  <%= f.text_field :subtitle, :value=>@article.subtitle.first %>
+<div class="fieldset">
+  <p class="small">Subtitle</p>
+  <%= f.text_field :subtitle, :value=>@article.subtitle.first, :style=>'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability", :tipTitle => "Subtitle", :tipDescription =>"If you would like to give your publication a sub-title, enter it here." } %>
 </div>
 
-<div class="field">
-  <%= f.label :abstract %>
-  <%= f.text_area :abstract, :value=>@article.abstract.first %>
+<div class="fieldset">
+  <p class="small">Abstract</p>
+  <%= f.text_area :abstract, :value=>@article.abstract.first, :style=>'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability", :tipTitle => "Abstract", :tipDescription =>"If you would like to give us an abstract of your publication, enter it here." } %>
 </div>
 
 <% if !@article.medium.nil? && !@article.medium.empty? && !@article.medium.first.empty? %>
   <!-- Only display if information exists i.e. imported records -->
-  <div class="field">
-    <%= f.label :medium %>
-    <%= f.text_field :medium, :value=>@article.medium.first %>
+  <div class="fieldset">
+    <p class="small">Medium</p>
+    <%= f.text_field :medium, :value=>@article.medium.first, data: {"progress" => "discoverability"} %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability", :tipTitle => "Medium", :tipDescription =>"If you would like to tell us the medium of your publication, enter it here." } %>
   </div>
 <% end %>
-
-<div class="control-group" id="keyword">
-  <%= f.label :keyword, "<span class='error'>*</span> Keyword".html_safe, :class=>"control-label" %>
-  <div class="controls" id="keyword_clone_0">
-    <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>@article.keyword.first, id: "keyword0" %>
-    <button class="adder btn" name="additional_keyword" id="keyword_button_0" type="button">+<span class="accessible-hidden">add another keyword</span></button>
-    &nbsp;
-    <%= help_icon(:keyword) %>
-  </div>
-  <% kcount = 1 %>
-  <% for k in @article.keyword.from(1) %>
-    <div class="controls" id="keyword_clone_<%=kcount%>">
-      <%= f.text_field :keyword, :name=>"article[keyword][]", :value=>k, id: "keyword%d"% kcount %>
-      <button class="remover btn" name="additional_keyword" id="keyword_button_<%=kcount%>" type="button">-<span class="accessible-hidden">remove this keyword</span></button>
-      <% kcount += 1 %>
-    </div>
-  <% end %>
-</div>
 

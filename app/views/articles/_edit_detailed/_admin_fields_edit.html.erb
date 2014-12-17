@@ -1,29 +1,27 @@
-<div class="well">
-  <div class="row">
-    <div class="control-group">
+<h4>Article processing fee and open access details</h4>
+<div class="fieldset">
+  <%= f.label :oaStatus, "Is this an open access article?", :class=>"control-label" %>
+  <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), { :include_blank => 'Select a status' }, :style=>"width: 450px;", data: {"progress" => "funder"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "OA Status" , :tipDescription => "Let us know if this publication will be made available as open access" } %>
+</div>
+    
+<div class="fieldset">
+  <fieldset class="small-text">
+  <%= f.label :apcPaid, "Does the article involve an article processing charge (either paid or to be paid)", :class=>"control-label" %>
+  <label><%= f.radio_button :apcPaid, "Yes", :checked=>(article.apcPaid.first=='Yes'), data: {"progress" => "funder"} %><span></span>Yes</label>
+  <label><%= f.radio_button :apcPaid, "No", :checked=>(article.apcPaid.first=='No'), data: {"progress" => "funder"} %><span></span>No</label>
+  </fieldset>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "APC charge" , :tipDescription => "If this publication is going to be made open access, does that incolce a charge with the publisher?" } %>
+</div>
 
-      <legend>Article processing fee and open access details</legend>
-      <div class="fields">
-        <%= f.label :oaStatus, "Is this an open access article?", :class=>"control-label" %>
-        <%= f.select :oaStatus, options_for_select(Sufia.config.oa_types, :selected=>article.oaStatus.first), { :include_blank => 'Select a status' }, :style=>"width: 450px;" %>
-      </div>
-          
-      <div class="fields">
-        <%= f.label :apcPaid, "Does the article involve an article processing charge (either paid or to be paid)", :class=>"control-label" %>
-        <%= f.radio_button :apcPaid, "Yes", :checked=>(article.apcPaid.first=='Yes') %> Yes &nbsp;&nbsp;
-        <%= f.radio_button :apcPaid, "No", :checked=>(article.apcPaid.first=='No') %> No
-      </div>
-      
-      <div class="fields">
-        <%= f.label :oaReason, "What is the basis of the APC?", :class=>"control-label" %>
-        <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), { :include_blank => 'Select a reason' }, :style=>"width: 550px;" %>
-      </div>
-      
-      <div class="fields">
-        <%= f.label :refExcepotion, "REF Exception?", :class=>"control-label" %>
-        <%= f.text_field :refException, :value=>article.refException.first %>
-      </div>
+<div class="fieldset">
+  <%= f.label :oaReason, "What is the basis of the APC?", :class=>"control-label" %>
+  <%= f.select :oaReason, options_for_select(Sufia.config.oa_reason, :selected=>article.oaReason.first), { :include_blank => 'Select a reason' }, :style=>"width: 550px;", data: {"progress" => "funder"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "OA reason" , :tipDescription => "Tell us the reason why you have chosen to make your publication open access and the reason for the charge" } %>
+</div>
 
-    </div><!-- /.control-group -->
-  </div> <!-- /.row -->
-</div> <!-- /.well -->
+<div class="fieldset">
+  <%= f.label :refExcepotion, "REF Exception?", :class=>"control-label" %>
+  <%= f.text_field :refException, :value=>article.refException.first %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "REF exception" , :tipDescription => "Does your puyblication need to be excluded from REF and on what basis?" } %>
+</div>

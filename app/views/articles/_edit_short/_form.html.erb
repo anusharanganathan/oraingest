@@ -5,7 +5,7 @@
       Deposit Article
     </div>
     <div class="padding-25 no-pad-bottom">
-      <%= render partial: 'articles/_edit_short/files_form' %>
+      <%= render partial: '/shared/upload/files_form', :locals => {:record => @article, :editpath => document_url("Article", "edit", @pid) } %>
     <div class="bottom-border"></div>
   </div>
 
