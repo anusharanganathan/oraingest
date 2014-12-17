@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs">
+<!-- <ul class="nav nav-tabs">
   <li class="active"><a href="#local" data-toggle="tab"><i class="icon-desktop"></i>Upload files</a></li>
   <li><a href="#describetab" data-toggle="tab"><i class="icon-tag"></i>Describe</a></li>
   <li><a href="#creatorstab" data-toggle="tab"><i class="icon-user"></i>Creators</a></li>
@@ -7,5 +7,18 @@
   <li><a href="#moreinfotab" data-toggle="tab"><i class="icon-link"></i>Links</a></li>
   <li><a href="#rightstab" data-toggle="tab"><i class="icon-thumbs-up"></i>Rights & Access</a></li>
   <li><a href="#workflowtab" data-toggle="tab"><i class="icon-flag"></i>Workflow</a></li>
-</ul>
+</ul> -->
 
+<nav class="form-steps extra-step">
+  <ol>
+    <li class="current">Upload<br/> files<span></span></li>
+    <li>About<br/> your publication<span></span></li>
+    <li>About<br/> you<span></span></li>
+    <li>Related<br/> publications<span></span></li>
+    <li>Archiving<br/> and access<span></span></li>
+    <li>Funders and<br/> licences<span></span></li>
+    <% if can? :review, :all %>
+      <li>Review<br/> workflow<span></span></li>
+    <% end %>
+  </ol>
+</nav>

@@ -1,27 +1,33 @@
-<h1>Update article</h1>
-
-<%# using partials rather than inlining, so implementers can add or change stuff on this page without much duplication %>
-<%= render partial: '/articles/_edit_detailed/tabs' %>
+<h2 style="margin-left: 10px;">Update article</h2>
 
 <div>
-    <% if @article.errors.any? %>
-      <div id="error_explanation">
-        <h2><%= pluralize(@article.errors.count, "error") %> prohibited this article from being saved:</h2>
-        <ul>
-          <% @article.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+  <% if @article.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@article.errors.count, "error") %> prohibited this article from being saved:</h2>
+      <ul>
+        <% @article.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 </div>
 
-<div class="tab-content">
-  <%= render partial: '/articles/_edit_detailed/files_form' %>
-  <%= render partial: '/articles/_edit_detailed/form' %>
 </div>
-<br/>
+<div class="gutter-container">
 
-<% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => publications_path } %>
-<%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+  <% path = { :new => new_article_path, :show => article_path(@pid), :edit => edit_article_path(@pid), :list => publications_path } %>
+  <%= render partial: "shared/actions/edit", :locals => { :path => path } %>
+
+  <div class="col col3of4">
+    <%= render partial: '/articles/_edit_detailed/tabs' %>
+  </div>
+
+  <div class="col col3of4">
+    <%= render partial: '/articles/_edit_detailed/form' %>
+  </div>
+
+  <div class="col col1of4">
+    <%= render :partial => 'shared/progress_tracker' %>
+  </div>
 
