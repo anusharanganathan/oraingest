@@ -351,6 +351,7 @@ class DatasetsController < ApplicationController
   end
 
   def add_metadata(dataset_params)
+    old_status =  @dataset.workflows.first.current_status
     # find or create the dataset agreement, if included in the params
     if dataset_params.has_key?(:hasAgreement) or dataset_params.has_key?(:hasRelatedAgreement)
       @@dataset_agreement, created = add_agreement(dataset_params)
@@ -373,16 +374,18 @@ class DatasetsController < ApplicationController
           @dataset.hasRelatedAgreement = @dataset_agreement
           saveAgain = true
         end
-        # Send email
-        data = {
-          "record_id" => @dataset.id,
-          "record_url" => dataset_url(@dataset)
-        }
-        ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Dataset")
-        if ans
-          dataset_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @dataset)
-          @dataset.attributes = dataset_params
-          saveAgain = true
+        if old_status != @dataset.workflows.first.current_status
+          # Send email
+          data = {
+            "record_id" => @dataset.id,
+            "record_url" => dataset_url(@dataset)
+          }
+          ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Dataset")
+          if ans
+            dataset_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @dataset)
+            @dataset.attributes = dataset_params
+            saveAgain = true
+          end
         end
         if saveAgain 
           if @dataset.save
