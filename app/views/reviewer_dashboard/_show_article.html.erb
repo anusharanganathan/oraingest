@@ -6,7 +6,10 @@
     <% if !document.creators.nil? && !document.creators.empty? %>
       <div class="small">
         <strong>Creator: </strong>
-        <%= document.creators.map { |author| author["name"] }.join "; " %>
+          <%= document.creators.map { |author| author["name"] }[0..2].join "; " %>
+          <% if document.creators.length > 3 %>
+           ...
+          <% end %>
       </div>
     <% end %>
     <% unless document.abstract.nil? %>
