@@ -261,20 +261,23 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
+    old_status = @rticle.workflows.first.current_status
     @article = Ora.buildMetadata(article_params, @article, contents, current_user.user_key)
     respond_to do |format|
       if @article.save
         saveAgain = false
-        # Send email
-        data = {
-          "record_id" => @article.id,
-          "record_url" => article_url(@article)
-        }
-        ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Article")
-        if ans
-          article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
-          @article.attributes = article_params
-          saveAgain = true
+        if old_status != @article.workflows.first.current_status
+          # Send email
+          data = {
+            "record_id" => @article.id,
+            "record_url" => article_url(@article)
+          }
+          ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Article")
+          if ans
+            article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
+            @article.attributes = article_params
+            saveAgain = true
+          end
         end
         if saveAgain
           if @article.save
