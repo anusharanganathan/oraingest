@@ -4,7 +4,7 @@ class PublishRecordJob
     :ora_publish
   end
 
-  attr_accessor :pid, :datastreams
+  attr_accessor :pid, :datastreams, :model
 
   def initialize(pid, datastreams, model)
     self.pid = pid

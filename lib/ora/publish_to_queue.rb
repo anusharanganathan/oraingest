@@ -1,18 +1,4 @@
-#Sufia.queue.push(ContentDepositorChangeEventJob.new(pid, on_behalf_of)) if on_behalf_of.present?
-#Sufia.queue.push(CreateDerivativesJob.new(generic_file.id))
-#Sufia.queue.push(ContentDepositEventJob.new(generic_file.pid, user.user_key))
-#Sufia.queue.push(ContentRestoredVersionEventJob.new(generic_file.pid, 
-#Sufia.queue.push(ImportUrlJob.new(gf.pid))
-#rails console
-#$redis = Redis.new(:host => 'localhost', :port => 6379)
-#$redis.keys
-#Sufia.queue.push(PublishRecordJob.new(
-
-#pid = "uuid:eb27873c-3337-4ab3-9939-01bb11c3e4f1" # No access info at all
-#pid = "sufia:6d56zw62k" # Some datastreams do not have access info
-#pid = "sufia:6d56zw69h" # All access info available
-
-#record = Dataset.find(pid)
+require 'ora/resque'
 
 module Ora
   module_function
@@ -77,7 +63,7 @@ module Ora
       record.workflows.first.entries.build(entry)
       # Push object to queue
       if toMigrate
-        Sufia.queue.push(PublishRecordJob.new(record.id.to_s, datastreams, record.class.model_name))
+        Sufia.queue.push_raw(PublishRecordJob.new(record.id.to_s, datastreams, record.class.model_name.to_s))
       end
     end
     #record.save()
