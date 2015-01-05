@@ -38,27 +38,20 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       occurence = Sufia.config.email_options[model.downcase][wf.current_status]['occurence']
       template = Sufia.config.email_options[model.downcase][wf.current_status]['template']
       subject = Sufia.config.email_options[model.downcase][wf.current_status]['subject'].gsub('ID', data['record_id'])
-      if (occurence == "first" && occurences.length == 1) || occurence == "all"
+      if (occurence == occurences.length) || occurence == "all"
         rt = Ora::RtClient.new
         content = rt.email_content(template, data, user)
         if content
           ans = rt.create_ticket(subject, user.oxford_email, content)
           is_number = true if Float(ans) rescue false
           if ans and is_number
-            email_params = { :id => wf.rdf_subject.to_s }
-            email_params[:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
-            return email_params
-          else
-            return false
+            #email_params = { :id => wf.rdf_subject.to_s }
+            #email_params[:emailThreads_attributes] = [{:identifier => ans, :references => "#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", :date => Time.now.to_s}]
+            #return email_params
+            wf.emailThreads.build(identifier:ans, references:"#{Sufia.config.rt_server}Ticket/Display.html?id=#{ans}", date:Time.now.to_s)
           end
-        else
-          return false
         end
-      else
-        return nil
       end
-    else
-      return nil
     end
   end 
   
