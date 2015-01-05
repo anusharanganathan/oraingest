@@ -13,6 +13,7 @@ class Dataset < ActiveFedora::Base
   #include Sufia::GenericFile::WebForm
   include Sufia::Noid
   include Hydra::ModelMethods
+  include WorkflowMethods
 
   attr_accessible *(DatasetRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + DatasetAdminRdfDatastream.fields)
   

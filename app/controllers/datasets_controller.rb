@@ -366,39 +366,16 @@ class DatasetsController < ApplicationController
     if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
+    if @dataset_agreement
+      @dataset.hasRelatedAgreement = @dataset_agreement
+    end
+    if old_status != @dataset.workflows.first.current_status
+      @dataset.perform_action
+    end
     respond_to do |format|
       if @dataset.save
-        saveAgain = false
-        # Associate the dataset agreement to the dataset
-        if @dataset_agreement
-          @dataset.hasRelatedAgreement = @dataset_agreement
-          saveAgain = true
-        end
-        if old_status != @dataset.workflows.first.current_status
-          # Send email
-          data = {
-            "record_id" => @dataset.id,
-            "record_url" => dataset_url(@dataset)
-          }
-          ans = @dataset.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Dataset")
-          if ans
-            dataset_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @dataset)
-            @dataset.attributes = dataset_params
-            saveAgain = true
-          end
-        end
-        if saveAgain 
-          if @dataset.save
-            format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-            format.json { head :no_content }
-          else
-            format.html { render action: 'edit' }
-            format.json { render json: @dataset.errors, status: :unprocessable_entity }
-          end
-        else
-          format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
-          format.json { head :no_content }
-        end
+        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+        format.json { head :no_content }
       else
         # If a dataset agreement was created newly, roll back changes
         if @dataset_agreement and created
