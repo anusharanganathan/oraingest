@@ -36,4 +36,6 @@ OraHydra::Application.configure do
   config.assets.debug = true
 
   config.eager_load = false
+
+  Rails.application.routes.default_url_options[:host] = 'hydra.bodleian.ox.ac.uk:3000'
 end
