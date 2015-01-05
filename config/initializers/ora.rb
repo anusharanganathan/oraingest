@@ -297,12 +297,28 @@ Sufia.config do |config|
     "Published" => "Published",
   }
 
+  config.publish_to_queue_options = {
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
+    # occurence 
+    #   can be a number or 'all'
+    "article" => {
+      "Approved" => {'occurence' => 'all'}
+    },
+    "dataset" => {
+      "Approved" => {'occurence' => 'all'}
+    },
+    "thesis" => {
+      "Approved" => {'occurence' => 'all'}
+    }
+  }
+
   config.rt_server = 'https://support.bodleian.ox.ac.uk/'
   config.rt_queue = 'oraq'
 
   config.email_options = {
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
     # occurence 
-    #   can be 'first' or 'all'
+    #   can be a number or 'all'
     # template 
     #   Naming of templates in line with rails convention for template partials 
     #   Example: /shared/emails/record_submitted looks for the file app/views/shared/emails/_record_submitted.html.erb
@@ -310,16 +326,16 @@ Sufia.config do |config|
     #   ID will be replaced by record_id
     #   TODO: Could replace subject string with a template. Needs code modification in rt_client.create_ticket
     "article" => {
-      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
-      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+      "Submitted" => {'occurence' => 1, 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 1, 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
     },
     "thesis" => {
-      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
-      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+      "Submitted" => {'occurence' => 1, 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 1, 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
     },
     "dataset" => {
-      "Submitted" => {'occurence' => 'first', 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
-      "Published" => {'occurence' => 'first', 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
+      "Submitted" => {'occurence' => 1, 'template' => '/shared/emails/record_submitted', 'subject' => 'Record ID submitted'},
+      "Published" => {'occurence' => 1, 'template' => '/shared/emails/record_published', 'subject' => 'Record ID published'}
     },
   }
 
