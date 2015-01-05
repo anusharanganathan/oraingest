@@ -36,4 +36,6 @@ OraHydra::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.eager_load = false
+
+  Rails.application.routes.default_url_options[:host] = 'oradeposit-dev.bodleian.ox.ac.uk'
 end
