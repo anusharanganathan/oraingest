@@ -18,6 +18,6 @@
   <% elsif !worktype[0].typeLabel.nil? && !worktype[0].typeLabel.first.nil? %>
     <%= t.hidden_field :typeLabel, :value => worktype[0].typeLabel.first %>
   <% else %>
-    <%= t.hidden_field :typeLabel, :value => Sufia.config.subtypes[@model].values()[0] %>
+    <%= t.hidden_field :typeLabel, :value => Sufia.config.subtypes[@model].values[0] %>
   <% end %>
 <% end %>

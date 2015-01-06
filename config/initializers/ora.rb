@@ -290,11 +290,26 @@ Sufia.config do |config|
     "Submitted" => "Submitted",
     "Assigned" => "Assigned",
     "Claimed" => "Claimed",
-    "Approved" => "Approved",
     "Escalated" => "Escalated",
     "Referred" => "Referred",
     "Rejected" => "Rejected",
-    "Published" => "Published",
+    "Approved" => "Approved",
+    "System failure" => "System failure",
+    "Migrate" => "Migrate",
+    "Published" => "Published"
+ }
+
+  config.next_workflow_status = {
+    # The workflow states a reviewer can set. 
+    # Ignoring Approved => [System failure, Migrate, Published] as these are set by the system.
+    "Draft" => ["Submitted"],
+    "Submitted" => ["Assigned", "Claimed"],
+    "Assigned" => ["Escalated", "Referred", "Rejected", "Approved"],
+    "Claimed" => ["Escalated", "Referred", "Rejected", "Approved"],
+    "Escalated" => ["Assigned", "Claimed", "Referred", "Rejected", "Approved"],
+    "Referred" => ["Submitted"],
+    "Approved" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected"],
+    "System failure" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"]
   }
 
   config.publish_to_queue_options = {

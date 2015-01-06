@@ -233,23 +233,9 @@
 <nav class="form-nav" style="margin-top: 20px;">
   <div class="form-nav-next" style="text-align: right">
     <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
-    <% unless @article.workflows.first.nil? %>
-      <% wf = @article.workflows.first %>
-      <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
-      <% if @article.workflows.first.comments.empty? %>
-        <% @article.workflows.first.comments.build %>
-      <% end %>
+    <% unless can? :review, :all %>
+      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article} %>
     <% end %>
-    <% if @article.workflows.empty? || @article.workflows.first.current_status == "Draft" || @article.workflows.first.current_status == "Referred" %>
-      <% if @article.workflows.empty? %>
-        <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
-        <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "", :id => "workflows_entries_status", data: {"default-value" => "Draft"} %>
-      <% else %>
-        <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "", :id => "workflows_entries_status", data: {"default-value" => @article.workflows.first.current_status} %>
-      <% end %>
-      <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
-    <% end %>
-
   </div>
 </nav>
 
