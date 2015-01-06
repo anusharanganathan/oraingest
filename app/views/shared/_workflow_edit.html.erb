@@ -1,41 +1,59 @@
 <% if can? :review, :all %>
   <% unless article.workflows.first.nil? %>
     <% wf = article.workflows.first %>
-    <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
-    <% if article.workflows.first.comments.empty? %>
-      <% article.workflows.first.comments.build %>
-    <% end %>
+    <% wf_id = wf.rdf_subject.to_s %>
+    <% currentStatus = wf.current_status %>
+  <% else %>
+    <% article.workflows.build %>
+    <% wf = article.workflows.first %>
+    <% wf_id = nil %>
+    <% currentStatus = "Draft" %>
   <% end %>
 
-  <h4>Update workflow</h4>
+  <%= f.fields_for :workflows, wf do |f_wf| %>
+    <% unless wf_id.nil? %>
+      <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflows_id" %>
+    <% end %>
+    <% if Sufia.config.next_workflow_status.include?(currentStatus) %>
+      <h4>Update workflow status from <%=currentStatus%></h4>
+      <% wf.entries.build %>
+      <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
+        <div class="fieldset small">
+          <label>Status</label>
+          <% Sufia.config.next_workflow_status[currentStatus].each do |val| %>
+            <label><%= f_wf_e.radio_button :status, val, data: {"progress" => "documentation"} %><span></span><%=val%></label>
+          <% end %>
+          <%#= f_wf_e.select :status, options_for_select(Sufia.config.workflow_status), { :include_blank => 'Select a status' }, id: "workflows_entries_status", data: {"progress" => "documentation"} %>
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
+        </div>
 
-  <%# article.workflows.each_with_index do |wf, wf_index| %>
-    <div class="fieldset">
-      <label>Status</label>
-      <%= select_tag "#{@model}[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, :selected=>""), :prompt => 'Select a status' , :class=>'span20 select_perm', :id => "workflows_entries_status", data: {"progress" => "documentation"} %>
-      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
-    </div>
+        <% if false %>
+          <div class="fieldset">
+            <label>Reviewer</label>
+            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :readonly => true, data: {"progress" => "documentation"} %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
+          </div>
+        <% end %>
 
-    <div class="fieldset">
-      <label>Reviewer</label>
-      <%= f.text_field "workflows_attributes][entries_attributes][reviewer_id", :value => "", :id => "workflows_entires_reviewer_id", data: {"progress" => "documentation"} %>
-      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
-    </div>
+        <div class="fieldset">
+          <label>Comment on workflow status update</label>
+          <%= f_wf_e.text_area :description, :value => "", :id => "workflows_entires_description", data: {"progress" => "documentation"} %> 
+          <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment on workflow status" , :tipDescription => "Add a comment, if needed, regarding the workflow status you have just selected." } %>
+        </div>
+      <% end %>
+    <% end %>
 
-    <div class="fieldset">
-      <label>Comment on workflow status</label>
-      <%= f.text_area "workflows_attributes][entries_attributes][description", :value => "", :id => "workflows_entires_description", data: {"progress" => "documentation"} %> 
-      <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment on workflow status" , :tipDescription => "Add a comment, if needed, regarding the workflow status you have just selected." } %>
-    </div>
-  <%# end %>
+    <h4>Add a comment</h4>
+    <% wf.comments.build %>
+    <%= f_wf.fields_for :comments, wf.comments.last do |f_wf_c| %>
+      <div class="fieldset">
+        <label>Comment</label>
+        <%= f_wf_c.text_field :description, :value => "", :id => "workflows_comments_description", data: {"progress" => "documentation"} %>
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment" , :tipDescription => "Here you can record a generic comment or add notes for future reference." } %>
+      </div>
+    <% end %>
 
-  <h4>Add a comment</h4>
-
-  <div class="fieldset">
-    <label>Record a comment</label>
-    <%= f.text_field "workflows_attributes][comments_attributes][description", :value => "", :id => "workflows_comments_description", data: {"progress" => "documentation"} %>
-    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment" , :tipDescription => "Here you can record a generic comment or add notes for future reference." } %>
-  </div>
+  <% end #fields_for first workflow %>
 
 <% end %> 
 

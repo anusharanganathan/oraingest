@@ -193,6 +193,11 @@ class WorkflowComment
     map.creator(in: RDF::DC)
     map.description(in: RDF::DC)
   end
+  
+  def persisted?
+    false
+  end
+  
 end
 
 class WorkflowCommunication
@@ -204,6 +209,11 @@ class WorkflowCommunication
     map.date(in: RDF::DC) 
     map.references(in: RDF::DC)
   end
+  
+  def persisted?
+    false
+  end
+  
 end
 
 

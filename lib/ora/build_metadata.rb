@@ -8,7 +8,7 @@ module Ora
 
   def validatePermissions(params)
     if params.is_a?(Hash)
-      params = params.values()
+      params = params.values
     end
     params.each do |p|
       if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
@@ -37,6 +37,9 @@ module Ora
 
   def validateWorkflow(params, depositor, article)
     if params
+      if params.kind_of?(Hash) && params.keys.include?("0")
+        params = params.values
+      end
       unless params.kind_of?(Array)
         params = [params]
       end
@@ -47,6 +50,9 @@ module Ora
       end
       if params[0].has_key?(:entries_attributes)
         # Validate entries is array
+        if params[0][:entries_attributes].kind_of?(Hash) && params[0][:entries_attributes].keys.include?("0")
+          params[0][:entries_attributes] = params[0][:entries_attributes].values
+        end
         unless params[0][:entries_attributes].kind_of?(Array)
           params[0][:entries_attributes] = [params[0][:entries_attributes]]
         end
@@ -64,6 +70,9 @@ module Ora
         end
       end
       if params[0].has_key?(:emailThreads_attributes)
+        if params[0][:emailThreads_attributes].kind_of?(Hash) && params[0][:emailThreads_attributes].keys.include?("0")
+          params[0][:emailThreads_attributes] = params[0][:emailThreads_attributes].values
+        end
         # Validate emailThreads is array
         if !params[0][:emailThreads_attributes].kind_of?(Array)
           params[0][:emailThreads_attributes] = [params[0][:emailThreads_attributes]]
@@ -71,6 +80,9 @@ module Ora
       end
       if params[0].has_key?(:comments_attributes)
         # Validate comments is array
+        if params[0][:comments_attributes].kind_of?(Hash) && params[0][:comments_attributes].keys.include?("0")
+          params[0][:comments_attributes] = params[0][:comments_attributes].values
+        end
         if !params[0][:comments_attributes].kind_of?(Array)
           params[0][:comments_attributes] = [params[0][:comments_attributes]]
         end
@@ -105,7 +117,7 @@ module Ora
   def buildSubject(params, article)
     article.subject = nil
     if params.is_a?(Hash)
-      params = params.values()
+      params = params.values
     end
     params.each do |s|
       if s[:subjectLabel].empty?
@@ -249,7 +261,7 @@ module Ora
   end
 
   def buildExternalRelations(params, article)
-    params = params.values()
+    params = params.values
     params.each_with_index do |rel, rel_index|
       hasInfo = false
       rel[:entity_attributes]["0"].each do |k, v|
@@ -293,7 +305,7 @@ module Ora
     vals = {'id' => id0, :wasAssociatedWith => [], :hasFundingAward => nil}
     awardCount = 0
     # Funder has to have name of funder and whom the funder funds
-    funders = params[:funder_attributes].values()
+    funders = params[:funder_attributes].values
     funders.each do |funder|
       if funder.nil? || funder.empty? || !funder.has_key?(:agent_attributes)
         funders.delete(funder)
@@ -340,7 +352,7 @@ module Ora
         end
         article.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
         # Clean the awards attributes for the funder and build
-        awards = funder[:awards_attributes].values()
+        awards = funder[:awards_attributes].values
         awards.each do |award|
           if award["grantNumber"].empty?
             awards.delete(award)
@@ -363,7 +375,7 @@ module Ora
   def buildCreationActivity(params, article)
     article.creation = nil
     if params[:creator_attributes].is_a?(Hash)
-      params[:creator_attributes] = params[:creator_attributes].values()
+      params[:creator_attributes] = params[:creator_attributes].values
     end
     # has to have name of creator
     params[:creator_attributes].each do |c|
@@ -411,7 +423,7 @@ module Ora
   def buildTitularActivity(params, article)
     article.titularActivity = nil
     if params[:titular_attributes].is_a?(Hash)
-      params[:titular_attributes] = params[:titular_attributes].values()
+      params[:titular_attributes] = params[:titular_attributes].values
     end
     # has to have name of titular
     params[:titular_attributes].each do |c|
