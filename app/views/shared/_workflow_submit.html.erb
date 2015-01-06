@@ -1,18 +1,24 @@
 <% unless article.workflows.first.nil? %>
   <% wf = article.workflows.first %>
-  <%= f.hidden_field "workflows_attributes][id", :value => wf.rdf_subject.to_s %>
-  <% if article.workflows.first.comments.empty? %>
-    <% article.workflows.first.comments.build %>
-  <% end %>
+  <% wf_id = wf.rdf_subject.to_s %>
+  <% currentStatus = wf.current_status %>
+<% else %>
+  <% article.workflows.build %>
+  <% wf = article.workflows.first %>
+  <% wf_id = nil %>
+  <% currentStatus = "Draft" %>
 <% end %>
 
-<% unless can? :review, :all %>
-  <% if article.workflows.empty? || article.workflows.first.current_status == "Draft" || article.workflows.first.current_status == "Referred" %>
-    <% buttonText = 'Submit for Review' %>
-    <% if article.workflows.empty? %>
-      <%= f.hidden_field "workflows_attributes][identifier", :value => "MediatedSubmission", :id => "workflows_id" %>
+<% if currentStatus == "Draft" || currentStatus == "Referred" %>
+  <%= f.fields_for :workflows, wf do |f_wf| %>
+    <% unless wf_id.nil? %>
+      <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflow_submit_id" %>
     <% end %>
-    <%= f.hidden_field "workflows_attributes][entries_attributes][status", :value => "Submitted", :id => "workflows_entries_status" %>
-  <% end %>
-<% end %> 
-
+    <%= f_wf.hidden_field :identifier, :value => "MediatedSubmission", :id => "workflow_submit_identifier" %>
+    <% wf.entries.build %>
+    <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
+      <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>
+    <% end %>
+  <% end #fields_for first workflow %>
+  <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+<% end %>

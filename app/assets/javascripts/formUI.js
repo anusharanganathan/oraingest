@@ -34,6 +34,6 @@ function displayDatasetAgreement(id, val) {
 }
 
 function setStatus() {
- $("#workflows_entries_status").val("Submitted");
+ $("#workflow_submit_entries_status").val("Submitted");
 }
 
