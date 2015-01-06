@@ -351,7 +351,11 @@ class DatasetsController < ApplicationController
   end
 
   def add_metadata(dataset_params)
-    old_status =  @dataset.workflows.first.current_status
+    if !@dataset.workflows.nil? && !@dataset.workflows.first.entries.nil?
+      old_status = @dataset.workflows.first.current_status
+    else
+      old_status = nil
+    end
     # find or create the dataset agreement, if included in the params
     if dataset_params.has_key?(:hasAgreement) or dataset_params.has_key?(:hasRelatedAgreement)
       @@dataset_agreement, created = add_agreement(dataset_params)
@@ -370,7 +374,7 @@ class DatasetsController < ApplicationController
       @dataset.hasRelatedAgreement = @dataset_agreement
     end
     if old_status != @dataset.workflows.first.current_status
-      @dataset.perform_action
+      @dataset.perform_action(current_user.user_key)
     end
     respond_to do |format|
       if @dataset.save

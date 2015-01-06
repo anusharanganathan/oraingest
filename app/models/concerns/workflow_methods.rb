@@ -4,18 +4,13 @@ module WorkflowMethods
   extend ActiveSupport::Concern
 
   def perform_action(current_user)
-    puts "-----------------------------------------------------"
-    puts self.id
-    puts self.class.model_name.to_s
     model = self.class.model_name.to_s
     # send email
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
     record_url = Rails.application.routes.url_helpers.url_for(:controller => models[model], :action=>'show', :id => self.id)
-    puts record_url
     ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", {"record_id" => self.id, "record_url" => record_url}, current_user, model)
     # publish record
     publishRecord("MediatedSubmission", current_user)
-    puts "-----------------------------------------------------"
   end
 
   def publishRecord(wf_id, current_user)
@@ -24,10 +19,10 @@ module WorkflowMethods
     wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
     model = self.class.model_name.to_s
     #Use Sufia.config.publish_to_queue_options to determine if method needs to be called
-    if wf && Sufia.config.email_options.keys.include?(model.downcase) && Sufia.config.email_options[model.downcase].include?(wf.current_status)
+    if wf && Sufia.config.publish_to_queue_options.keys.include?(model.downcase) && Sufia.config.publish_to_queue_options[model.downcase].include?(wf.current_status)
       # The status is available for this model in the config
       occurences = wf.all_statuses.select{|s| s == wf.current_status}
-      occurence = Sufia.config.email_options[model.downcase][wf.current_status]['occurence']
+      occurence = Sufia.config.publish_to_queue_options[model.downcase][wf.current_status]['occurence']
       if (occurences.length == occurence) || occurence == "all"
         # The occurence count matches and so procedd to performing action
         toMigrate = false
@@ -77,12 +72,11 @@ module WorkflowMethods
           msg << "Catalogue record is #{self.accessRights[0].embargoStatus[0]}."
         end
         # Update status of object
-        entry = {:description => msg.join(" "), :creator => current_user, :date => Time.now.to_s, :status => status}
-        self.workflows.first.entries.build(entry)
+        self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
         # Push object to queue
         if toMigrate
           Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, self.class.model_name.to_s))
-      end
+        end
       #else
       #  # Note: Not doing this as we may just add a whole lot of comments for redundant clicks
       #  # Cannot publish as not not the correct occurence. Add comment and return
@@ -96,14 +90,6 @@ module WorkflowMethods
     #  msg = "Record cannot be processed for current status #{self.workflows.first.current_status}."
     #  comment = {:description => msg, :creator => current_user, :date => Time.now.to_s}
     #  self.workflows.first.comments.build(comment)
-    end
-
-    unless self.workflows.first.current_status == "Approved"
-      # Cannot publish as not approved. Add comment and return
-      msg = "Record cannot be processed until approved. Current status is #{self.workflows.first.current_status}."
-      comment = {:description => msg, :creator => current_user, :date => Time.now.to_s}
-      self.workflows.first.comments.build(comment)
-    else
     end
   end
 

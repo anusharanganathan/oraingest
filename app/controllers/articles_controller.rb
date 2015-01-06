@@ -261,36 +261,19 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
-    old_status = @rticle.workflows.first.current_status
+    if !@rticle.workflows.nil? && !@rticle.workflows.first.entries.nil?
+      old_status = @rticle.workflows.first.current_status
+    else
+      old_status = nil
+    end
     @article = Ora.buildMetadata(article_params, @article, contents, current_user.user_key)
+    if old_status != @article.workflows.first.current_status
+      @article.perform_action(current_user.user_key)
+    end
     respond_to do |format|
       if @article.save
-        saveAgain = false
-        if old_status != @article.workflows.first.current_status
-          # Send email
-          data = {
-            "record_id" => @article.id,
-            "record_url" => article_url(@article)
-          }
-          ans = @article.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, "Article")
-          if ans
-            article_params[:workflows_attributes] = Ora.validateWorkflow(ans, current_user.user_key, @article)
-            @article.attributes = article_params
-            saveAgain = true
-          end
-        end
-        if saveAgain
-          if @article.save
-            format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-            format.json { head :no_content }
-          else
-            format.html { render action: 'edit' }
-            format.json { render json: @article.errors, status: :unprocessable_entity }
-          end
-        else
-          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-          format.json { head :no_content }
-        end
+        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+        format.json { head :no_content }
       else
         format.html { render action: 'edit' }
         format.json { render json: @article.errors, status: :unprocessable_entity }
