@@ -22,7 +22,6 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require 'ora/build_metadata'
 
 class DatasetAgreementsController < ApplicationController
   before_action :set_dataset_agreement, only: [:show, :edit, :update, :destroy]
@@ -231,7 +230,7 @@ class DatasetAgreementsController < ApplicationController
 
   def add_metadata(dataset_agreement_params)
     #TODO: All data stewards should be added to list of contibutors
-    @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, contents, current_user.user_key)
+    @dataset_agreement.buildMetadata(dataset_agreement_params, contents, current_user.user_key)
     respond_to do |format|
       if @dataset_agreement.save
         format.html { redirect_to edit_dataset_agreement_path(@dataset_agreement), notice: 'Dataset agreement was successfully updated.' }
