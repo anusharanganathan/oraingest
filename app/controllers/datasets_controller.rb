@@ -22,7 +22,6 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require 'ora/build_metadata'
 
 require 'json'
 
@@ -334,7 +333,7 @@ class DatasetsController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = Ora.validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
+      new_params = @dataset.validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
       respond_to do |format|
         if @dataset.update(new_params)
           format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
@@ -366,7 +365,7 @@ class DatasetsController < ApplicationController
       dataset_params[:hasAgreement] = @dataset_agreement.id
     end
     # Update params
-    @dataset = Ora.buildMetadata(dataset_params, @dataset, contents, current_user.user_key)
+    @dataset.buildMetadata(dataset_params, contents, current_user.user_key)
     if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
@@ -436,7 +435,7 @@ class DatasetsController < ApplicationController
       dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
       dataset_agreement_params[:agreementType] = "Individual"
       dataset_agreement_params[:contributor] = current_user.user_key
-      @dataset_agreement = Ora.buildMetadata(dataset_agreement_params, @dataset_agreement, [], current_user.user_key)
+      @dataset_agreement.buildMetadata(dataset_agreement_params, [], current_user.user_key)
       if !@dataset_agreement.save
         @dataset_agreement = nil
       end 
