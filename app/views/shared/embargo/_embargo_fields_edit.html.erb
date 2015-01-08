@@ -34,15 +34,24 @@
   
     <fieldset class="small-text">
       <label>
-        <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"}, :class => "required"  %>
+        <% if false #Removing required as we need to fix required value on show and hide %>
+          <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"}, :class => "required"  %>
+        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"} %>
         <span></span>Yes
       </label>
       <label panel='dataset-embargo-<%= panel_id %>'>
-        <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required" %>
+        <% if false #Removing required as we need to fix required value on show and hide %>
+          <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required" %>
+        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"} %>
         <span></span>After a certain period
       </label>
       <label>
-        <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"}, :class => "required" %>
+        <% if false #Removing required as we need to fix required value on show and hide %>
+          <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"}, :class => "required" %>
+        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"} %>
         <span></span>No
       </label>
     </fieldset>

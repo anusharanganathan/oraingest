@@ -18,8 +18,12 @@ funding_types = {
     <h4>Is your research the result of a funding award?</h4>
     <div class="fieldset">
       <fieldset class="small-text">
-        <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "required" %><span></span>Yes</label>
-        <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "required" %><span></span>No</label>
+        <% if false #TODO: Fix the required fields on hide and show and then add required = true %>
+          <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "required" %><span></span>Yes</label>
+          <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "required" %><span></span>No</label>
+        <% end %>
+        <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes") %><span></span>Yes</label>
+        <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no") %><span></span>No</label>
       </fieldset>
       <div class="expand-panel" id="dataset-funding">
         <h5>Funder information</h5>
@@ -38,14 +42,20 @@ funding_types = {
                     <%= f_f1.fields_for :agent, f2 do |f_f2| %>
                       <label>
                       <span class="small">Name</span>
-                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, required: true, data: {"progress" => "funder"} %>
+                      <% if false #TODO: Fix the required fields on hide and show and then add required = true %>
+                        <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, required: true, data: {"progress" => "funder"} %>
+                      <% end %>
+                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, data: {"progress" => "funder"} %>
                       <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
                       </label>
                       <% f1.awards.each_with_index do |f2, f2_index| %>
                         <%= f_f1.fields_for :awards, f2 do |f_f2| %>
                           <label>
                             <span class="small">Grant number:</span>
-                            <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], required: true, data: {"progress" => "funder"} %>
+                            <% if false #TODO: Fix the required fields on hide and show and then add required = true %>
+                              <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], required: true, data: {"progress" => "funder"} %>
+                            <% end %>
+                            <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], data: {"progress" => "funder"} %>
                           </label>
                         <% end %>
                       <% end %>
@@ -53,7 +63,10 @@ funding_types = {
                   <% end %>
                   <label>
                     <span class="small">Who or what was funded?</span>
-                    <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, required: true, data: {"progress" => "funder"} %>
+                    <% if false #TODO: Fix the required fields on hide and show and then add required = true %>
+                      <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, required: true, data: {"progress" => "funder"} %>
+                    <% end %>
+                    <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, data: {"progress" => "funder"} %>
                   </label>
                 </li>
               <% end %>
