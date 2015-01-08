@@ -234,7 +234,9 @@
   <div class="form-nav-next" style="text-align: right">
     <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
     <% unless can? :review, :all %>
-      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article} %>
+      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => true} %>
+    <% else %>
+      <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
     <% end %>
   </div>
 </nav>

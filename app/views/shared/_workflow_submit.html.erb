@@ -20,5 +20,9 @@
       <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>
     <% end %>
   <% end #fields_for first workflow %>
-  <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+  <% if validate == false %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()", data: {"submit-without-validation" => true} %>
+  <% else %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+  <% end %>
 <% end %>
