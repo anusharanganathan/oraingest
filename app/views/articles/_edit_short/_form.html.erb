@@ -7,9 +7,14 @@
     <div class="padding-25 no-pad-bottom">
       <%= render partial: '/shared/upload/files_form', :locals => {:record => @article, :editpath => document_url("Article", "edit", @pid) } %>
     <div class="bottom-border"></div>
+    <div class="padding-0">
+      <div class="padding-25 no-pad-bottom">
+        <%= render partial: 'shared/upload/list_files' %>
+      </div>
+    </div>
   </div>
 
-  <%= form_for(@article) do |f| %>
+  <%= form_for @article, :html => {:id => "new_article_fields", :class => "ora-validate-form"} do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
 
     <!-- publication info -->
@@ -49,8 +54,8 @@
     <!-- Form save and submi -->
     <nav class="form-nav" style="margin-top: 20px;">
       <div class="form-nav-next" style="text-align: right">
-        <%= f.submit "Save article", class: "button light-blue" %>
-        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article} %>
+        <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
+        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => false} %>
       </div>
     </nav>
   
