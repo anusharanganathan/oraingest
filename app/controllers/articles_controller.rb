@@ -243,7 +243,7 @@ class ArticlesController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = @article.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
+      new_params = @article.validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
       respond_to do |format|
         if @article.update(new_params)
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
