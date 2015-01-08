@@ -281,7 +281,7 @@ Sufia.config do |config|
   config.archiving_payment_options = {
     "Payment has already been made for archiving the data" => "Paid",
     "Raise me an invoice for archiving the data" => "To be invoiced",
-    "Payment is not required" => "Unfunded research",
+    "Payment is not required" => "Payment not required",
     "I need help with this" => "Payment help"
   }
 
