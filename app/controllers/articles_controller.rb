@@ -22,7 +22,6 @@ require 'parslet'
 require 'parsing_nesting/tree'
 
 require "utils"
-require 'ora/build_metadata'
 
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :edit_detailed, :update, :destroy, :revoke_permissions]
@@ -244,7 +243,7 @@ class ArticlesController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = Ora.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
+      new_params = @article.validatePermissionsToRevoke(params[:article], @article.workflowMetadata.depositor[0])
       respond_to do |format|
         if @article.update(new_params)
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
@@ -261,12 +260,12 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params)
-    if !@rticle.workflows.nil? && !@rticle.workflows.first.entries.nil?
-      old_status = @rticle.workflows.first.current_status
+    if !@article.workflows.nil? && !@article.workflows.first.entries.nil?
+      old_status = @article.workflows.first.current_status
     else
       old_status = nil
     end
-    @article = Ora.buildMetadata(article_params, @article, contents, current_user.user_key)
+    @article.buildMetadata(article_params, contents, current_user.user_key)
     if old_status != @article.workflows.first.current_status
       @article.perform_action(current_user.user_key)
     end
