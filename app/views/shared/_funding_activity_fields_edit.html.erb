@@ -19,11 +19,11 @@ funding_types = {
     <div class="fieldset">
       <fieldset class="small-text">
         <% if false #TODO: Fix the required fields on hide and show and then add required = true %>
-          <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "required" %><span></span>Yes</label>
-          <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "required" %><span></span>No</label>
+          <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "fundingAward required" %><span></span>Yes</label>
+          <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "fundingAward required" %><span></span>No</label>
         <% end %>
-        <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes") %><span></span>Yes</label>
-        <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no") %><span></span>No</label>
+        <label panel="dataset-funding"><%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "fundingAward" %><span></span>Yes</label>
+        <label><%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "fundingAward" %><span></span>No</label>
       </fieldset>
       <div class="expand-panel" id="dataset-funding">
         <h5>Funder information</h5>

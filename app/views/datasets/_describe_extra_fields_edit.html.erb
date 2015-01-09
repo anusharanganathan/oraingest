@@ -11,10 +11,10 @@
     <p class="small">Is your data in digital format?</p>
     <fieldset class="small-text">
       <label panel="dataset-format-digital">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')", data: {"progress" => "documentation"} %><span></span> Yes
+        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital", data: {"progress" => "documentation"} %><span></span> Yes
       </label>
       <label panel="dataset-format-physical">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')", data: {"progress" => "documentation"} %>
+        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')", :class => "medium-analog", data: {"progress" => "documentation"} %>
         <span></span> No
       </label>
     </fieldset>
