@@ -75,6 +75,7 @@
                   <%= f_hp.fields_for :accessRights do |f_a| %>
                     <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f_hp, :accessRights => hp.accessRights, :embargo_type => "file" } %>
                   <% end %>
+                  <div class="file-options"><a href="#" data-action="hide_form">Hide Edit Details/Embargo</a></div>
                 </div><!-- /.hidden-form -->
               <% end %>
             </div><!-- /.file-content -->
