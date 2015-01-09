@@ -42,9 +42,9 @@
       </label>
       <label panel='dataset-embargo-<%= panel_id %>'>
         <% if false #Removing required as we need to fix required value on show and hide %>
-          <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required" %>
+          <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required embargoed" %>
         <% end %>
-        <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"} %>
+        <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "embargoed" %>
         <span></span>After a certain period
       </label>
       <label>
