@@ -334,6 +334,34 @@ $(function() {
     }
   }
 
+  function expandPanel() {
+    // Medium
+    if ($(".medium-digital").first().is(':checked')) {
+      $("#dataset-format-digital").css("display","block");
+      $("#dataset-format-digital").css("opacity","1");
+    } 
+    if ($(".medium-analog").first().is(':checked')) {
+      $("#dataset-format-digital").css("display","block");
+      $("#dataset-format-digital").css("opacity","1");
+    }
+    // Funding
+    $(".fundingAward").each(function(){
+      if ($(this).is(':checked') && $(this).val() == "yes") {
+        $("#dataset-funding").css("display","block");
+        $("#dataset-funding").css("opacity","1");
+      }
+    });
+    // embargo status
+    $(".embargoed").each(function(){
+      if ($(this).is(':checked')) {
+        var panelId = $(this).parents("label").first().attr('panel');
+        $("#" + panelId).css("display","block");
+        $("#" + panelId).css("opacity","1");
+      }
+    });
+  }
+
   fixTracker();
+  expandPanel();
   $(document).on("scroll",fixTracker);
 });
