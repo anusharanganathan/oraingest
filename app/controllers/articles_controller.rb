@@ -118,6 +118,9 @@ class ArticlesController < ApplicationController
       create_from_upload(params)
     elsif params.has_key?(:article)
       add_metadata(params[:article])
+    elsif can? :review, @article
+      format.html { render action: 'edit_detailed' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -130,6 +133,9 @@ class ArticlesController < ApplicationController
       create_from_upload(params)
     elsif article_params
       add_metadata(params[:article])
+    elsif can? :review, @article
+      format.html { render action: 'edit_detailed' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -246,13 +252,24 @@ class ArticlesController < ApplicationController
       new_params = @article.validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
       respond_to do |format|
         if @article.update(new_params)
-          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-          format.json { head :no_content }
+          if can? :review, @article
+            format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.' }
+            format.json { head :no_content }
+          else
+            format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+            format.json { head :no_content }
+          end
+        elsif can? :review, @article
+          format.html { render action: 'edit_detailed' }
+          format.json { render json: @article.errors, status: :unprocessable_entity }
         else
           format.html { render action: 'edit' }
           format.json { render json: @article.errors, status: :unprocessable_entity }
         end
       end
+    elsif can? :review, @article
+      format.html { render action: 'edit_detailed' }
+      format.json { render json: @article.errors, status: :unprocessable_entity }
     else
       format.html { render action: 'edit' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -271,8 +288,16 @@ class ArticlesController < ApplicationController
     end
     respond_to do |format|
       if @article.save
-        format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
-        format.json { head :no_content }
+        if can? :review, @article
+          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
+          format.json { head :no_content }
+        end
+      elsif can? :review, @article
+        format.html { render action: 'edit_detailed' }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
       else
         format.html { render action: 'edit' }
         format.json { render json: @article.errors, status: :unprocessable_entity }
