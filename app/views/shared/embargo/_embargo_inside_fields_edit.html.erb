@@ -6,7 +6,7 @@
     <!-- End date --> 
     <%= f_dt.fields_for :end do |f_dt_end| %>
       <div class="row" id="embargo-date-row-<%=ele_id%>">
-        <div class="col col1of3">
+        <div class="col col1of4">
           <label>
             <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
               <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
@@ -18,16 +18,16 @@
             <span></span>Embargo end date
           </label>
         </div>
-        <div class="col col2of3 embargo-date" style="display: <%=displayEndDate%>;">
+        <div class="col col3of4 embargo-date" style="display: <%=displayEndDate%>;">
           <div class="row">
             <div class="col">Date</div>
           </div> 
           <div class="row">
             <div class="col">
               <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
-                <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:100px' %>
+                <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first%>
               <% else %>
-                <%= f_dt_end.date_field :date, :value => "", :style=>'width:100px' %>
+                <%= f_dt_end.date_field :date, :value => "" %>
               <% end %>
             </div>
           </div>
@@ -36,7 +36,7 @@
     <% end %>
     <!-- Duration --> 
     <div class="row" id="embargo-duration-row-<%=ele_id%>">
-      <div class="col col1of3">
+      <div class="col col1of4">
         <label>
         <% if ["Date", "Publication date"].include?(accessRights[0].embargoDate[0].start[0].label.first) %>
           <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
@@ -48,7 +48,7 @@
         <span></span>Embargo period
         </label>
       </div>
-      <div class="col col1of3 embargo-duration" style="display: <%=displayDuration%>;">
+      <div class="col col1of4 embargo-duration" style="display: <%=displayDuration%>;">
         <%= f_dt.fields_for :duration do |f_dt_duration| %>
           <div class="row">
             <div class="col col1of2">Years</div>
@@ -64,7 +64,7 @@
           </div>
         <% end %>
       </div>
-      <div class="col col1of3 embargo-duration" style="display: <%=displayDuration%>;">
+      <div class="col col2of4 embargo-duration" style="display: <%=displayDuration%>;">
         <label>Starting from</label>
         <%= f_dt.fields_for :start do |f_dt_start| %>
           <% if accessRights[0].embargoDate[0].start[0].label.first == "Date" %>
@@ -92,8 +92,8 @@
           </label>
         <% end %>
       </div>
-      <div class="col col1of3 embargo-duration">&nbsp;</div>
-      <div class="col col2of3 embargo-duration">
+      <div class="col col1of4 embargo-duration">&nbsp;</div>
+      <div class="col col3of4 embargo-duration">
         <% if accessRights[0].embargoDate[0].end[0].label.first == "Approximate" %>
           <div style="margin-top:5px;">The end date has been calculated to be after <%=accessRights[0].embargoDate[0].end[0].date.first%></div>
         <% elsif accessRights[0].embargoDate[0].end[0].label.first == "Defined" %>
