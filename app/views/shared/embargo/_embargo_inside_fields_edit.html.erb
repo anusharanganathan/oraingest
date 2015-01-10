@@ -1,42 +1,81 @@
 <%= embargo_type = nil %>
 <h5>What is the embargo date?</h5>
-
-<div class="fieldset">
+<% ele_id = SecureRandom.uuid %>
+<div class="fieldset" id="embargo-fieldset-<%=ele_id%>">
   <%= f_a.fields_for :embargoDate do |f_dt| %>
+    <!-- End date --> 
     <%= f_dt.fields_for :end do |f_dt_end| %>
-    <div class="row">
-      <div class="col col1of3">
-        <label><input type="radio" name="dataset-embargo[0]" data-progress="documentation" /><span></span>
-          Enter end date
-        </label>
+      <div class="row" id="embargo-date-row-<%=ele_id%>">
+        <div class="col col1of3">
+          <label>
+            <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
+              <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+              <% displayEndDate = "block" %>
+            <% else %>
+              <input type="radio" name="dataset-embargo[0]" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+              <% displayEndDate = "none" %>
+            <% end %>
+            <span></span>Embargo end date
+          </label>
+        </div>
+        <div class="col col2of3 embargo-date" style="display: <%=displayEndDate%>;">
+          <div class="row">
+            <div class="col">Date</div>
+          </div> 
+          <div class="row">
+            <div class="col">
+              <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
+                <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:100px' %>
+              <% else %>
+                <%= f_dt_end.date_field :date, :value => "", :style=>'width:100px' %>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col col2of3">
-        <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first, :style=>'width:100px' %>
-      </div>
-    </div>
     <% end %>
-    <div class="row field-break">Or</div>
-
-    <div class="row">
+    <!-- Duration --> 
+    <div class="row" id="embargo-duration-row-<%=ele_id%>">
       <div class="col col1of3">
-        <label><input type="radio" name="dataset-embargo[0]" data-progress="documentation" /><span></span>
-          Enter embargo period
+        <label>
+        <% if ["Date", "Publication date"].include?(accessRights[0].embargoDate[0].start[0].label.first) %>
+          <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <% displayDuration = "block" %>
+        <% else %>
+          <input type="radio" name="dataset-embargo[0]" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <% displayDuration = "none" %>
+        <% end %>
+        <span></span>Embargo period
         </label>
       </div>
-      <div class="col col2of3">
+      <div class="col col1of3 embargo-duration" style="display: <%=displayDuration%>;">
         <%= f_dt.fields_for :duration do |f_dt_duration| %>
-          <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2", placeholder: "Years", style: "width: 70px; float: left; margin: 0; margin-right: 5px;" %>
-          <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2", placeholder: "Months", style: "width: 70px; margin: 0; float: left;" %>
+          <div class="row">
+            <div class="col col1of2">Years</div>
+            <div class="col col1of2">Months</div>
+          </div>
+          <div class="row">
+            <div class="col col1of2">
+              <%= f_dt_duration.text_field :years, :value => accessRights[0].embargoDate[0].duration[0].years.first, maxlength: "2", size: "2" %>
+            </div>
+            <div class="col col1of2">
+              <%= f_dt_duration.text_field :months, :value => accessRights[0].embargoDate[0].duration[0].months.first, maxlength: "2", size: "2" %>
+            </div>
+          </div>
         <% end %>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col col1of3">
-        <label class="indent">Starting from</label>
-      </div>
-      <div class="col col2of3">
+      <div class="col col1of3 embargo-duration" style="display: <%=displayDuration%>;">
+        <label>Starting from</label>
         <%= f_dt.fields_for :start do |f_dt_start| %>
+          <% if accessRights[0].embargoDate[0].start[0].label.first == "Date" %>
+            <% if accessRights[0].embargoDate[0].start[0].date.first == Time.now %>
+              <% startOption = "Today" %>
+            <% elsif !accessRights[0].embargoDate[0].start[0].date.first.empty? %>
+              <% startOption = "Date" %>
+            <% end %>
+          <% elsif accessRights[0].embargoDate[0].start[0].label.first == "Publication date" %>
+            <% startOption = "Publication date" %>
+          <% end %>
           <label>
             <%= f_dt_start.radio_button :label, "Today", :checked => (startOption == "Today") %><span></span> Today
           </label>
@@ -45,11 +84,24 @@
           </label>
           <label>
             <%= f_dt_start.radio_button :label, "", :checked => (startOption == "Date") %><span></span> Date
+            <% if startOption == "Date" %>
+              <div><%= f_dt_start.date_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first %></div>
+            <% else %>
+              <div><%= f_dt_start.date_field :date, :value => "" %></div>
+            <% end %>
           </label>
-          <%= f_dt_start.date_field :date, :value => accessRights[0].embargoDate[0].start[0].date.first, :style=>'width: 100px' %>
+        <% end %>
+      </div>
+      <div class="col col1of3 embargo-duration">&nbsp;</div>
+      <div class="col col2of3 embargo-duration">
+        <% if accessRights[0].embargoDate[0].end[0].label.first == "Approximate" %>
+          <div style="margin-top:5px;">The end date has been calculated to be after <%=accessRights[0].embargoDate[0].end[0].date.first%></div>
+        <% elsif accessRights[0].embargoDate[0].end[0].label.first == "Defined" %>
+          <div style="margin-top:5px;">The end date has been calculated to be on <%=accessRights[0].embargoDate[0].end[0].date.first%></div>
         <% end %>
       </div>
     </div>
+
   <% end %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Embargo end date" , :tipDescription => "Please enter either the the precise date when the embargo should be lifted, in the form DD/MM/YYYY (e.g. ’26/06/2018), or enter the required length of embargo in years and months (e.g. ’1 year 6 months’) and select a start date." } %>
 </div>

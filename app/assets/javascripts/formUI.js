@@ -16,6 +16,28 @@ function toggleDigitalFieldsDisplay(val) {
   }
 }
 
+function toggleEmbargoFieldsDisplay(currentEle) {
+  var val = currentEle.value;
+  var eleId = currentEle.id;
+  // show the fields for this embargo option
+  var rowId = eleId.replace(val, val + "-row");
+  var colClass = ".embargo-"+ val;
+  $("#"+rowId).find(colClass).each(function(){
+    $(this).css("display", "block");
+  });
+  // hide fields for other embargo option
+  if (val == "date") {
+    var otherCol = "duration";
+  } else if (val == "duration") {
+    var otherCol = "date";
+  }
+  var fieldsetId = eleId.replace(val, "fieldset");
+  var colClass = ".embargo-"+ otherCol;
+  $("#"+fieldsetId).find(colClass).each(function(){
+    $(this).css("display", "none");
+  });
+}
+
 function displayDatasetAgreement(id, val) {
   if (val != "") {
     $.ajax({
