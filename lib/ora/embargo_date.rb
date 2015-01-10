@@ -3,6 +3,25 @@ module Ora
   module_function
 
   def validateEmbargoDates(params, id, datePublished)
+    # If endDate is given
+    # 	endDateType = Stated
+    #   endDate = date
+    # If duration is given and startDate is today
+    #   startDateType = Date
+    #   endDateType = Defined
+    #	endDate = today's date + duration
+    # If duration is given and startDate is particular date
+    #   startDateType = Date
+    #   endDateType = Defined
+    #	endDate = date + duration
+    # If duration is given and startDate is publication date
+    #   startDateType = Publication date
+    #   If publication date is known 
+    #     endDateType = Defined
+    #	  endDate = publication date + duration
+    #   If publication date is not known
+    #     endDateType = Approximate
+    #	  endDate = today + duration
     vals = {
       'id' => "%s#accessRights"% id,
       :embargoStatus => nil, 
