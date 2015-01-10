@@ -104,7 +104,7 @@ module Ora
               numberOfMonths = params[:embargoDate][:duration][:months].to_i
             end
           end
-          if !numberOfYears.nil? || !numberOfMonths.nil?
+          if (!numberOfYears.nil? || !numberOfMonths.nil?) && (numberOfYears > 0 || numberOfMonths > 0)
             if startDate.nil?
               endDateType = "Approximate"
               startDate = Time.now
