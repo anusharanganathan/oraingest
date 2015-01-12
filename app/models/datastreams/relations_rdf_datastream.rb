@@ -234,45 +234,85 @@ class EmbargoInfo
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end
 
+  def embargoInfo
+    embargoHash = {}
+    embargoHash['identifier'] = rdf_subject.to_s
+    if !self.embargoStatus.nil? && !self.embargoStatus.first.nil?
+      embargoHash['embargoStatus'] = self.embargoStatus.first
+    end
+    if !self.embargoReason.nil? && !self.embargoReason.empty?
+      embargoHash['embargoReason'] = self.embargoReason
+    end
+    if !self.embargoRelease.nil? && !self.embargoRelease.first.nil?
+      embargoHash['embargoRelease'] = self.embargoRelease.first
+    end
+
+    if !self.embargoDate.nil? && !self.embargoDate.first.nil?
+      # Embargo end - type, date and human
+      if !self.embargoDate.first.end.nil? && !self.embargoDate.first.end.first.nil?
+        if !self.embargoDate.first.end.first.label.nil? && !self.embargoDate.first.end.first.label.first.nil?
+          embargoHash['embargoEndType'] = self.embargoDate.first.end.first.label.first
+        end
+        if !self.embargoDate.first.end.first.date.nil? && !self.embargoDate.first.end.first.date.first.nil?
+          embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
+        end
+        if embargoHash.has_key?('embargoEndType') && embargoHash.has_key?('embargoEnd')
+          if embargoHash['embargoEndType'] == "Stated" || embargoHash['embargoEndType'] == "Defined"
+            embargoHash['embargoEndHuman'] = "until #{embargoHash['embargoEnd']}"
+          elsif embargoHash['embargoEndType'] == "Approximate"
+            embargoHash['embargoEndHuman'] = "after #{embargoHash['embargoEnd']}"
+          end
+        end
+      end
+      # Embargo start - type and date
+      if !self.embargoDate.first.start.nil? && !self.embargoDate.first.start.first.nil?
+        if !self.embargoDate.first.start.first.label.nil? && !self.embargoDate.first.start.first.label.first.nil?
+          embargoHash['embargoStartType'] = self.embargoDate.first.start.first.label.first
+        end
+        if !self.embargoDate.first.start.first.date.nil? && !self.embargoDate.first.start.first.date.first.nil?
+          embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
+        end
+      end
+      # Embargo duration
+      if !self.embargoDate.first.duration.nil? && !self.embargoDate.first.duration.first.nil?
+        if (self.embargoDate.first.duration.first.years.first.to_i > 0) || (self.embargoDate.first.duration.first.months.first.to_i > 0)
+          embargoHash['embargoDuration'] = "%d years and %d months"% [self.embargoDate.first.duration.first.years.first.to_i, self.embargoDate.first.duration.first.months.first.to_i]
+        end
+      end
+      # Embargo duration - human
+      if embargoHash.has_key?('embargoDuration') && embargoHash.has_key?('embargoStartType')
+        if embargoHash['embargoStartType'] == "Date" && embargoHash.has_key?('embargoStart')
+          if embargoHash['embargoStart'] == Time.now
+            embargoHash['embargoDurationHuman'] = "#{embargoHash['embargoDuration']} from today"
+          else
+            embargoHash['embargoDurationHuman'] = "#{embargoHash['embargoDuration']} from #{embargoHash['embargoStart']}"
+          end
+        elsif embargoHash['embargoStartType'] == "Publication date"
+          if embargoHash.has_key?('embargoStart') && embargoHash.has_key?('embargoEndType') && embargoHash['embargoEndType'] == "Defined"
+            # If embargoEndType = Approximate, than we do not know the publication date and have set it tp today
+            embargoHash['embargoDurationHuman'] = "#{embargoHash['embargoDuration']} from publication date (#{embargoHash['embargoStart']})"
+          else
+            embargoHash['embargoDurationHuman'] = "#{embargoHash['embargoDuration']} from publication date"
+          end
+        end
+      end
+
+    end #embargo date not nil
+    embargoHash
+  end 
+
   def to_solr(solr_doc={})
     solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] ||= []
     solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
     solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
-    embargoHash = {}
-    embargoHash['identifier'] = rdf_subject.to_s
-    embargoHash['embargoStatus'] = self.embargoStatus.first 
-    embargoHash['embargoReason'] = self.embargoReason.first 
-    embargoHash['embargoRelease'] = self.embargoRelease.first 
-
-    if !self.embargoDate.nil? && !self.embargoDate.first.nil?
-      if !self.embargoDate.first.end.nil? && !self.embargoDate.first.end.first.nil?
-        if !self.embargoDate.first.end.first.label.nil? && !self.embargoDate.first.end.first.date.nil?
-          embargoHash['embargoEnd'] = "%s %s"% [self.embargoDate.first.end.first.label.first, self.embargoDate.first.end.first.date.first]
-        elsif !self.embargoDate.first.end.first.date.nil?
-          embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
-        end
-        if !self.embargoDate.first.end.first.date.nil?
-          solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] << self.embargoDate.first.end.first.date.first
-          begin 
-            solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] << Chronic.parse(self.embargoDate.first.end.first.date.first).utc.iso8601
-          rescue
-          end
-        end
-      end
-      if !self.embargoDate.first.start.nil? && !self.embargoDate.first.start.first.nil?
-        if !self.embargoDate.first.start.first.label.nil? && !self.embargoDate.first.start.first.date.nil?
-          embargoHash['embargoStart'] = "%s %s"% [self.embargoDate.first.start.first.label.first, self.embargoDate.first.start.first.date.first]
-        elsif !self.embargoDate.first.start.first.label.nil?
-          embargoHash['embargoStart'] = self.embargoDate.first.start.first.label.first
-        elsif !self.embargoDate.first.start.first.date.nil?
-          embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
-        end
-      end
-      if !self.embargoDate.first.duration.nil? && !self.embargoDate.first.duration.first.nil? 
-        embargoHash['embargoPeriod'] = "%d years and %d months"% [self.embargoDate.first.duration.first.years.first.to_i, self.embargoDate.first.duration.first.months.first.to_i]
+    if self.embargoInfo.has_key?("embargoEnd")
+      solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] << self.embargoInfo["embargoEnd"]
+      begin 
+        solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] << Chronic.parse(self.embargoInfo["embargoEnd"]).utc.iso8601
+      rescue
       end
     end
-    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] << embargoHash.to_json
+    solr_doc[Solrizer.solr_name("relations_metadata__embargoInfo", :displayable)] << self.embargoInfo.to_json
     solr_doc
   end
 
@@ -288,7 +328,7 @@ class EmbargoDate
   map_predicates do |map|
     #-- embargoStart --
     map.start(:to => "hasBeginning", :in => RDF::TIME, class_name: "LabelledDate")
-    #-- embargoPeriod --
+    #-- embargoDuration --
     map.duration(:to => "hasDurationDescription", :in => RDF::TIME, class_name: "EmbargoDuration")
     #-- embargoEnd --
     map.end(:to => "hasEnd", :in => RDF::TIME, class_name: "LabelledDate")
