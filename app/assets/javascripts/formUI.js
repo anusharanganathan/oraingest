@@ -27,8 +27,8 @@ function toggleEmbargoFieldsDisplay(currentEle) {
     $(this).css("display", "block");
     // Set input value of end date label to Stated
     if (val == "date") {
-      $(this).find("#embargo-date-type").val("Stated");
-      $(this).find("#embargo-date-type").attr("value", "Stated");
+      $(this).find(".embargo-date-type").val("Stated");
+      $(this).find(".embargo-date-type").attr("value", "Stated");
     }
   });
   // hide fields for other embargo option
@@ -44,8 +44,8 @@ function toggleEmbargoFieldsDisplay(currentEle) {
     $(this).css("display", "none");
     // Set input value of end date label to blank
     if (otherCol == "date") {
-      $(this).find("#embargo-date-type").val("");
-      $(this).find("#embargo-date-type").attr("value", "");
+      $(this).find(".embargo-date-type").val("");
+      $(this).find(".embargo-date-type").attr("value", "");
     }
   });
 }
