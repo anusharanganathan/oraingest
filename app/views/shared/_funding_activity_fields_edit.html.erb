@@ -27,7 +27,8 @@ funding_types = {
       </fieldset>
       <div class="expand-panel" id="dataset-funding">
         <h5>Funder information</h5>
-        <div class="field-repeater padding-25 no-pad-top" data-max-fields="10">
+        <div class="field-repeater padding-25 no-pad-top">
+        <!-- <div class="field-repeater padding-25 no-pad-top" data-max-fields="10"> -->
           <ol>
             <% f0.funder.each_with_index do |f1, f1_index| %>
               <% if f1.agent.empty? %>

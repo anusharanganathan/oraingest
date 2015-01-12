@@ -4,7 +4,8 @@
 
 <div class="fieldset">
   <h4>Related publications and dataset</h4>
-  <div class="field-repeater" data-max-fields="5">
+  <div class="field-repeater">
+  <!-- <div class="field-repeater" data-max-fields="5"> -->
     <ol>
     <% qualifiedRelation.each_with_index do |r, r_index| %>
       <% if r.entity.empty? %>
