@@ -200,7 +200,7 @@ $(function() {
       if (id > next_id) next_id = id;
     });
     next_id += 1;
-    if(!max) max = 10;
+    if(!max) max = 100;
     if(items < max) clone.hide().appendTo(list).fadeIn("slow");
     if(items === (max-1)) container.find(".add-field").hide();
     setup_autocomplete();
