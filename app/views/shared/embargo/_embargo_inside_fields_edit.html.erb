@@ -7,17 +7,21 @@
     <%= f_dt.fields_for :end do |f_dt_end| %>
       <div class="row" id="embargo-date-row-<%=ele_id%>">
         <div class="col col2of4">
-          <label>
-            <%= puts accessRights[0].embargoInfo %>
-            <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
-              <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
-              <% displayEndDate = "block" %>
-            <% else %>
-              <input type="radio" name="dataset-embargo[0]" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+          <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
+            <% displayEndDate = "block" %>
+            <%= f_dt_end.hidden_field :label, :value => "Stated", :class=>"embargo-date-type" %>
+            <label>
+              <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+              <span></span>Embargo end date
+            </label>
+          <% else %>
+              <%= f_dt_end.hidden_field :label, :value => "", :class=>"embargo-date-type" %>
               <% displayEndDate = "none" %>
-            <% end %>
-            <span></span>Embargo end date
-          </label>
+              <label>
+                <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+              <span></span>Embargo end date
+            </label>
+          <% end %>
         </div>
         <div class="col col2of4 embargo-date" style="display: <%=displayEndDate%>;">
           <div class="row">
@@ -40,10 +44,10 @@
       <div class="col col1of4">
         <label>
         <% if ["Date", "Publication date"].include?(accessRights[0].embargoDate[0].start[0].label.first) %>
-          <input type="radio" name="dataset-embargo[0]" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
           <% displayDuration = "block" %>
         <% else %>
-          <input type="radio" name="dataset-embargo[0]" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
           <% displayDuration = "none" %>
         <% end %>
         <span></span>Embargo period
@@ -95,18 +99,6 @@
       </div>
       <div class="col col1of4 embargo-duration">&nbsp;</div>
     </div>
-    <div>
-      <% if accessRights[0].embargoInfo.has_key?("embargoEndHuman") || accessRights[0].embargoInfo.has_key?("embargoDurationHuman") %>
-        <label>Previously saved values for embargo period:</label>
-        <% if accessRights[0].embargoInfo.has_key?("embargoDurationHuman") && accessRights[0].embargoInfo.has_key?("embargoEndHuman")%>
-          <div style="margin-left:20px;"><%=accessRights[0].embargoInfo['embargoDurationHuman']%></div>
-          <div style="margin-left:20px;">The end date was calculated to be <%=accessRights[0].embargoInfo['embargoEndHuman']%></div>
-        <% elsif accessRights[0].embargoInfo.has_key?("embargoEndHuman") %>
-          <div style="margin-left:20px;"><%=accessRights[0].embargoInfo['embargoEndHuman']%></div>
-        <% end %>
-      <% end %>
-    </div>
-
   <% end %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Embargo end date" , :tipDescription => "Please enter either the the precise date when the embargo should be lifted, in the form DD/MM/YYYY (e.g. ’26/06/2018), or enter the required length of embargo in years and months (e.g. ’1 year 6 months’) and select a start date." } %>
 </div>

@@ -62,11 +62,13 @@ module Ora
       numberOfYears = nil
       numberOfMonths = nil
       if !params[:embargoDate].nil? || !params[:embargoDate].nil?
-        if !params[:embargoDate][:end].nil? && !params[:embargoDate][:end].nil? && !params[:embargoDate][:end][:date].nil?
-          begin
-            endDate = Time.parse(params[:embargoDate][:end][:date])
-          rescue
-            endDate = nil
+        if !params[:embargoDate][:end].nil? && !params[:embargoDate][:end].nil?
+          if !params[:embargoDate][:end][:date].nil? && !params[:embargoDate][:end][:label].nil? && params[:embargoDate][:end][:label] == "Stated"
+            begin
+              endDate = Time.parse(params[:embargoDate][:end][:date])
+            rescue
+              endDate = nil
+            end
           end
         end
         if !endDate.nil?
