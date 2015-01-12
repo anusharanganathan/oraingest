@@ -23,7 +23,13 @@ function toggleEmbargoFieldsDisplay(currentEle) {
   var rowId = eleId.replace(val, val + "-row");
   var colClass = ".embargo-"+ val;
   $("#"+rowId).find(colClass).each(function(){
+    // display the column
     $(this).css("display", "block");
+    // Set input value of end date label to Stated
+    if (val == "date") {
+      $(this).find("#embargo-date-type").val("Stated");
+      $(this).find("#embargo-date-type").attr("value", "Stated");
+    }
   });
   // hide fields for other embargo option
   if (val == "date") {
@@ -34,7 +40,13 @@ function toggleEmbargoFieldsDisplay(currentEle) {
   var fieldsetId = eleId.replace(val, "fieldset");
   var colClass = ".embargo-"+ otherCol;
   $("#"+fieldsetId).find(colClass).each(function(){
+    // display the column
     $(this).css("display", "none");
+    // Set input value of end date label to blank
+    if (otherCol == "date") {
+      $(this).find("#embargo-date-type").val("");
+      $(this).find("#embargo-date-type").attr("value", "");
+    }
   });
 }
 
