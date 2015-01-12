@@ -31,10 +31,11 @@
     </div>
 
     <h4 class="padding-side-25">Nominate a data steward</h4>
-    <div class="padding-0">
-      <%= render partial: 'shared/creation_activity_fields_data_steward_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "During period of project" } %>
-    </div>
-
+    <% if false #Removing option to simplify this part of form%>
+      <div class="padding-0">
+        <%= render partial: 'shared/creation_activity_fields_data_steward_edit', :locals => { :f => f_a, :creation => hasRelatedAgreement.creation, :label => "During period of project" } %>
+      </div>
+    <% end %>
     <div class="padding-0">
       <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f_a, :titularActivity => hasRelatedAgreement.titularActivity } %>
     </div>
