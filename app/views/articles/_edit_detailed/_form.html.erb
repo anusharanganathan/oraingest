@@ -42,7 +42,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      Add journal and publisher information to your publication
+      <div class="space-right">Add journal and publisher information to your publication</div>
     </div>
     <div class="expand-content">
       <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
@@ -51,7 +51,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      Add subject keywords, and language information to your publication
+      <div class="space-right">Add subject, keywords, and language information to your publication</div>
     </div>
     <div class="expand-content">
       <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
@@ -171,7 +171,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      Licence your data
+      <div class="space-right">Licence your data</div>
     </div>
     <div class="expand-content">
       <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
@@ -214,7 +214,7 @@
     <% if !@article.permissions.nil? && !@article.permissions.empty? %>       
       <div class="content-box padding-0">
         <div class="content-box-header expand-header">
-          Set permissions
+          <div class="space-right">Set permissions</div>
         </div>
         <div class="expand-content">
           <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
