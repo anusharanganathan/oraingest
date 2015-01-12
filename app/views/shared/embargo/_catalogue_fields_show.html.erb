@@ -1,82 +1,49 @@
 <% hasData = false %>
 <% if !article.accessRights.nil? && !article.accessRights[0].nil? %>
-  <% if !article.accessRights[0].embargoStatus.empty? %>
+  <% if article.accessRights[0].embargoInfo.has_key?('embargoStatus') %>
     <% hasData = true %>
   <% end %>
-  <% if !article.accessRights[0].embargoDate.nil? && !article.accessRights[0].embargoDate[0].nil? %>
-    <% dateEnd = nil %>
-    <% dateDuration = nil %>
-    <% dateStart = nil %>
-    <% if !article.accessRights[0].embargoDate[0].end.nil? && !article.accessRights[0].embargoDate[0].end[0].nil? && (!article.accessRights[0].embargoDate[0].end[0].label.empty? || !article.accessRights[0].embargoDate[0].end[0].date.empty?) %>
-      <% dateEnd = article.accessRights[0].embargoDate[0].end[0] %>
-      <% hasData = true %>
-    <% end %>
-    <% if !article.accessRights[0].embargoDate[0].duration.nil? && !article.accessRights[0].embargoDate[0].duration[0].nil? && (!article.accessRights[0].embargoDate[0].duration[0].years.empty? || !article.accessRights[0].embargoDate[0].duration[0].months.empty?) %>
-      <% dateDuration = article.accessRights[0].embargoDate[0].duration[0] %>
-      <% hasData = true %>
-    <% end %>
-    <% if !article.accessRights[0].embargoDate[0].start.nil? && !article.accessRights[0].embargoDate[0].start[0].nil? && (!article.accessRights[0].embargoDate[0].start[0].label.empty? || !article.accessRights[0].embargoDate[0].start[0].date.empty?) %>
-      <% dateStart = article.accessRights[0].embargoDate[0].start[0] %>
-      <% hasData = true %>
-    <% end %>
-  <% end %>
-  <% if !article.accessRights[0].embargoReason.empty? %>
+  <% if article.accessRights[0].embargoInfo.has_key?("embargoEndHuman") || article.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") %>
     <% hasData = true %>
   <% end %>
-  <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty? %>
+  <% if article.accessRights[0].embargoInfo.has_key?('embargoReason') %>
+    <% hasData = true %>
+  <% end %>
+  <% if article.accessRights[0].embargoInfo.has_key?('embargoRelease')%>
     <% hasData = true %>
   <% end %>
 <% end %>
 <% if hasData %>
   <div class="accordian">
     <div class="accordian-header">Visibility of catalogue record</div>
-      <div class="accordian-content">
-        <% if !article.accessRights[0].embargoStatus.empty? && !article.accessRights[0].embargoStatus.first.empty? %>
-          <h6>Embargo status:</h6>
-          <p><%= article.accessRights[0].embargoStatus.first %></p>
+    <div class="accordian-content">
+      <!-- status -->
+      <% if article.accessRights[0].embargoInfo.has_key?('embargoStatus') %>
+        <h6>Embargo status:</h6>
+        <p><%= article.accessRights[0].embargoInfo['embargoStatus']%></p>
+      <% end %>
+      <!-- embargo period -->
+      <% if article.accessRights[0].embargoInfo.has_key?("embargoEndHuman") || article.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") %>
+        <h6>Embargo period:</h6>
+        <% if article.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") && article.accessRights[0].embargoInfo.has_key?("embargoEndHuman")%>
+          <p><%=article.accessRights[0].embargoInfo['embargoDurationHuman']%></p>
+          <p>The end date was calculated to be <%=article.accessRights[0].embargoInfo['embargoEndHuman']%></p>
+        <% elsif article.accessRights[0].embargoInfo.has_key?("embargoEndHuman") %>
+          <p><%=article.accessRights[0].embargoInfo['embargoEndHuman']%></p>
         <% end %>
-        <% if !article.accessRights[0].embargoDate.nil? && !article.accessRights[0].embargoDate[0].nil? %>
-          <h6>Embargo end date:</h6>
-          <% if dateEnd %>
-            <p>
-            <% if !dateEnd.date.empty? && !dateEnd.date.first.empty? %>
-              <%= dateEnd.date.first %>
-            <% end %>
-            <% if !dateEnd.label.empty? && !dateEnd.label.first.empty? %>
-              (<%= article.accessRights[0].embargoDate[0].end[0].label.first %>)
-            <% end %>
-            </p>
-          <% end %>
-          <% if dateDuration %>
-            <p>
-            <% if !dateDuration.years.empty? && !dateDuration.years.first.empty? %>
-              <%= dateDuration.years.first %> years
-            <% end %>
-            <% if !dateDuration.months.empty? && !dateDuration.months.first.empty? %>
-              <%= dateDuration.months.first %> months
-            <% end %>
-            </p>
-          <% end %>
-          <% if dateStart %>
-            <p>from
-            <% if !dateStart.date.empty? && !dateStart.date.first.empty? %>
-              <%= dateStart.date.first %>
-            <% end %>
-            <% if !dateStart.label.empty? && !dateStart.label.first.empty? %>
-              (<%= dateStart.label.first %>)
-            <% end %>
-            </p>
-          <% end %>
+      <% end %>
+      <!-- reason -->
+      <% if article.accessRights[0].embargoInfo.has_key?('embargoReason') %>
+        <h6>Embargo reason:</h6>
+        <% article.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
+          <p><%=er%></p>
         <% end %>
-        <% if !article.accessRights[0].embargoReason.empty? %>
-          <h6>Embargo reason:</h6>
-            <% article.accessRights[0].embargoReason.each do |er| %>
-              <p><%=er%></p>
-            <% end %>
-        <% end %>
-        <% if !article.accessRights[0].embargoRelease.empty? && !article.accessRights[0].embargoRelease.first.empty?%>
-           <h6>Embargo release method:</h6><p><%= article.accessRights[0].embargoRelease.first %></p>
-        <% end %>
+      <% end %>
+      <!-- release method -->
+      <% if article.accessRights[0].embargoInfo.has_key?('embargoRelease')%>
+        <h6>Embargo release method:</h6>
+        <p><%= article.accessRights[0].embargoInfo['embargoRelease'] %></p>
+      <% end %>
     </div>
   </div>
 <% end %>
