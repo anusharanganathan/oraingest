@@ -199,7 +199,7 @@ module BuildMetadata
         end
       end
       select.each do |k, v|
-        select[k] = nil if v.empty?
+        select[k] = nil if v.nil? || v.empty?
       end
       self.hasPart.build(select)
       self.hasPart[count].accessRights = nil
