@@ -11,14 +11,14 @@
             <% displayEndDate = "block" %>
             <%= f_dt_end.hidden_field :label, :value => "Stated", :class=>"embargo-date-type" %>
             <label>
-              <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+              <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
               <span></span>Embargo end date
             </label>
           <% else %>
               <%= f_dt_end.hidden_field :label, :value => "", :class=>"embargo-date-type" %>
               <% displayEndDate = "none" %>
               <label>
-                <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
+                <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
               <span></span>Embargo end date
             </label>
           <% end %>
@@ -44,10 +44,10 @@
       <div class="col col1of4">
         <label>
         <% if ["Date", "Publication date"].include?(accessRights[0].embargoDate[0].start[0].label.first) %>
-          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
           <% displayDuration = "block" %>
         <% else %>
-          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-progress="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
+          <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="duration" id="embargo-duration-<%=ele_id%>"/>
           <% displayDuration = "none" %>
         <% end %>
         <span></span>Embargo period
@@ -107,9 +107,9 @@
 
 <div class="fieldset">
   <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' }, data: {"progress" => "funder"} %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' }, data: {"category" => "funder"} %>
   <% else %>
-    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods), { :include_blank => 'Select release method' }, data: {"progress" => "funder"} %>
+    <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods), { :include_blank => 'Select release method' }, data: {"category" => "funder"} %>
   <% end %>
   <% if @model == "dataset" %>
     <% desc = "Please specify whether you want the embargo to be lifted automatically without
@@ -138,9 +138,9 @@
         <label><%= f_a.check_box(:embargoReason, {:multiple => true, :checked=>hasIt}, val, nil) %><span></span><%=key%></label>
       <% end %>
     <% elsif !accessRights[0].embargoReason.nil? && !accessRights[0].embargoReason.empty? %>
-      <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first, data: {"progress" => "funder"} %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0', :value => accessRights[0].embargoReason.first, data: {"category" => "funder"} %>
     <% else %>
-      <%= f_a.text_area :embargoReason, :style=>'margin:0', data: {"progress" => "funder"} %>
+      <%= f_a.text_area :embargoReason, :style=>'margin:0', data: {"category" => "funder"} %>
     <% end %>
   </div><!-- /row -->
   <% if @model == "dataset" %>
