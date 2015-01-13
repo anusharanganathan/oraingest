@@ -46,8 +46,8 @@ $(function() {
   $(document).on("click","input",function() {
     var fieldset = $(this).parents("fieldset").first(),
         panel_id = $(this).parents("label").first().attr("panel");
-
-    // Open expandable panel on click
+    
+    // Close other panels
     fieldset.find("[panel!="+panel_id+"]").each(function(){
       var panel_id = $(this).attr("panel");
       $("#"+panel_id)
@@ -56,15 +56,23 @@ $(function() {
           { opacity: 0 },
           { queue: false, duration: 'slow' }
         );
+      // set required to false
+      $("#"+panel_id).find("*[data-required]").each(function(){
+        $(this).prop('required', false);
+      });
     });
 
-    // Close other panels
+    // Open expandable panel on click
     $("#"+panel_id)
       .slideDown("slow")
       .animate(
         { opacity: 1 },
         { queue: false, duration: 'slow' }
       );
+    // set required to true
+    $("#"+panel_id).find("*[data-required]").each(function(){
+      $(this).prop('required', true);
+    });
   });
 
   /* -------------------------------------------------------------
@@ -349,6 +357,9 @@ $(function() {
       if ($(this).is(':checked') && $(this).val() == "yes") {
         $("#dataset-funding").css("display","block");
         $("#dataset-funding").css("opacity","1");
+        $("#dataset-funding").find("*[data-required]").each(function(){
+          $(this).prop('required', true);
+        });
       }
     });
     // embargo status
