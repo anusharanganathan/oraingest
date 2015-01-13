@@ -31,7 +31,12 @@
           <% end %>
           <% if !r.relation.empty? && !r.relation[0].empty? %>
             <h6>Relationship:</h6>
-            <p><%= link_to r.relation.first %></p>
+            <% #relations = Hash[Sufia.config.relationship_types.map{|k,v| [v.to_s, k]}] %>
+            <% if Sufia.config.relationship_types_reverse.include?(r.relation.first.to_s) %>
+              <p>This <%=@model%> <strong><%=Sufia.config.relationship_types_reverse[r.relation.first.to_s]%></strong> the related item</p>
+            <% else %>
+              <p>This <%=@model%> <strong><%=r.relation.first%></strong> the related item</p>
+            <% end %>
           <% end %>
 
           <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
