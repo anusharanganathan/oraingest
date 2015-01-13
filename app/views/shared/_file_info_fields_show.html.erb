@@ -20,13 +20,19 @@
       <% end %>
     <% end %>
     <% if !select.nil? %>
+      <div class="control-group">
       <% if !select.description.empty? %>
         <h6><%= select.description.first %></h6>
+      <% end %>
+      <% if !select.type.empty? %>
+        <h6>Type:</h6>
+        <span class="small"><%= select.type.first %></span>
       <% end %>
       <% if !select.accessRights.empty? %>
         <!-- <span class="embargo-details">Embargo details</span> -->
         <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
       <% end %>
+      </div>
       <hr/>
     <% end %>
   <% end %>
