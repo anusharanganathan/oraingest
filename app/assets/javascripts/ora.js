@@ -62,7 +62,6 @@ $(function() {
       });
       // remove data-progress attribute
       $("#"+panel_id).find("*[data-category]").each(function(){
-        alert($(this).attr('name'));
         $(this).attr('data-progress', false);
       });
     });
@@ -80,7 +79,6 @@ $(function() {
     });
     // set data-progress attribute
     $("#"+panel_id).find("*[data-category]").each(function(){
-      alert($(this).attr('name') + ' : ' + $(this).data("category"));
       var cat = $(this).data("category");
       $(this).data('progress', cat);
     });
@@ -354,14 +352,23 @@ $(function() {
   }
 
   function expandPanel() {
+    // On load set these values
     // Medium
     if ($(".medium-digital").first().is(':checked')) {
       $("#dataset-format-digital").css("display","block");
       $("#dataset-format-digital").css("opacity","1");
+      $("#dataset-format-digital").find("*[data-category]").each(function(){
+        var cat = $(this).data("category");
+        $(this).data('progress', cat);
+      });
     } 
     if ($(".medium-analog").first().is(':checked')) {
-      $("#dataset-format-digital").css("display","block");
-      $("#dataset-format-digital").css("opacity","1");
+      $("#dataset-format-physical").css("display","block");
+      $("#dataset-format-physical").css("opacity","1");
+      $("#dataset-format-physical").find("*[data-category]").each(function(){
+        var cat = $(this).data("category");
+        $(this).data('progress', cat);
+      });
     }
     // Funding
     $(".fundingAward").each(function(){
@@ -371,6 +378,10 @@ $(function() {
         $("#dataset-funding").find("*[data-required]").each(function(){
           $(this).prop('required', true);
         });
+        $("#dataset-funding").find("*[data-category]").each(function(){
+          var cat = $(this).data("category");
+          $(this).data('progress', cat);
+        });
       }
     });
     // embargo status
@@ -379,6 +390,10 @@ $(function() {
         var panelId = $(this).parents("label").first().attr('panel');
         $("#" + panelId).css("display","block");
         $("#" + panelId).css("opacity","1");
+        $("#" + panelId).find("*[data-category]").each(function(){
+          var cat = $(this).data("category");
+          $(this).data('progress', cat);
+        });
       }
     });
   }
