@@ -24,7 +24,7 @@
             <p class="small">Type of relationship</p>
             <p>This <%=@model%> <span>&nbsp;</span>
             <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), { :include_blank => 'Select the relation' }, id: "relationType%d"% r_index, data: {"progress" => "discoverability"} %>
-           related item</p>
+           this related item</p>
           </label>
 
           <label>

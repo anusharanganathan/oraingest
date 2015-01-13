@@ -32,9 +32,9 @@
           <% if !r.relation.empty? && !r.relation[0].empty? %>
             <h6>Relationship:</h6>
             <% if Sufia.config.relationship_types_reverse.include?(r.relation.first.to_s) %>
-              <p>This <%=@model%> <strong><%=Sufia.config.relationship_types_reverse[r.relation.first.to_s]%></strong> the related item</p>
+              <p>This <%=@model%> <strong><%=Sufia.config.relationship_types_reverse[r.relation.first.to_s]%></strong> this related item</p>
             <% else %>
-              <p>This <%=@model%> <strong><%=r.relation.first%></strong> the related item</p>
+              <p>This <%=@model%> <strong><%=r.relation.first%></strong> this related item</p>
             <% end %>
           <% end %>
 
