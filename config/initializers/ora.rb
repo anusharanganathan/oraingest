@@ -145,7 +145,7 @@ Sufia.config do |config|
 
   config.relationship_types = {
     "is a part of" => RDF::DC::isPartOf,
-    "has constituent part" => RDF::DC::hasPart,
+    "has a constituent part in" => RDF::DC::hasPart,
     "is a format of" => RDF::DC::isFormatOf, 
     "is referenced by" => RDF::DC::isReferencedBy,
     "references" => RDF::DC::references,
@@ -153,8 +153,10 @@ Sufia.config do |config|
     "replaces" => RDF::DC::replaces,
     "is required by" => RDF::DC::isRequiredBy,
     "requires" => RDF::DC::requires,
-    "is a version Of" => RDF::DC::isVersionOf
+    "is a version of" => RDF::DC::isVersionOf
   }
+
+  config.relationship_types_reverse = Hash[config.relationship_types.map{|k,v| [v.to_s, k]}]
 
   config.embargo_release_methods = {
     "Automatically lift the embargo" => "Automatically lift the embargo",
@@ -226,31 +228,10 @@ Sufia.config do |config|
     }
   }
 
-  config.role_labels = {
-    RDF::ORA.adapter.to_s => "Adapter",
-    RDF::ORA.author.to_s => "Author",
-    RDF::DC.contributor.to_s => "Contributor",
-    RDF::ORA.copyrightHolder.to_s => "Copyright holder",
-    RDF::DC.creator.to_s => "Creator",
-    RDF::ORA.DataSteward.to_s => "Data steward",
-    RDF::ORA.depositor.to_s => "Depositor",
-    RDF::ORA.editor.to_s => "Editor",
-    RDF::BIBO.editor.to_s => "Editor",
-    RDF::ORA.examiner.to_s => "Examiner",
-    RDF::ORA.funder.to_s => "Funder",
-    RDF::ORA.headOfDepartment.to_s => "Head of Department",
-    RDF::ORA.headOfFaculty.to_s => "Head of Faculty",
-    RDF::ORA.headOfResearchGroup.to_s => "Head of Research Group",
-    RDF::BIBO.owner.to_s => "Owner",
-    RDF::ORA.performer.to_s => "Performer",
-    RDF::ORA.principalInvestigator.to_s => "Principal Investigator",
-    RDF::DC.publisher.to_s => "Publisher",
-    RDF::ORA.researcher.to_s => "Researcher",
-    RDF::ORA.reviewer.to_s => "Reviewer",
-    RDF::ORA.sponsor.to_s => "Sponsor",
-    RDF::ORA.supervisor.to_s => "Supervisor",
-    RDF::ORA.translator.to_s => "Translator"
-  }
+  config.role_labels = {}
+  config.role_types.each do |k, v|
+    config.role_labels.merge!(Hash[v.map{|k1,v1| [v1.to_s, k1]}])
+  end
 
   config.oa_types = {
     "Article available freely on the publisher's website" => "Article available freely on the publisher's website",
