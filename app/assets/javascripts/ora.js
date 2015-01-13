@@ -60,6 +60,11 @@ $(function() {
       $("#"+panel_id).find("*[data-required]").each(function(){
         $(this).prop('required', false);
       });
+      // remove data-progress attribute
+      $("#"+panel_id).find("*[data-category]").each(function(){
+        alert($(this).attr('name'));
+        $(this).attr('data-progress', false);
+      });
     });
 
     // Open expandable panel on click
@@ -72,6 +77,12 @@ $(function() {
     // set required to true
     $("#"+panel_id).find("*[data-required]").each(function(){
       $(this).prop('required', true);
+    });
+    // set data-progress attribute
+    $("#"+panel_id).find("*[data-category]").each(function(){
+      alert($(this).attr('name') + ' : ' + $(this).data("category"));
+      var cat = $(this).data("category");
+      $(this).data('progress', cat);
     });
   });
 
