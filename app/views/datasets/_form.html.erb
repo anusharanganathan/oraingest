@@ -76,8 +76,8 @@
           <% @dataset.temporal.build %>
         <% end %>
         <p class="small">Time period covered by the data</p>
-        <%= f.date_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
-        <%= f.date_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+        <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+        <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
         <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Time period covered by the data." , :tipDescription => "If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'." } %>
       </div>
 
