@@ -67,7 +67,17 @@ function displayDatasetAgreement(id, val) {
   }
 }
 
-function setStatus() {
- $("#workflow_submit_entries_status").val("Submitted");
+function setStatus(eleId, wstatus) {
+  states = ["Draft", "Submitted", "Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"];
+  if (states.indexOf(wstatus) > -1) {
+   $("#"+eleId).val(wstatus);
+   $("#"+eleId).attr("value", wstatus);
+  } else if (wstatus == "default") {
+    var defVal = $("#"+eleId).data("default-value");
+    if (states.indexOf(defVal) > -1) {
+      $("#"+eleId).val(defVal);
+      $("#"+eleId).attr("value", defVal);
+    }
+  }
 }
 
