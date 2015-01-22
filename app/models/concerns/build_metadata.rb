@@ -15,15 +15,14 @@ module BuildMetadata
   end
 
   def validatePermissions(params)
-    params = normalizeParams(params)
-    params.each do |p|
+    permissions = []
+    normalizeParams(params).each do |p|
       if p.has_key? 'name' and !p["name"].empty? and p.has_key? 'access' and !p["access"].empty?
         p["type"] = "user"
-      else
-        params.delete(p)
+        permissions << p
       end #check name and access exists
     end
-    params
+    permissions
   end
 
   def validatePermissionsToRevoke(params, depositor)
@@ -91,13 +90,13 @@ module BuildMetadata
 
   def buildSubject(params)
     self.subject = nil
-    params = normalizeParams(params)
-    params.each do |s|
-      if s[:subjectLabel].empty?
-         params.delete(s)
+    subjects = []
+    normalizeParams(params).each do |s|
+      if !s[:subjectLabel].empty?
+        subjects << s
       end
     end
-    params.each_with_index do |s, s_index|
+    subjects.each_with_index do |s, s_index|
       s.each do |k, v|
         s[k] = nil if v.empty?
       end
@@ -229,24 +228,24 @@ module BuildMetadata
   end
 
   def buildExternalRelations(params)
-    params = params.values
-    params.each_with_index do |rel, rel_index|
+    extRelations = []
+    params.values.each_with_index do |rel, rel_index|
       hasInfo = false
       rel[:entity_attributes]["0"].each do |k, v|
         if v.empty?
-          params[rel_index][:entity_attributes]["0"][k] = nil
+          rel[:entity_attributes]["0"][k] = nil
         else
           hasInfo = true
         end
       end
-      if !hasInfo || rel[:relation].empty?
-        params.delete(params[rel_index])
+      if hasInfo && rel.has_key?(:relation) && !rel[:relation].nil? && !rel[:relation].empty?
+        extRelations << rel
       end
     end
     self.qualifiedRelation = nil
     self.influence = nil
     influences = []
-    params.each_with_index do |rel, rel_index|
+    extRelations.each_with_index do |rel, rel_index|
       if rel[:entity_attributes]["0"]['identifier'].nil? || rel[:entity_attributes]["0"]['identifier'].empty?
         rel[:entity_attributes]["0"]['id'] = "info:fedora/#{self.id}#externalRelation#{rel_index.to_s}"
       elsif rel[:entity_attributes]["0"]['identifier'].start_with?('10.')
@@ -272,12 +271,10 @@ module BuildMetadata
     vals = {'id' => id0, :wasAssociatedWith => [], :hasFundingAward => nil}
     awardCount = 0
     # Funder has to have name of funder and whom the funder funds
-    funders = params[:funder_attributes].values
-    funders.each do |funder|
-      if funder.nil? || funder.empty? || !funder.has_key?(:agent_attributes)
-        funders.delete(funder)
-      elsif funder[:agent_attributes]["0"][:name].empty? and funder[:funds].empty?
-        funders.delete(funder)
+    funders = []
+    params[:funder_attributes].values.each do |funder|
+      if !funder.nil? && !funder.empty? & funder.has_key?(:agent_attributes) && !funder[:agent_attributes]["0"][:name].empty? && !funder[:funds].empty?
+        funders << funder
       end
     end
     # Funding award has to be either yes or no
@@ -319,10 +316,10 @@ module BuildMetadata
         end
         self.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
         # Clean the awards attributes for the funder and build
-        awards = funder[:awards_attributes].values
-        awards.each do |award|
-          if award["grantNumber"].empty?
-            awards.delete(award)
+        awards = [] 
+        funder[:awards_attributes].values.each do |award|
+          if !award["grantNumber"].empty?
+            awards << award
           end
         end
         awards.each_with_index do |award, n2|
@@ -340,30 +337,27 @@ module BuildMetadata
 
   def buildCreationActivity(params)
     self.creation = nil
-    params[:creator_attributes] = normalizeParams(params[:creator_attributes])
+    creators = []
     # has to have name of creator
-    params[:creator_attributes].each do |c|
-      if c.nil? || c.empty? || !c.has_key?("name")
-        params[:creator_attributes].delete(c)
-      elsif c[:name].empty?
-        params[:creator_attributes].delete(c)
-      else
+    normalizeParams(params[:creator_attributes]).each do |c|
+      if !c.nil? && c.has_key?("name") && !c[:name].empty?
         c.each do |k, v|
           c[k] = nil if v.empty?
         end
+        creators << c
       end
     end 
-    if !params[:creator_attributes].empty?
+    if !creators.empty?
       id0 = "info:fedora/%s#creationActivity" % self.id
       vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
-      (0..params[:creator_attributes].length-1).each do |n|
+      (0..creators.length-1).each do |n|
         b1 = "info:fedora/%s#creator%d" % [self.id, n]
         vals[:wasAssociatedWith].push(b1)
       end 
       self.creation.build(vals)
       affiliationCount = 0
       self.creation[0].creator = nil
-      params[:creator_attributes].each_with_index do |c1, c1_index|
+      creators.each_with_index do |c1, c1_index|
         b1 = "info:fedora/%s#creator%d" % [self.id, c1_index]
         agent = { 'id'=> b1, :name => c1[:name], :email => c1[:email], :type => RDF::VCARD.Individual, :sameAs => c1[:sameAs] }
         b2 = "info:fedora/%s#creationAssociation%d" % [self.id, c1_index]
@@ -385,30 +379,27 @@ module BuildMetadata
 
   def buildTitularActivity(params)
     self.titularActivity = nil
-    params[:titular_attributes] = normalizeParams(params[:titular_attributes])
-    # has to have name of titular
-    params[:titular_attributes].each do |c|
-      if c.nil? || c.empty? || !c.has_key?("name")
-        params[:titular_attributes].delete(c)
-      elsif c[:name].empty?
-        params[:titular_attributes].delete(c)
-      else
+    creators = []
+    normalizeParams(params[:titular_attributes]).each do |c|
+      # has to have name of titular
+      if !c.nil? && c.has_key?("name") && !c[:name].empty?
         c.each do |k, v|
           c[k] = nil if v.empty?
         end
+        creators << c
       end
     end
-    if !params[:titular_attributes].empty?
+    if !creators.empty?
       id0 = "info:fedora/%s#titularActivity" % self.id
       vals = {'id' => id0, :wasAssociatedWith=> [], :type => RDF::PROV.Activity}
-      (0..params[:titular_attributes].length-1).each do |n|
+      (0..creators.length-1).each do |n|
         b1 = "info:fedora/%s#titular%d" % [self.id, n]
         vals[:wasAssociatedWith].push(b1)
       end
       self.titularActivity.build(vals)
       affiliationCount = 0
       self.titularActivity[0].titular = nil
-      params[:titular_attributes].each_with_index do |c1, c1_index|
+      creators.each_with_index do |c1, c1_index|
         b1 = "info:fedora/%s#titular%d" % [self.id, c1_index]
         agent = { 'id'=> b1, :name => c1[:name], :roleHeldBy => c1[:roleHeldBy] }
         b2 = "info:fedora/%s#titularAssociation%d" % [self.id, c1_index]
