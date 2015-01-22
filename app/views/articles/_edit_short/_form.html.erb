@@ -36,12 +36,12 @@
 
         <!-- funder info -->
         <div class="padding-side-25"> 
-          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding } %>
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
         </div>
         <div class="bottom-border padding-side-25"></div>
 
         <!-- creator info -->
-        <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator" } %>
+        <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator", :required => false } %>
         <div class="bottom-border padding-side-25"></div>
   
         <!-- Related item -->
@@ -54,7 +54,7 @@
     <nav class="form-nav" style="margin-top: 20px;">
       <div class="form-nav-next" style="text-align: right">
         <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
-        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => false} %>
+        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => true} %>
       </div>
     </nav>
   

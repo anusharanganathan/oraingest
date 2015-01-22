@@ -23,7 +23,11 @@
               <li>
                 <label>
                 <span class="small">Name</span>
-                <%= f_c.text_field :name, :required => true, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName", data: {"progress" => "citation"} %>
+                <% if required %>
+                  <%= f_c.text_field :name, :required => true, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName", data: {"progress" => "citation"} %>
+                <% else %>
+                  <%= f_c.text_field :name, :value => c.agent[0].name.first, id: "creatorName%d"%c_index, :class=>"creatorName", data: {"progress" => "citation"} %>
+                <% end %>
                 <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
                 </label>
 

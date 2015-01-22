@@ -10,6 +10,14 @@ funding_types = {
   "Project" =>"info:fedora/#{@pid}#project1"} 
 %>
 
+<% if required %>
+  <% reqClass = "required" %>
+  <% dataAttribs = {"category" => "funder", "required" => true} %>
+<% else %>
+  <% reqClass = "" %>
+  <% dataAttribs = {"category" => "funder"} %>
+<% end %>
+
 <% funding.each do |f0| %>
   <% if f0.funder.empty? %>
     <% f0.funder.build %>
@@ -19,11 +27,11 @@ funding_types = {
     <div class="fieldset">
       <fieldset class="small-text">
         <label panel="dataset-funding">
-          <%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "fundingAward required" %>
+          <%= f_f0.radio_button :hasFundingAward, "yes", :checked =>(f0.hasFundingAward.first == "yes"), :class => "fundingAward #{reqClass}" %>
           <span></span>Yes
         </label>
         <label>
-          <%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "fundingAward required" %>
+          <%= f_f0.radio_button :hasFundingAward, "no", :checked =>(f0.hasFundingAward.first == "no"), :class => "fundingAward #{reqClass}" %>
           <span></span>No
         </label>
       </fieldset>
@@ -45,14 +53,14 @@ funding_types = {
                     <%= f_f1.fields_for :agent, f2 do |f_f2| %>
                       <label>
                       <span class="small">Name</span>
-                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, data: {"category" => "funder", "required" => true} %>
+                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, data: dataAttribs %>
                       <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
                       </label>
                       <% f1.awards.each_with_index do |f2, f2_index| %>
                         <%= f_f1.fields_for :awards, f2 do |f_f2| %>
                           <label>
                             <span class="small">Grant number:</span>
-                            <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], data: {"category" => "funder", "required" => true} %>
+                            <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], data: dataAttribs %>
                           </label>
                         <% end %>
                       <% end %>
@@ -60,7 +68,7 @@ funding_types = {
                   <% end %>
                   <label>
                     <span class="small">Who or what was funded?</span>
-                    <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, data: {"category" => "funder", "required" => true} %>
+                    <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, data: dataAttribs %>
                   </label>
                 </li>
               <% end %>
