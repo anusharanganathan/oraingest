@@ -10,7 +10,7 @@
   <!-- <div class="field-repeater" data-max-fields="10"> -->
     <ol>
     <% subject.each_with_index do |s, s_index| %>
-      <%= f.fields_for "subject][", s do |f_s| %>
+      <%= f.fields_for "subject][#{s_index}", s do |f_s| %>
         <li>
           <label>
           <span class="small">Subject title:</span>
