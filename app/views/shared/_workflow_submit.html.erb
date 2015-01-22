@@ -21,8 +21,8 @@
     <% end %>
   <% end #fields_for first workflow %>
   <% if validate == false %>
-    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()", data: {"submit-without-validation" => true} %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"Submitted\")", data: {"submit-without-validation" => true} %>
   <% else %>
-    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus()" %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"Submitted\")" %>
   <% end %>
 <% end %>
