@@ -4,10 +4,10 @@
     <% if !c.agent[0].name.empty? and !c.agent[0].roleHeldBy.empty? %>
       <p><span class="h6">Held by:</span> <%=link_to c.agent[0].name.first, c.agent[0].roleHeldBy.first %></p>
     <% elsif !c.agent[0].name.empty? %>
-       <p><span class="h6">Held by:</span><%= c.agent[0].name.first %></p>
+      <p><span class="h6">Held by:</span> <%= c.agent[0].name.first %></p>
     <% end %>
     <% if c.role %>
-      <p><span class="h6">Role:</span> 
+      <p><span class="h6">Role:</span>  
       <% if Sufia.config.role_labels.include?(c.role.first) %>
         <%= Sufia.config.role_labels[c.role.first] %>
       <% else %>
@@ -16,7 +16,7 @@
       </p>
     <% end %>
     <% if !c.agent[0].affiliation.empty? %>
-      <p><span class="h6">Affiliation</span> 
+      <p><span class="h6">Affiliation:</span> 
       <% c.agent[0].affiliation.each do |c2| %>
         <% if !c2.name.empty? and !c2.sameAs.empty? %>
           <%=link_to c2.name.first, c2.sameAs.first %>, 
@@ -26,6 +26,7 @@
       <% end %>
       </p>
     <% end %>
+    <br/>
   <% end %>
 <% end %>
 
