@@ -26,7 +26,6 @@
     <div class="padding-side-25"> 
       <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
     </div>
-  <!-- </div> -->
   
     <!-- Expander -->
     <div class="content-box padding-0" style="margin-top: 20px;">
@@ -54,7 +53,7 @@
     <!-- Form save and submit -->
     <nav class="form-nav" style="margin-top: 20px;">
       <div class="form-nav-next" style="text-align: right">
-        <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
+        <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
         <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => false} %>
       </div>
     </nav>

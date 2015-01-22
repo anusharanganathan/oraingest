@@ -282,10 +282,11 @@
 
 <nav class="form-nav" style="margin-top: 20px;">
   <div class="form-nav-next" style="text-align: right">
-    <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
     <% unless can? :review, :all %>
+      <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")",  data: {"submit-without-validation" => true} %>
       <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @dataset, :validate => true} %>
     <% else %>
+      <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
       <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
     <% end %>
   </div>
