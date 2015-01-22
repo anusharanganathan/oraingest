@@ -296,7 +296,7 @@ module BuildMetadata
       self.funding[0].funder = nil
       #(0..params[:funder_attributes].length-1).each do |n|
       funders.each_with_index do |funder, n|
-        # Clean the funder attributes and build
+        # Clean the funder attributes
         funder["id"] = "info:fedora/%s#fundingAssociation%d" % [self.id, n]
         funder["role"] = RDF::FRAPO.FundingAgency
         #TODO: Need to be smart about Ids for funder[:funds]. 
@@ -305,27 +305,31 @@ module BuildMetadata
         if funder[:annotation].nil? || funder[:annotation].empty?
           funder[:annotation] = nil
         end
-        self.funding[0].funder.build(funder)
-        self.funding[0].funder[n].agent = nil
-        self.funding[0].funder[n].awards = nil
-        # Clean the agent attributes for the funder and build
+        # Clean the agent attributes for the funder
         funder[:agent_attributes]["0"]["id"] = "info:fedora/%s#funder%d" % [self.id, n]
         funder[:agent_attributes]["0"]["type"] = RDF::FRAPO.FundingAgency
         if !funder[:agent_attributes]["0"].nil? && funder[:agent_attributes]["0"].has_key?("sameAs") && funder[:agent_attributes]["0"][:sameAs].empty?
           funder[:agent_attributes]["0"][:sameAs] = nil
         end
-        self.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
-        # Clean the awards attributes for the funder and build
+        # Clean the awards attributes for the funder
         awards = [] 
         funder[:awards_attributes].values.each do |award|
           if !award["grantNumber"].empty?
+            award["id"] = "info:fedora/%s#fundingAward%d" % [self.id, awardCount]
+            awardCount += 1
             awards << award
           end
         end
+        funder[:awards_attributes] = awards
+        # Build the funder
+        # Important - Do not build before setting the correct Ids for agent and award. 
+        #             It may overwrite previous funders if ids are not incremented in form repeater
+        self.funding[0].funder.build(funder)
+        self.funding[0].funder[n].agent = nil
+        self.funding[0].funder[n].awards = nil
+        self.funding[0].funder[n].agent.build(funder[:agent_attributes]["0"])
         awards.each_with_index do |award, n2|
-          award["id"] = "info:fedora/%s#fundingAward%d" % [self.id, awardCount]
           self.funding[0].funder[n].awards.build(award)
-          awardCount += 1
         end
       end
     elsif !vals[:hasFundingAward].nil?
