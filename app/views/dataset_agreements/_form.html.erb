@@ -22,7 +22,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset_agreement.creation, :label => "data steward" } %>
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset_agreement.creation, :label => "data steward", :required => true } %>
           <%= render partial: 'shared/titular_activity_fields_edit', :locals => { :f => f, :titularActivity => @dataset_agreement.titularActivity } %>
           <div class="actions">
             <%= f.submit "Save data steward information", class: "btn btn-success" %>
@@ -40,7 +40,7 @@
     <div class="well">
       <div class="row">
         <div class="control-group">
-          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset_agreement.funding } %>
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset_agreement.funding, :required => true } %>
           <div class="actions">
             <%= f.submit "Save funder information", class: "btn btn-success" %>
           </div><!-- /.actions -->

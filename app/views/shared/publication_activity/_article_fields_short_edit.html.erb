@@ -10,7 +10,7 @@
       <% end %>
       <div class="field">
         <%= f_p.label :dateAccepted, "Date of acceptance", :class=>"control-label" %>
-        <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first %>
+        <%= f_p.date_field :dateAccepted, :value => p.dateAccepted.first, :required=>true %>
       </div>
       <% p.hasDocument.each do |p2| %>
         <% if p2.journal.empty? %>
