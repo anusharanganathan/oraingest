@@ -1,33 +1,35 @@
-<div class="control-group">
-  <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
-    <!-- status -->
-    <% if hp.accessRights[0].embargoInfo.has_key?('embargoStatus') %>
-      <h6>Embargo status:</h6>
-      <span class="small"><%= hp.accessRights[0].embargoInfo['embargoStatus'] %></span>
-    <% end %>
-    <!-- embargo period -->
-    <% if hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman") || hp.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") %>
-      <h6>Embargo period:</h6>
-      <% if hp.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") && hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman")%>
-        <span class="small"><%=hp.accessRights[0].embargoInfo['embargoDurationHuman']%></span>
-        <span class="small">The end date was calculated to be <%=hp.accessRights[0].embargoInfo['embargoEndHuman']%></span>
-      <% elsif hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman") %>
-        <span class="small"><%=hp.accessRights[0].embargoInfo['embargoEndHuman']%></span>
+<div class="accordian">
+  <div class="accordian-header">Embargo details</div>
+  <div style="display: none;" class="accordian-content">
+    <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
+      <!-- status -->
+      <% if hp.accessRights[0].embargoInfo.has_key?('embargoStatus') %>
+        <h6>Embargo status:</h6>
+        <span class="small"><%= hp.accessRights[0].embargoInfo['embargoStatus'] %></span>
+      <% end %>
+      <!-- embargo period -->
+      <% if hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman") || hp.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") %>
+        <h6>Embargo period:</h6>
+        <% if hp.accessRights[0].embargoInfo.has_key?("embargoDurationHuman") && hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman")%>
+          <span class="small"><%=hp.accessRights[0].embargoInfo['embargoDurationHuman']%></span>
+          <span class="small">The end date was calculated to be <%=hp.accessRights[0].embargoInfo['embargoEndHuman']%></span>
+        <% elsif hp.accessRights[0].embargoInfo.has_key?("embargoEndHuman") %>
+          <span class="small"><%=hp.accessRights[0].embargoInfo['embargoEndHuman']%></span>
+        <% end %>
+      <% end %>
+      <!-- reason -->
+      <% if hp.accessRights[0].embargoInfo.has_key?('embargoReason') %>
+        <h6>Embargo reason:</h6>
+        <% hp.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
+          <span class="small"><%=er%></span>
+        <% end %>
+      <% end %>
+      <!-- release method -->
+      <% if hp.accessRights[0].embargoInfo.has_key?('embargoRelease')%>
+        <h6>Embargo release method:</h6>
+        <span class="small"><%= hp.accessRights[0].embargoInfo['embargoRelease'] %></span>
       <% end %>
     <% end %>
-    <!-- reason -->
-    <% if hp.accessRights[0].embargoInfo.has_key?('embargoReason') %>
-      <h6>Embargo reason:</h6>
-      <% hp.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
-        <span class="small"><%=er%></span>
-      <% end %>
-    <% end %>
-    <!-- release method -->
-    <% if hp.accessRights[0].embargoInfo.has_key?('embargoRelease')%>
-      <h6>Embargo release method:</h6>
-      <span class="small"><%= hp.accessRights[0].embargoInfo['embargoRelease'] %></span>
-    <% end %>
-
-  <% end %>
+  </div>
 </div> <!-- /.control-group -->
 

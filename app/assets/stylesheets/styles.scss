@@ -1739,6 +1739,8 @@ table td textarea {
 }
 
 .record-sidebar > a > .record_name {
+	display: inline-block;
+	min-height: 30px;
 	&:hover {
 		text-decoration: underline;
 	}
@@ -1758,6 +1760,23 @@ table td textarea {
 	&:hover {
 		text-decoration: none;
 	}
+}
+
+.record-sidebar > .accordian { 
+	border-top: none; 
+	border-bottom: 1px dotted #ccc;
+}
+.record-sidebar > .accordian .accordian-header {
+        font-size: 0.9em;
+        color: #4F738A;
+        padding: 5px 0 5px 0;
+        cursor: pointer;
+}
+.record-sidebar > .accordian .accordian-header:after {
+        width: 16px;
+        height: 16px;
+        margin-top: -5.5px; 
+	background-size: 15px;
 }
 
 .record-details { margin: 0 !important; }
