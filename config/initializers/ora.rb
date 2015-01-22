@@ -160,7 +160,7 @@ Sufia.config do |config|
 
   config.embargo_release_methods = {
     "Automatically lift the embargo" => "Automatically lift the embargo",
-    "Consult me before lift of embargo" => "Consult me before lift of embargo"
+    "Consult me before lifting embargo" => "Consult me before lifting embargo"
   }
 
   config.embargo_options = [
