@@ -136,7 +136,7 @@
       3. About you
     </div>
     <div class="padding-0">
-      <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator" } %>
+      <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator", :required => true } %>
     </div>
   </div>
 
@@ -209,7 +209,7 @@
       6. Funders and licences
     </div>
     <div class="padding-25 no-pad-top no-pad-bottom">
-      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding } %>
+      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding, :required => true } %>
     </div>
 
   </div>
