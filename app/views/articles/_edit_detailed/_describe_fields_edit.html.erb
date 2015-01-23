@@ -1,5 +1,5 @@
 <div class="fieldset">
-  <p class="small">Title</p>
+  <p class="small reqlabel">Title</p>
   <%= f.text_field :title, :value=>@article.title.first, :required=>true, :style=>'width: 60%', data: {"progress" => "citation"} %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation", :tipTitle => "Title", :tipDescription =>"Enter the title by which your publication should be known and cited." } %>
 </div>
