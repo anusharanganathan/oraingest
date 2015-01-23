@@ -1,7 +1,7 @@
 <%= embargo_type = nil %>
-<h5>What is the embargo date?</h5>
 <% ele_id = SecureRandom.uuid %>
 <div class="fieldset" id="embargo-fieldset-<%=ele_id%>">
+  <p class="small">What is the embargo date?</p>
   <%= f_a.fields_for :embargoDate do |f_dt| %>
     <!-- End date --> 
     <%= f_dt.fields_for :end do |f_dt_end| %>
@@ -103,9 +103,8 @@
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Embargo end date" , :tipDescription => "Please enter either the the precise date when the embargo should be lifted, in the form DD/MM/YYYY (e.g. ’26/06/2018), or enter the required length of embargo in years and months (e.g. ’1 year 6 months’) and select a start date." } %>
 </div>
 
-<h5>Embargo release method</h5>
-
 <div class="fieldset">
+  <p class="small">Embargo release method</p>
   <% if !accessRights[0].embargoRelease.nil? && !accessRights[0].embargoRelease.empty? %>
     <%= f_a.select :embargoRelease, options_for_select(Sufia.config.embargo_release_methods, :selected=>accessRights[0].embargoRelease.first), { :include_blank => 'Select release method' }, data: {"category" => "funder"} %>
   <% else %>
@@ -124,9 +123,8 @@
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "funder" , :tipTitle => "Release method" , :tipDescription => desc } %>
 </div><!-- /fieldset -->
 
-<h5>Reason for Embargo</h5>
-
 <div class="fieldset">
+  <p class="small">Reason for Embargo</p>
   <div class="row">
     <% if Sufia.config.embargo_reasons.has_key? (@model) %>
       <% Sufia.config.embargo_reasons[@model].each do |key, val| %>
