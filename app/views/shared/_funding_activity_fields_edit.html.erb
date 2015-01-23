@@ -12,9 +12,11 @@ funding_types = {
 
 <% if required %>
   <% reqClass = "required" %>
+  <% reqLabelClass = "reqlabel" %>
   <% dataAttribs = {"category" => "funder", "required" => true} %>
 <% else %>
   <% reqClass = "" %>
+  <% reqLabelClass = nil %>
   <% dataAttribs = {"category" => "funder"} %>
 <% end %>
 
@@ -23,7 +25,11 @@ funding_types = {
     <% f0.funder.build %>
   <% end %>
   <%= f.fields_for :funding, f0 do |f_f0| %>
-    <h4>Is your research the result of a funding award?</h4>
+    <% if reqLabelClass %>
+      <h4 class="reqlabel">Is your research the result of a funding award?</h4>
+    <% else %>
+      <h4>Is your research the result of a funding award?</h4>
+    <% end %>
     <div class="fieldset">
       <fieldset class="small-text">
         <label panel="dataset-funding">
@@ -52,14 +58,24 @@ funding_types = {
                   <% f1.agent.each do |f2| %>
                     <%= f_f1.fields_for :agent, f2 do |f_f2| %>
                       <label>
-                      <span class="small">Name</span>
-                      <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, data: dataAttribs %>
-                      <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+                        <% if reqLabelClass %>
+                          <span class="small <%=reqLabelClass%>">
+                        <% else %>
+                          <span class="small">
+                        <% end %>
+                        Name</span>
+                        <%= f_f2.text_field :name, :value => f2.name.first, id: "funderName%d"% f1_index, data: dataAttribs %>
+                        <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
                       </label>
                       <% f1.awards.each_with_index do |f2, f2_index| %>
                         <%= f_f1.fields_for :awards, f2 do |f_f2| %>
                           <label>
-                            <span class="small">Grant number:</span>
+                            <% if reqLabelClass %>
+                              <span class="small <%=reqLabelClass%>">
+                            <% else %>
+                              <span class="small">
+                            <% end %>
+                            Grant number:</span>
                             <%= f_f2.text_field :grantNumber, :value => f2.grantNumber.first, id: "funder%dgrantNumber%d"% [f1_index, f2_index], data: dataAttribs %>
                           </label>
                         <% end %>
@@ -67,7 +83,12 @@ funding_types = {
                     <% end %>
                   <% end %>
                   <label>
-                    <span class="small">Who or what was funded?</span>
+                    <% if reqLabelClass %>
+                      <span class="small <%=reqLabelClass%>">
+                    <% else %>
+                      <span class="small">
+                    <% end %>
+                    Who or what was funded?</span>
                     <%= f_f1.select :funds, options_for_select(funding_types, :selected=>f1.funds.first), { :include_blank => 'Select an option' }, id: "funderFunds%d"% f1_index, data: dataAttribs %>
                   </label>
                 </li>

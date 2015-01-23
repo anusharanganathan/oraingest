@@ -1,6 +1,6 @@
 <div class="fieldset">
   <h4>Title</h4>
-  <p class="small">Enter the title by which your dataset should be known and cited</p>
+  <p class="small reqlabel">Enter the title by which your dataset should be known and cited</p>
   <%= f.text_field :title, :value=>@dataset.title.first, :required=>true, :style=>'width: 60%', data: {"progress" => "citation"} %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Title" , :tipDescription => "Enter the title by which your dataset should be known and cited." } %>
 </div>
@@ -12,7 +12,7 @@
 </div>
 
 <div class="fieldset">
-  <p class="small">Documentation about your dataset and processes</p>
+  <p class="small reqlabel">Documentation about your dataset and processes</p>
   <%= f.text_area :isDocumentedBy, :required => true, :value=>@dataset.isDocumentedBy.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
   <% desc = "Please explain briefly how, why and when your data were created (including whether you used any specific software to create, edit or process the files – e.g. note whether a particular software package is required to read and work with the files). You should include sufficient information about your dataset to make it easily intelligible to another researcher. You may either type directly in the box or, if you are including this information in a separate file with your data upload, please enter the file name instead." %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Documentation" , :tipDescription => desc } %>
