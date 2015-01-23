@@ -59,7 +59,7 @@
                     </div>
                   <% end %>
                   <div class="fieldset"> 
-                    <h5>Description of file</h5>
+                    <p class="small">Description of file</p>
                     <%= f_hp.hidden_field :identifier, :value => hp.identifier.first %>
                     <%= f_hp.text_field :description, :value => hp.description.first, data: {"progress" => "documentation"} %>
                     <% if @model == "dataset" %>
