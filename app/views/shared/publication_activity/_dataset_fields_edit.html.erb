@@ -15,7 +15,7 @@
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
         <div class="fieldset">
-          <p class="small">Publisher name</p>
+          <p class="small reqlabel">Publisher name</p>
           <%= f_p2.text_field :name, :required => true, :value => p2.name.first || "University of Oxford", data: {"progress" => "citation", "default-value" => "University of Oxford"} %>
           <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. For data produced at Oxford, this will usually be the University of Oxford." } %>
         </div>
@@ -29,7 +29,7 @@
       <% end %>
     <% end %>
     <div class="fieldset">
-      <p class="small">Year published</p>
+      <p class="small reqlabel">Year published</p>
       <%= f_p.text_field :datePublished, :required => true, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Year published" , :tipDescription => "Enter the year the data have been or will be published, i.e. made publicly available." } %>
     </div>

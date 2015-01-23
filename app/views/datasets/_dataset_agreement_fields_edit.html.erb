@@ -6,6 +6,7 @@
 
     <h4 class="padding-side-25">Archive service payment</h4>
     <div class="fieldset">
+      <p class="small reqlabel">How are you paying for the archival service of your data?</p>
       <%= f_a.hidden_field :title, :value=>hasRelatedAgreement.title.first, :id=>"dataset_agreement_title", :disabled=>true %>
       <%= f_a.hidden_field :agreementType, :value=>hasRelatedAgreement.agreementType.first %>
       <%= f_a.hidden_field :contributor, :value=>hasRelatedAgreement.contributor.first %>
