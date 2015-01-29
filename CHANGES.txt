@@ -1,6 +1,25 @@
 Changelog
 =========
 
+1.1
+------------------
+
+- Embargo options are displayed in archving section in form
+- Enabled search
+- Added sections to manage workflow and permissions in dataset form
+- Added facets to list of publications and datasets
+- Added new form for article review
+- Published records pushed to redis queue
+- Embargo options displayed in an accoridon on the record page
+- Page redirects made based on user roles
+- Cleaned up the data progress in forms
+- Display of file embargo options in form improved
+- Made improvements to reviewer dashboard
+- Improved checks for mandatory fields
+- Improved code sharing by adding commn classes to models
+- Removed unused views 
+- Form user experience improved
+
 1.0.1
 ------------------
 
