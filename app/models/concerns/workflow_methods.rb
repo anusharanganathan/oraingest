@@ -28,11 +28,15 @@ module WorkflowMethods
         toMigrate = false
         msg = []
         datastreams = []
+        numberOfFiles = 0
         #Get list of all datastreams without access rights
         conts = self.datastreams.keys.select { |key| key.start_with?('content') and self.datastreams[key].content != nil }
         self.hasPart.each do |hp|
-          if (conts.include? hp.identifier[0]) && (!hp.accessRights.nil? && !hp.accessRights[0].embargoStatus.nil? && !hp.accessRights[0].embargoStatus[0].nil? && !hp.accessRights[0].embargoStatus[0].empty?)
-            conts.delete(hp.identifier[0])
+          if conts.include?(hp.identifier[0])
+            numberOfFiles = numberOfFiles + 1
+            if !hp.accessRights.nil? && !hp.accessRights[0].embargoStatus.nil? && !hp.accessRights[0].embargoStatus[0].nil? && !hp.accessRights[0].embargoStatus[0].empty?
+              conts.delete(hp.identifier[0])
+            end
           end
         end
         # If access rights not defined for file or catalogue record, mark as system failure
@@ -75,7 +79,7 @@ module WorkflowMethods
         self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
         # Push object to queue
         if toMigrate
-          Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, self.class.model_name.to_s))
+          Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, self.class.model_name.to_s, numberOfFiles.to_s))
         end
       #else
       #  # Note: Not doing this as we may just add a whole lot of comments for redundant clicks

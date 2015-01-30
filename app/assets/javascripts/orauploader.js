@@ -33,13 +33,14 @@ var sequentialUploads = true;
     function uploadStopped() {
       if (files_done == filestoupload && (files_done >0)){
          //TODO: Add function to save form here. Set status to nothing
-         $("#workflow_submit_entries_status").val("")
-         $("#new_record_fields").submit();
-         //var loc = $("#redirect-loc").html()
-         //$(location).attr('href',loc);
+         //alert("file upload all done - " + files_done);
+         //$("#workflow_submit_entries_status").val("");
+         //$("#new_record_fields").submit();
+         var loc = $("#redirect-loc").html();
+         $(location).attr('href',loc);
       } else if (error_string.length > 0){
         //TODO: Enable the save button
-        $("#new_record_fields").find('input[type="submit"]').removeAttr('disabled');
+        //$("#new_record_fields").find('input[type="submit"]').removeAttr('disabled');
         // an error occured       
          if (files_done == 0) {
             $("#fail").fadeIn('slow')
@@ -104,10 +105,10 @@ var sequentialUploads = true;
     // based off of https://github.com/blueimp/jQuery-File-Upload/wiki/How-to-submit-additional-Form-Data
     function uploadSubmit(e, data) {
       // TODO: disable the save button in form once upload has started
-      $("#new_record_fields").find('input[type="submit"]').attr('disabled','disabled');
-      $('#relative_path').val(data.files[0].webkitRelativePath)
+      //$("#new_record_fields").find('input[type="submit"]').attr('disabled','disabled');
+      //$('#relative_path').val(data.files[0].webkitRelativePath);
       if (settings.afterSubmit) {
-        settings.afterSubmit(this, e, data)
+        settings.afterSubmit(this, e, data);
       }
     }
 
