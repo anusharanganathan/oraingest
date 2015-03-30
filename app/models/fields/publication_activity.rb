@@ -199,7 +199,7 @@ class QualifiedPublicationAssociation
   include ActiveFedora::RdfObject
   extend ActiveModel::Naming
   include ActiveModel::Conversion
-  attr_accessor :type, :agent, :role, :name, :website
+  attr_accessor :type, :agent, :role
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -211,8 +211,37 @@ class QualifiedPublicationAssociation
   #rdf_type rdf_type RDF::PROV.Association
   map_predicates do |map|
     map.type(:in => RDF::DC)
-    map.agent(:in => RDF::PROV)
+    map.agent(:in => RDF::PROV, class_name:"PublicationAssociation")
     map.role(:to => "hadRole", :in => RDF::PROV)
+  end
+  accepts_nested_attributes_for :agent
+
+  def persisted?
+    rdf_subject.kind_of? RDF::URI
+  end
+
+  def id
+    rdf_subject if rdf_subject.kind_of? RDF::URI
+  end 
+
+  def to_solr(solr_doc={})
+    self.agent.each do |a|
+      a.to_solr(solr_doc)
+    end
+    solr_doc
+  end
+
+end
+
+class PublicationAssociation
+  include ActiveFedora::RdfObject
+  extend ActiveModel::Naming
+  include ActiveModel::Conversion
+  attr_accessor :type, :name, :website
+
+  #rdf_type rdf_type RDF::PROV.Association
+  map_predicates do |map|
+    map.type(:in => RDF::DC)
     map.name(:to => "n", :in => RDF::VCARD)
     map.website(:to => "hasURL", :in => RDF::VCARD)
   end
@@ -226,8 +255,12 @@ class QualifiedPublicationAssociation
   end 
 
   def to_solr(solr_doc={})
-    solr_doc[Solrizer.solr_name("desc_metadata__publisher", :stored_searchable)] = self.name.first
-    solr_doc[Solrizer.solr_name("desc_metadata__publisherWebsite", :displayable)] = self.website.first
+    # Initialize fields as array
+    solr_doc[Solrizer.solr_name("desc_metadata__publisher", :stored_searchable)] ||= []
+    solr_doc[Solrizer.solr_name("desc_metadata__publisherWebsite", :displayable)] ||= []
+    # Append values
+    solr_doc[Solrizer.solr_name("desc_metadata__publisher", :stored_searchable)] << self.name.first
+    solr_doc[Solrizer.solr_name("desc_metadata__publisherWebsite", :displayable)] << self.website.first
     solr_doc
   end
 
