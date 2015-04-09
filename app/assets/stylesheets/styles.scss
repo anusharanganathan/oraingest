@@ -1247,7 +1247,7 @@ form .error {
   }
 }
 #file-table .progress {
-  width: 100px;
+  width: 150px; /* If this is changed, the value needs to be changed in orauploader.js uploadDone */
   background-color: #F5F5F5;
   .bar {
     background-color: #719AAA;

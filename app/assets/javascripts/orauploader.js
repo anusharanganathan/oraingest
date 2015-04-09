@@ -32,12 +32,14 @@ var sequentialUploads = true;
 
     function uploadStopped() {
       if (files_done == filestoupload && (files_done >0)){
-         //TODO: Add function to save form here. Set status to nothing
          //alert("file upload all done - " + files_done);
-         //$("#workflow_submit_entries_status").val("");
-         //$("#new_record_fields").submit();
-         var loc = $("#redirect-loc").html();
-         $(location).attr('href',loc);
+         $(".ora-validate-form").validate().settings.ignore = "*";
+         $("#workflows_entries_status").val($(this).attr("data-default-value"));
+         $("#workflows_entries_status").attr("value", $(this).attr("data-default-value"));
+         //$("#saverecord").trigger("click");
+         $("form#new_record_fields").submit();
+         //var loc = $("#redirect-loc").html();
+         //$(location).attr('href',loc);
       } else if (error_string.length > 0){
         //TODO: Enable the save button
         //$("#new_record_fields").find('input[type="submit"]').removeAttr('disabled');
@@ -91,7 +93,13 @@ var sequentialUploads = true;
     function uploadDone(e, data) {
       var file = ($.isArray(data.result) && data.result[0]) || {error: 'emptyResult'};
       if (!file.error) {
-        files_done++;     
+        files_done++;
+        $('.bar').css('background-color', function(){
+          var width = parseInt($(this).css('width'));
+          if (width == 150) {
+            return '#3a8d24';
+          }    
+        });
       } else {
         if (error_string.length > 0) {
           error_string += '<br/>';
