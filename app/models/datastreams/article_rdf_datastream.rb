@@ -39,9 +39,11 @@ class ArticleRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.medium(:in => RDF::DC)
     #-- language --
     map.language(:in => RDF::DC, class_name:"MadsLanguage")
-    # -- publication status --
+    # -- publication status -- 
+    #TODO: Check if this is used. May be replaced by one in publication activity
     map.publicationStatus(:to => "DocumentStatus", :in => RDF::BIBO)
     # -- review status --
+    #TODO: Check if this is used. May be replaced by one in publication activity
     map.reviewStatus(:in => RDF::ORA)
     # -- rights activity --
     map.license(:in => RDF::DC, class_name:"LicenseStatement")
