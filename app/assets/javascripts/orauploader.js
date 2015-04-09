@@ -34,9 +34,8 @@ var sequentialUploads = true;
       if (files_done == filestoupload && (files_done >0)){
          //alert("file upload all done - " + files_done);
          $(".ora-validate-form").validate().settings.ignore = "*";
-         $("#workflows_entries_status").val($(this).attr("data-default-value"));
-         $("#workflows_entries_status").attr("value", $(this).attr("data-default-value"));
-         //$("#saverecord").trigger("click");
+         $("#workflow_submit_entries_status").val($(this).attr("data-default-value"));
+         $("#workflow_submit_entries_status").attr("value", $(this).attr("data-default-value"));
          $("form#new_record_fields").submit();
          //var loc = $("#redirect-loc").html();
          //$(location).attr('href',loc);
