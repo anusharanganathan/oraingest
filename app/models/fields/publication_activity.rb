@@ -199,7 +199,8 @@ class QualifiedPublicationAssociation
   include ActiveFedora::RdfObject
   extend ActiveModel::Naming
   include ActiveModel::Conversion
-  attr_accessor :type, :agent, :role
+  #TODO: Remove name and website after all existing objects have been moved to new model
+  attr_accessor :type, :agent, :role, :name, :website
 
   rdf_subject { |ds|
     if ds.pid.nil?
@@ -213,6 +214,9 @@ class QualifiedPublicationAssociation
     map.type(:in => RDF::DC)
     map.agent(:in => RDF::PROV, class_name:"PublicationAssociation")
     map.role(:to => "hadRole", :in => RDF::PROV)
+    #TODO: Remove name and website after all existing objects have been moved to new model
+    map.name(:to => "n", :in => RDF::VCARD)
+    map.website(:to => "hasURL", :in => RDF::VCARD)
   end
   accepts_nested_attributes_for :agent
 

@@ -431,9 +431,13 @@ module BuildMetadata
     id0 = "info:fedora/%s#publicationActivity" % self.id
     params['id'] = id0
     params[:type] = RDF::PROV.Activity
+    params[:wasAssociatedWith] = []
     if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
-      if !params[:publisher_attributes]["0"][:name].empty?
-        params[:wasAssociatedWith] = ["info:fedora/%s#publisher" % self.id]
+      if params[:publisher_attributes]["0"].has_key?(:agent_attributes) && !params[:publisher_attributes]["0"][:agent_attributes].nil? && !params[:publisher_attributes]["0"][:agent_attributes].empty?
+        p1 = params[:publisher_attributes]["0"][:agent_attributes]["0"]
+        if p1.has_key?(:name) and not p1[:name].empty?
+          params[:wasAssociatedWith].push("info:fedora/%s#publisher" % self.id)
+        end
       end
     end
     self.publication.build(params)
@@ -462,15 +466,18 @@ module BuildMetadata
     end
     self.publication[0].publisher = nil
     if !params["publisher_attributes"].nil? && !params[:publisher_attributes].empty?
-      params[:publisher_attributes]["0"].each do |k, v|
-        params[:publisher_attributes]["0"][k] = nil if v.empty?
-      end
-      if !params[:publisher_attributes]["0"][:name].nil?
-        params[:publisher_attributes]["0"]['id'] = "info:fedora/%s#publicationAssociation" % self.id
-        params[:publisher_attributes]["0"][:type] = RDF::PROV.Association
-        params[:publisher_attributes]["0"][:agent] = "info:fedora/%s#publisher" % self.id
-        params[:publisher_attributes]["0"][:role] = RDF::DC.publisher
-        self.publication[0].publisher.build(params[:publisher_attributes]["0"])
+      if params[:publisher_attributes]["0"].has_key?(:agent_attributes) && !params[:publisher_attributes]["0"][:agent_attributes].nil? && !params[:publisher_attributes]["0"][:agent_attributes].empty?
+        params[:publisher_attributes]["0"][:agent_attributes]["0"].each do |k, v|
+          params[:publisher_attributes]["0"][:agent_attributes]["0"][k] = nil if v.empty?
+        end
+        if params[:publisher_attributes]["0"][:agent_attributes]["0"].has_key?(:name) && !params[:publisher_attributes]["0"][:agent_attributes]["0"][:name].nil?
+          p = {'id'=>"info:fedora/%s#publicationAssociation" % self.id, :type => RDF::PROV.Association, :role => RDF::DC.publisher}
+          self.publication[0].publisher.build(p)
+          self.publication[0].publisher[0].agent = nil
+          params[:publisher_attributes]["0"][:agent_attributes]["0"]["id"] = "info:fedora/%s#publisher" % self.id
+          params[:publisher_attributes]["0"][:agent_attributes]["0"][:type] = RDF::VCARD.Organization
+          self.publication[0].publisher[0].agent.build(params[:publisher_attributes]["0"][:agent_attributes]["0"])
+        end
       end
     end
   end
