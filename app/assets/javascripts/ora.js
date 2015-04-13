@@ -396,6 +396,11 @@ $(function() {
         });
       }
     });
+    // redirect to previous field
+    var eleid = $("#redirect_field").val();
+    if (eleid) {
+      highlight_field($("#"+eleid));
+    }
   }
 
   fixTracker();
