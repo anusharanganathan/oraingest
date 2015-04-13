@@ -135,7 +135,7 @@ class DatasetsController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:dataset)
-      add_metadata(params[:dataset])
+      add_metadata(params[:dataset], "")
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -147,10 +147,14 @@ class DatasetsController < ApplicationController
 
   def update
     @pid = params[:pid]
+    redirect_field = ""
+    if params.has_key?(:redirect_field)
+      redirect_field = params[:redirect_field]
+    end
     if params.has_key?(:files)
       create_from_upload(params)
     elsif dataset_params
-      add_metadata(params[:dataset])
+      add_metadata(params[:dataset], redirect_field)
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -349,7 +353,7 @@ class DatasetsController < ApplicationController
     end 
   end
 
-  def add_metadata(dataset_params)
+  def add_metadata(dataset_params, redirect_field)
     if !@dataset.workflows.nil? && !@dataset.workflows.first.entries.nil?
       old_status = @dataset.workflows.first.current_status
     else
@@ -377,7 +381,7 @@ class DatasetsController < ApplicationController
     end
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.', flash: { redirect_field: redirect_field } }
         format.json { head :no_content }
       else
         # If a dataset agreement was created newly, roll back changes
