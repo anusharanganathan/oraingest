@@ -49,7 +49,7 @@
       <% hasData = true %>
     <% end %>
   <% end %>
-  <% if !article.publication[0].publisher.nil? && !article.publication[0].publisher[0].nil? && !article.publication[0].publisher[0].agent.nil? %>
+  <% if !article.publication[0].publisher.nil? && !article.publication[0].publisher[0].nil? && !article.publication[0].publisher[0].agent.nil? && !article.publication[0].publisher[0].agent[0].nil? %>
     <% if !article.publication[0].publisher[0].agent[0].name.empty? && !article.publication[0].publisher[0].agent[0].name[0].empty? %>
       <% hasData = true %>
     <% end %>
