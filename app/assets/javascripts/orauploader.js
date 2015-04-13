@@ -32,24 +32,37 @@ var sequentialUploads = true;
 
     function uploadStopped() {
       if (files_done == filestoupload && (files_done >0)){
-         //alert("file upload all done - " + files_done);
-         $(".ora-validate-form").validate().settings.ignore = "*";
-         $("#workflow_submit_entries_status").val($(this).attr("data-default-value"));
-         $("#workflow_submit_entries_status").attr("value", $(this).attr("data-default-value"));
-         $("form#new_record_fields").submit();
-         //var loc = $("#redirect-loc").html();
-         //$(location).attr('href',loc);
+        $(".ora-validate-form").validate().settings.ignore = "*";
+        $("#workflow_submit_entries_status").val($(this).attr("data-default-value"));
+        $("#workflow_submit_entries_status").attr("value", $(this).attr("data-default-value"));
+        var focusid = $(document.activeElement).closest('[id]').attr('id');
+        if (focusid && $("form#new_record_fields #"+focusid).length) {
+          var inputid = "";
+          if ($("#"+focusid).attr("tag") != "input") {
+            inputid = $("#"+focusid).parent().closest('input').attr('id');
+          }
+          if (inputid) {
+            $("#redirect_field").val(inputid);
+            $("#redirect_field").attr("value", inputid);
+          } else {
+            $("#redirect_field").val(focusid);
+            $("#redirect_field").attr("value", focusid);
+          }
+        }
+        $("form#new_record_fields").submit();
+        //var loc = $("#redirect-loc").html();
+        //$(location).attr('href',loc);
       } else if (error_string.length > 0){
         //TODO: Enable the save button
         //$("#new_record_fields").find('input[type="submit"]').removeAttr('disabled');
         // an error occured       
-         if (files_done == 0) {
-            $("#fail").fadeIn('slow')
-         } else {
-            $("#partial_fail").fadeIn('slow')
-         }          
-         $("#errmsg").html(error_string);
-         $("#errmsg").fadeIn('slow');
+        if (files_done == 0) {
+          $("#fail").fadeIn('slow')
+        } else {
+          $("#partial_fail").fadeIn('slow')
+        }          
+        $("#errmsg").html(error_string);
+        $("#errmsg").fadeIn('slow');
       }
     } 
 
@@ -173,11 +186,6 @@ var sequentialUploads = true;
 
       // on fail if abort (aka cancel) decrease the number of uploaded files to send
       $('#fileupload').bind("fileuploadfail", uploadFail);
-
-      // Log the current bitrate for this upload:
-      $('#fileupload').bind('fileuploadprogress', function (e, data) {
-       console.log(data.bitrate);
-      });
 
     });
 

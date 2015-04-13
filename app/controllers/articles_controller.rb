@@ -117,7 +117,7 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:article)
-      add_metadata(params[:article])
+      add_metadata(params[:article], "")
     elsif can? :review, @article
       format.html { render action: 'edit_detailed' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -129,10 +129,14 @@ class ArticlesController < ApplicationController
 
   def update
     @pid = params[:pid]
+    redirect_field = ""
+    if params.has_key?(:redirect_field)
+      redirect_field = params[:redirect_field]
+    end
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
-      add_metadata(params[:article])
+      add_metadata(params[:article], redirect_field)
     elsif can? :review, @article
       format.html { render action: 'edit_detailed' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -276,7 +280,7 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def add_metadata(article_params)
+  def add_metadata(article_params, redirect_field)
     if !@article.workflows.nil? && !@article.workflows.first.entries.nil?
       old_status = @article.workflows.first.current_status
     else
@@ -289,7 +293,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.save
         if can? :review, @article
-          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.' }
+          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.', flash:{ redirect_field: redirect_field } }
           format.json { head :no_content }
         else
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
