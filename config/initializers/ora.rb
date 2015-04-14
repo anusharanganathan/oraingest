@@ -173,21 +173,21 @@ Sufia.config do |config|
     "article" => {
       "Commercial confidentiality" => "Commercial confidentiality",
       "Publication pending" => "Publication pending", 
-      "Conditional access only" => "Conditional access only"
-      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions"
-      "Ethical conditions or agreements"  => "Ethical conditions or agreements"
-      "Legal conditions or agreements"  => "Legal conditions or agreements"
-      "National security issues"  => "National security issues"
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
       "Patent pending"  => "Patent pending"
     },
     "dataset" => {
       "Commercial confidentiality" => "Commercial confidentiality",
       "Publication pending" => "Publication pending", 
-      "Conditional access only" => "Conditional access only"
-      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions"
-      "Ethical conditions or agreements"  => "Ethical conditions or agreements"
-      "Legal conditions or agreements"  => "Legal conditions or agreements"
-      "National security issues"  => "National security issues"
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
       "Patent pending"  => "Patent pending"
     }
   }
