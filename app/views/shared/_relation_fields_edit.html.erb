@@ -3,7 +3,7 @@
 <% end %>
 
 <div class="fieldset">
-  <h4>Related publications and dataset</h4>
+  <h4>Related publications and datasets</h4>
   <div class="field-repeater">
   <!-- <div class="field-repeater" data-max-fields="5"> -->
     <ol>
@@ -22,7 +22,7 @@
 
           <label>
             <p class="small">Type of relationship</p>
-            <p>This <%=@model%> <span>&nbsp;</span>
+            <p>My <%=@model%> <span>&nbsp;</span>
             <%= f_r.select :relation, options_for_select(Sufia.config.relationship_types, :selected=>r.relation.first), { :include_blank => 'Select the relation' }, id: "relationType%d"% r_index, data: {"progress" => "discoverability"} %>
            this related item</p>
           </label>
@@ -49,9 +49,9 @@
     </ol>
     <a href="#" class="add-field">Add related item</a>
   </div>
-  <% desc = "<p>Enter the title of any related item, e.g. a dataset which underpins your publication.</p>
-    <p>Select the option that best describes the relationship between your publication and the item you have indicated as being related.</p>
-    <p>Add an abstract or brief description of the related item.</p>
-    <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please give a citation for it.</p>" %>
-  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Related publications and dataset" , :tipDescription => desc } %>
+  <% desc = "<p>You can use this field to link your data to any related publications or datasets.</p>
+    <p>Please enter the title of any related item (e.g. a publication which your data underpins, or another version of your dataset),
+     and select the option that best describes the relationship between your data and the related item (e.g. ‘My dataset is referenced by this related item’).</p>
+    <p>You can then add an abstract or brief description of the related item and, if applicable, provide a DOI, URL or other citation</p>" %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Related publications and datasets (optional)" , :tipDescription => desc } %>
 </div><!-- /fieldset -->
