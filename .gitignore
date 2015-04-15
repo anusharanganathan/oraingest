@@ -20,8 +20,11 @@ rails_server.log
 /tmp
 
 #Ignore all of the cookies files
-.rtclientrc
 /rt_cookies/*
+
+#Ignore config files
+.rtclientrc
+config/doi_credentials.yml
 
 #Committing Gemfile.lock before upgrading to sufia 3.7.2
 #Gemfile.lock
