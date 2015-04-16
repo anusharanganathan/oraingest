@@ -35,6 +35,7 @@
       2. About your data
     </div>
     <div class="padding-0">
+        <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
         <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
         <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %> 
@@ -97,8 +98,6 @@
         <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
         <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Geographical location" , :tipDescription => "If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085)." } %>
       </div>
-
-      <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
 
       <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
     </div>
