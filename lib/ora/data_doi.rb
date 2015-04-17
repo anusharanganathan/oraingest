@@ -1,13 +1,10 @@
 require 'uri'
 require 'rest_client'
-require 'hydra/remote_identifier/remote_service'
-require 'hydra/remote_identifier/exceptions'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'builder'
 require 'nokogiri'
 
-module Hydra::RemoteIdentifier
-  module RemoteServices
+module ORA
    class DataValidationError < RuntimeError
       def initialize(errors)
         if errors.is_a?(Array)
@@ -18,7 +15,7 @@ module Hydra::RemoteIdentifier
       end
     end
 
-    class DataDoi < Hydra::RemoteIdentifier::RemoteService
+    class DataDoi
       TEST_CONFIGURATION =
       {
         username: 'apitest',
@@ -98,8 +95,6 @@ module Hydra::RemoteIdentifier
         puts response.body, response.code
         matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
         matched_data[:doi].strip
-      rescue RestClient::Exception => e
-        raise(RemoteServiceError.new(e, uri_for_create, data))
       end
 
       def uri_for_metadata
@@ -114,8 +109,6 @@ module Hydra::RemoteIdentifier
         puts response.body, response.code
         matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
         matched_data[:doi].strip
-      rescue RestClient::Exception => e
-        raise(RemoteServiceError.new(e, uri_for_metadata, data))
       end
 
       def data_for_create(payload)
@@ -282,5 +275,4 @@ module Hydra::RemoteIdentifier
       end
 
     end
-  end
 end
