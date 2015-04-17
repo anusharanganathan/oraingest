@@ -1,16 +1,55 @@
+require 'id_service'
+
 module DoiMethods
   extend ActiveSupport::Concern
 
+  def doi
+    if (!self.publication.nil? && !self.publication[0].nil? &&
+       !self.publication[0].hasDocument.nil? && !self.publication[0].hasDocument[0].nil? &&
+       !self.publication[0].hasDocument[0].doi.nil? && !self.publication[0].hasDocument[0].doi[0].blank?)
+      doi = self.publication[0].hasDocument[0].doi[0]
+    else
+      doi = Sufia::Noid.noidify(Sufia::IdService.mint_doi)
+      doi = Sufia::Noid.doize(doi)
+    end
+    doi
+  end
+
   def doi_data
+    contributorTypes = [
+      "ContactPerson",
+      "DataCollector",
+      "DataCurator",
+      "DataManager",
+      "Distributor",
+      "Editor",
+      "Funder",
+      "HostingInstitution",
+      "Other",
+      "Producer",
+      "ProjectLeader",
+      "ProjectManager",
+      "ProjectMember",
+      "RegistrationAgency",
+      "RegistrationAuthority",
+      "RelatedPerson",
+      "ResearchGroup",
+      "RightsHolder",
+      "Researcher",
+      "Sponsor",
+      "Supervisor",
+      "WorkPackageLeader",
+    ]
+    
     doi_data = {
       target: "http://ora.ox.ac.uk/objects/#{self.id.to_s}",
-      creators: [],
-      contributors: [],
-      subjects: [],
+      creator: [],
+      contributor: [],
+      subject: [],
       resourceType: "Dataset",
       resourceTypeGeneral: "Dataset",
       rights: [],
-      descriptions: []
+      description: []
     }
     # title
     if !self.title.empty?
@@ -42,14 +81,16 @@ module DoiMethods
           c[:affiliation] = cr.agent[0].affiliation[0].name[0]
         end
         if cr.role[0].to_s == "http://purl.org/dc/terms/creator"
-          doi_data[:creators] << c
+          doi_data[:creator] << c
         else
-          if Sufia.config.role_labels.include?(cr.role[0])
+          if Sufia.config.role_labels.include?(cr.role[0]) && contributorTypes.include?(Sufia.config.role_labels[cr.role[0]])
             c[:type] = Sufia.config.role_labels[cr.role[0]]
-          else
+          elsif contributorTypes.include?(cr.role[0])
             c[:type] = cr.role[0]
+          else
+            c[:type] = "Other"
           end
-          doi_data[:contributors] << c
+          doi_data[:contributor] << c
         end
       end
     end
@@ -66,7 +107,7 @@ module DoiMethods
         sh[:scheme] = s.subjectScheme[0]
       end
       if !sh.empty?
-        doi_data[:subjects] << sh
+        doi_data[:subject] << sh
       end
     end
     # digitalSize
@@ -100,7 +141,7 @@ module DoiMethods
     end
     # abstract
     if !self.abstract.empty?
-      doi_data[:descriptions] << {description: self.abstract[0], type: "Abstract"}
+      doi_data[:description] << {description: self.abstract[0], type: "Abstract"}
     end
     doi_data
   end
