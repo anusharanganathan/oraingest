@@ -1,21 +1,23 @@
+<% isDigital = false %>
 <% if !@files.nil? && !@files.empty? %>
   <%= f.hidden_field :medium, :value=>Sufia.config.data_medium["Digital"] %>
+  <% isDigital = true %>
 <% else %>
-
   <% if @dataset.medium[0] == Sufia.config.data_medium["Digital"] %>
     <% showDigital = "inline" %>
   <% else %>
     <% showDigital = "none" %>
-  <% end %>
+<% end %>
+ 
+<% if !isDigital %>
   <div class="fieldset">
-    <p class="small">Is your data in digital format?</p>
+      <p class="small reqlabel">Is your data in digital format?</p>   
     <fieldset class="small-text">
       <label panel="dataset-format-digital">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital", data: {"category" => "documentation"} %><span></span> Yes
+        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => isDigital, :class => "required", :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital required", data: {"category" => "documentation"} %><span></span> Yes        
       </label>
       <label panel="dataset-format-physical">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')", :class => "medium-analog", data: {"category" => "documentation"} %>
-        <span></span> No
+        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => !isDigital, :class => "required", :onchange => "toggleDigitalFieldsDisplay('analog')",  :class => "medium-analog required", data: {"category" => "documentation"} %><span></span> No
       </label>
     </fieldset>
     <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Data medium" , :tipDescription => "Please indicate whether the data you are describing are in the form of digital files, or whether they are physical notes or specimens etc." } %>
@@ -48,7 +50,7 @@
     </div><!-- /fieldset -->
   </div><!-- /expand-panel -->
 
-  <div class="expand-panel" id="dataset-format-physical">
+  <div class="expand-panel" id="dataset-format-physical" style="display:block;opacity:1;">
     <h5>Physical data information</h5>
     <div class="fieldset">
       <label>
@@ -61,3 +63,4 @@
 
 <% end %>
 
+<% end %><!-- End of !isDigital -->
