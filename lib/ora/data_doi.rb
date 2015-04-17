@@ -1,3 +1,8 @@
+#http://stackoverflow.com/questions/27542913/override-http-ssl-version-to-tlsv1-not-working
+#http://stackoverflow.com/questions/22550213/how-to-set-tls-context-options-in-ruby-like-opensslsslssl-op-no-sslv2
+#http://stackoverflow.com/questions/17375066/setting-restclient-ssl-version-to-sslv3
+#http://codereview.stackexchange.com/questions/49106/let-openssl-decide-which-tls-protocol-version-is-used-by-default
+
 require 'uri'
 require 'rest_client'
 require 'active_support/core_ext/hash/indifferent_access'
@@ -43,7 +48,7 @@ module ORA
       end
 
       def remote_uri_for(identifier)
-        URI.parse(File.join(resolver_url, normalize_identifier(identifier)))
+        URI.parse(File.join(resolver_url, identifier))
       end
 
       REQUIRED_ATTRIBUTES = ['identifier', 'creator', 'title', 'publisher', 'publicationYear' ].freeze
