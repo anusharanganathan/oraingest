@@ -67,6 +67,15 @@ function displayDatasetAgreement(id, val) {
   }
 }
 
+function displayDoi(id) {
+  var doi = $("#mintedDoi").val();
+  $("#dataset_doi").val(doi);
+  $("#dataset_doi").attr("value", doi);
+  $("#workflow_submit_involves").val("Register doi:"+doi);
+  $("#workflow_submit_involves").attr("value", "Register doi:"+doi);
+  $("#dataset_doi").attr("readonly", "true");
+}
+
 function setStatus(eleId, wstatus) {
   states = ["Draft", "Submitted", "Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"];
   if (states.indexOf(wstatus) > -1) {
