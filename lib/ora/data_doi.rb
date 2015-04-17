@@ -32,6 +32,7 @@ module ORA
         @shoulder = configuration.fetch(:shoulder)
         @url = configuration.fetch(:url)
         @resolver_url = configuration.fetch(:resolver_url) { default_resolver_url }
+        @resource = RestClient::Resource.new(@url, :user => @username, :password => @password)
       end
 
       def normalize_identifier(value)
@@ -83,29 +84,15 @@ module ORA
 
       private
 
-      def uri_for_create
-        uri_for_create = URI.parse(File.join(@url, 'doi'))
-        uri_for_create.user = username
-        uri_for_create.password = password
-        uri_for_create
-      end
-
       def request(data)
-        response = RestClient.post(uri_for_create.to_s, data, content_type: 'text/plain;charset=UTF-8', )
+        response = @resource['doi'].post(data, content_type: 'text/plain;charset=UTF-8')
         puts response.body, response.code
         matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
         matched_data[:doi].strip
       end
 
-      def uri_for_metadata
-        uri_for_metadata = URI.parse(File.join(@url, 'metadata'))
-        uri_for_metadata.user = username
-        uri_for_metadata.password = password
-        uri_for_metadata
-      end
-
       def add_metadata(data)
-        response = RestClient.post(uri_for_metadata.to_s, data, content_type: 'application/xml;charset=UTF-8')
+        response = @resource['metadata'].post(data, content_type: 'application/xml;charset=UTF-8')
         puts response.body, response.code
         matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
         matched_data[:doi].strip
