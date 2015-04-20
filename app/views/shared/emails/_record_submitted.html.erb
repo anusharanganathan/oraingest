@@ -1,8 +1,12 @@
-<%# data hash will have 'record_url' and 'record_id'. user will have all of the user properties. %>
+<%# data hash will have 'record_url', 'record_id', 'doi_requested' and 'doi'. user will have all of the user properties. %>
 <% if user.display_name && !data['record_url'].empty? %>
 Dear <%= user.display_name %>,
 Thank you for submitting your record in My ORA. <%= data['record_url'] %> was recieved successfully and will be reviewed by ORA staff, before making it available in ORA (http://ora.ox.ac.uk).
 In the mean time your record will continue to be available in the My ORA interface.
+
+<% if data.has_key?('doi_requested') and data['doi_requested'] and data.has_key?('doi') and data['doi'] %>
+You have requested a DOI to be registered for your record. The DOI minted for your record is "DOI: <%=data['doi']%>. This DOI will be registered with Datacite, once the record is published is ORA  and can be used to cite your data.
+<% end %>
 
 If you need to contact the ORA review team with any queries, just reply to this email, making sure you do not modify the subject.
 
