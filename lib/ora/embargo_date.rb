@@ -61,8 +61,8 @@ module Ora
       endDateType = nil
       numberOfYears = nil
       numberOfMonths = nil
-      if !params[:embargoDate].nil? || !params[:embargoDate].nil?
-        if !params[:embargoDate][:end].nil? && !params[:embargoDate][:end].nil?
+      if !params[:embargoDate].nil?
+        if !params[:embargoDate][:end].nil?
           if !params[:embargoDate][:end][:date].nil? && !params[:embargoDate][:end][:label].nil? && params[:embargoDate][:end][:label] == "Stated"
             begin
               endDate = Time.parse(params[:embargoDate][:end][:date])
@@ -77,7 +77,7 @@ module Ora
           vals[:embargoDate][0][:end][0][:label] = "Stated"
         else
           # get the start date
-          if !params[:embargoDate][:start].nil? && !params[:embargoDate][:start].nil?
+          if !params[:embargoDate][:start].nil?
             if params[:embargoDate][:start][:label] == "Today"
               startDateType = "Date"	
               startDate = Time.now
@@ -98,7 +98,7 @@ module Ora
             end
           end
           # Get the duration
-          if !params[:embargoDate][:duration].nil? && !params[:embargoDate][:duration].nil?
+          if !params[:embargoDate][:duration].nil?
             if params[:embargoDate][:duration][:years]
               numberOfYears = params[:embargoDate][:duration][:years].to_i
             end
