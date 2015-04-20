@@ -48,8 +48,8 @@
         <div class="fieldset">
           <p class="small">DOI</p>
           <%= hidden_field_tag(:mintedDoi, @doi) %>
-           <button type="button" class="button light-blue" onclick="displayDoi()">Get a DOI </button>
-          <% if (!p2.doi.nil? && !p2.doi.first.blank?) || !@files.blank? %>
+          <% if !@files.blank? %>
+            <button type="button" class="button light-blue" onclick="displayDoi()">Get a DOI </button>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", :readonly => true, data: {"progress" => "citation"} %>
           <% else %>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", data: {"progress" => "citation"} %>
