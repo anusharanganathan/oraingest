@@ -15,6 +15,18 @@ module DoiMethods
     doi
   end
 
+  def doi_requested
+    status = false
+    if !self.workflows.nil? && !self.workflows.first.nil? && !self.workflows.first.involves.nil?
+      self.workflows.first.involves.each do |event|
+        if event.include?("Register doi")
+          status = true
+        end
+      end
+    end
+    status
+  end
+
   def doi_data
     contributorTypes = [
       "ContactPerson",
