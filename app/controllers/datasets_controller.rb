@@ -109,6 +109,7 @@ class DatasetsController < ApplicationController
   end
 
   def edit
+    # Only edits for drafts and referred allowed. Not published items. So need not check for doi_requested in workflow
     authorize! :edit, params[:id]
     if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
