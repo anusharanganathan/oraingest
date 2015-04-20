@@ -52,6 +52,16 @@
           <% end %>
         </table>
       <% end %>
+      <% if !wf.involves.nil? and !wf.involves.empty? %>
+        <h4>Events involved</h4>
+        <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+          <% wf.involves.each do |event| %>
+            <tr>
+              <td><%=event%></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
     <% end %>
   </div>
 </div>
