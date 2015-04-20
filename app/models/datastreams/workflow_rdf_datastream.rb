@@ -141,7 +141,7 @@ class Workflow
       submission_entry.date.first
     end
   end
- 
+
   def persisted?
     false
   end
