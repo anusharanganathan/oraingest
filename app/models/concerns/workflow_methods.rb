@@ -8,7 +8,11 @@ module WorkflowMethods
     # send email
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
     record_url = Rails.application.routes.url_helpers.url_for(:controller => models[model], :action=>'show', :id => self.id)
-    ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", {"record_id" => self.id, "record_url" => record_url}, current_user, model)
+    data = {"record_id" => self.id, "record_url" => record_url, "doi_requested"=>self.doi_requested}
+    if self.doi_requested
+      data["doi"] = self.doi
+    end
+    ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, model)
     # publish record
     publishRecord("MediatedSubmission", current_user)
   end
