@@ -70,8 +70,6 @@ gem 'paperclip', '>=3.1.0'
 
 gem 'rt-client'
 
-gem 'hydra-remote_identifier'
-
 group :development, :test do
   gem "rspec-rails"
   #gem 'jettywrapper', "~> 1.5.0"
