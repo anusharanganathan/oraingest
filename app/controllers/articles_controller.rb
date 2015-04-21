@@ -71,10 +71,6 @@ class ArticlesController < ApplicationController
 
   def index
     redirect_to publications_path
-    #Grab users recent documents
-    #recent_me_not_draft
-    #recent_me_draft
-    #@model = 'article'
   end
 
   def show
@@ -93,7 +89,9 @@ class ArticlesController < ApplicationController
 
   def edit
     authorize! :edit, params[:id]
-    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
+    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
       authorize! :review, params[:id]
     end
     @pid = params[:id]
@@ -103,6 +101,9 @@ class ArticlesController < ApplicationController
 
   def edit_detailed
     authorize! :edit, params[:id]
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
+    end
     authorize! :review, params[:id]
     @pid = params[:id]
     @files = contents
@@ -148,7 +149,9 @@ class ArticlesController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to delete while record is being migrated!", :read, Article)
+    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
     @article.destroy
