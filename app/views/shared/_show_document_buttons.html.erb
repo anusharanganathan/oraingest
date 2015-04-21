@@ -1,10 +1,12 @@
 <% if can? :review, :all %>
   <!-- show button -->
   <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
-  <!-- edit button -->
-  <a href="<%= document_url(document.modelName, 'edit', document.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
-  <!-- delete button -->
-  <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue" data-method="delete" data-confirm="Are you sure?">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
+  <% if document.submission_workflow_status != "Migrate" %>
+    <!-- edit button -->
+    <a href="<%= document_url(document.modelName, 'edit', document.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
+    <!-- delete button -->
+    <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue" data-method="delete" data-confirm="Are you sure?">Delete<%= image_tag "ora/icons/delete.svg", class: "icon icon-read" %></a>
+  <% end %>
 <% else %>
   <% if can? :show, document.id %>
     <!-- show button -->
