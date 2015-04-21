@@ -1,20 +1,23 @@
-<% if @files %>
-  <div><table>
-  <% @files.each do |file| %>
-    <tr class="template-download">
-      <td class="preview">
-        <% if file['thumbnail_url'] %>
-          <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt: "View file") %></span>
-        <% end %>
-      </td>
-      <td class="name">
-        <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
-        <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
-      </td>
-      <td class="Delete">
-        <span class="label label-warning"><%= link_to 'Delete', file['delete_url'], method: :delete, data: { confirm: 'Are you sure?' } %></span>
-      </td>
-    </tr>
-  <% end %>
-  </table></div>
+<% if !@files.empty? %>
+  <div>
+    <p>You can choose to apply an embargo to your file(s) on the <i>Data archiving and access</i> tab (Step 5).</p>
+    <table>
+    <% @files.each do |file| %>
+      <tr class="template-download">
+        <td class="preview">
+          <% if file['thumbnail_url'] %>
+            <span class=""><img src="/assets/<%=file['thumbnail_url']%>" alt: "View file") %></span>
+          <% end %>
+        </td>
+        <td class="name">
+          <span><a href="<%=file['url']%>" title="<%=file['name']%>" rel= "<%=file['thumbnail_url']%> gallery" download= "<%file['name']%>" target="_blank"><%= file['name'] %></a> </span>
+          <span>(<%=ActionController::Base.helpers.number_to_human_size(file['size'], precision: 2)%>)</span>
+        </td>
+        <td class="Delete">
+          <span class="label label-warning"><%= link_to 'Delete', file['delete_url'], method: :delete, data: { confirm: 'Are you sure?' } %></span>
+        </td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
 <% end %>
