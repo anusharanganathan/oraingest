@@ -26,7 +26,7 @@
     <% if !p.hasDocument.nil? %>
       <% p.hasDocument.each do |p2| %>
         <% if !p2.doi.empty? && !p2.doi[0].empty? %>
-          <p><span class="h6">DOI:</span> <%= p2.doi.first %></p>
+          <p><span class="h6">DOI:</span> <%= link_to p2.doi.first, article.remote_uri_for(p2.doi.first).to_s %></p>
         <% end %>
       <% end #each document %>
     <% end #hasDocument %> 
