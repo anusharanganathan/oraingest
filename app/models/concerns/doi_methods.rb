@@ -3,12 +3,13 @@ require 'id_service'
 module DoiMethods
   extend ActiveSupport::Concern
 
-  def doi
+  def doi(mint=true)
+    doi = nil
     if (!self.publication.nil? && !self.publication[0].nil? &&
        !self.publication[0].hasDocument.nil? && !self.publication[0].hasDocument[0].nil? &&
        !self.publication[0].hasDocument[0].doi.nil? && !self.publication[0].hasDocument[0].doi[0].blank?)
       doi = self.publication[0].hasDocument[0].doi[0]
-    else
+    elsif mint
       doi = Sufia::Noid.noidify(Sufia::IdService.mint_doi)
       doi = Sufia::Noid.doize(doi)
     end
@@ -156,6 +157,19 @@ module DoiMethods
       doi_data[:description] << {description: self.abstract[0], type: "Abstract"}
     end
     doi_data
+  end
+
+  def normalize_doi(value)
+    resolver_url = Sufia.config.doi_credentials.fetch(:resolver_url)
+    value.to_s.strip.
+        sub(/\A#{resolver_url}/, '').
+        sub(/\A\s*doi:\s+/, 'doi:').
+        sub(/\A(\d)/, 'doi:\1')
+  end
+
+  def remote_uri_for(identifier)
+    resolver_url = Sufia.config.doi_credentials.fetch(:resolver_url)
+    URI.parse(File.join(resolver_url, normalize_doi(identifier)))
   end
 
 end
