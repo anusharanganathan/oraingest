@@ -3,12 +3,14 @@ Changelog
 
 1.2
 ------------------
-- Improve workflow and limits for file upload in forms
+- Improve workflow and limits for file upload in forms and add help text
 - Modify inheritance of javascript files
 - Mint DOIs for Datasets and register once published
 - Funder field is no longer mandatory
 - Fix rdf model for publication activity
 - Index and display published records in ORA
+- Modify workflow and corresponding states for reviewing
+- Display DOI's as hypertexts
 
 1.1
 ------------------
