@@ -78,7 +78,7 @@
           <p><span class="h6">Article number:</span> <%= p2.identifier.first %></p>
         <% end %>
         <% if !p2.doi.empty? && !p2.doi[0].empty? %>
-          <p><span class="h6">DOI:</span> <%= p2.doi.first %></p>
+          <p><span class="h6">DOI:</span><%=link_to p2.doi.first, article.remote_uri_for(p2.doi.first).to_s %></p>
         <% end %>
         <% if !p2.uri.empty? && !p2.uri[0].empty? %>
          <p><span class="h6">URI:</span> <%= p2.uri.first %></p>
