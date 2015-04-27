@@ -36,6 +36,7 @@
       2. About your data
     </div>
     <div class="padding-0">
+        <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
         <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
         <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
         <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %> 
@@ -49,7 +50,15 @@
     <div class="content-box-header expand-header">
       <div class="space-right">Add subject, keywords, dates, geographical location and language information to your data</div>
     </div>
+    
     <div class="expand-content">
+    
+      <div class="fieldset">
+        <p class="small">Abstract or brief description of research context</p>
+        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
+        <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." } %>
+      </div>
+      
       <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
 
       <div class="padding-side-25">
@@ -91,30 +100,8 @@
         <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Geographical location" , :tipDescription => "If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085)." } %>
       </div>
 
-      <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
-
       <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
     </div>
-  </div>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">Add a description of your research</div>
-    </div>
-    <div class="expand-content">
-      <div class="fieldset">
-        <p class="small">Version number</p>
-        <%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Version number" , :tipDescription => "If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here." } %>
-      </div>
-
-      <div class="fieldset">
-        <p class="small">Abstract or brief description of research context</p>
-        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." } %>
-      </div>
-    </div>
-
   </div>
 
   <nav class="form-nav">
@@ -216,11 +203,11 @@
   </div>
 
   <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your data more discoverable via search engines.</p>
+  <p>Apply a licence to your research data and choose their terms of use.</p>
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      <div class="space-right">Licence your data</div>
+      <div class="space-right">License your data</div>
     </div>
     <div class="expand-content">
 

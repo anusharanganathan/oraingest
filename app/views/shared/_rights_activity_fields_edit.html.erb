@@ -10,9 +10,14 @@
       <p class="small">Assign a licence to your data</p>
       <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
     </label>
-    <% desc = "Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text of
-      any bespoke licence, access terms and conditions." %>
-    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Assign a license", :tipDescription => desc } %>
+    <% desc = "If you wish, you may select a standard licence from the list, or 
+               choose 'bespoke licence' and enter (or paste in) the text of any bespoke licence, access terms and conditions.
+               For guidance on how to license research data, please see: 
+               Ball, A. (2012). ‘How to License Research Data’. DCC How-to Guides. Edinburgh: Digital Curation Centre.
+               Available online: 
+               <a href='http://www.dcc.ac.uk/resources/how-guides/license-research-data'>
+               http://www.dcc.ac.uk/resources/how-guides/license-research-data</a>" %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Assign a licence", :tipDescription => desc } %>
   </div>
 
   <div class="fieldset" style="display: none;" id="license-statement">
