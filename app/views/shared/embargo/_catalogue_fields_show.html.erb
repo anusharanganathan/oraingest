@@ -36,7 +36,7 @@
       <% if article.accessRights[0].embargoInfo.has_key?('embargoReason') %>
         <h6>Embargo reason:</h6>
         <% article.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
-          <p><%=er%></p>
+          <p><%=simple_format(er)%></p>
         <% end %>
       <% end %>
       <!-- release method -->

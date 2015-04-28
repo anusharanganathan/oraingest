@@ -16,7 +16,7 @@
 
 <% if !article.abstract.empty? && !article.abstract[0].empty? %>
   <h6>Abstract:</h6>
-  <p><%= article.abstract.first %></p>
+  <p><%= simple_format(article.abstract.first) %></p>
 <% end %>
 
 <% if !article.medium.empty? && !article.medium[0].empty? %>
