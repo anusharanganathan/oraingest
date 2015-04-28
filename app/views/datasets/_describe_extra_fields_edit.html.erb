@@ -5,10 +5,10 @@
       <p class="small reqlabel">Is your data in digital format?</p>   
     <fieldset class="small-text">
       <label panel="dataset-format-digital">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :class => "required", :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital required", data: {"category" => "documentation"} %><span></span> Yes        
+        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital required", data: {"category" => "documentation"} %><span></span> Yes        
       </label>
       <label panel="dataset-format-physical">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :class => "required", :onchange => "toggleDigitalFieldsDisplay('analog')",  :class => "medium-analog required", data: {"category" => "documentation"} %><span></span> No
+        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')",  :class => "medium-analog required", data: {"category" => "documentation"} %><span></span> No
       </label>
     </fieldset>
     <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Data medium" , :tipDescription => "Please indicate whether the data you are describing are in the form of digital files, or whether they are physical notes or specimens etc." } %>
