@@ -16,7 +16,7 @@
 
 <% if !@dataset.abstract.empty? && !@dataset.abstract.first.empty? %>
   <h6>Abstract or brief description of research context:</h6>
-  <p><%= @dataset.abstract.first %></p>
+  <p><%= simple_format(@dataset.abstract.first) %></p>
 <% end %>
 
 <%= render partial: "shared/mads_subject_fields_show", :locals => { :article => @dataset } %>
@@ -32,7 +32,7 @@
 
 <% if !@dataset.isDocumentedBy.empty? && !@dataset.isDocumentedBy.first.empty? %>
   <h6>Documentation about the dataset and processes:</h6>
-  <p><%= @dataset.isDocumentedBy.first %></p>  
+  <p><%= simple_format(@dataset.isDocumentedBy.first) %></p>
 <% end %>
 
 <% if !@dataset.temporal.nil? && !@dataset.temporal.first.nil? && !@dataset.temporal.first.start.empty? && !@dataset.temporal.first.start.first.empty? %>

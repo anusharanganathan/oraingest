@@ -40,7 +40,7 @@
 
           <% if !r.entity[0].description.empty? && !r.entity[0].description[0].empty? %>
             <h6>Description:</h6>
-            <p><%= r.entity[0].description.first %></p>
+            <p><%= simple_format(r.entity[0].description.first) %></p>
           <% end %>
 
           <% if !r.entity[0].citation.empty? && !r.entity[0].citation[0].empty? %>

@@ -51,7 +51,7 @@
         
         <% if !article.hasRelatedAgreement.invoice.nil? && !article.hasRelatedAgreement.invoice.first.nil? && !article.hasRelatedAgreement.invoice.first.description.empty? && !article.hasRelatedAgreement.invoice.first.description.first.empty? %>
           <h6>Archiving payment option details:</h6>
-          <p><%= article.hasRelatedAgreement.invoice.first.description.first %></p>
+          <p><%= simple_format(article.hasRelatedAgreement.invoice.first.description.first) %></p>
         <% end #Invoice details%>
         <%= render partial: "shared/creation_agreement_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>
         <%= render partial: "shared/titular_activity_fields_show", :locals => { :article => article.hasRelatedAgreement } %>

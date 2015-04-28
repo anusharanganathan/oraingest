@@ -38,7 +38,7 @@
         <% if !@dataset_agreement.invoice.first.description.empty? && !@dataset_agreement.invoice.first.description.first.empty? %>
           <p>
             <strong>Archiving payment option details:</strong>
-            <%= @dataset_agreement.invoice.first.description.first %>
+            <%= simple_format(@dataset_agreement.invoice.first.description.first) %>
           </p>
         <% end %>
         <% if can? :review, DatasetAgreement %>
