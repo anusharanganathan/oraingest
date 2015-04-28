@@ -56,9 +56,7 @@
 		  <p>Add an abstract or brief description of the related item.</p>
 		  <p>If applicable, enter the DOI or URL of the related item. If the related item does not have a DOI or URL, please give a citation for it.</p>" 
 	  %>
-   <% end %>	  
-  
-   <% if @model=='dataset' %>
+   <% elsif @model=='dataset' %>
 	  <% desc = "<p>You can use this field to link your data to any related publications or datasets.</p>
 		  <p>Please enter the title of any related item (e.g. a publication which your data underpins, or another version of your dataset),
 		     and select the option that best describes the relationship between your data and the related item (e.g. ‘My dataset is referenced by this related item’).</p>

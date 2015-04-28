@@ -15,9 +15,7 @@
     <% if @model=='article' %>
 	    <% desc = "Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text of any bespoke licence, access terms and conditions." 
 	     %>
-    <% end %>
-    
-    <% if @model=='dataset' %>
+    <% elsif @model=='dataset' %>
 	    <% desc = "If you wish, you may select a standard licence from the list, or 
 	               choose 'bespoke licence' and enter (or paste in) the text of any bespoke licence, access terms and conditions.
 	               For guidance on how to license research data, please see: 
