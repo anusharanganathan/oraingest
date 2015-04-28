@@ -19,7 +19,7 @@
             <td><%= entry.creator.first %></td>
             <td><%= entry.status.first %></td>
             <td><%= entry.reviewer_id.first %></td>
-            <td><%= entry.description.first %></td>
+            <td><%= simple_format(entry.description.first) %></td>
           </tr>
         <% end %>
       </table>
@@ -33,7 +33,7 @@
             <tr>
               <td><%= format_date(comment.date.first) %></td>
               <td><%= comment.creator.first %></td>
-              <td><%= comment.description.first %></td>
+              <td><%= simple_format(comment.description.first) %></td>
             </tr>
           <% end %>
         </table>

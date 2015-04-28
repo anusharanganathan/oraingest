@@ -21,7 +21,7 @@
     <% end %>
     <% if !select.nil? %>
       <% if !select.description.empty? %>
-        <span class="small"><%= select.description.first %></span>
+        <span class="small"><%= simple_format(select.description.first) %></span>
       <% end %>
       <% if !select.type.empty? %>
         <h6>Type:</h6>
