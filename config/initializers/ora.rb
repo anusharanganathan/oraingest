@@ -171,18 +171,24 @@ Sufia.config do |config|
 
   config.embargo_reasons = {
     "article" => {
-      "Publisher's requirement" => "Publishers requirement", 
-      "Legal or ethical reasons" => "Legal or ethical reasons",
       "Commercial confidentiality" => "Commercial confidentiality",
-      "National security" => "National security",
-      "Conditional access only" => "Conditional access only"
+      "Publication pending" => "Publication pending", 
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
+      "Patent pending"  => "Patent pending"
     },
     "dataset" => {
-      "Publisher's requirement" => "Publishers requirement", 
-      "Legal or ethical reasons" => "Legal or ethical reasons",
       "Commercial confidentiality" => "Commercial confidentiality",
-      "National security" => "National security",
-      "Conditional access only" => "Conditional access only"
+      "Publication pending" => "Publication pending", 
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
+      "Patent pending"  => "Patent pending"
     }
   }
 
@@ -217,11 +223,15 @@ Sufia.config do |config|
       "Translator" => RDF::ORA.translator
     },
     "data_steward" => {
-      "Principal Investigator" => RDF::ORA.principalInvestigator,
       "Creator" => RDF::DC.creator,
+      "Departmental Administrator" => RDF::ORA.departmentalAdministrator,
       "Head of Department" => RDF::ORA.headOfDepartment,
       "Head of Faculty" => RDF::ORA.headOfFaculty,
       "Head of Research Group" => RDF::ORA.headOfResearchGroup,  
+      "Information/Data Manager" => RDF::ORA.informationOrDataManager,     
+      "Laboratory Manager" => RDF::ORA.laboratoryManager,         
+      "Principal Investigator (PI)" => RDF::ORA.principalInvestigator,
+      "Subject Librarian" => RDF::ORA.subjectLibrarian, 
     },
     "dataset_agreement" => {
       "Data steward" => RDF::ORA.DataSteward
