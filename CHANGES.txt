@@ -11,6 +11,9 @@ Changelog
 - Index and display published records in ORA
 - Modify workflow and corresponding states for reviewing
 - Display DOI's as hypertexts
+- Updated helper text
+- List of roles for data steward expanded
+- Removed the form fill tracker
 
 1.1
 ------------------
