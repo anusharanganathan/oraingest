@@ -59,6 +59,12 @@
         <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." } %>
       </div>
       
+       <div class="fieldset">
+		<p class="small">Version number</p>
+		<%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
+		<%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Version number" , :tipDescription => "If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here." } %>
+	  </div>
+	  
       <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
 
       <div class="padding-side-25">
