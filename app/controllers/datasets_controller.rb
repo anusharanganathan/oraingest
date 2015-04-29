@@ -289,11 +289,11 @@ class DatasetsController < ApplicationController
     # Save file to disk
     location = @dataset.save_file(file, @dataset.id)
     #Save the location and add the file size to the admin datastream
-    if !@dataset.locator.include?(File.dirname(location))
-      @dataset.locator << File.dirname(location)
+    if !@dataset.adminLocator.include?(File.dirname(location))
+      @dataset.adminLocator << File.dirname(location)
     end
-    size = Integer(@dataset.digitalSize.first) rescue 0
-    @dataset.digitalSize = size + file.size
+    size = Integer(@dataset.adminDigitalSize.first) rescue 0
+    @dataset.adminDigitalSize = size + file.size
     @dataset.medium = Sufia.config.data_medium["Digital"]
      
     # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
