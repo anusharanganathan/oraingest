@@ -7,12 +7,18 @@ function toggleDatasetAgreementDisplay(val) {
   }
 }
 
-function toggleDigitalFieldsDisplay(val) {
+function toggleLocatorFieldsDisplay(val) {
   if (val == "digital") {
     // Display form fields relating to digital data type
-    $("#digitalFields").css('display', 'inline');
+    $("#data_locator_digital").prop('disabled', false);
+    $("#data_locator_analog").prop('disabled', true);
   } else {
-    $("#digitalFields").css('display', 'none');
+    $("#data_locator_digital").prop('disabled', true);
+    $("#data_locator_analog").prop('disabled', false);
+    $("#dataset_digitalSize").val("");
+    $("#dataset_digitalSize").attr("value", "");
+    $("#dataset_format").val("");
+    $("#dataset_format").attr("value", "");
   }
 }
 
