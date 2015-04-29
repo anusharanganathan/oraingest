@@ -19,7 +19,7 @@
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"category" => "documentation"} %>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_digital",  data: {"category" => "documentation"} %>
       </label>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Storage location" , :tipDescription => "<p>Please indicate where the data are located.</p> <p>If the data are not available online, please give details of whom to contact to enquire about the data.</p> <p>You could add the DOI or the url of the data location, if published on the web.</p>" } %>
     </div><!-- /fieldset -->
@@ -46,7 +46,7 @@
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", data: {"category" => "documentation"} %>
+        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_physical", data: {"category" => "documentation"} %>
       </label>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Storage location" , :tipDescription => "Please indicated where the data are located. If the data are not available online please give details of whom to contact to enquire about the data." } %>
     </div><!-- /fieldset -->
