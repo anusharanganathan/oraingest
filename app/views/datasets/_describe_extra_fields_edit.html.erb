@@ -5,10 +5,10 @@
       <p class="small reqlabel">Is your data in digital format?</p>   
     <fieldset class="small-text">
       <label panel="dataset-format-digital">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleDigitalFieldsDisplay('digital')", :class => "medium-digital required", data: {"category" => "documentation"} %><span></span> Yes        
+        <%= f.radio_button :medium, Sufia.config.data_medium["Digital"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Digital"]), :onchange => "toggleLocatorFieldsDisplay('digital')", :class => "medium-digital required", data: {"category" => "documentation"} %><span></span> Yes        
       </label>
-      <label panel="dataset-format-physical">
-        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleDigitalFieldsDisplay('analog')",  :class => "medium-analog required", data: {"category" => "documentation"} %><span></span> No
+      <label panel="dataset-format-analog">
+        <%= f.radio_button :medium, Sufia.config.data_medium["Analog"], :checked => (@dataset.medium[0] == Sufia.config.data_medium["Analog"]), :onchange => "toggleLocatorFieldsDisplay('analog')",  :class => "medium-analog required", data: {"category" => "documentation"} %><span></span> No
       </label>
     </fieldset>
     <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Data medium" , :tipDescription => "Please indicate whether the data you are describing are in the form of digital files, or whether they are physical notes or specimens etc." } %>
@@ -19,7 +19,11 @@
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_digital",  data: {"category" => "documentation"} %>
+        <% if (@dataset.medium[0] == Sufia.config.data_medium["Digital"]) %>
+          <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_digital",  data: {"category" => "documentation"} %>
+        <% else %>
+          <%= f.text_field :locator, :value=>"", :style=>"width: 50%;", :id=>"data_locator_digital",  data: {"category" => "documentation"} %>
+        <% end %>
       </label>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Storage location" , :tipDescription => "<p>Please indicate where the data are located.</p> <p>If the data are not available online, please give details of whom to contact to enquire about the data.</p> <p>You could add the DOI or the url of the data location, if published on the web.</p>" } %>
     </div><!-- /fieldset -->
@@ -41,12 +45,16 @@
     </div><!-- /fieldset -->
   </div><!-- /expand-panel -->
 
-  <div class="expand-panel" id="dataset-format-physical" >
+  <div class="expand-panel" id="dataset-format-analog" >
     <h5>Physical data information</h5>
     <div class="fieldset">
       <label>
         <p class="small">Storage location</p>
-        <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_physical", data: {"category" => "documentation"} %>
+        <% if (@dataset.medium[0] == Sufia.config.data_medium["Analog"]) %>
+          <%= f.text_field :locator, :value=>@dataset.locator.first, :style=>"width: 50%;", :id=>"data_locator_analog", data: {"category" => "documentation"} %>
+        <% else %>
+          <%= f.text_field :locator, :value=>"", :style=>"width: 50%;", :id=>"data_locator_analog", data: {"category" => "documentation"} %>
+        <% end %>
       </label>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Storage location" , :tipDescription => "Please indicated where the data are located. If the data are not available online please give details of whom to contact to enquire about the data." } %>
     </div><!-- /fieldset -->
