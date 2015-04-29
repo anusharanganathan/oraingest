@@ -13,6 +13,7 @@ class Article < ActiveFedora::Base
   include Hydra::ModelMethods
   include WorkflowMethods
   include BuildMetadata
+  include DoiMethods
 
   attr_accessible *(ArticleRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + ArticleAdminRdfDatastream.fields)
   
