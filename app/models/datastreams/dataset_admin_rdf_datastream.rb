@@ -5,7 +5,7 @@ require 'vocabulary/bibo'
 
 class DatasetAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :hasAgreement, :storageAgreement, :note, :locator, :digitalSize
+  attr_accessor :hasAgreement, :storageAgreement, :note, :adminLocator, :adminDigitalSize
 
   map_predicates do |map|
     # For internal relations
@@ -13,8 +13,8 @@ class DatasetAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.hasAgreement(:in => RDF::ORA)
     map.storageAgreement(:in => RDF::ORA, class_name:"AgreementDetails")
     map.note(:to => "annotation", :in => RDF::ORA)
-    map.locator(:in => RDF::ORA)
-    map.digitalSize(:in => RDF::ORA)
+    map.adminLocator(:to => "locator", :in => RDF::ORA)
+    map.adminDigitalSize(:to => "digitalSize", :in => RDF::ORA)
   end
   accepts_nested_attributes_for :storageAgreement
 
@@ -29,8 +29,8 @@ class DatasetAdminRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       solr_doc[Solrizer.solr_name("admin_metadata__agreementTitle", :stored_searchable)] = self.storageAgreement.first.title.first
       solr_doc[Solrizer.solr_name("admin_metadata__agreementIdentifier", :symbol)] = self.storageAgreement.first.identifier.first
     end
-    solr_doc[Solrizer.solr_name("admin_metadata__locator", :stored_searchable)] = self.locator
-    solr_doc[Solrizer.solr_name("admin_metadata__digitalSize", :symbol)] = self.digitalSize
+    solr_doc[Solrizer.solr_name("admin_metadata__locator", :stored_searchable)] = self.adminLocator
+    solr_doc[Solrizer.solr_name("admin_metadata__digitalSize", :symbol)] = self.adminDigitalSize
     solr_doc
   end
 
