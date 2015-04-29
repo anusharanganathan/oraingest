@@ -248,12 +248,12 @@ module BuildMetadata
     extRelations.each_with_index do |rel, rel_index|
       if rel[:entity_attributes]["0"]['identifier'].nil? || rel[:entity_attributes]["0"]['identifier'].empty?
         rel[:entity_attributes]["0"]['id'] = "info:fedora/#{self.id}#externalRelation#{rel_index.to_s}"
-      elsif rel[:entity_attributes]["0"]['identifier'].start_with?('10.')
-        rel[:entity_attributes]["0"]['id'] = "http://dx.doi.org/#{rel[:entity_attributes]["0"]['id']}"
-      elsif !rel[:entity_attributes]["0"]['identifier'].start_with?('http')
-        rel[:entity_attributes]["0"]['id'] = "info:fedora/#{self.id}#externalRelation#{rel_index.to_s}"
-      else
+      elsif rel[:entity_attributes]["0"]['identifier'].include?('10.')
+        rel[:entity_attributes]["0"]['id'] = self.remote_uri_for(rel[:entity_attributes]["0"]['identifier'])
+      elsif rel[:entity_attributes]["0"]['identifier'].start_with?('http')
         rel[:entity_attributes]["0"]['id'] = rel[:entity_attributes]["0"]['identifier']
+      else
+        rel[:entity_attributes]["0"]['id'] = "info:fedora/#{self.id}#externalRelation#{rel_index.to_s}"
       end
       influences.push(rel[:entity_attributes]["0"]['id'])
       rel['id'] = "info:fedora/%s#qualifiedRelation%d" % [self.id, rel_index]
