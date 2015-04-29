@@ -31,9 +31,23 @@ var sequentialUploads = true;
     var error_string =''; 
 
     function saveForm() {
+      // do not validate
       $(".ora-validate-form").validate().settings.ignore = "*";
+      // set workflow status to default
       $("#workflow_submit_entries_status").val($(this).attr("data-default-value"));
       $("#workflow_submit_entries_status").attr("value", $(this).attr("data-default-value"));
+      // set format of data to none
+      $("#dataset_format").val("");
+      $("#dataset_format").attr("value", "");
+      // set size of data to none
+      $("#dataset_digitalSize").val("");
+      $("#dataset_digitalSize").attr("value", "");
+      // set location of data to none
+      $("#data_locator_digital").val("");
+      $("#data_locator_digital").attr("value", "");
+      $("#data_locator_analog").val("");
+      $("#data_locator_analog").attr("value", "");
+      // get redirect field
       var focusid = $(document.activeElement).closest('[id]').attr('id');
       if (focusid && $("form#new_record_fields #"+focusid).length) {
         var inputid = "";
