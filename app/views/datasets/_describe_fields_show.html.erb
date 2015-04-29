@@ -70,21 +70,25 @@
   <% end %>
   </p>
 <% end %>
-
-<% if !@dataset.locator.empty? && !@dataset.locator.first.empty? %>
-  <p><span class="h6">Data location:</span>
-  <%= @dataset.locator.first %></p>
+<% if @files.empty? %>
+  <% if !@dataset.locator.empty? && !@dataset.locator.first.empty? %>
+    <p><span class="h6">Data location:</span>
+    <%= @dataset.locator.first %></p>
+  <% end %>
+  <% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
+    <p><span class="h6">Approximate data size:</span>
+    <%= ActionController::Base.helpers.number_to_human_size(@dataset.digitalSize.first, precision: 2) %></p>
+  <% end %>
+  <% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
+    <p><span class="h6">Data format:</span>
+    <%= @dataset.format.first %></p>
+  <% end %>
+<% else %>
+  <% if !@dataset.adminDigitalSize.empty? && !@dataset.adminDigitalSize.first.empty? %>
+    <p><span class="h6">Approximate data size:</span>
+    <%= ActionController::Base.helpers.number_to_human_size(@dataset.adminDigitalSize.first, precision: 2) %></p>
+  <% end %>
 <% end %>
-
-<% if !@dataset.digitalSize.empty? && !@dataset.digitalSize.first.empty? %>
-  <p><span class="h6">Approximate data size:</span>
-  <%= ActionController::Base.helpers.number_to_human_size(@dataset.digitalSize.first, precision: 2) %></p>
-<% end %>
-<% if !@dataset.format.empty? && !@dataset.format.first.empty? %>
-  <p><span class="h6">Data format:</span>
-  <%= @dataset.format.first %></p>
-<% end %>
-
 <% if !@dataset.version.empty? && !@dataset.version.first.empty? %>
   <p><span class="h6">Version number:</span>
   <%= @dataset.version.first %></p>
