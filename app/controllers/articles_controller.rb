@@ -84,6 +84,7 @@ class ArticlesController < ApplicationController
     @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
+    @files = []
     @model = 'article'
   end
 
