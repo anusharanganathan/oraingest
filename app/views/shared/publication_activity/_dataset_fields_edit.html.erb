@@ -51,10 +51,14 @@
           <% if !@files.blank? %>
             <button type="button" class="button light-blue" onclick="displayDoi()">Get a DOI </button>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", :readonly => true, data: {"progress" => "citation"} %>
+            <% desc = "Please select this option if you would like to receive an instant DOI (Digital Object Identifier) for your dataset. <br/>
+                       N.B. You may cite this DOI in any papers you may be submitting for publication, but it will not become a 'live' 
+                       working DOI link until the ORA-Data team have reviewed your deposit and published the catalogue record for your data online in ORA" %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => desc } %>
           <% else %>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", data: {"progress" => "citation"} %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => "What is the DOI of your dataset?" } %>
           <% end %>
-          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => "What is the DOI of your dataset?" } %>
         </div>
 
       <% end #fields for each document %>
