@@ -62,7 +62,7 @@ class DatasetFilesController < ApplicationController
       parts = @dataset.hasPart
       @dataset.hasPart = nil
       @dataset.hasPart = parts.select { |key| not key.id.to_s.include? params[:dsid] }
-      @dataset.digitalSize = Integer(@dataset.digitalSize.first) - Integer(opts['size']) rescue @dataset.digitalSize
+      @dataset.adminDigitalSize = Integer(@dataset.adminDigitalSize.first) - Integer(opts['size']) rescue @dataset.adminDigitalSize
       @dataset.save
     end
     respond_to do |format|
