@@ -14,6 +14,7 @@
     <% unless wf_id.nil? %>
       <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflows_id" %>
     <% end %>
+    <%= f_wf.hidden_field :involves, :value => wf.involves.first, :id => "workflow_submit_involves" %>
     <% if Sufia.config.next_workflow_status.include?(currentStatus) %>
       <h4>Update workflow status from <%=currentStatus%></h4>
       <% wf.entries.build %>

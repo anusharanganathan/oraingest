@@ -361,14 +361,16 @@ $(function() {
         var cat = $(this).data("category");
         $(this).data('progress', cat);
       });
+      toggleLocatorFieldsDisplay('digital');
     } 
     if ($(".medium-analog").first().is(':checked')) {
-      $("#dataset-format-physical").css("display","block");
-      $("#dataset-format-physical").css("opacity","1");
-      $("#dataset-format-physical").find("*[data-category]").each(function(){
+      $("#dataset-format-analog").css("display","block");
+      $("#dataset-format-analog").css("opacity","1");
+      $("#dataset-format-analog").find("*[data-category]").each(function(){
         var cat = $(this).data("category");
         $(this).data('progress', cat);
       });
+      toggleLocatorFieldsDisplay('analog');
     }
     // Funding
     $(".fundingAward").each(function(){
@@ -396,6 +398,11 @@ $(function() {
         });
       }
     });
+    // redirect to previous field
+    var eleid = $("#redirect_field").val();
+    if (eleid) {
+      highlight_field($("#"+eleid));
+    }
   }
 
   fixTracker();

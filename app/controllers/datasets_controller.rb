@@ -78,11 +78,6 @@ class DatasetsController < ApplicationController
 
   def index
     redirect_to list_datasets_path
-    #@datasets = Dataset.all
-    #Grab users recent documents
-    #recent_me_not_draft
-    #recent_me_draft
-    #@model = 'dataset'
   end
 
   def show
@@ -96,6 +91,8 @@ class DatasetsController < ApplicationController
     @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset = Dataset.new
+    @doi = @dataset.doi(mint=true)
+    @files = []
     @agreement = DatasetAgreement.new
     @agreement.title = "Agreement for #{@pid}"
     @agreement.agreementType = "Individual"
@@ -107,11 +104,15 @@ class DatasetsController < ApplicationController
   end
 
   def edit
+    # Only edits for drafts and referred allowed. Not published items. So need not check for doi_requested in workflow
     authorize! :edit, params[:id]
-    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
-       authorize! :review, params[:id]
+    if @dataset.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
+    elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+      authorize! :review, params[:id]
     end
     @pid = params[:id]
+    @doi = @dataset.doi(mint=true)
     @files = contents
     if !@files and @dataset.medium[0].empty?
       @dataset.medium[0] = Sufia.config.data_medium["Digital"]
@@ -135,7 +136,7 @@ class DatasetsController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:dataset)
-      add_metadata(params[:dataset])
+      add_metadata(params[:dataset], "")
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -147,10 +148,14 @@ class DatasetsController < ApplicationController
 
   def update
     @pid = params[:pid]
+    redirect_field = ""
+    if params.has_key?(:redirect_field)
+      redirect_field = params[:redirect_field]
+    end
     if params.has_key?(:files)
       create_from_upload(params)
     elsif dataset_params
-      add_metadata(params[:dataset])
+      add_metadata(params[:dataset], redirect_field)
     else
       format.html { render action: 'edit' }
       format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -159,7 +164,9 @@ class DatasetsController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+    if @dataset.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
+    elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
     @dataset.delete_dir(@dataset.id)
@@ -282,11 +289,11 @@ class DatasetsController < ApplicationController
     # Save file to disk
     location = @dataset.save_file(file, @dataset.id)
     #Save the location and add the file size to the admin datastream
-    if !@dataset.locator.include?(File.dirname(location))
-      @dataset.locator << File.dirname(location)
+    if !@dataset.adminLocator.include?(File.dirname(location))
+      @dataset.adminLocator << File.dirname(location)
     end
-    size = Integer(@dataset.digitalSize.first) rescue 0
-    @dataset.digitalSize = size + file.size
+    size = Integer(@dataset.adminDigitalSize.first) rescue 0
+    @dataset.adminDigitalSize = size + file.size
     @dataset.medium = Sufia.config.data_medium["Digital"]
      
     # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
@@ -349,7 +356,7 @@ class DatasetsController < ApplicationController
     end 
   end
 
-  def add_metadata(dataset_params)
+  def add_metadata(dataset_params, redirect_field)
     if !@dataset.workflows.nil? && !@dataset.workflows.first.entries.nil?
       old_status = @dataset.workflows.first.current_status
     else
@@ -377,7 +384,7 @@ class DatasetsController < ApplicationController
     end
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
+        format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.', flash: { redirect_field: redirect_field } }
         format.json { head :no_content }
       else
         # If a dataset agreement was created newly, roll back changes

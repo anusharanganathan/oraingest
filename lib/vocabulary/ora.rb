@@ -52,6 +52,7 @@ module RDF
     property :adapter
     property :author
     property :copyrightHolder
+    property :departmentalAdministrator
     property :depositor
     property :editor
     property :examiner
@@ -59,11 +60,14 @@ module RDF
     property :headOfDepartment
     property :headOfFaculty
     property :headOfResearchGroup
+    property :informationOrDataManager
+    property :laboratoryManager
     property :performer
     property :principalInvestigator
     property :researcher
     property :reviewer
     property :sponsor
+    property :subjectLibrarian
     property :supervisor
     property :translator
     # funding

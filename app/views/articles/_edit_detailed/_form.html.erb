@@ -24,8 +24,9 @@
   </nav>
 </section>
 
-<%= form_for @article, :html => {:id => "new_article_fields", :class => "ora-validate-form"} do |f| %>
+<%= form_for @article, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
 <%= hidden_field_tag(:pid, @pid) %>
+<%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
@@ -161,7 +162,7 @@
       6. Funders and licences
     </div>
     <div class="padding-25 no-pad-top no-pad-bottom">
-      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => true } %>
+      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
     </div>
 
   </div>
@@ -171,7 +172,7 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      <div class="space-right">Licence your data</div>
+      <div class="space-right">License your data</div>
     </div>
     <div class="expand-content">
       <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>

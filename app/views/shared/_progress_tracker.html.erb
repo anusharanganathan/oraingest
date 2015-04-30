@@ -7,8 +7,14 @@
   :preservation => 0
  }
 %>
-<div class="tracker">
-      <h4>Your submission</h4>
+
+<% if true %>
+	<div class="tracker"></div>
+<% end %>
+
+<% if false %> 
+  <div class="tracker">
+    <h4>Your submission</h4>
       <div class="chart" data-percent="<%= progress[:total] %>">
         <div>
           <span class="number"><span class="percentage"><%= progress[:total] %></span>%</span>
@@ -52,6 +58,5 @@
           </div>
         </div>
       </div>
-
-    </div>
-
+  </div>
+<% end %>

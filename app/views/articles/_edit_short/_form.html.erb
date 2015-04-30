@@ -14,8 +14,9 @@
     </div>
   </div>
 
-  <%= form_for @article, :html => {:id => "new_article_fields", :class => "ora-validate-form"} do |f| %>
+  <%= form_for @article, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
     <%= hidden_field_tag(:pid, @pid) %>
+    <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
 
     <!-- publication info -->
     <div class="padding-side-25 bottom-border">

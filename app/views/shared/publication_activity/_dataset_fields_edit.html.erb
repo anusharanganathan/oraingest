@@ -14,25 +14,55 @@
     <% end %>
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-        <div class="fieldset">
-          <p class="small reqlabel">Publisher name</p>
-          <%= f_p2.text_field :name, :required => true, :value => p2.name.first || "University of Oxford", data: {"progress" => "citation", "default-value" => "University of Oxford"} %>
-          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. For data produced at Oxford, this will usually be the University of Oxford." } %>
-        </div>
-        <!--
-        <div class="fieldset">
-          <p class="small">Publisher website</p>
-          <%#= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "documentation"} %>
-          <%#= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know the publisher's website, add it here." } %>
-        </div>
-        -->
+       <% if p2.agent.empty? %>
+          <% p2.agent.build %>
+        <% end %>
+        <% p2.agent.each do |p3| %>
+          <%= f_p2.fields_for :agent, p3 do |f_p3| %>
+            <% nameVal = p3.name.first || p2.name.first || "University of Oxford" #TODO: Remove once old model is deprecated %>
+            <% websiteVal = p3.website.first || p2.website.first #TODO: Remove once old model is deprecated %>
+            <div class="fieldset">
+              <p class="small reqlabel">Publisher name</p>
+              <%= f_p3.text_field :name, :required => true, :value => nameVal, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. For data produced at Oxford, this will usually be the University of Oxford." } %>
+            </div>
+            <!--
+            <div class="fieldset">
+              <p class="small">Publisher website</p>
+              <%#= f_p3.text_field :website, :value => websiteVal, data: {"progress" => "documentation"} %>
+              <%#= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know the publisher's website, add it here." } %>
+            </div>
+            -->
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
     <div class="fieldset">
       <p class="small reqlabel">Year published</p>
-      <%= f_p.text_field :datePublished, :required => true, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation", "default-value" => Time.now.year } %>
+      <%= f_p.text_field :datePublished, :required => true, :value => p.datePublished.first || Time.now.year, data: {"progress" => "citation" } %>
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Year published" , :tipDescription => "Enter the year the data have been or will be published, i.e. made publicly available." } %>
     </div>
+
+    <% p.hasDocument.each do |p2| %>
+      <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
+        <div class="fieldset">
+          <p class="small">DOI</p>
+          <%= hidden_field_tag(:mintedDoi, @doi) %>
+          <% if !@files.blank? %>
+            <button type="button" class="button light-blue" onclick="displayDoi()">Get a DOI </button>
+            <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", :readonly => true, data: {"progress" => "citation"} %>
+            <% desc = "Please select this option if you would like to receive an instant DOI (Digital Object Identifier) for your dataset. <br/>
+                       N.B. You may cite this DOI in any papers you may be submitting for publication, but it will not become a 'live' 
+                       working DOI link until the ORA-Data team have reviewed your deposit and published the catalogue record for your data online in ORA" %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => desc } %>
+          <% else %>
+            <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", data: {"progress" => "citation"} %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "DOI" , :tipDescription => "What is the DOI of your dataset?" } %>
+          <% end %>
+        </div>
+
+      <% end #fields for each document %>
+    <% end #each document %>
 
   <% end #fields for each publication %>
 <% end #each publication %>

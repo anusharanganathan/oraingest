@@ -7,12 +7,18 @@ function toggleDatasetAgreementDisplay(val) {
   }
 }
 
-function toggleDigitalFieldsDisplay(val) {
+function toggleLocatorFieldsDisplay(val) {
   if (val == "digital") {
     // Display form fields relating to digital data type
-    $("#digitalFields").css('display', 'inline');
+    $("#data_locator_digital").prop('disabled', false);
+    $("#data_locator_analog").prop('disabled', true);
   } else {
-    $("#digitalFields").css('display', 'none');
+    $("#data_locator_digital").prop('disabled', true);
+    $("#data_locator_analog").prop('disabled', false);
+    $("#dataset_digitalSize").val("");
+    $("#dataset_digitalSize").attr("value", "");
+    $("#dataset_format").val("");
+    $("#dataset_format").attr("value", "");
   }
 }
 
@@ -65,6 +71,15 @@ function displayDatasetAgreement(id, val) {
       }
     })
   }
+}
+
+function displayDoi(id) {
+  var doi = $("#mintedDoi").val();
+  $("#dataset_doi").val(doi);
+  $("#dataset_doi").attr("value", doi);
+  $("#workflow_submit_involves").val("Register doi:"+doi);
+  $("#workflow_submit_involves").attr("value", "Register doi:"+doi);
+  $("#dataset_doi").attr("readonly", "true");
 }
 
 function setStatus(eleId, wstatus) {

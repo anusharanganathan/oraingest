@@ -1,16 +1,15 @@
+require 'vocabulary/pwo'
 require 'ora/rt_client'
 
 class OxfordWorkflow < RDF::Vocabulary("http://vocab.ox.ac.uk/workflow/schema#")
   property :depositor
   property :workflow
-  property :entry
-  property :comment
-  
+  property :entry       # same as PWO.hasStep. Is of type PWO.Step
+  property :comment     # is of type owl entity
   property :status
   property :reviewer_id
-  
-  property :Workflow
-  property :emailThread
+  property :Workflow    # same as PWO.Workflow
+  property :emailThread # is of type owl entity
 end
 
 class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
@@ -77,12 +76,14 @@ class Workflow
   include ActiveFedora::RdfObject
   extend ActiveModel::Naming
   include ActiveModel::Conversion
-  rdf_type rdf_type OxfordWorkflow.Workflow
+  rdf_type rdf_type OxfordWorkflow.Workflow 
   map_predicates do |map|
     map.identifier(:in => RDF::DC)
     map.entries(to: :entry, :in => OxfordWorkflow, class_name:"WorkflowEntry")
     map.comments(to: :comment, :in => OxfordWorkflow, class_name:"WorkflowComment")
     map.emailThreads(to: :emailThread, :in => OxfordWorkflow, class_name:"WorkflowCommunication")
+    map.produces(:in => RDF::PWO)
+    map.involves(to: :involvesEvent, :in => RDF::PWO)
   end
   
   accepts_nested_attributes_for :entries, :comments, :emailThreads
@@ -140,7 +141,7 @@ class Workflow
       submission_entry.date.first
     end
   end
- 
+
   def persisted?
     false
   end
@@ -164,6 +165,7 @@ class WorkflowEntry
   include ActiveFedora::RdfObject
   extend ActiveModel::Naming
   include ActiveModel::Conversion
+  rdf_type rdf_type RDF::PWO.Step 
   map_predicates do |map|
     map.date(in: RDF::DC) 
     map.status(in: OxfordWorkflow)

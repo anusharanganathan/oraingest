@@ -19,7 +19,7 @@
             <td><%= entry.creator.first %></td>
             <td><%= entry.status.first %></td>
             <td><%= entry.reviewer_id.first %></td>
-            <td><%= entry.description.first %></td>
+            <td><%= simple_format(entry.description.first) %></td>
           </tr>
         <% end %>
       </table>
@@ -33,7 +33,7 @@
             <tr>
               <td><%= format_date(comment.date.first) %></td>
               <td><%= comment.creator.first %></td>
-              <td><%= comment.description.first %></td>
+              <td><%= simple_format(comment.description.first) %></td>
             </tr>
           <% end %>
         </table>
@@ -48,6 +48,16 @@
             <tr>
               <td><%= format_date(emailThread.date.first) %></td>
               <td><%=link_to emailThread.identifier.first, emailThread.references.first, :target => "_blank" %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+      <% if !wf.involves.nil? and !wf.involves.empty? %>
+        <h4>Events involved</h4>
+        <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+          <% wf.involves.each do |event| %>
+            <tr>
+              <td><%=event%></td>
             </tr>
           <% end %>
         </table>

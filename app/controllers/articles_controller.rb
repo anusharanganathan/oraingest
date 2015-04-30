@@ -71,10 +71,6 @@ class ArticlesController < ApplicationController
 
   def index
     redirect_to publications_path
-    #Grab users recent documents
-    #recent_me_not_draft
-    #recent_me_draft
-    #@model = 'article'
   end
 
   def show
@@ -88,12 +84,15 @@ class ArticlesController < ApplicationController
     @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @article = Article.new
+    @files = []
     @model = 'article'
   end
 
   def edit
     authorize! :edit, params[:id]
-    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
+    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
       authorize! :review, params[:id]
     end
     @pid = params[:id]
@@ -103,6 +102,9 @@ class ArticlesController < ApplicationController
 
   def edit_detailed
     authorize! :edit, params[:id]
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
+    end
     authorize! :review, params[:id]
     @pid = params[:id]
     @files = contents
@@ -117,7 +119,7 @@ class ArticlesController < ApplicationController
     if params.has_key?(:files)
       create_from_upload(params)
     elsif params.has_key?(:article)
-      add_metadata(params[:article])
+      add_metadata(params[:article], "")
     elsif can? :review, @article
       format.html { render action: 'edit_detailed' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -129,10 +131,14 @@ class ArticlesController < ApplicationController
 
   def update
     @pid = params[:pid]
+    redirect_field = ""
+    if params.has_key?(:redirect_field)
+      redirect_field = params[:redirect_field]
+    end
     if params.has_key?(:files)
       create_from_upload(params)
     elsif article_params
-      add_metadata(params[:article])
+      add_metadata(params[:article], redirect_field)
     elsif can? :review, @article
       format.html { render action: 'edit_detailed' }
       format.json { render json: @article.errors, status: :unprocessable_entity }
@@ -144,7 +150,9 @@ class ArticlesController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    if @article.workflows.first.current_status == "Migrate"
+      raise CanCan::AccessDenied.new("Not authorized to delete while record is being migrated!", :read, Article)
+    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
     @article.destroy
@@ -276,7 +284,7 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def add_metadata(article_params)
+  def add_metadata(article_params, redirect_field)
     if !@article.workflows.nil? && !@article.workflows.first.entries.nil?
       old_status = @article.workflows.first.current_status
     else
@@ -289,7 +297,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.save
         if can? :review, @article
-          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.' }
+          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.', flash:{ redirect_field: redirect_field } }
           format.json { head :no_content }
         else
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }

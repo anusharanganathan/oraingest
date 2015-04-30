@@ -15,6 +15,7 @@
       <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflow_submit_id" %>
     <% end %>
     <%= f_wf.hidden_field :identifier, :value => "MediatedSubmission", :id => "workflow_submit_identifier" %>
+    <%= f_wf.hidden_field :involves, :value => wf.involves.first, :id => "workflow_submit_involves" %>
     <% wf.entries.build %>
     <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
       <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>

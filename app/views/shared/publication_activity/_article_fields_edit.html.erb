@@ -29,19 +29,29 @@
 
     <% p.publisher.each do |p2| %>
       <%= f_p.fields_for :publisher, p2 do |f_p2| %>
-        <div class="fieldset">
-          <p class="small">Publisher name</p>
-          <%= f_p2.text_field :name, :value => p2.name.first, data: {"progress" => "citation"} %>
-          <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. 
-          For data produced at Oxford, this will usually be the University of Oxford." } %>
-        </div>
+        <% if p2.agent.empty? %>
+          <% p2.agent.build %>
+        <% end %>
 
-        <div class="fieldset">
-          <p class="small">Publisher website</p>
-          <%= f_p2.text_field :website, :value => p2.website.first, data: {"progress" => "documentation"} %>
-          <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know your publisher's website, add it here." } %>
-        </div>
+        <% p2.agent.each do |p3| %>
+          <%= f_p2.fields_for :agent, p3 do |f_p3| %>
+            <% nameVal = p3.name.first || p2.name.first #TODO: Remove once old model is deprecated %>
+            <% websiteVal = p3.website.first || p2.website.first #TODO: Remove once old model is deprecated %>
 
+            <div class="fieldset">
+              <p class="small">Publisher name</p>
+              <%= f_p3.text_field :name, :value => nameVal, data: {"progress" => "citation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Publisher name" , :tipDescription => "Enter the name of the body making the data publicly available. 
+              For data produced at Oxford, this will usually be the University of Oxford." } %>
+            </div>
+
+            <div class="fieldset">
+              <p class="small">Publisher website</p>
+              <%= f_p3.text_field :website, :value => websiteVal, data: {"progress" => "documentation"} %>
+              <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Publisher website" , :tipDescription => "If you know your publisher's website, add it here." } %>
+            </div>
+          <% end %>
+        <% end %>
       <% end %> 
     <% end %> 
 

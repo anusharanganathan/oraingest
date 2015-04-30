@@ -39,7 +39,7 @@
           <% end %>
           <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
               <p><span class="h6">License statement:</span> 
-              <%= l.licenseStatement.first %></p>
+              <%= simple_format(l.licenseStatement.first) %></p>
             </p>
           <% end %>
         <% end #each License %>

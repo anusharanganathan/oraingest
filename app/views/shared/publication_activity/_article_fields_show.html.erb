@@ -49,8 +49,10 @@
       <% hasData = true %>
     <% end %>
   <% end %>
-  <% if !article.publication[0].publisher.nil? && !article.publication[0].publisher[0].nil? && !article.publication[0].publisher[0].name.empty? && !article.publication[0].publisher[0].name[0].empty? %>
-    <% hasData = true %>
+  <% if !article.publication[0].publisher.nil? && !article.publication[0].publisher[0].nil? && !article.publication[0].publisher[0].agent.nil? && !article.publication[0].publisher[0].agent[0].nil? %>
+    <% if !article.publication[0].publisher[0].agent[0].name.empty? && !article.publication[0].publisher[0].agent[0].name[0].empty? %>
+      <% hasData = true %>
+    <% end %>
   <% end %>
 <% end %>  
 <% if hasData %>
@@ -76,7 +78,7 @@
           <p><span class="h6">Article number:</span> <%= p2.identifier.first %></p>
         <% end %>
         <% if !p2.doi.empty? && !p2.doi[0].empty? %>
-          <p><span class="h6">DOI:</span> <%= p2.doi.first %></p>
+          <p><span class="h6">DOI:</span><%=link_to p2.doi.first, article.remote_uri_for(p2.doi.first).to_s %></p>
         <% end %>
         <% if !p2.uri.empty? && !p2.uri[0].empty? %>
          <p><span class="h6">URI:</span> <%= p2.uri.first %></p>
@@ -114,9 +116,16 @@
     <% end #hasDocument %> 
     <% if !p.publisher.nil? %>
       <% p.publisher.each do |p2| %>
-        <% if !p2.name.empty? && !p2.website.empty? && !p2.name[0].empty? && !p2.website[0].empty? %>
+        <% p2.agent.each do |p3| %>
+          <% if !p3.name.empty? && !p3.website.empty? && !p3.name[0].empty? && !p3.website[0].empty? %>
+            <p><span class="h6">Publisher:</span> <%=link_to p3.name.first, p3.website.first %></p>
+          <% elsif !p3.name.empty? && !p3.name[0].empty? %>
+            <p><span class="h6">Publisher:</span> <%= p3.name.first %></p>
+          <% end %>
+        <% end #each agent %>
+        <% if !p2.name.empty? && !p2.website.empty? && !p2.name[0].empty? && !p2.website[0].empty? #TODO: Remove once old model is deprecated %>
           <p><span class="h6">Publisher:</span> <%=link_to p2.name.first, p2.website.first %></p>
-        <% elsif !p2.name.empty? && !p2.name[0].empty? %>
+        <% elsif !p2.name.empty? && !p2.name[0].empty? #TODO: Remove once old model is deprecated %>
           <p><span class="h6">Publisher:</span> <%= p2.name.first %></p>
         <% end %>
       <% end #each publisher %>
