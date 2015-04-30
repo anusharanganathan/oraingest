@@ -3,6 +3,7 @@ Changelog
 
 1.2
 ------------------
+
 - Improve workflow and limits for file upload in forms and add help text
 - Modify inheritance of javascript files
 - Mint DOIs for Datasets and register once published
@@ -14,6 +15,7 @@ Changelog
 - Updated helper text
 - List of roles for data steward expanded
 - Removed the form fill tracker
+- Disambiguate user and admin file sizes
 
 1.1
 ------------------
