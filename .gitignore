@@ -42,3 +42,5 @@ config/databank_credentials.yml
 # other temp files
 *~
 
+# Rubymine
+.idea
