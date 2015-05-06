@@ -83,7 +83,11 @@ module WorkflowMethods
         self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
         # Push object to queue
         if toMigrate
-          Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, self.class.model_name.to_s, numberOfFiles.to_s))
+          if model == "Dataset"
+            Sufia.queue.push(DatabankPublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
+          else
+            Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
+          end
         end
       #else
       #  # Note: Not doing this as we may just add a whole lot of comments for redundant clicks
