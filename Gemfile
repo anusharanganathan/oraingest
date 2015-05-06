@@ -72,7 +72,7 @@ gem 'paperclip', '>=3.1.0'
 gem 'rt-client'
 
 group :development, :test do
-  gem "rspec-rails"
+  gem "rspec-rails", '~>2.99.0'
   #gem 'jettywrapper', "~> 1.5.0"
   gem 'chronic'
   #gem "jettywrapper"

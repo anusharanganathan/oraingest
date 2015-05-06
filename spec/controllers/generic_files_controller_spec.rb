@@ -26,7 +26,15 @@ describe GenericFilesController do
       @generic_file.workflows.first.entries.count.should == 1
       @generic_file.workflows.first.comments.count.should == 0
       workflow = @generic_file.workflows.first
-      params = {"generic_file"=>{"workflows_attributes"=>{"id"=>workflow.rdf_subject.to_s, "identifier"=>"MediatedSubmission", "entries_attributes"=>{"status"=>"Submitted", "date"=>"2013-07-05 16:23:32 +0100"}, "comments_attributes"=>{"creator"=>"archivist1@example.com"}}}, "update_workflow"=>"", "id"=>@generic_file.noid}
+      params = {
+          "generic_file"=> {
+              "workflows_attributes"=> [{
+                  "id"=>workflow.rdf_subject.to_s, "identifier"=>"MediatedSubmission",
+                  "entries_attributes"=>
+                      [{"status"=>"Submitted", "date"=>"2013-07-05 16:23:32 +0100"}],
+                  "comments_attributes"=>
+                      [{"creator"=>"archivist1@example.com"}]}]
+          }, "update_workflow"=>"", "id"=>@generic_file.noid}
       xhr :post, :update, params
       assigns(:generic_file).pid.should == @generic_file.pid
       assigns(:generic_file).workflows.count.should == 1
