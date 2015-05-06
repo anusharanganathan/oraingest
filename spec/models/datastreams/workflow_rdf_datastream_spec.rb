@@ -78,7 +78,7 @@ describe WorkflowRdfDatastream do
     solr_doc[Solrizer.solr_name("all_workflow_statuses", :symbol)].should == ["Approved", "Success"]
     solr_doc[Solrizer.solr_name("MediatedSubmission_status", :symbol)].should == "Approved"
     solr_doc[Solrizer.solr_name("MediatedSubmission_current_reviewer_id", :symbol)].should == @user.user_key
-    solr_doc[Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol)].should == ["user23",@user.user_key] 
+    solr_doc[Solrizer.solr_name("MediatedSubmission_all_reviewer_ids", :symbol)].should == ['foouser', 'user23', @user.user_key]
     solr_doc[Solrizer.solr_name("MediatedSubmission_date_submitted", :dateable)].should == Time.parse(HOUR_AGO).utc.iso8601
     solr_doc[Solrizer.solr_name("VirusCheck_status", :symbol)].should == "Success"
   end

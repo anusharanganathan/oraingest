@@ -8,27 +8,27 @@ describe "Workflow Variations" do
     @user = FactoryGirl.find_or_create(:user)
     @archivist = FactoryGirl.find_or_create(:archivist)
     
-    @draft = GenericFile.new(title:"Draft Submission", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Draft"}} )
+    @draft = GenericFile.new(title: 'Draft Submission', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Draft'}]}] )
     @draft.apply_depositor_metadata(@user.user_key)
-    @submitted = GenericFile.new(title:"Submitted Item", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Submitted"}})
+    @submitted = GenericFile.new(title: 'Submitted Item', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Submitted'}]}] )
     @submitted.apply_depositor_metadata(@user.user_key)
-    @in_review = GenericFile.new(title:"Item In Review", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Assigned", reviewer_id:@archivist.user_key}})
+    @in_review = GenericFile.new(title: 'Item In Review', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Assigned', reviewer_id: @archivist.user_key}]}] )
     @in_review.apply_depositor_metadata(@user.user_key)
-    @escalated = GenericFile.new(title:"Item In Review", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Escalated", reviewer_id:@archivist.user_key}})
+    @escalated = GenericFile.new(title: 'Item In Review', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Escalated', reviewer_id: @archivist.user_key}]}] )
     @escalated.apply_depositor_metadata(@user.user_key)
-    @approved = GenericFile.new(title:"Item In Review", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Approved", reviewer_id:@archivist.user_key}})
+    @approved = GenericFile.new(title: 'Item In Review', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Approved', reviewer_id: @archivist.user_key}]}] )
     @approved.apply_depositor_metadata(@user.user_key)
-    @rejected = GenericFile.new(title:"Item In Review", workflows_attributes:
-                          {identifier:"MediatedSubmission", entries_attributes:{status:"Rejected", reviewer_id:@archivist.user_key}})
+    @rejected = GenericFile.new(title: 'Item In Review', workflows_attributes:
+                          [{identifier: 'MediatedSubmission', entries_attributes: [{status: 'Rejected', reviewer_id: @archivist.user_key}]}] )
     @rejected.apply_depositor_metadata(@user.user_key)
 
     [@draft, @submitted, @in_review, @escalated, @approved, @rejected].each {|o| o.save}
-    
+
   end
   after(:all) do
     [@draft, @submitted, @in_review, @escalated, @approved, @rejected].each {|o| o.delete}

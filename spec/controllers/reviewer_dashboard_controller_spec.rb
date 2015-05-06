@@ -23,7 +23,7 @@ describe ReviewerDashboardController do
         response.should render_template('reviewer_dashboard/index')
       end
       it "should return an array of documents that need to be reviewed" do
-        expected_results = Blacklight.solr.get "select", :params=>{:q => "*:*", :fq=>["active_fedora_model_ssi:GenericFile OR active_fedora_model_ssi:Collection", "-MediatedSubmission_status_ssim:Approved", "-MediatedSubmission_status_ssim:Draft"]}
+        expected_results = Blacklight.solr.get "select", :params=>{:q => "*:*", :fq=>["active_fedora_model_ssi:Article OR active_fedora_model_ssi:Dataset", "-MediatedSubmission_status_ssim:Approved", "-MediatedSubmission_status_ssim:Draft"]}
         assigns(:response)["response"]["numFound"].should eql(expected_results["response"]["numFound"])
       end
     end
