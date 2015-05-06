@@ -287,6 +287,7 @@ Sufia.config do |config|
     "Approved" => "Approved",
     "System failure" => "System failure",
     "Migrate" => "Migrate",
+    "Data migrated" => "Data migrated",
     "Published" => "Published"
  }
 
