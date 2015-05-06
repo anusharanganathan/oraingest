@@ -1,0 +1,91 @@
+require 'ora/databank'
+
+class DatabankPublishRecordJob
+
+  def queue_name
+    :databank_publish
+  end
+
+  attr_accessor :pid, :datastreams, :model, :numberOfFiles
+
+  def initialize(pid)
+    self.pid = pid
+    self.datastreams = datastreams
+    self.model = model
+    self.numberOfFiles = numberOfFiles
+    if self.pid.start_with?('uuid:')
+      self.dataset = self.pid.sub('uuid:', '')
+    else
+      self.dataset = self.pid
+    end
+    self.status = true
+    self.msg = []
+    @databank = Databank.new(Sufia.config.databank_credentials)
+    self.silo = Sufia.config.databank_credentials['silo']
+  end
+
+  def self.perform()
+    if self.model == "Article"
+      return
+    obj = Dataset.find(self.pid)
+    # 1. Save metadata datastreams to disk and get list of files
+    filenames = {}
+    obj.datastreams.keys.each do |ds|
+      if ds.start_with?('content')
+        opts = obj.datastream_opts(ds)
+        filenames[ds] = opts["dsLocation"]
+      elsif ds != 'DC'
+        cont = obj.datastreams[ds].content
+        file = Tempfile.new(ds)
+        filenames[ds] = file.path
+        file.write(cont)
+        file.close
+      end
+    end
+    # 2. Migrate to Databank
+    ans = @databank.getDataset(self.silo, self.dataset)
+    # Create dataset if needed
+    if !@databank.responseGood(ans['code'])
+      ans = @databank.createDataset(self.silo, self.dataset, label=nil, embargoed="true")
+      if @databank.responseGood(ans['code'])
+        self.msg << "Created Dataset #{self.dataset}"
+      else
+        self.msg << "Error creating Dataset #{self.dataset}"
+        self.status = false
+      end
+    else
+      self.msg << "Dataset #{self.dataset} exists"
+    end
+    # Upload files
+    if self.status == true
+      filenames.each do |ds,fp|
+        if ds.start_with?('content')
+          ans = @databank.uploadFile(self.silo, self.dataset, fp, filename=nil)
+        else
+          ans = @databank.uploadFile(self.silo, self.dataset, fp, filename=ds)
+        end
+        if @databank.responseGood(ans['code'])
+          self.msg << "Uploaded file #{ds}"
+        else
+          self.msg << "Error uploading file #{ds}"
+          self.status = false
+        end
+      end
+    end
+    # 3. Update workflow status
+    wf = obj.workflows.first
+    wf.entries.build
+    if self.status == true
+      wf.entries.last.status = Sufia.config.workflow_status["Data migrated"]
+    else
+      wf.entries.last.status = Sufia.config.workflow_status["System failure"]
+    end
+    wf.entries.last.reviewer_id = "ORA Deposit system"
+    wf.entries.last.description = self.msg.join('\n')
+    wf.entries.last.date = Time.now.to_s
+    obj.save!
+    # 4. If success, send to ora_publish queue 
+    if self.status == true
+      Sufia.queue.push_raw(PublishRecordJob.new(self.pid, self.datastreams, self.model, self.numberOfFiles))
+    end
+end
