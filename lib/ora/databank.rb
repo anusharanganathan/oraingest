@@ -17,8 +17,12 @@ class Databank
     if host.end_with?('/')
       host = host[0...-1]
     end
-    @resource = RestClient::Resource.new(host, :user => username, :password => password)
-    #@resource = RestClient::Resource.new(host, :user => username, :password => password, :ssl_version => 'TLSv1')
+    if host.start_with?("http://")
+      @resource = RestClient::Resource.new(host, :user => username, :password => password)
+    elsif host.start_with?("https://")
+      @resource = RestClient::Resource.new(host, :user => username, :password => password, :ssl_version => 'TLSv1')
+    end
+    @host = host
   end
 
   def getSilos()
@@ -140,6 +144,25 @@ class Databank
       return create_response(e.response, nil)
     end
     return create_response(data, data.body)
+  end
+
+  def getUrl(silo, dataset=nil, filename=nil)
+    url = nil
+    # build the path
+    if !dataset.nil? && !filename.nil?
+      path = "/#{silo}/datasets/#{dataset}/#{filename}"
+    elsif !dataset.nil? 
+      path = "/#{silo}/datasets/#{dataset}"
+    else
+      path => "/#{silo}"
+    end
+    # Construct the url
+    if @host.start_with?("http://")
+      url = URI::HTTP.build({:host => @host.sub("http://", ""), :path => path}).to_s
+    elsif @host.start_with?("https://")
+      url = URI::HTTPS.build({:host => @host.sub("https://", ""), :path => path}).to_s
+    end
+    url
   end
 
   private
