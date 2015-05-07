@@ -16,18 +16,18 @@ class updatePublishRecordJob
   end
 
   def self.perform()
-    #if self.model == "Article"
-    #  obj = Article.find(self.pid)
-    #elsif self.model == "Dataset"
-    #  obj = Dataset.find(self.pid)
-    #end
-    #wf = obj.workflows.first
-    #wf.entries.build
-    #wf.entries.last.status = "Published"
-    #wf.entries.last.reviewer_id = "ORA Deposit system"
-    #wf.entries.last.description = self.msg
-    #wf.entries.last.date = Time.now.to_s
-    #obj.save!
+    if self.model == "Article"
+      obj = Article.find(self.pid)
+    elsif self.model == "Dataset"
+      obj = Dataset.find(self.pid)
+    end
+    wf = obj.workflows.first
+    wf.entries.build
+    wf.entries.last.status = "Published"
+    wf.entries.last.reviewer_id = "ORA Deposit system"
+    wf.entries.last.description = self.msg
+    wf.entries.last.date = Time.now.to_s
+    obj.save!
   end
 
 end

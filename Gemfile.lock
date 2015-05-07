@@ -73,7 +73,7 @@ GEM
       sass (~> 3.2)
     builder (3.1.4)
     cancan (1.6.10)
-    capybara (2.1.0)
+    capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -289,22 +289,23 @@ GEM
       netrc (~> 0.7)
     rsolr (1.0.10)
       builder (>= 2.1.2)
-    rspec-core (3.1.5)
-      rspec-support (~> 3.1.0)
-    rspec-expectations (3.1.2)
+    rspec-core (3.2.3)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.1.0)
-    rspec-mocks (3.1.2)
-      rspec-support (~> 3.1.0)
-    rspec-rails (3.1.0)
-      actionpack (>= 3.0)
-      activesupport (>= 3.0)
-      railties (>= 3.0)
-      rspec-core (~> 3.1.0)
-      rspec-expectations (~> 3.1.0)
-      rspec-mocks (~> 3.1.0)
-      rspec-support (~> 3.1.0)
-    rspec-support (3.1.1)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-rails (3.2.1)
+      actionpack (>= 3.0, < 4.3)
+      activesupport (>= 3.0, < 4.3)
+      railties (>= 3.0, < 4.3)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
     rt-client (0.8.0)
       rest-client (>= 0.9)
     rubydora (1.7.5)
@@ -415,7 +416,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootstrap-sass
-  capybara (~> 2.1.0)
+  capybara (~> 2.4.0)
   chronic
   coffee-rails (~> 4.0.0)
   devise
@@ -431,7 +432,7 @@ DEPENDENCIES
   paperclip (>= 3.1.0)
   qa
   rails (= 4.0.3)
-  rspec-rails
+  rspec-rails (~> 3.2.0)
   rt-client
   sass-rails (~> 4.0.0)
   sdoc
