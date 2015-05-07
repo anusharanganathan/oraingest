@@ -1,5 +1,5 @@
 require 'ora/databank'
-require 'FileUtils'
+require "fileutils"
 
 class DatabankPublishRecordJob
 
@@ -7,9 +7,9 @@ class DatabankPublishRecordJob
     :databank_publish
   end
 
-  attr_accessor :pid, :datastreams, :model, :numberOfFiles
+  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :dataset, :status, :msg, :silo
 
-  def initialize(pid)
+  def initialize(pid, datastreams, model, numberOfFiles)
     self.pid = pid
     self.datastreams = datastreams
     self.model = model
@@ -21,7 +21,7 @@ class DatabankPublishRecordJob
     end
     self.status = true
     self.msg = []
-    @databank = Databank.new(Sufia.config.databank_credentials)
+    @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
     self.silo = Sufia.config.databank_credentials['silo']
   end
 

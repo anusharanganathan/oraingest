@@ -99,9 +99,9 @@ class Databank
     begin
       data = @resource["#{silo}/datasets"].post(payload, {:accept => 'application/json'})
     rescue => e
-      return (nil, e.response.code, e.response.headers, e.response.description)
+      return create_response(e.response, nil)
     end
-    return (data.body, data.code, data.headers, data.description)
+    return create_response(data, data.body)
   end
 
   def getDataset(silo, dataset)
@@ -154,7 +154,7 @@ class Databank
     elsif !dataset.nil? 
       path = "/#{silo}/datasets/#{dataset}"
     else
-      path => "/#{silo}"
+      path = "/#{silo}"
     end
     # Construct the url
     if @host.start_with?("http://")
@@ -168,11 +168,11 @@ class Databank
   private
 
   def create_response(response, results)   
-    return { 'code' => response.code, 'description' => response.description, 'results' => results)
+    return {'code' => response.code, 'description' => response.description, 'results' => results}
   end
 
   def responseGood(code)
     return 200 <= code <= 299
   end
-#silo="general"
-#host="10.0.0.110", user="orauser", password="G6eNK2MxWe6x"
+
+end
