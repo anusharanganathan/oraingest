@@ -71,11 +71,11 @@ gem 'paperclip', '>=3.1.0'
 gem 'rt-client'
 
 group :development, :test do
-  gem "rspec-rails"
+  gem "rspec-rails", '~>3.2.0'
   #gem 'jettywrapper', "~> 1.5.0"
   gem 'chronic'
   #gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
-  gem 'capybara', '~>2.1.0'
+  gem 'capybara', '~>2.4.0'
 #  gem "debugger"
 end

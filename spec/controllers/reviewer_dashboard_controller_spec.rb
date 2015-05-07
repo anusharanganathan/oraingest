@@ -1,30 +1,27 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ReviewerDashboardController do
   before do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
-    User.any_instance.stub(:groups).and_return([])
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+    allow_any_instance_of(User).to receive(:groups).and_return([])
   end
   
   describe "logged in archivist" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:archivist)
       sign_in @user
-      controller.stub(:clear_session_user) ## Don't clear out the authenticated session
-      User.any_instance.stub(:groups).and_return([])
+      allow_any_instance_of(User).to receive(:groups).and_return([])
     end
     describe "#index" do
       before (:each) do
         xhr :get, :index
       end
       it "should be a success" do
-        response.should be_success
-        response.should render_template('reviewer_dashboard/index')
+        expect(response).to be_success
+        expect(response).to render_template('reviewer_dashboard/index')
       end
       it "should return an array of documents that need to be reviewed" do
-        expected_results = Blacklight.solr.get "select", :params=>{:q => "*:*", :fq=>["active_fedora_model_ssi:GenericFile OR active_fedora_model_ssi:Collection", "-MediatedSubmission_status_ssim:Approved", "-MediatedSubmission_status_ssim:Draft"]}
-        assigns(:response)["response"]["numFound"].should eql(expected_results["response"]["numFound"])
+        expected_results = Blacklight.solr.get "select", :params=>{:q => "*:*", :fq=>["active_fedora_model_ssi:Article OR active_fedora_model_ssi:Dataset", "-MediatedSubmission_status_ssim:Approved", "-MediatedSubmission_status_ssim:Draft"]}
+        expect(assigns(:response)["response"]["numFound"]).to eql(expected_results["response"]["numFound"])
       end
     end
   end
@@ -33,13 +30,12 @@ describe ReviewerDashboardController do
     before (:each) do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
-      controller.stub(:clear_session_user) ## Don't clear out the authenticated session
-      User.any_instance.stub(:groups).and_return([])
+      allow_any_instance_of(User).to receive(:groups).and_return([])
     end
     describe "#index" do
       it "should return an error" do
         xhr :post, :index
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
   end
@@ -48,7 +44,7 @@ describe ReviewerDashboardController do
     describe "#index" do
       it "should return an error" do
         xhr :post, :index
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
   end

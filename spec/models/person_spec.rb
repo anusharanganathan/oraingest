@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Person do
   before do
@@ -52,55 +52,55 @@ describe Person do
   end
 
   it "should allow you to express values" do
-    @ds1.first_name.should == ["John"]
-    @ds1.last_name.should == ["Tolkein"]
-    @ds1.display_name.should == ["J. R. R. Tolkein"]
-    @ds1.title.should == ["Prof."]
-    @ds1.email.should == ["tolkein@example.com"]
-    @ds1.website.should == ["http://en.wikipedia.org/wiki/J._R._R._Tolkien"]
-    @ds1.webauth.should == ["mer123"]
-    @ds1.institution.should == ["University of Oxford"]
-    @ds1.faculty.should == ["Department of english language and literature"]
-    @ds1.oxford_college.should == ["Pembroke College", "Merton College", "Exeter College"]
-    @ds1.research_group.should == ['Inklings']
+    expect(@ds1.first_name).to eq(["John"])
+    expect(@ds1.last_name).to eq(["Tolkein"])
+    expect(@ds1.display_name).to eq(["J. R. R. Tolkein"])
+    expect(@ds1.title).to eq(["Prof."])
+    expect(@ds1.email).to eq(["tolkein@example.com"])
+    expect(@ds1.website).to eq(["http://en.wikipedia.org/wiki/J._R._R._Tolkien"])
+    expect(@ds1.webauth).to eq(["mer123"])
+    expect(@ds1.institution).to eq(["University of Oxford"])
+    expect(@ds1.faculty).to eq(["Department of english language and literature"])
+    expect(@ds1.oxford_college).to eq(["Pembroke College", "Merton College", "Exeter College"])
+    expect(@ds1.research_group).to eq(['Inklings'])
 
-    @ds2.first_name.should == ["Mark"]
-    @ds2.last_name.should == ["Twain"]
-    @ds2.display_name.should == []
-    @ds2.email.should == ["mark.twain@example.com"]
-    @ds2.webauth.should == ["bod123"]
-    @ds2.institution.should == ["University of Oxford"]
-    @ds2.faculty.should == []
-    @ds2.oxford_college.should == []
-    @ds2.research_group.should == []
+    expect(@ds2.first_name).to eq(["Mark"])
+    expect(@ds2.last_name).to eq(["Twain"])
+    expect(@ds2.display_name).to eq([])
+    expect(@ds2.email).to eq(["mark.twain@example.com"])
+    expect(@ds2.webauth).to eq(["bod123"])
+    expect(@ds2.institution).to eq(["University of Oxford"])
+    expect(@ds2.faculty).to eq([])
+    expect(@ds2.oxford_college).to eq([])
+    expect(@ds2.research_group).to eq([])
 
-    @ds3.first_name.should == ["Salvatore"]
-    @ds3.last_name.should == []
-    @ds3.display_name.should == []
-    @ds3.email.should == ["salvatore.dali@example.com"]
-    @ds3.webauth.should == ["oxf456"]
-    @ds3.institution.should == ["University of Oxford"]
+    expect(@ds3.first_name).to eq(["Salvatore"])
+    expect(@ds3.last_name).to eq([])
+    expect(@ds3.display_name).to eq([])
+    expect(@ds3.email).to eq(["salvatore.dali@example.com"])
+    expect(@ds3.webauth).to eq(["oxf456"])
+    expect(@ds3.institution).to eq(["University of Oxford"])
 
-    @ds4.first_name.should == []
-    @ds4.last_name.should == ["Einstein"]
-    @ds4.display_name.should == []
-    @ds4.email.should == ["albert.einstein@example.com"]
-    @ds4.webauth.should == ["oxf789"]
-    @ds4.institution.should == ["University of Oxford"]
+    expect(@ds4.first_name).to eq([])
+    expect(@ds4.last_name).to eq(["Einstein"])
+    expect(@ds4.display_name).to eq([])
+    expect(@ds4.email).to eq(["albert.einstein@example.com"])
+    expect(@ds4.webauth).to eq(["oxf789"])
+    expect(@ds4.institution).to eq(["University of Oxford"])
 
-    @ds5.first_name.should == []
-    @ds5.last_name.should == []
-    @ds5.display_name.should == []
-    @ds5.email.should == ["anonymous@example.com"]
-    @ds5.webauth.should == ["oxf000"]
-    @ds5.institution.should == ["University of Oxford"]
+    expect(@ds5.first_name).to eq([])
+    expect(@ds5.last_name).to eq([])
+    expect(@ds5.display_name).to eq([])
+    expect(@ds5.email).to eq(["anonymous@example.com"])
+    expect(@ds5.webauth).to eq(["oxf000"])
+    expect(@ds5.institution).to eq(["University of Oxford"])
   end
 
   it "should allow you to ask for name" do
-    @ds1.name.should == ["J. R. R. Tolkein"]
-    @ds2.name.should == ["Mark Twain"]
-    @ds3.name.should == ["Salvatore"]
-    @ds4.name.should == ["Einstein"]
-    @ds5.name.should == ["oxf000"]
+    expect(@ds1.name).to eq(["J. R. R. Tolkein"])
+    expect(@ds2.name).to eq(["Mark Twain"])
+    expect(@ds3.name).to eq(["Salvatore"])
+    expect(@ds4.name).to eq(["Einstein"])
+    expect(@ds5.name).to eq(["oxf000"])
   end
 end
