@@ -13,6 +13,14 @@ OraHydra::Application.routes.draw do
   #  match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
   #end
 
+  if defined?(Sufia::ResqueAdmin)
+    namespace :admin do
+      constraints Sufia::ResqueAdmin do
+        mount Resque::Server, at: 'queues'
+      end
+    end
+  end
+  
   get 'deposit_licence', to: 'static#deposit_licence'
   get 'data_deposit_licence', to: 'static#data_deposit_licence'
 
@@ -57,7 +65,6 @@ OraHydra::Application.routes.draw do
 
   #mount Hydra::Collections::Engine => '/' 
   mount Sufia::Engine => '/'
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
