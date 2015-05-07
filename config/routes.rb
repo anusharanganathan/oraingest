@@ -40,12 +40,14 @@ OraHydra::Application.routes.draw do
     end
   end
 
-  resources :articles
-  delete 'articles/:id/permissions', to: 'articles#revoke_permissions'
-  get 'articles/:id/detailed/edit', to: 'articles#edit_detailed', as: :article_detailed
-  
-  get 'articles/:id/file/:dsid', to: 'article_files#show'
-  delete 'articles/:id/file/:dsid', to: 'article_files#destroy'
+  resources :articles do
+    collection do
+      delete ':id/permissions', :action => :revoke_permissions
+      get ':id/detailed/edit', :action => :edit_detailed, :as => :article_detailed
+      get ':id/file/:dsid', :controller => 'article_files', :action => :show
+      delete ':id/file/:dsid', :controller => 'article_files', :action => :destroy
+    end
+  end
 
   resources :datasets, :except => :index do
     collection do
@@ -53,13 +55,12 @@ OraHydra::Application.routes.draw do
       get 'page/:page', :controller => 'list_datasets', :action => :index
       get 'activity', :controller => 'list_datasets', :action => :activity, :as => :dashboard_activity
       get 'facet/:id', :controller => 'list_datasets', :action => :facet, :as => :dashboard_facet
+      delete ':id/permissions', :action => :revoke_permissions
+      get ':id/agreement', :action => :agreement
+      get ':id/file/:dsid', :controller => 'dataset_files', :action => :show
+      delete ':id/file/:dsid', :controller => 'dataset_files', :action => :destroy
     end
   end
-  delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
-  get 'datasets/:id/agreement', to: 'datasets#agreement'
-  
-  get 'datasets/:id/file/:dsid', to: 'dataset_files#show'
-  delete 'datasets/:id/file/:dsid', to: 'dataset_files#destroy'
 
   resources :dataset_agreements
 
@@ -80,7 +81,7 @@ OraHydra::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  # Sample resource route with options:
+ # Sample resource route with options:
   #   resources :products do
   #     member do
   #       get 'short'
