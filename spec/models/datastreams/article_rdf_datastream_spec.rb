@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe ArticleRdfDatastream do
   before do
@@ -48,9 +48,9 @@ describe ArticleRdfDatastream do
   end
 
   it "should allow you to express values" do
-    @dsg.title.should == ["test"]
-    @dsg.subtitle.should == ["subtitle"]
-    @dsg.abstract.should == ["Abstract for paper"]
+    expect(@dsg.title).to eq(["test"])
+    expect(@dsg.subtitle).to eq(["subtitle"])
+    expect(@dsg.abstract).to eq(["Abstract for paper"])
   end
 
   it "shoud allow you to associate files with people" do
@@ -62,28 +62,28 @@ describe ArticleRdfDatastream do
 
   it "should allow you to get people attributes" do
     #pending "Is this possible?"
-    @generic_file.authors.first.first_name.should == ["Mark"]
-    @generic_file.authors.first.last_name.should == ["Twain"]
-    @generic_file.authors.first.display_name.should == ["Twain, M"]
-    @generic_file.authors.first.email.should == ["mark.twain@example.com"]
-    @generic_file.authors.first.webauth.should == ["bod123"]
-    @generic_file.authors.first.institution.should == ["University of Oxford"]
-    @generic_file.authors.first.name.should == ["Twain, M"]
+    expect(@generic_file.authors.first.first_name).to eq(["Mark"])
+    expect(@generic_file.authors.first.last_name).to eq(["Twain"])
+    expect(@generic_file.authors.first.display_name).to eq(["Twain, M"])
+    expect(@generic_file.authors.first.email).to eq(["mark.twain@example.com"])
+    expect(@generic_file.authors.first.webauth).to eq(["bod123"])
+    expect(@generic_file.authors.first.institution).to eq(["University of Oxford"])
+    expect(@generic_file.authors.first.name).to eq(["Twain, M"])
 
-    @generic_file.authors.last.first_name.should == ["James"]
-    @generic_file.authors.last.last_name.should == ["Thurber"]
-    @generic_file.authors.last.display_name.should == ["Thurber, J"]
-    @generic_file.authors.last.email.should == ["james.thurber@example.com"]
-    @generic_file.authors.last.webauth.should == ["bod456"]
-    @generic_file.authors.last.institution.should == ["University of Oxford"]
-    @generic_file.authors.last.name.should == ["Thurber, J"]
+    expect(@generic_file.authors.last.first_name).to eq(["James"])
+    expect(@generic_file.authors.last.last_name).to eq(["Thurber"])
+    expect(@generic_file.authors.last.display_name).to eq(["Thurber, J"])
+    expect(@generic_file.authors.last.email).to eq(["james.thurber@example.com"])
+    expect(@generic_file.authors.last.webauth).to eq(["bod456"])
+    expect(@generic_file.authors.last.institution).to eq(["University of Oxford"])
+    expect(@generic_file.authors.last.name).to eq(["Thurber, J"])
 
-    @generic_file.copyright_holders.first.first_name.should == ["Charles"]
-    @generic_file.copyright_holders.first.last_name.should == ["Dickens"]
-    @generic_file.copyright_holders.first.display_name.should == ["Dickens, C"]
-    @generic_file.copyright_holders.first.email.should == ["charles.dickens@example.com"]
-    @generic_file.copyright_holders.first.webauth.should == ["bod789"]
-    @generic_file.copyright_holders.first.institution.should == ["Penguin Publishers"]
-    @generic_file.copyright_holders.first.name.should == ["Dickens, C"]
+    expect(@generic_file.copyright_holders.first.first_name).to eq(["Charles"])
+    expect(@generic_file.copyright_holders.first.last_name).to eq(["Dickens"])
+    expect(@generic_file.copyright_holders.first.display_name).to eq(["Dickens, C"])
+    expect(@generic_file.copyright_holders.first.email).to eq(["charles.dickens@example.com"])
+    expect(@generic_file.copyright_holders.first.webauth).to eq(["bod789"])
+    expect(@generic_file.copyright_holders.first.institution).to eq(["Penguin Publishers"])
+    expect(@generic_file.copyright_holders.first.name).to eq(["Dickens, C"])
   end
 end
