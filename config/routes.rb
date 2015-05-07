@@ -43,7 +43,7 @@ OraHydra::Application.routes.draw do
   resources :articles do
     collection do
       delete ':id/permissions', :action => :revoke_permissions
-      get ':id/detailed/edit', :action => :edit_detailed, :as => :article_detailed
+      get ':id/detailed/edit', :action => :edit_detailed, :as => :edit_detailed
       get ':id/file/:dsid', :controller => 'article_files', :action => :show
       delete ':id/file/:dsid', :controller => 'article_files', :action => :destroy
     end
