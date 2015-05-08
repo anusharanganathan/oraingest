@@ -25,7 +25,7 @@ class DatabankPublishRecordJob
     self.silo = Sufia.config.databank_credentials['silo']
   end
 
-  def self.perform()
+  def run
     if self.model == "Article"
       return
     end
