@@ -47,7 +47,4 @@ limitations under the License.
     <%= render :partial=>'reviewer_dashboard/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) } } %>  
   </div>
 
-
-  <% if false %> 
-    <%= render 'dashboard/results_pagination' %>
-  <% end %>
+  <%= render 'dashboard/results_pagination' %>
