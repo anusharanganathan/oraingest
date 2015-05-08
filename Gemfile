@@ -38,8 +38,7 @@ end
 
 gem 'sufia', "~> 3.7.2"
 #gem 'sufia'
-# required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
-gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  
+gem 'kaminari'
 gem 'jettywrapper', "~> 1.5.0"
 #gem 'jettywrapper'
 #gem 'hydra-collections'
