@@ -1,10 +1,10 @@
-class updatePublishRecordJob
+class UpdatePublishRecordJob
 
   def queue_name
     :ora_publish_status
   end
 
-  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :status. :msg
+  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :status, :msg
 
   def initialize(pid, datastreams, model, numberOfFiles, status, msg)
     self.pid = pid
