@@ -128,7 +128,7 @@ class Databank
     if filename.nil?
       filename = File.basename filepath
     end
-    files = {:file => File.new(path, 'rb'), :filename => filename}
+    files = {:file => File.new(filepath, 'rb'), :filename => filename}
     begin
       data = @resource["/#{silo}/datasets/#{dataset}"].post(files, :accept => 'application/json')
     rescue => e
@@ -165,14 +165,14 @@ class Databank
     url
   end
 
+  def responseGood(code)
+    return 200 <= code && code <= 299
+  end
+
   private
 
   def create_response(response, results)   
     return {'code' => response.code, 'description' => response.description, 'results' => results}
-  end
-
-  def responseGood(code)
-    return 200 <= code <= 299
   end
 
 end
