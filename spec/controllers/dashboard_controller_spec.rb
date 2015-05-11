@@ -13,6 +13,7 @@ describe DashboardController do
       sign_in @user
       allow_any_instance_of(User).to receive(:groups).and_return([])
     end
+
     describe "#index" do
       before(:each) do
         xhr :get, :index
@@ -33,14 +34,16 @@ describe DashboardController do
         expect(response).to be_success
         expect(response).to render_template('dashboard/index')
       end
+
       it "should return an array of documents I can edit" do
         user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
         expect(assigns(:response)["response"]["numFound"]).to eql(user_results["response"]["numFound"])
       end
+
       context "with render views" do
         render_views
-        it "should paginate" do          
-          xhr :get, :index, per_page: 2
+        it "should paginate" do
+          xhr :get, :index
           expect(response).to be_success
           expect(response).to render_template('dashboard/index')
         end
