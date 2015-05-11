@@ -8,6 +8,11 @@ FactoryGirl.define do
     email 'archivist1@example.com'
     password 'password'
   end
+
+  factory :reviewer, class: User do |u|
+    email 'archivist1@example.com'
+    password 'password'
+  end
   
   factory :curator, :class => User do |u|
     email 'curator1@example.com'
