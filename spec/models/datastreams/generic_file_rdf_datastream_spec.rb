@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ArticleRdfDatastream do
+describe GenericFileRdfDatastream do
   before do
     @generic_file = GenericFile.new
     @generic_file.apply_depositor_metadata('anusha')
@@ -45,6 +45,46 @@ describe ArticleRdfDatastream do
     @person1.save
     @person2.save
     @person3.save
+  end
+
+  describe 'attributes' do
+    subject { @dsg }
+
+    it { is_expected.to respond_to(:part_of) }
+    it { is_expected.to respond_to(:resource_type) }
+    it { is_expected.to respond_to(:title) }
+    it { is_expected.to respond_to(:subtitle) }
+    it { is_expected.to respond_to(:creator) }
+    it { is_expected.to respond_to(:rights_ownership) }
+    it { is_expected.to respond_to(:third_party_copyright) }
+    it { is_expected.to respond_to(:description) }
+    it { is_expected.to respond_to(:abstract) }
+    it { is_expected.to respond_to(:subject) }
+    it { is_expected.to respond_to(:keyword) }
+    it { is_expected.to respond_to(:language) }
+    it { is_expected.to respond_to(:doi) }
+    it { is_expected.to respond_to(:local_id) }
+    it { is_expected.to respond_to(:issn) }
+    it { is_expected.to respond_to(:isbn) }
+    it { is_expected.to respond_to(:eissn) }
+    it { is_expected.to respond_to(:uuid) }
+    it { is_expected.to respond_to(:identifier) }
+    it { is_expected.to respond_to(:grant_number) }
+    it { is_expected.to respond_to(:edition) }
+    it { is_expected.to respond_to(:status) }
+    it { is_expected.to respond_to(:version) }
+    it { is_expected.to respond_to(:journal) }
+    it { is_expected.to respond_to(:volume) }
+    it { is_expected.to respond_to(:issue) }
+    it { is_expected.to respond_to(:pages) }
+    it { is_expected.to respond_to(:tag) }
+    it { is_expected.to respond_to(:rights) }
+    it { is_expected.to respond_to(:date_created) }
+    it { is_expected.to respond_to(:date_uploaded) }
+    it { is_expected.to respond_to(:date_modified) }
+    it { is_expected.to respond_to(:based_near) }
+    it { is_expected.to respond_to(:related_url) }
+
   end
 
   it "should allow you to express values" do
