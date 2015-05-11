@@ -65,7 +65,7 @@ describe DatasetAgreement do
       expect(@agreement.permissions.size).to eq(3)
     end
 
-    it 'sets the permissions to reviewer/group/edit' do
+    it 'sets the permissions' do
       permission = @agreement.permissions[0]
       expect(permission.name).to eq('registered')
       expect(permission.type).to eq('group')
