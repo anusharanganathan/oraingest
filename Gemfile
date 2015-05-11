@@ -38,8 +38,7 @@ end
 
 gem 'sufia', "~> 3.7.2"
 #gem 'sufia'
-# required to handle pagination properly in dashboard. See https://github.com/amatsuda/kaminari/pull/322
-gem 'kaminari', github: 'harai/kaminari', branch: 'route_prefix_prototype'  
+gem 'kaminari'
 gem 'jettywrapper', "~> 1.5.0"
 #gem 'jettywrapper'
 #gem 'hydra-collections'
@@ -71,11 +70,11 @@ gem 'paperclip', '>=3.1.0'
 gem 'rt-client'
 
 group :development, :test do
-  gem "rspec-rails"
+  gem "rspec-rails", '~>3.2.0'
   #gem 'jettywrapper', "~> 1.5.0"
   gem 'chronic'
   #gem "jettywrapper"
   gem "factory_girl_rails", "~> 4.2.1"
-  gem 'capybara', '~>2.1.0'
+  gem 'capybara', '~>2.4.0'
 #  gem "debugger"
 end

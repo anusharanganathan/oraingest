@@ -261,7 +261,7 @@ class ArticlesController < ApplicationController
       respond_to do |format|
         if @article.update(new_params)
           if can? :review, @article
-            format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.' }
+            format.html { redirect_to edit_detailed_articles_path(@article), notice: 'Article was successfully updated.' }
             format.json { head :no_content }
           else
             format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }
@@ -297,7 +297,7 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.save
         if can? :review, @article
-          format.html { redirect_to article_detailed_path(@article), notice: 'Article was successfully updated.', flash:{ redirect_field: redirect_field } }
+          format.html { redirect_to edit_detailed_articles_path(@article), notice: 'Article was successfully updated.', flash:{ redirect_field: redirect_field } }
           format.json { head :no_content }
         else
           format.html { redirect_to edit_article_path(@article), notice: 'Article was successfully updated.' }

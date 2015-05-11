@@ -25,6 +25,7 @@ rails_server.log
 #Ignore config files
 .rtclientrc
 config/doi_credentials.yml
+config/databank_credentials.yml
 
 #Committing Gemfile.lock before upgrading to sufia 3.7.2
 #Gemfile.lock
@@ -41,3 +42,5 @@ config/doi_credentials.yml
 # other temp files
 *~
 
+# Rubymine
+.idea

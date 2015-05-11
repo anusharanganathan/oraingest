@@ -1,21 +1,19 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe DashboardController do
   before do
     @routes = Sufia::Engine.routes
   end
   before do
-    GenericFile.any_instance.stub(:terms_of_service).and_return('1')
-    User.any_instance.stub(:groups).and_return([])
-    controller.stub(:clear_session_user) ## Don't clear out the authenticated session
+    allow_any_instance_of(User).to receive(:groups).and_return([])
   end
   describe "logged in user" do
     before (:each) do
       @user = FactoryGirl.find_or_create(:user)
       sign_in @user
-      controller.stub(:clear_session_user) ## Don't clear out the authenticated session
-      User.any_instance.stub(:groups).and_return([])
+      allow_any_instance_of(User).to receive(:groups).and_return([])
     end
+
     describe "#index" do
       before(:each) do
         xhr :get, :index
@@ -33,19 +31,21 @@ describe DashboardController do
       end
       
       it "should be a success" do
-        response.should be_success
-        response.should render_template('dashboard/index')
+        expect(response).to be_success
+        expect(response).to render_template('dashboard/index')
       end
+
       it "should return an array of documents I can edit" do
         user_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
-        assigns(:response)["response"]["numFound"].should eql(user_results["response"]["numFound"])
+        expect(assigns(:response)["response"]["numFound"]).to eql(user_results["response"]["numFound"])
       end
+
       context "with render views" do
         render_views
-        it "should paginate" do          
-          xhr :get, :index, per_page: 2
-          response.should be_success
-          response.should render_template('dashboard/index')
+        it "should paginate" do
+          xhr :get, :index
+          expect(response).to be_success
+          expect(response).to render_template('dashboard/index')
         end
       end
     end
@@ -54,7 +54,7 @@ describe DashboardController do
     describe "#index" do
       it "should return an error" do
         xhr :post, :index
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
   end
