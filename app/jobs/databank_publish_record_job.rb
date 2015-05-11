@@ -1,5 +1,4 @@
 require 'ora/databank'
-require "fileutils"
 
 class DatabankPublishRecordJob
 
@@ -29,24 +28,9 @@ class DatabankPublishRecordJob
     if self.model == "Article"
       return
     end
-    obj = Dataset.find(self.pid)
-    # 1. Save metadata datastreams to disk and get list of files
-    filenames = {}
-    obj.datastreams.keys.each do |ds|
-      if ds.start_with?('content')
-        opts = obj.datastream_opts(ds)
-        filenames[ds] = opts["dsLocation"]
-      elsif ds != 'DC'
-        cont = obj.datastreams[ds].content
-        file = Tempfile.new(ds)
-        filenames[ds] = file.path
-        file.write(cont)
-        file.close
-      end
-    end
-    # 2. Migrate to Databank
+
+    #1. Create a dataset
     ans = @databank.getDataset(self.silo, self.dataset)
-    # Create dataset if needed
     if !@databank.responseGood(ans['code'])
       ans = @databank.createDataset(self.silo, self.dataset, label=nil, embargoed="true")
       if @databank.responseGood(ans['code'])
@@ -58,23 +42,49 @@ class DatabankPublishRecordJob
     else
       self.msg << "Dataset #{self.dataset} exists"
     end
-    # Upload files if dataset exists
+
+    #2. Upload files if dataset exists
+    filenames = {}
     if self.status == true
-      filenames.each do |ds,fp|
+      obj = Dataset.find(self.pid)
+      obj.datastreams.keys.each do |ds|
+        next if ds == 'DC'
         if ds.start_with?('content')
-          filename = File.basename fp
+          # Get file path and file name
+          opts = obj.datastream_opts(ds)
+          filepath = opts["dsLocation"]
+          filename = File.basename filepath
+          filenames[ds] = filepath
         else
-          filename = ds
+          # Save datastream to disk, get file path and file name
+          case ds
+          when "RELS-EXT"
+            ext = '.rdf'
+          when "rightsMetadata"
+            ext = '.xml'
+          else
+            ext = ".ttl"
+          end
+          cont = obj.datastreams[ds].content
+          file = Tempfile.new([ ds, ext ])
+          file.write(cont)
+          filepath = file.path
+          filename = ds  
         end
-        ans = @databank.uploadFile(self.silo, self.dataset, fp, filename=filename)
+        ans = @databank.uploadFile(self.silo, self.dataset, filepath, filename=filename)
         if @databank.responseGood(ans['code'])
           self.msg << "Uploaded file #{ds}"
         else
           self.msg << "Error uploading file #{ds}"
           self.status = false
         end
+        unless ds.start_with?('content')
+          file.close
+          file.unlink
+        end
       end
     end
+
     # 3. Update workflow status
     wf = obj.workflows.first
     wf.entries.build
@@ -86,37 +96,29 @@ class DatabankPublishRecordJob
     wf.entries.last.reviewer_id = "ORA Deposit system"
     wf.entries.last.description = self.msg.join('\n')
     wf.entries.last.date = Time.now.to_s
+
     # 4. If succes, update file location in datastream, delete local copy of file and move job to ora_publish queue
-    dirname = nil
     if self.status == true
       filenames.each do |ds,fp|
-        if ds.start_with?('content')
-          filename = File.basename fp
-          opts = obj.datastream_opts(ds)
-          oldLoc = opts["dsLocation"]
-          dirname = File.dirname(oldLoc)
-          # Update file location in datastream
-          opts["dsLocation"] = @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
-          obj.datastreams[ds].content = opts.to_json
-          # delete file
-          obj.delete_file(oldLoc)
-        end
+        filename = File.basename fp
+        opts = obj.datastream_opts(ds)
+        oldLoc = opts["dsLocation"]
+        # Update file location in datastream
+        opts["dsLocation"] = @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+        obj.datastreams[ds].content = opts.to_json
+        # delete file
+        obj.delete_file(oldLoc)
       end
       # Delete directory if empty
-      if !dirname.nil? && Dir["#{dirname}/*"].empty?
+      if Dir["#{obj.dir}/*"].empty?
         obj.delete_dir(self.pid)
       end
       # Add to ora publish queue
       Sufia.queue.push_raw(PublishRecordJob.new(self.pid, self.datastreams, self.model, self.numberOfFiles))
     end
+
     # Save object
     obj.save!
-    # Delete temporary files created
-    filenames.each do |ds,fp|
-      if !ds.start_with?('content')
-        FileUtils.rm(fp)
-      end 
-    end
   end
 
 end
