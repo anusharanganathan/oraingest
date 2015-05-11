@@ -44,3 +44,6 @@ config/databank_credentials.yml
 
 # Rubymine
 .idea
+
+# Simplecov
+coverage

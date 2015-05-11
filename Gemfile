@@ -78,3 +78,5 @@ group :development, :test do
   gem 'capybara', '~>2.4.0'
 #  gem "debugger"
 end
+
+gem 'simplecov', :require => false, :group => :test
