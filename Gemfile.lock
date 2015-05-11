@@ -103,6 +103,7 @@ GEM
       devise
       rails (>= 3.2, < 5.0)
     diff-lcs (1.2.5)
+    docile (1.1.5)
     ensure_valid_encoding (0.5.3)
     equivalent-xml (0.5.1)
       nokogiri (>= 1.4.3)
@@ -323,6 +324,11 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    simplecov (0.10.0)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -430,6 +436,7 @@ DEPENDENCIES
   rt-client
   sass-rails (~> 4.0.0)
   sdoc
+  simplecov
   sqlite3
   sufia (~> 3.7.2)
   therubyracer
