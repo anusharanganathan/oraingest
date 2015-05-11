@@ -60,7 +60,10 @@ describe Article do
 
     it 'initializes the submission workflow' do
       @article.save
-      expect(@article.workflows).not_to be_empty
+      expect(@article.workflows.count).to eq(1)
+      workflow = @article.workflows.first
+      expect(workflow.identifier).to eq(["MediatedSubmission"])
+      expect(workflow.current_status).to eq("Draft")
     end
 
     it 'removes blank assertions' do
