@@ -33,6 +33,7 @@ limitations under the License.
   <div class="colfull" style="text-align: right; margin-bottom: 15px">
     <hr />
     <%= render 'sort_and_per_page' %>
+    <%= render 'dashboard/results_pagination' %>
   </div>
   
   <%= render :partial=>'dashboard/facets' %>
@@ -47,4 +48,3 @@ limitations under the License.
     <%= render :partial=>'reviewer_dashboard/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) } } %>  
   </div>
 
-  <%= render 'dashboard/results_pagination' %>
