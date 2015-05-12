@@ -66,8 +66,9 @@ class DatabankPublishRecordJob
             ext = ".ttl"
           end
           cont = obj.datastreams[ds].content
-          file = Tempfile.new([ ds, ext ])
+          file = Tempfile.new([ ds, ext ], 'tmp/files/')
           file.write(cont)
+          file.close
           filepath = file.path
           filename = ds  
         end
@@ -79,7 +80,6 @@ class DatabankPublishRecordJob
           self.status = false
         end
         unless ds.start_with?('content')
-          file.close
           file.unlink
         end
       end
@@ -110,7 +110,7 @@ class DatabankPublishRecordJob
         obj.delete_file(oldLoc)
       end
       # Delete directory if empty
-      if Dir["#{obj.dir}/*"].empty?
+      if Dir["#{obj.dir(self.pid)}/*"].empty?
         obj.delete_dir(self.pid)
       end
       # Add to ora publish queue
