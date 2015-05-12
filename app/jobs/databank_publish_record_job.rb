@@ -104,7 +104,12 @@ class DatabankPublishRecordJob
         opts = obj.datastream_opts(ds)
         oldLoc = opts["dsLocation"]
         # Update file location in datastream
-        opts["dsLocation"] = @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+        opts["dsLocation"] = {
+          'silo' => self.silo,
+          'dataset' => self.dataset,
+          'filename' => filename,
+          'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+        }
         obj.datastreams[ds].content = opts.to_json
         # delete file
         obj.delete_file(oldLoc)
