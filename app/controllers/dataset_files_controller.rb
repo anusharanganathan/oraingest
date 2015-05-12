@@ -54,9 +54,9 @@ class DatasetFilesController < ApplicationController
         filename = parts[-1]
         url = opts['dsLocation']
       elsif opts['dsLocation'].is_a? Hash
-        filename = File.basename(opts['dsLocation']['filepath'])
+        filename = File.basename(opts['dsLocation']['filename'])
         @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
-        url = @databank.getUrl(opts['dsLocation']['silo'], dataset=opts['dsLocation']['dataset'], filename=opts['dsLocation']['filepath']) 
+        url = @databank.getUrl(opts['dsLocation']['silo'], dataset=opts['dsLocation']['dataset'], filename=opts['dsLocation']['filename']) 
       end
       begin
         timeout(10) { @stream = open(url, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
