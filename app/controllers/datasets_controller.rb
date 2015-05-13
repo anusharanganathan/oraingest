@@ -284,12 +284,17 @@ class DatasetsController < ApplicationController
     dsid = datastream_id
     # Save file to disk
     location = @dataset.save_file(file, @dataset.id)
-    #Save the location and add the file size to the admin datastream
+
+    # Add the file location to the admin metadata
     if !@dataset.adminLocator.include?(File.dirname(location))
       @dataset.adminLocator << File.dirname(location)
     end
+
+    # Increment total file size in metadata
     size = Integer(@dataset.adminDigitalSize.first) rescue 0
     @dataset.adminDigitalSize = size + file.size
+
+    # Set the medium to digital in metadata
     @dataset.medium = Sufia.config.data_medium["Digital"]
      
     # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
@@ -297,15 +302,21 @@ class DatasetsController < ApplicationController
     #@dataset.add_datastream(ds)
 
     # Prepare data for associated datastream
-    file_name =  file.original_filename
-    file_name = File.basename(file_name)
+    file_name = File.basename(file.original_filename)
     mime_types = MIME::Types.of(file_name)
     mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
     opts = {:dsLabel => file_name, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file.size}
+
+    # Add the datastream associated to the file
     dsfile = StringIO.new(opts.to_json)
-    # Add data as file datastream
     @dataset.add_file(dsfile, dsid, "attributes.json")
-    @dataset.title = file.original_filename
+
+    #Set the title of the dataset if it is empty or nil
+    if @dataset.title.nil? || @dataset.title.empty? || @dataset.title.first.empty?
+      @dataset.title = file.original_filename
+    end
+
+    # Save the dataset
     save_tries = 0
     begin
       @dataset.save!
