@@ -66,8 +66,9 @@ class DatabankPublishRecordJob
             ext = ".ttl"
           end
           cont = obj.datastreams[ds].content
-          file = Tempfile.new([ ds, ext ])
+          file = Tempfile.new([ ds, ext ], 'tmp/files/')
           file.write(cont)
+          file.close
           filepath = file.path
           filename = ds  
         end
@@ -79,7 +80,6 @@ class DatabankPublishRecordJob
           self.status = false
         end
         unless ds.start_with?('content')
-          file.close
           file.unlink
         end
       end
@@ -104,13 +104,18 @@ class DatabankPublishRecordJob
         opts = obj.datastream_opts(ds)
         oldLoc = opts["dsLocation"]
         # Update file location in datastream
-        opts["dsLocation"] = @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+        opts["dsLocation"] = {
+          'silo' => self.silo,
+          'dataset' => self.dataset,
+          'filename' => filename,
+          'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+        }
         obj.datastreams[ds].content = opts.to_json
         # delete file
         obj.delete_file(oldLoc)
       end
       # Delete directory if empty
-      if Dir["#{obj.dir}/*"].empty?
+      if Dir["#{obj.dir(self.pid)}/*"].empty?
         obj.delete_dir(self.pid)
       end
       # Add to ora publish queue
