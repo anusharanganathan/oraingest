@@ -55,7 +55,7 @@ module Ora
 
     #Set the title of the dataset if it is empty or nil
     if @dataset.title.nil? || @dataset.title.empty? || @dataset.title.first.empty?
-      @dataset.title = file.original_filename
+      @dataset.title = file_name
     end
 
     # Save the dataset
