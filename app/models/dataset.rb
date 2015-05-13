@@ -83,8 +83,7 @@ class Dataset < ActiveFedora::Base
   end
 
   def save_file(file, pid)
-    name =  file.original_filename
-    name = File.basename(name) 
+    name = File.basename(file.original_filename) 
     if pid.include?('sufia:')
       pid = pid.gsub('sufia:', '')
     end
@@ -92,6 +91,16 @@ class Dataset < ActiveFedora::Base
     FileUtils::mkdir_p(directory) 
     # create the file path
     path = File.join(directory, name)
+    #If the file exists, append a count to the filename
+    extn = File.extname(path)
+    fn = File.basename(path, extn)
+    dirname = File.dirname(path)
+    count = 0
+    while File.file?(path)
+      count += 1
+      fnNew = "#{fn}-#{count}"
+      path = File.join(dirname,"#{fnNew}#{extn}")
+    end
     # write the file
     File.open(path, "wb") { |f| f.write(file.read) }
     path
