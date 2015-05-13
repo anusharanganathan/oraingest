@@ -33,6 +33,8 @@
     
     <%= render :partial => 'document_list' %>
 
+    <%= render 'dashboard/results_pagination' %>
+
   <% content_for :sidebar do %>
     <%= render :partial=>'dashboard/facets' %>
   <% end %>
