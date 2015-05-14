@@ -2,6 +2,8 @@ require "rails_helper"
 
 describe Article do
 
+  it_behaves_like "doi_methods"
+
   describe 'attributes' do
 
     before do
