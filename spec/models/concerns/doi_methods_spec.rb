@@ -1,0 +1,134 @@
+require "rails_helper"
+
+shared_examples_for "doi_methods" do
+
+  let(:model) { described_class.new }
+
+  def publication_params
+    {
+        'publicationStatus' => '',
+        'reviewStatus' => '',
+        'publisher_attributes' => {
+            '0' => {
+                'agent_attributes' => {
+                    '0' => {
+                        'name' => '',
+                        'website' => ''
+                    }
+                }
+            }
+        },
+        'dateAccepted' => '',
+        'datePublished' => '',
+        'location' => '',
+        'hasDocument_attributes' => {
+            '0' => {
+                'doi' => '10.5072/bodleian:nn999n999',
+                'uri' => '',
+                'identifier' => '',
+                'series_attributes' => {
+                    '0' => {
+                        'title' => ''
+                    }
+                },
+                'journal_attributes' => {
+                    '0' => {
+                        'title' => '',
+                        'issn'=> '',
+                        'eissn' => '',
+                        'volume' => '',
+                        'issue' => '',
+                        'pages' => ''
+                    }
+                }
+            }
+        }
+    }.with_indifferent_access
+  end
+
+  describe '#doi' do
+    context ' when publication is present' do
+      before do
+        model.buildPublicationActivity(publication_params)
+      end
+
+      it 'returns the doi' do
+        expect(model.doi).to eq('10.5072/bodleian:nn999n999')
+      end
+    end
+
+    context ' when publication is not present' do
+      context 'when mint is true' do
+        it 'returns the doi' do
+          expect(model.doi()).not_to be_nil
+          expect(model.doi(true)).not_to be_nil
+        end
+      end
+      context 'when mint is false' do
+        it 'returns nil' do
+          expect(model.doi(false)).to be_nil
+        end
+      end
+    end
+  end
+
+  describe '#doi_requested' do
+    context 'when workflows are present' do
+      it 'returns true'
+
+    end
+    context 'when workflows are not present' do
+      it 'returns false' do
+        expect(model.doi_requested).to be false
+      end
+    end
+
+  end
+
+  describe '#doi_data' do
+    before do
+      model.title = 'Some article'
+      model.buildPublicationActivity(publication_params)
+
+      creation_params = {
+              :creator_attributes => {
+                  '0' => {
+                      'name' => 'Joe Creator',
+                      'email' => '',
+                      'sameAs' => '',
+                      'role' => '',
+                      'affiliation' => {
+                          'name' => 'An affiliation',
+                          'sameAs' => ''
+                      }
+                  }
+              }
+          }.with_indifferent_access
+      model.buildCreationActivity(creation_params)
+
+      subject_params = {
+          '0' => {
+              'subjectLabel' => 'Substance abuse',
+              'subjectAuthority' => 'http://id.worldcat.org/fast/01136767',
+              'subjectScheme' => 'FAST'
+          },
+          '1' => {
+              'subjectLabel' => 'Alcoholism',
+              'subjectAuthority' => 'http://id.worldcat.org/fast/00804461',
+              'subjectScheme' => 'FAST'
+          }
+      }.with_indifferent_access
+      model.buildSubject(subject_params)
+    end
+
+    it 'returns the doi_data'
+  end
+
+  describe '#normalize_doi' do
+    it 'returns the normalized doi'
+  end
+
+  describe '#remote_uri_for' do
+    it 'returns the remote uri'
+  end
+end
