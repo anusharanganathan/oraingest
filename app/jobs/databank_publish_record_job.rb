@@ -93,7 +93,7 @@ class DatabankPublishRecordJob
     else
       wf.entries.last.status = Sufia.config.workflow_status["System failure"]
     end
-    wf.entries.last.reviewer_id = "ORA Deposit system"
+    wf.entries.last.creator = "ORA Deposit system"
     wf.entries.last.description = self.msg.join('\n')
     wf.entries.last.date = Time.now.to_s
 
