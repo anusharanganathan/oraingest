@@ -4,18 +4,22 @@ class UpdatePublishRecordJob
     :ora_publish_status
   end
 
-  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :status, :msg
+  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :status, :msg, :data, :dataOrig
 
-  def initialize(pid, datastreams, model, numberOfFiles, status, msg)
-    self.pid = pid
-    self.datastreams = datastreams
-    self.model = model
-    self.numberOfFiles = numberOfFiles
-    self.status = status
-    self.msg = msg
+  def initialize(data)
+    self.dataOrig = data
+    self.data = data
+    self.data = self.data.gsub("=>", ":") #Stupid conversion that needs to be undone
+    self.data = JSON.parse(self.data)
+    self.pid = self.data["pid"]
+    self.datastreams = self.data["datastreams"]
+    self.model = self.data["model"]
+    self.numberOfFiles = self.data["numberOfFiles"]
+    self.status = self.data["status"]
+    self.msg = self.data["msg"]
   end
 
-  def self.perform()
+  def run
     if self.model == "Article"
       obj = Article.find(self.pid)
     elsif self.model == "Dataset"
@@ -24,10 +28,37 @@ class UpdatePublishRecordJob
     wf = obj.workflows.first
     wf.entries.build
     wf.entries.last.status = "Published"
-    wf.entries.last.reviewer_id = "ORA Deposit system"
+    wf.entries.last.creator = "ORA Deposit system"
     wf.entries.last.description = self.msg
     wf.entries.last.date = Time.now.to_s
     obj.save!
   end
+
+  # Code to do when executing interactively
+  #done = []
+  #error = []
+  #while $redis.llen("ora_publish_status") > 0
+  #  begin
+  #    dataOrig = $redis.lpop("ora_publish_status")
+  #    data = dataOrig
+  #    data = data.gsub("=>", ":") #Stupidly conversion that needs to be undone
+  #    data = JSON.parse(data)
+  #    if data["model"] == "Article"
+  #      obj = Article.find(data["pid"])
+  #    elsif data["model"] == "Dataset"
+  #      obj = Dataset.find(data["pid"])
+  #    end
+  #    wf = obj.workflows.first
+  #    wf.entries.build
+  #    wf.entries.last.status = "Published"
+  #    wf.entries.last.creator = "ORA Deposit system"
+  #    wf.entries.last.description = data["msg"]
+  #    wf.entries.last.date = Time.now.to_s
+  #    obj.save!
+  #    done << data["pid"]
+  #  rescue
+  #    error << dataOrig
+  #  end
+  #end
 
 end
