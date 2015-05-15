@@ -80,9 +80,9 @@ describe GenericFile do
 
   describe "create" do
     before(:each) do
+      Timecop.freeze
       @generic_file.apply_depositor_metadata("fake@example.com")
       @generic_file.save
-      Timecop.freeze
     end
     after(:each) do
       @generic_file.delete

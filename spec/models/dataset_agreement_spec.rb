@@ -2,6 +2,8 @@ require "rails_helper"
 
 describe DatasetAgreement do
 
+  it_behaves_like 'build_metadata'
+
   describe 'attributes' do
 
     before do
