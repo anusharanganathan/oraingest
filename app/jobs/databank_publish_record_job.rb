@@ -95,7 +95,7 @@ class MigrateData
       ext = ".ttl"
     end
     cont = @obj.datastreams[ds].content
-    file = Tempfile.new([ ds, ext ], 'tmp/files/')
+    file = Tempfile.new([ ds, ext ], Sufia.config.tmp_file_dir)
     file.write(cont)
     file.close
     filepath = file.path
@@ -153,7 +153,7 @@ class MigrateData
       'model' => self.model,
       'numberOfFiles' => self.numberOfFiles
     }
-    Resque.redis.rpush("ora_publish", args.to_json)
+    Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
   end
 
   def save()
