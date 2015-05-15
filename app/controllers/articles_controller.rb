@@ -226,6 +226,7 @@ class ArticlesController < ApplicationController
 
   def process_file(file)
     #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
+    datastream_id = @article.mint_datastream_id()
     @article.add_file(file, datastream_id, file.original_filename)
     save_tries = 0
     begin
@@ -314,21 +315,12 @@ class ArticlesController < ApplicationController
   end
 
   def contents
-    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
+    content_datastreams = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
     files = []
-    for dsid in choicesUsed
+    content_datastreams.each do |dsid|
       files.push(@article.to_jq_upload(@article.datastreams[dsid].label, @article.datastreams[dsid].size, @article.id, dsid))
     end
     files
-  end
-
-  def datastream_id
-    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
-    begin
-      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
-    rescue
-      "content01"
-    end
   end
 
   private
