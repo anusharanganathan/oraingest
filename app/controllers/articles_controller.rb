@@ -315,9 +315,8 @@ class ArticlesController < ApplicationController
   end
 
   def contents
-    content_datastreams = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
     files = []
-    content_datastreams.each do |dsid|
+    @article.content_datastreams.each do |dsid|
       files.push(@article.to_jq_upload(@article.datastreams[dsid].label, @article.datastreams[dsid].size, @article.id, dsid))
     end
     files
