@@ -64,13 +64,32 @@ class Article < ActiveFedora::Base
     }
   end
 
-  def mint_datastream_id()
+  def mint_datastream_id
     choicesUsed = self.datastreams.keys.select { |key| key.match(/^content\d+/) and self.datastreams[key].content != nil }
     begin
       "content%02d"%(choicesUsed[-1].last(2).to_i+1)
     rescue
       "content01"
     end
+  end
+
+  def content_datastreams
+    self.datastreams.keys.select { |key| key.start_with?('content') and self.datastreams[key].content != nil }
+  end
+
+  def has_all_access_rights?
+    status = true
+    # Does the object have access rights
+    unless self.accessRights && self.accessRights[0].has_access_right?
+      status = false
+    end
+    #Do all datastreams have access rights      
+    self.content_datastreams.each do |dsid|
+      unless self.datastream_has_access_right?(dsid)
+        status = false
+      end
+    end
+    status
   end
 
   private

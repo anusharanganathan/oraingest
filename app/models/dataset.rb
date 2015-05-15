@@ -149,9 +149,28 @@ class Dataset < ActiveFedora::Base
     ds
   end
 
-  def mint_datastream_id()
+  def mint_datastream_id
     dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
     dsid
+  end
+
+  def content_datastreams
+    self.datastreams.keys.select { |key| key.start_with?('content') and self.datastreams[key].content != nil }
+  end
+
+  def has_all_access_rights?
+    status = true
+    # Does the object have access rights
+    unless self.accessRights && self.accessRights[0].has_access_right?
+      status = false
+    end
+    #Do all datastreams have access rights      
+    self.content_datastreams.each do |dsid|
+      unless self.datastream_has_access_right?(dsid)
+        status = false
+      end
+    end
+    status
   end
 
   private

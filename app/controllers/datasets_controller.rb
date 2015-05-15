@@ -379,9 +379,8 @@ class DatasetsController < ApplicationController
   end
 
   def contents
-    content_datastreams = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
     files = []
-    content_datastreams.each do |dsid|
+    @dataset.content_datastreams.each do |dsid|
       opts = @dataset.datastream_opts(dsid)
       files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end
