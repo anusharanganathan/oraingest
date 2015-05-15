@@ -367,5 +367,9 @@ Sufia.config do |config|
   config.from_email = "no-reply@bodleian.ox.ac.uk"
   config.data_root_dir = "/data/"
   config.cud_base_url = "http://10.0.0.203"
+
+  # For migrating records
+  config.ora_publish_queue_name = "ora_publish"
+  config.tmp_file_dir = "tmp/files/"
 end
 

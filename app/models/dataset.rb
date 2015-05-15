@@ -82,15 +82,14 @@ class Dataset < ActiveFedora::Base
     opts
   end
 
-  def save_file(file, pid)
-    name = File.basename(file.original_filename) 
+  def save_file(file, pid, filename)
     if pid.include?('sufia:')
       pid = pid.gsub('sufia:', '')
     end
     directory = File.join(Sufia.config.data_root_dir, pid)
     FileUtils::mkdir_p(directory) 
     # create the file path
-    path = File.join(directory, name)
+    path = File.join(directory, filename)
     #If the file exists, append a count to the filename
     extn = File.extname(path)
     fn = File.basename(path, extn)
@@ -104,6 +103,28 @@ class Dataset < ActiveFedora::Base
     # write the file
     File.open(path, "wb") { |f| f.write(file.read) }
     path
+  end
+
+  def save_file_associated_datastream(filename, location, file_size)
+    # Prepare data for associated datastream
+    dsid = self.mint_datastream_id()
+    mime_types = MIME::Types.of(filename)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    opts = {:dsLabel => filename, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
+
+    # Add the datastream associated to the file
+    dsfile = StringIO.new(opts.to_json)
+    self.add_file(dsfile, dsid, "attributes.json")
+    dsid
+  end
+
+  def save_file_metadata(location, file_size)
+    # Add the file location to the admin metadata
+    if !file.adminLocator.include?(File.dirname(location))
+      self.adminLocator << File.dirname(location)
+    end
+    size = Integer(self.adminDigitalSize.first) rescue 0
+    self.adminDigitalSize = size + file_size
   end
 
   def delete_file(file_location)
@@ -126,6 +147,11 @@ class Dataset < ActiveFedora::Base
     attrs = {:dsLabel => dsid, :controlGroup => "E", :dsLocation=>url, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
     ds = create_datastream(ActiveFedora::Datastream, dsid, attrs)
     ds
+  end
+
+  def mint_datastream_id()
+    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
+    dsid
   end
 
   private

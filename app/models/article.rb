@@ -64,6 +64,15 @@ class Article < ActiveFedora::Base
     }
   end
 
+  def mint_datastream_id()
+    choicesUsed = self.datastreams.keys.select { |key| key.match(/^content\d+/) and self.datastreams[key].content != nil }
+    begin
+      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
+    rescue
+      "content01"
+    end
+  end
+
   private
   
   def initialize_submission_workflow
