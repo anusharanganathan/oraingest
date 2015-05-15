@@ -33,6 +33,37 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     influence
   end
 
+  def datastream_has_access_right?(dsid)
+    status = false
+    self.hasPart.each do |hp|
+      if hp.identifier[0] == dsid
+        if hp.accessRights && hp.accessRights[0].has_access_rights?
+          status = true
+        end
+      end
+    end
+    status
+  end
+ 
+  def list_open_access_content
+    datastreams =[]
+    unless self.accessRights[0].embargoStatus[0] == "Open access"
+      return datastreams
+    end
+    if self.datastreams.keys().include? "descMetadata"
+      datastreams << "descMetadata"
+    end
+    if self.datastreams.keys().include? "relationsMetadata"
+      datastreams << "relationsMetadata"
+    end
+    self.hasPart.each do |hp|
+      if hp.accessRights && hp.accessRights[0].has_access_rights? && hp.accessRights[0].embargoStatus[0] == "Open access"
+        datastreams << "#{hp.identifier[0]}"
+      end
+    end
+    datastreams
+  end
+
   def persisted?
     rdf_subject.kind_of? RDF::URI
   end
@@ -42,18 +73,14 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     articleVisible = true
     contentVisible = false
     hasContent = false
-    if !self.accessRights.nil? && !self.accessRights.first.nil?
-      if self.accessRights.first.embargoStatus != 'Open access'
-        articleVisible = false
-      end
+    unless self.accessRights && self.accessRights.first.has_access_rights? && self.accessRights.first.embargoStatus == 'Open access'
+      articleVisible = false
     end
     self.hasPart.each do |hp|
-      if !hp.nil?
-        if hp.identifier.first.start_with?('content')
-          hasContent = true
-          if !hp.accessRights.nil? && !hp.accessRights.first.nil? && hp.accessRights.first.embargoStatus == 'Open access'
-            contentVisible = true
-          end
+      if hp.identifier.first.start_with?('content')
+        hasContent = true
+        if hp.accessRights && hp.accessRights.first.has_access_rights? && hp.accessRights.first.embargoStatus == 'Open access'
+          contentVisible = true
         end
       end
     end
@@ -234,47 +261,55 @@ class EmbargoInfo
     rdf_subject if rdf_subject.kind_of? RDF::URI
   end
 
+  def has_access_rights?
+    status = false
+    if self.embargoStatus
+      status = true
+    end
+  end
+
   def embargoInfo
     embargoHash = {}
     embargoHash['identifier'] = rdf_subject.to_s
-    if !self.embargoStatus.nil? && !self.embargoStatus.first.nil?
+    if self.embargoStatus
       embargoHash['embargoStatus'] = self.embargoStatus.first
     end
-    if !self.embargoReason.nil? && !self.embargoReason.empty?
+    if self.embargoReason
       embargoHash['embargoReason'] = self.embargoReason
     end
-    if !self.embargoRelease.nil? && !self.embargoRelease.first.nil?
+    if !self.embargoRelease
       embargoHash['embargoRelease'] = self.embargoRelease.first
     end
 
-    if !self.embargoDate.nil? && !self.embargoDate.first.nil?
+    if self.embargoDate
       # Embargo end - type, date and human
-      if !self.embargoDate.first.end.nil? && !self.embargoDate.first.end.first.nil?
-        if !self.embargoDate.first.end.first.label.nil? && !self.embargoDate.first.end.first.label.first.nil?
+      if self.embargoDate.first.end
+        if self.embargoDate.first.end.first.label
           embargoHash['embargoEndType'] = self.embargoDate.first.end.first.label.first
         end
-        if !self.embargoDate.first.end.first.date.nil? && !self.embargoDate.first.end.first.date.first.nil?
+        if self.embargoDate.first.end.first.date
           embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
         end
         if embargoHash.has_key?('embargoEndType') && embargoHash.has_key?('embargoEnd')
-          if embargoHash['embargoEndType'] == "Stated" || embargoHash['embargoEndType'] == "Defined"
+          case embargoHash['embargoEndType']
+          when "Stated", "Defined"
             embargoHash['embargoEndHuman'] = "until #{embargoHash['embargoEnd']}"
-          elsif embargoHash['embargoEndType'] == "Approximate"
+          when "Approximate"
             embargoHash['embargoEndHuman'] = "after #{embargoHash['embargoEnd']}"
           end
         end
       end
       # Embargo start - type and date
-      if !self.embargoDate.first.start.nil? && !self.embargoDate.first.start.first.nil?
-        if !self.embargoDate.first.start.first.label.nil? && !self.embargoDate.first.start.first.label.first.nil?
+      if self.embargoDate.first.start 
+        if self.embargoDate.first.start.first.label
           embargoHash['embargoStartType'] = self.embargoDate.first.start.first.label.first
         end
-        if !self.embargoDate.first.start.first.date.nil? && !self.embargoDate.first.start.first.date.first.nil?
+        if self.embargoDate.first.start.first.date
           embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
         end
       end
       # Embargo duration
-      if !self.embargoDate.first.duration.nil? && !self.embargoDate.first.duration.first.nil?
+      if self.embargoDate.first.duration
         if (self.embargoDate.first.duration.first.years.first.to_i > 0) || (self.embargoDate.first.duration.first.months.first.to_i > 0)
           embargoHash['embargoDuration'] = "%d years and %d months"% [self.embargoDate.first.duration.first.years.first.to_i, self.embargoDate.first.duration.first.months.first.to_i]
         end
