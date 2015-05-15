@@ -2,34 +2,46 @@ require 'ora/databank'
 
 class DatabankPublishRecordJob
 
-  def queue_name
-    :databank_publish
+  @queue = :databank_publish
+
+  def self.perform(pid, datastreams, model, numberOfFiles)
+    if model == "Article"
+      return
+    end
+    m = MigrateData.new(pid, datastreams, model, numberOfFiles)
+    m.create_dataset()
+    m.upload_to_databank()
+    m.update_status()
+    if m.status
+      m.update_content_datastreams()
+      m.add_to_next_queue()
+    end
+    m.save()
   end
 
-  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :dataset, :status, :msg, :silo
+end
+
+class MigrateData
+
+  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :dataset, :status, :msg, :silo, :content_files
 
   def initialize(pid, datastreams, model, numberOfFiles)
     self.pid = pid
     self.datastreams = datastreams
     self.model = model
     self.numberOfFiles = numberOfFiles
-    if self.pid.start_with?('uuid:')
-      self.dataset = self.pid.sub('uuid:', '')
-    else
-      self.dataset = self.pid
-    end
+    self.dataset = pid.sub('uuid:', '')
     self.status = true
     self.msg = []
-    @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
-    self.silo = Sufia.config.databank_credentials['silo']
+    self.content_files = {}
+    dc = Sufia.config.databank_credentials
+    self.silo = dc['silo']
+    @obj = Dataset.find(self.pid)
+    @databank = Databank.new(dc['host'], username=dc['username'], password=dc['password'])
   end
 
-  def run
-    if self.model == "Article"
-      return
-    end
-
-    #1. Create a dataset
+  def create_dataset()
+    #create dataset if it doesn't exist
     ans = @databank.getDataset(self.silo, self.dataset)
     if !@databank.responseGood(ans['code'])
       ans = @databank.createDataset(self.silo, self.dataset, label=nil, embargoed="true")
@@ -42,88 +54,110 @@ class DatabankPublishRecordJob
     else
       self.msg << "Dataset #{self.dataset} exists"
     end
-
-    #2. Upload files if dataset exists
-    filenames = {}
-    if self.status == true
-      obj = Dataset.find(self.pid)
-      obj.datastreams.keys.each do |ds|
+  end
+  
+  def upload_to_databank()
+    if self.status
+      @obj.datastreams.keys.each do |ds|
         next if ds == 'DC'
         if ds.start_with?('content')
-          # Get file path and file name
-          opts = obj.datastream_opts(ds)
-          filepath = opts["dsLocation"]
-          filename = File.basename filepath
-          filenames[ds] = filepath
+          filepath = upload_content(ds)
+          self.content_files[ds] = filepath
         else
-          # Save datastream to disk, get file path and file name
-          case ds
-          when "RELS-EXT"
-            ext = '.rdf'
-          when "rightsMetadata"
-            ext = '.xml'
-          else
-            ext = ".ttl"
-          end
-          cont = obj.datastreams[ds].content
-          file = Tempfile.new([ ds, ext ], 'tmp/files/')
-          file.write(cont)
-          file.close
-          filepath = file.path
-          filename = ds  
-        end
-        ans = @databank.uploadFile(self.silo, self.dataset, filepath, filename=filename)
-        if @databank.responseGood(ans['code'])
-          self.msg << "Uploaded file #{ds}"
-        else
-          self.msg << "Error uploading file #{ds}"
-          self.status = false
-        end
-        unless ds.start_with?('content')
-          file.unlink
+          upload_metadata(ds)
         end
       end
     end
+  end
 
-    # 3. Update workflow status
-    wf = obj.workflows.first
+  def upload_content(ds)
+    # Get file path and file name
+    opts = @obj.datastream_opts(ds)
+    filepath = opts["dsLocation"]
+    filename = File.basename filepath
+    ans = @databank.uploadFile(self.silo, self.dataset, filepath, filename=filename)
+    if @databank.responseGood(ans['code'])
+      self.msg << "Uploaded file #{ds}"
+    else
+      self.msg << "Error uploading file #{ds}"
+      self.status = false
+    end
+    return filepath
+  end
+
+  def upload_metadata(ds)
+    case ds
+    when "RELS-EXT"
+      ext = '.rdf'
+    when "rightsMetadata"
+      ext = '.xml'
+    else
+      ext = ".ttl"
+    end
+    cont = @obj.datastreams[ds].content
+    file = Tempfile.new([ ds, ext ], 'tmp/files/')
+    file.write(cont)
+    file.close
+    filepath = file.path
+    filename = ds
+    ans = @databank.uploadFile(silo, self.dataset, filepath, filename=filename)
+    if @databank.responseGood(ans['code'])
+      self.msg << "Uploaded file #{ds}"
+    else
+      self.msg << "Error uploading file #{ds}"
+      self.status = false
+    end
+    file.unlink
+  end
+
+  def update_status()
+    wf = @obj.workflows.first
     wf.entries.build
-    if self.status == true
+    if status
       wf.entries.last.status = Sufia.config.workflow_status["Data migrated"]
     else
       wf.entries.last.status = Sufia.config.workflow_status["System failure"]
     end
     wf.entries.last.creator = "ORA Deposit system"
-    wf.entries.last.description = self.msg.join('\n')
+    wf.entries.last.description = msg.join('\n')
     wf.entries.last.date = Time.now.to_s
+  end
 
-    # 4. If succes, update file location in datastream, delete local copy of file and move job to ora_publish queue
-    if self.status == true
-      filenames.each do |ds,fp|
-        filename = File.basename fp
-        opts = obj.datastream_opts(ds)
-        oldLoc = opts["dsLocation"]
-        # Update file location in datastream
-        opts["dsLocation"] = {
-          'silo' => self.silo,
-          'dataset' => self.dataset,
-          'filename' => filename,
-          'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
-        }
-        obj.datastreams[ds].content = opts.to_json
-        # delete file
-        obj.delete_file(oldLoc)
-      end
-      # Delete directory if empty
-      if Dir["#{obj.dir(self.pid)}/*"].empty?
-        obj.delete_dir(self.pid)
-      end
-      # Add to ora publish queue
-      Sufia.queue.push_raw(PublishRecordJob.new(self.pid, self.datastreams, self.model, self.numberOfFiles))
+  def update_content_datastreams()
+    self.content_files.each do |ds, fp|
+      filename = File.basename fp
+      opts = @obj.datastream_opts(ds)
+      oldLoc = opts["dsLocation"]
+      # Update file location in datastream
+      opts["dsLocation"] = {
+        'silo' => self.silo,
+        'dataset' => self.dataset,
+        'filename' => filename,
+        'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
+      }
+      @obj.datastreams[ds].content = opts.to_json
+      # delete file
+      @obj.delete_file(oldLoc)
     end
+    # Delete directory if empty
+    if Dir["#{@obj.dir(self.pid)}/*"].empty?
+      @obj.delete_dir(self.pid)
+    end
+  end
 
-    # Save object
-    obj.save!
+  def add_to_next_queue()
+    # Add to ora publish queue
+    args = {
+      'pid' => self.pid,
+      'datastreams' => self.datastreams,
+      'model' => self.model,
+      'numberOfFiles' => self.numberOfFiles
+    }
+    Resque.redis.rpush("ora_publish", args.to_json)
+  end
+
+  def save()
+    @obj.save!
   end
 
 end
