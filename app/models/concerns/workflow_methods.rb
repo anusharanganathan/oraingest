@@ -84,9 +84,16 @@ module WorkflowMethods
         # Push object to queue
         if toMigrate
           if model == "Dataset"
-            Sufia.queue.push(DatabankPublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
+            Resque.enqueue(DatabankPublishRecordJob, self.id.to_s, datastreams, model, numberOfFiles.to_s)
           else
-            Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
+            # Add to ora publish queue
+            args = {
+              'pid' => self.id.to_s,
+              'datastreams' => datastreams,
+              'model' => model,
+              'numberOfFiles' => numberOfFiles.t_s
+            }
+            Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
           end
         end
       #else
