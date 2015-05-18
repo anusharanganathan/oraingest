@@ -120,7 +120,7 @@ class Dataset < ActiveFedora::Base
 
   def save_file_metadata(location, file_size)
     # Add the file location to the admin metadata
-    if !file.adminLocator.include?(File.dirname(location))
+    if !self.adminLocator.include?(File.dirname(location))
       self.adminLocator << File.dirname(location)
     end
     size = Integer(self.adminDigitalSize.first) rescue 0
