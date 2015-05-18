@@ -103,24 +103,26 @@ shared_examples_for 'build_metadata' do
   describe '#buildSubject' do
     context 'with valid parameters' do
       it 'creates a single subject' do
-        skip 'not working for DatasetAgreement'
-        params = {'0' => {subjectLabel: 'Subject #1', subjectAuthority: 'Authority', subjectScheme: 'scheme'}}.with_indifferent_access
-        model.buildSubject(params)
-        expect(model.subject).to be_an(Array)
-        expect(model.subject).not_to be_empty
-        expect(model.subject.size).to eq(1)
-        expect(model.subject.first).to be_a(MadsSubject)
+        unless model.is_a?(DatasetAgreement)
+          params = {'0' => {subjectLabel: 'Subject #1', subjectAuthority: 'Authority', subjectScheme: 'scheme'}}.with_indifferent_access
+          model.buildSubject(params)
+          expect(model.subject).to be_an(Array)
+          expect(model.subject).not_to be_empty
+          expect(model.subject.size).to eq(1)
+          expect(model.subject.first).to be_a(MadsSubject)
+        end
       end
     end
 
     context 'with invalid parameters' do
       context 'missing subjectLabel' do
         it 'does not create a subject' do
-          skip 'not working for DatasetAgreement'
-          params = {'0' => {subjectLabel: '', subjectAuthority: 'Authority', subjectScheme: 'scheme'}}.with_indifferent_access
-          model.buildSubject(params)
-          expect(model.subject).to be_an(Array)
-          expect(model.subject).to be_empty
+          unless model.is_a?(DatasetAgreement)
+            params = {'0' => {subjectLabel: '', subjectAuthority: 'Authority', subjectScheme: 'scheme'}}.with_indifferent_access
+            model.buildSubject(params)
+            expect(model.subject).to be_an(Array)
+            expect(model.subject).to be_empty
+          end
         end
       end
     end
@@ -530,6 +532,10 @@ shared_examples_for 'build_metadata' do
       end
     end
 
+  end
+
+  describe '#buildStorageAgreementData' do
+    pending 'implement this'
   end
 
   describe '#buildValidityDate' do
