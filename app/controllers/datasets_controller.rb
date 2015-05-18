@@ -287,7 +287,7 @@ class DatasetsController < ApplicationController
     # Set the medium to digital in metadata
     @dataset.medium = Sufia.config.data_medium["Digital"]
     #Set the title of the dataset if it is empty or nil
-    if @dataset.title.nil? || @dataset.title.empty? || @dataset.title.first.empty?
+    unless @dataset.title && @dataset.title.first
       @dataset.title = file.original_filename
     end
     # Save the dataset
