@@ -1,5 +1,3 @@
-require 'ora/resque'
-
 module WorkflowMethods
   extend ActiveSupport::Concern
 
