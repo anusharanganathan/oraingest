@@ -18,8 +18,8 @@ shared_examples_for "doi_methods" do
                 }
             }
         },
-        'dateAccepted' => '',
-        'datePublished' => '',
+        'dateAccepted' => '2014-12-01',
+        'datePublished' => '2015-02-23',
         'location' => '',
         'hasDocument_attributes' => {
             '0' => {
@@ -121,7 +121,23 @@ shared_examples_for "doi_methods" do
       model.buildSubject(subject_params)
     end
 
-    it 'returns the doi_data'
+    it 'returns the doi_data' do
+      if model.is_a?(Dataset)
+        data = model.doi_data
+        expect(data).not_to be_nil
+        expect(data[:resourceType]).to eq('Dataset')
+        expect(data[:resourceTypeGeneral]).to eq('Dataset')
+        expect(data[:title]).to eq('Some article')
+        expect(data[:identifier]).to eq('10.5072/bodleian:nn999n999')
+        expect(data[:publisher]).to eq('University of Oxford')
+        expect(data[:creator]).to be_an(Array)
+        expect(data[:contributor]).to be_an(Array)
+        expect(data[:subject]).to be_an(Array)
+        expect(data[:subject].size).to eq(2)
+        expect(data[:rights]).to be_an(Array)
+        expect(data[:description]).to be_an(Array)
+      end
+    end
   end
 
   describe '#normalize_doi' do
