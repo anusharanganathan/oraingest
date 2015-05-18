@@ -6,7 +6,9 @@
   <% end %>
   <strong>Note:</strong> You must agree to <a href='<%=url%>' target="_blank"><%= "ORA's deposit licence" %></a> before starting your upload.
   <% if @files.empty? %>
-    <p>If you wish to create a record about a dataset stored elsewhere and do not need to upload any data files, please move on to Step 2, <i>About your data</i>.</p>
+    <% if @model=='dataset' %>
+            <p>If you wish to create a record about a dataset stored elsewhere and do not need to upload any data files, please move on to Step 2, <i>'About your data'</i>.</p>
+    <% end %>
   <% end %>
 </div>
 
