@@ -16,8 +16,8 @@ describe PublicationActivity do
                 }
             }
         }, 
-        'dateAccepted' => nil, 
-        'datePublished' => nil, 
+        'dateAccepted' => '2014-12-01',
+        'datePublished' => '2015-02-23',
         'location' => nil, 
         'hasDocument_attributes' =>  {
             '0' =>  {
