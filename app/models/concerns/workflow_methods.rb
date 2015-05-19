@@ -20,7 +20,7 @@ module WorkflowMethods
     # If datastreams are empty, that means record is all dark
     unless self.ready_to_publish?
       return
-
+    end
     wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
     model = self.class.model_name.to_s
     status = "Migrate"
@@ -40,7 +40,6 @@ module WorkflowMethods
       open_access_content = self.list_open_access_content
       numberOfFiles = (open_access_content.select { |key| key.start_with?('content') }).length
       msg << "Open access datastreams: %s."%open_access_content.join(", ")
-
       if model == "Dataset"
         Resque.enqueue(DatabankPublishRecordJob, self.id.to_s, open_access_content, model, numberOfFiles.to_s)
       else
@@ -65,8 +64,10 @@ module WorkflowMethods
     status = false
     unless Sufia.config.publish_to_queue_options.keys.include?(model.downcase)
       return status
+    end
     unless Sufia.config.publish_to_queue_options[model.downcase].include?(wf.current_status)
       return status
+    end
     occurences = wf.all_statuses.select{|s| s == wf.current_status}
     occurence = Sufia.config.publish_to_queue_options[model.downcase][wf.current_status]['occurence']
     return (occurences.length == occurence) || occurence == "all"
