@@ -33,7 +33,7 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     influence
   end
 
-  def datastream_has_access_right?(dsid)
+  def datastream_has_access_rights?(dsid)
     status = false
     self.hasPart.each do |hp|
       if hp.identifier[0] == dsid
@@ -266,6 +266,7 @@ class EmbargoInfo
     if self.embargoStatus
       status = true
     end
+    status
   end
 
   def embargoInfo
@@ -281,13 +282,13 @@ class EmbargoInfo
       embargoHash['embargoRelease'] = self.embargoRelease.first
     end
 
-    if self.embargoDate
+    if self.embargoDate.first
       # Embargo end - type, date and human
-      if self.embargoDate.first.end
-        if self.embargoDate.first.end.first.label
+      if self.embargoDate.first.end.first
+        if self.embargoDate.first.end.first.label.first
           embargoHash['embargoEndType'] = self.embargoDate.first.end.first.label.first
         end
-        if self.embargoDate.first.end.first.date
+        if self.embargoDate.first.end.first.date.first
           embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
         end
         if embargoHash.has_key?('embargoEndType') && embargoHash.has_key?('embargoEnd')
@@ -300,16 +301,16 @@ class EmbargoInfo
         end
       end
       # Embargo start - type and date
-      if self.embargoDate.first.start 
-        if self.embargoDate.first.start.first.label
+      if self.embargoDate.first.start.first 
+        if self.embargoDate.first.start.first.label.first
           embargoHash['embargoStartType'] = self.embargoDate.first.start.first.label.first
         end
-        if self.embargoDate.first.start.first.date
+        if self.embargoDate.first.start.first.date.first
           embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
         end
       end
       # Embargo duration
-      if self.embargoDate.first.duration
+      if self.embargoDate.first.duration.first
         if (self.embargoDate.first.duration.first.years.first.to_i > 0) || (self.embargoDate.first.duration.first.months.first.to_i > 0)
           embargoHash['embargoDuration'] = "%d years and %d months"% [self.embargoDate.first.duration.first.years.first.to_i, self.embargoDate.first.duration.first.months.first.to_i]
         end
