@@ -49,7 +49,7 @@ module WorkflowMethods
           'pid' => self.id.to_s,
           'datastreams' => open_access_content,
           'model' => model,
-          'numberOfFiles' => numberOfFiles.t_s
+          'numberOfFiles' => numberOfFiles.to_s
         }
         Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
       end
