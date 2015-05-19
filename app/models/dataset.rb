@@ -161,12 +161,12 @@ class Dataset < ActiveFedora::Base
   def has_all_access_rights?
     status = true
     # Does the object have access rights
-    unless self.accessRights && self.accessRights[0].has_access_right?
+    unless self.accessRights && self.accessRights[0].has_access_rights?
       status = false
     end
     #Do all datastreams have access rights      
     self.content_datastreams.each do |dsid|
-      unless self.datastream_has_access_right?(dsid)
+      unless self.datastream_has_access_rights?(dsid)
         status = false
       end
     end
