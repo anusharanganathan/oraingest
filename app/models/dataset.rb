@@ -166,7 +166,7 @@ class Dataset < ActiveFedora::Base
     end
     #Do all datastreams have access rights      
     self.content_datastreams.each do |dsid|
-      unless self.datastream_has_access_rights?(dsid)
+      unless self.relationsMetadata.datastream_has_access_rights?(dsid)
         status = false
       end
     end
