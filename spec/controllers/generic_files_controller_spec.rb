@@ -38,7 +38,7 @@ describe GenericFilesController do
           },
           "update_workflow"=>"", "id"=>@generic_file.noid
       }
-      xhr :post, :update, params
+      post :update, params
       expect(assigns(:generic_file).pid).to eq(@generic_file.pid)
       expect(assigns(:generic_file).workflows.count).to eq(1)
       wf = assigns(:generic_file).workflows.first
