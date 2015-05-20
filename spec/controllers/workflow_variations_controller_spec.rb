@@ -42,7 +42,7 @@ describe "Workflow Variations" do
       end
       describe "#index" do
         before (:each) do
-          xhr :get, :index, per_page:"100"
+          get :index, per_page:"100"
         end
         it "should be a success" do
           expect(response).to be_success
@@ -67,7 +67,7 @@ describe "Workflow Variations" do
         it "should not show other users content" do
           editable_results = Blacklight.solr.get "select", :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@archivist.user_key}"]}
           
-          xhr :post, :index
+          post :index
           expect(response).to be_success
           expect(assigns(:result_set_size)).to eql(editable_results["response"]["numFound"])
         end
