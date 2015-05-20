@@ -12,10 +12,10 @@ module WorkflowMethods
     end
     ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, model)
     # publish record
-    publishRecord("MediatedSubmission", current_user)
+    publish_record("MediatedSubmission", current_user)
   end
 
-  def publishRecord(wf_id, current_user)
+  def publish_record(wf_id, current_user)
     # Send pid and list of open datastreams to queue
     # If datastreams are empty, that means record is all dark
     unless self.ready_to_publish?
@@ -25,16 +25,13 @@ module WorkflowMethods
     model = self.class.model_name.to_s
     status = "Migrate"
     msg = []
-
     unless self.datastreams.keys().include? "descMetadata"
       status = "System failure"
       msg << "No descMetadata available."
-      #self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
     end
     unless self.has_all_access_rights?
       status = "System failure"
       msg << "Not all files or the catalogue record has embargo details"
-      #self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
     end
     if status == "Migrate"
       open_access_content = self.list_open_access_content
@@ -53,12 +50,10 @@ module WorkflowMethods
         Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
       end
     end
-
     self.workflows.first.entries.build(description: msg.join(" "), creator: current_user, date: Time.now.to_s, status: status)
-
   end
 
-  def ready_to_publish?
+  def ready_to_publish?(wf_id="MediatedSubmission")
     wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
     model = self.class.model_name.to_s
     status = false
@@ -74,3 +69,4 @@ module WorkflowMethods
   end
 
 end
+
