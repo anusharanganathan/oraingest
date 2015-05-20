@@ -263,7 +263,7 @@ class EmbargoInfo
 
   def has_access_rights?
     status = false
-    if self.embargoStatus
+    if self.embargoStatus.first
       status = true
     end
     status
