@@ -56,7 +56,7 @@ describe PublicationActivity do
       expect(activity).to be_a(PublicationActivity)
       expect(activity.persisted?).to be true
       expect(activity.id).not_to be_nil
-    end#
+    end
 
     it 'builds solr' do
       activity = model.publication.build(params)

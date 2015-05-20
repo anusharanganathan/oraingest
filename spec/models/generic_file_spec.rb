@@ -49,6 +49,10 @@ describe GenericFile do
   end
 
   describe 'workflows' do
+    after do
+      subject.delete if subject.persisted?
+    end
+
     it "should allow updating workflows" do
       subject.update_attributes( { workflows_attributes: [
                                      {identifier: "MediatedSubmission", entries_attributes: [{status: "Submitted"}]},
@@ -79,30 +83,42 @@ describe GenericFile do
   end
 
   describe "create" do
-    before(:each) do
-      Timecop.freeze
-      @generic_file.apply_depositor_metadata("fake@example.com")
-      @generic_file.save
+    context 'when not already there' do
+      before(:each) do
+        Timecop.freeze
+        @generic_file.apply_depositor_metadata("fake@example.com")
+        @generic_file.save
+      end
+      after(:each) do
+        @generic_file.delete
+        Timecop.return
+      end
+
+      it "should initialize submission workflow" do
+        expect(@generic_file.workflows.count).to eq(1)
+        wf = @generic_file.workflows.first
+        expect(wf.identifier).to eq(["MediatedSubmission"])
+        expect(wf.current_status).to eq("Draft")
+        expect(wf.entries.first.date.first).to include(Time.new.strftime("%Y-%m-%d %H:%M"))
+      end
+
     end
-    after(:each) do
-      @generic_file.delete
-      Timecop.return
-    end
-    it "should initialize submission workflow" do
-      expect(@generic_file.workflows.count).to eq(1)
-      wf = @generic_file.workflows.first
-      expect(wf.identifier).to eq(["MediatedSubmission"])
-      expect(wf.current_status).to eq("Draft")
-      expect(wf.entries.first.date.first).to include(Time.new.strftime("%Y-%m-%d %H:%M"))
-    end
-    it "should skip initializing workflow if it's already there" do
-      @in_review = GenericFile.new(title: "Item In Review", workflows_attributes:
-                            [{identifier: "MediatedSubmission", entries_attributes: [{status: "Assigned", reviewer_id: "fake@example.com"}]}] )
-      @in_review.apply_depositor_metadata("fake@example.com")
-      expect(@in_review.workflows.count).to eq(1)
-      @in_review.save
-      expect(@in_review.workflows.count).to eq(1)
-      expect(@in_review.workflows.first.current_status).to eq("Assigned")
+
+    context 'when already there' do
+      before do
+        @in_review = GenericFile.new(title: "Item In Review", workflows_attributes:
+                                                                [{identifier: "MediatedSubmission", entries_attributes: [{status: "Assigned", reviewer_id: "fake@example.com"}]}] )
+        @in_review.apply_depositor_metadata("fake@example.com")
+      end
+      after do
+        @in_review.delete
+      end
+      it "should skip initializing workflow" do
+        expect(@in_review.workflows.count).to eq(1)
+        @in_review.save
+        expect(@in_review.workflows.count).to eq(1)
+        expect(@in_review.workflows.first.current_status).to eq("Assigned")
+      end
     end
   end
 end

@@ -61,6 +61,10 @@ describe Article do
       @article = Article.new
     end
 
+    after do
+      @article.delete
+    end
+
     it 'initializes the submission workflow' do
       @article.save
       expect(@article.workflows.count).to eq(1)

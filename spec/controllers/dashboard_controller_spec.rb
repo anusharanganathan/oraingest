@@ -16,7 +16,7 @@ describe DashboardController do
 
     describe "#index" do
       before(:each) do
-        xhr :get, :index
+        get :index
         # Make sure there are at least 3 files owned by @user. Otherwise, the tests aren't meaningful.
         if assigns(:document_list).count < 3
           files_count = assigns(:document_list).count
@@ -26,7 +26,7 @@ describe DashboardController do
             gf.save
             files_count += 1
           end
-          xhr :get, :index
+          get :index
         end
       end
       
@@ -43,7 +43,7 @@ describe DashboardController do
       context "with render views" do
         render_views
         it "should paginate" do
-          xhr :get, :index
+          get :index
           expect(response).to be_success
           expect(response).to render_template('dashboard/index')
         end
@@ -53,7 +53,7 @@ describe DashboardController do
   describe "not logged in as a user" do
     describe "#index" do
       it "should return an error" do
-        xhr :post, :index
+        post :index
         expect(response).not_to be_success
       end
     end

@@ -13,7 +13,7 @@ describe ReviewerDashboardController do
     end
     describe "#index" do
       before (:each) do
-        xhr :get, :index
+        get :index
       end
       it "should be a success" do
         expect(response).to be_success
@@ -34,7 +34,7 @@ describe ReviewerDashboardController do
     end
     describe "#index" do
       it "should return an error" do
-        xhr :post, :index
+        post :index
         expect(response).not_to be_success
       end
     end
@@ -43,7 +43,7 @@ describe ReviewerDashboardController do
   describe "not logged in as a user" do
     describe "#index" do
       it "should return an error" do
-        xhr :post, :index
+        post :index
         expect(response).not_to be_success
       end
     end
