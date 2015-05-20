@@ -13,10 +13,10 @@
     <% hasData = true %>
   <% end %>
 <% end %>
-<% if hasData %>
-  <div class="accordian">
-    <div class="accordian-header">Visibility of catalogue record</div>
-    <div class="accordian-content">
+<div class="accordian">
+  <div class="accordian-header">Visibility of catalogue record</div>
+  <div class="accordian-content">
+    <% if hasData %>
       <!-- status -->
       <% if article.accessRights[0].embargoInfo.has_key?('embargoStatus') %>
         <h6>Embargo status:</h6>
@@ -36,7 +36,7 @@
       <% if article.accessRights[0].embargoInfo.has_key?('embargoReason') %>
         <h6>Embargo reason:</h6>
         <% article.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
-          <p><%=simple_format(er)%></p>
+          <p><%=er%></p>
         <% end %>
       <% end %>
       <!-- release method -->
@@ -44,7 +44,9 @@
         <h6>Embargo release method:</h6>
         <p><%= article.accessRights[0].embargoInfo['embargoRelease'] %></p>
       <% end %>
-    </div>
+    <% else %>
+      <p>This information has not been entered</p>
+    <% end %>
   </div>
-<% end %>
+</div>
 
