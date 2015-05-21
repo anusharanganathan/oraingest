@@ -14,6 +14,7 @@ class Article < ActiveFedora::Base
   include WorkflowMethods
   include BuildMetadata
   include DoiMethods
+  include ContentMethods
 
   attr_accessible *(ArticleRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + ArticleAdminRdfDatastream.fields)
   
@@ -73,25 +74,6 @@ class Article < ActiveFedora::Base
     end
   end
 
-  def content_datastreams
-    self.datastreams.keys.select { |key| key.start_with?('content') and self.datastreams[key].content != nil }
-  end
-
-  def has_all_access_rights?
-    status = true
-    # Does the object have access rights
-    unless self.accessRights && self.accessRights[0].has_access_rights?
-      status = false
-    end
-    #Do all datastreams have access rights      
-    self.content_datastreams.each do |dsid|
-      unless self.relationsMetadata.datastream_has_access_rights?(dsid)
-        status = false
-      end
-    end
-    status
-  end
-
   private
   
   def initialize_submission_workflow
@@ -113,22 +95,6 @@ class Article < ActiveFedora::Base
     rescue ActiveFedora::ObjectNotFoundError
       Article.create({pid: pid})
     end
-  end
-
-  def thumbnail_url(filename, size)
-    icon = "fileIcons/default-icon-#{size}x#{size}.png"
-    begin
-      mt = MIME::Types.of(filename)
-      extensions = mt[0].extensions
-    rescue
-      extensions = []
-    end
-    for ext in extensions
-      if Rails.application.assets.find_asset("fileIcons/#{ext}-icon-#{size}x#{size}.png")
-        icon = "fileIcons/#{ext}-icon-#{size}x#{size}.png"
-      end
-    end
-    icon
   end
 
 end
