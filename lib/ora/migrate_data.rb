@@ -36,7 +36,7 @@ module ORA
     def create_dataset
       #create dataset in Databank if it doesn't exist
       ans = @databank.getDataset(self.silo, self.dataset)
-      if !@databank.responseGood(ans['code'])
+      unless @databank.responseGood(ans['code'])
         ans = @databank.createDataset(self.silo, self.dataset, label=nil, embargoed="true")
         if @databank.responseGood(ans['code'])
           self.msg << "Created Dataset #{self.dataset}"
