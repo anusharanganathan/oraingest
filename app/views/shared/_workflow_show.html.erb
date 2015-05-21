@@ -11,15 +11,22 @@
     <% else %>
       <table style="font-size: 12px; margin: 10px 0; color: #505050;">
         <tr>
-          <th>Date</th><th>Modified by</th><th>Status</th><th>Assignee</th><th>Comment</th>
+          <th class="col1of5"><strong>Date</strong></th>
+          <th class="col1of5"><strong>Modified by</strong></th>
+          <th class="col1of5"><strong>Status</strong></th>
+          <th class="col2of5"><strong>Comment</strong></th>
         </tr>
         <% wf.entries.each do |entry| %>
           <tr>
             <td><%= format_date(entry.date.first) %></td>
             <td><%= entry.creator.first %></td>
             <td><%= entry.status.first %></td>
-            <td><%= entry.reviewer_id.first %></td>
-            <td><%= simple_format(entry.description.first) %></td>
+            <td>
+              <% if entry.reviewer_id.any? %>
+                Assigned to <%= entry.reviewer_id.first %><br/>
+              <% end %>
+              <%= simple_format(entry.description.first) %>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -27,7 +34,9 @@
         <h4>Comments</h4>
         <table style="font-size: 12px; margin: 10px 0; color: #505050;">
           <tr>
-            <th>Date</th><th>Comment Author</th><th>Comment</th>
+            <th class="col1of5"><strong>Date</strong></th>
+            <th class="col1of5"><strong>Comment Author</strong></th>
+            <th class="col3of5"><strong>Comment</strong></th>
           </tr>
           <% wf.comments.each do |comment| %>
             <tr>
@@ -42,7 +51,8 @@
         <h4>Email threads</h4>
         <table style="font-size: 12px; margin: 10px 0; color: #505050;">
           <tr>
-            <th>Date</th><th>Email thread</th>
+            <th><strong>Date</strong></th>
+            <th><strong>Email thread</strong></th>
           </tr>
           <% wf.emailThreads.each do |emailThread| %>
             <tr>
@@ -52,7 +62,7 @@
           <% end %>
         </table>
       <% end %>
-      <% if !wf.involves.nil? and !wf.involves.empty? %>
+      <% if wf.involves.any? %>
         <h4>Events involved</h4>
         <table style="font-size: 12px; margin: 10px 0; color: #505050;">
           <% wf.involves.each do |event| %>
