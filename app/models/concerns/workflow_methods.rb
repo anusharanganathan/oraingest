@@ -6,8 +6,8 @@ module WorkflowMethods
     # send email
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
     record_url = Rails.application.routes.url_helpers.url_for(:controller => models[model], :action=>'show', :id => self.id)
-    data = {"record_id" => self.id, "record_url" => record_url, "doi_requested"=>self.doi_requested}
-    if self.doi_requested
+    data = {"record_id" => self.id, "record_url" => record_url, "doi_requested"=>self.doi_requested?}
+    if self.doi_requested?
       data["doi"] = self.doi(mint=false)
     end
     ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, model)
@@ -57,6 +57,9 @@ module WorkflowMethods
     wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
     model = self.class.model_name.to_s
     status = false
+    if wf.nil?
+      return status
+    end
     unless Sufia.config.publish_to_queue_options.keys.include?(model.downcase)
       return status
     end
