@@ -45,25 +45,6 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     status
   end
  
-  def list_open_access_content
-    datastreams =[]
-    unless self.accessRights[0].embargoStatus[0] == "Open access"
-      return datastreams
-    end
-    if self.datastreams.keys().include? "descMetadata"
-      datastreams << "descMetadata"
-    end
-    if self.datastreams.keys().include? "relationsMetadata"
-      datastreams << "relationsMetadata"
-    end
-    self.hasPart.each do |hp|
-      if hp.accessRights && hp.accessRights[0].has_access_rights? && hp.accessRights[0].embargoStatus[0] == "Open access"
-        datastreams << "#{hp.identifier[0]}"
-      end
-    end
-    datastreams
-  end
-
   def persisted?
     rdf_subject.kind_of? RDF::URI
   end
@@ -73,13 +54,13 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     articleVisible = true
     contentVisible = false
     hasContent = false
-    unless self.accessRights && self.accessRights.first.has_access_rights? && self.accessRights.first.embargoStatus == 'Open access'
+    unless self.accessRights.any? && self.accessRights.first.has_access_rights? && self.accessRights.first.embargoStatus.first == 'Open access'
       articleVisible = false
     end
     self.hasPart.each do |hp|
       if hp.identifier.first.start_with?('content')
         hasContent = true
-        if hp.accessRights && hp.accessRights.first.has_access_rights? && hp.accessRights.first.embargoStatus == 'Open access'
+        if hp.accessRights.any? && hp.accessRights.first.has_access_rights? && hp.accessRights.first.embargoStatus.first == 'Open access'
           contentVisible = true
         end
       end
@@ -117,11 +98,11 @@ class RelationsRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     solr_doc[Solrizer.solr_name("relations_metadata__embargoStatus", :symbol)] = self.embargoStatus
     solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :dateable, type: :date)] ||= []
     solr_doc[Solrizer.solr_name("relations_metadata__embargoDates", :stored_searchable)] ||= []
-    if !self.accessRights.nil? && !self.accessRights.first.nil?
+    if self.accessRights.any? && self.accessRights.first.has_access_rights?
       self.accessRights.first.to_solr(solr_doc)
     end
     self.hasPart.each do |hp|
-      if !hp.nil? && hp.identifier.first.start_with?('content') && !hp.accessRights.nil? && !hp.accessRights.first.nil?
+      if hp.identifier.first.start_with?('content') && hp.accessRights.first.has_access_rights?
         hp.accessRights.first.to_solr(solr_doc)
       end #if content and accessRights
     end #each hasPart
@@ -190,7 +171,7 @@ class ExternalRelationsQualified
     solr_doc[Solrizer.solr_name("relations_metadata__relatedItemURL", :stored_searchable)] ||= []
     solr_doc[Solrizer.solr_name("relations_metadata__relatedItemRelation", :symbol)] ||= []
     riHash = {}
-    if !self.entity.nil? && !self.entity.first.nil?
+    if self.entity.any?
       riHash['url'] = self.entity.first.rdf_subject.to_s
       riHash['title'] = self.entity.first.title.first 
       riHash['description'] = self.entity.first.description.first
@@ -263,7 +244,7 @@ class EmbargoInfo
 
   def has_access_rights?
     status = false
-    if self.embargoStatus.first
+    unless self.embargoStatus.first.blank?
       status = true
     end
     status
@@ -272,23 +253,23 @@ class EmbargoInfo
   def embargoInfo
     embargoHash = {}
     embargoHash['identifier'] = rdf_subject.to_s
-    if self.embargoStatus
+    unless self.embargoStatus.first.blank?
       embargoHash['embargoStatus'] = self.embargoStatus.first
     end
-    if self.embargoReason
+    if self.embargoReason.any?
       embargoHash['embargoReason'] = self.embargoReason
     end
-    if !self.embargoRelease
+    unless self.embargoRelease.first.blank?
       embargoHash['embargoRelease'] = self.embargoRelease.first
     end
 
     if self.embargoDate.first
       # Embargo end - type, date and human
       if self.embargoDate.first.end.first
-        if self.embargoDate.first.end.first.label.first
+        unless self.embargoDate.first.end.first.label.first.blank?
           embargoHash['embargoEndType'] = self.embargoDate.first.end.first.label.first
         end
-        if self.embargoDate.first.end.first.date.first
+        unless self.embargoDate.first.end.first.date.blank?
           embargoHash['embargoEnd'] = self.embargoDate.first.end.first.date.first
         end
         if embargoHash.has_key?('embargoEndType') && embargoHash.has_key?('embargoEnd')
@@ -301,11 +282,11 @@ class EmbargoInfo
         end
       end
       # Embargo start - type and date
-      if self.embargoDate.first.start.first 
-        if self.embargoDate.first.start.first.label.first
+      if self.embargoDate.first.start.first
+        unless self.embargoDate.first.start.first.label.first.blank?
           embargoHash['embargoStartType'] = self.embargoDate.first.start.first.label.first
         end
-        if self.embargoDate.first.start.first.date.first
+        unless self.embargoDate.first.start.first.date.first.blank?
           embargoHash['embargoStart'] = self.embargoDate.first.start.first.date.first
         end
       end
