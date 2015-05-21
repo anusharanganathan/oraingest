@@ -29,6 +29,10 @@ describe DashboardController do
           get :index
         end
       end
+
+      after do
+        GenericFile.delete_all
+      end
       
       it "should be a success" do
         expect(response).to be_success
