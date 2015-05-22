@@ -281,7 +281,7 @@ class DatasetsController < ApplicationController
   def process_file(file)
     # Save file to disk
     filename = File.basename(file.original_filename)
-    dsid = @dataset.save_file(file, filename)
+    dsid = @dataset.add_content(file, filename)
     # Save the dataset
     save_tries = 0
     begin

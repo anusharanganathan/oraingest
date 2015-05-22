@@ -26,9 +26,12 @@ module ORA
       self.update_status
       if self.status
         self.update_content_datastreams
-        self.add_to_next_queue
       end
       self.save
+      if self.status
+        self.delete_local_files
+        self.add_to_next_queue
+      end
     end
   
     private
@@ -124,7 +127,7 @@ module ORA
       self.content_files.each do |ds, fp|
         filename = File.basename fp
         opts = @obj.datastream_opts(ds)
-        oldLoc = opts["dsLocation"]
+        old_location = opts["dsLocation"]
         # Update file location in datastream
         opts["dsLocation"] = {
           'silo' => self.silo,
@@ -133,13 +136,18 @@ module ORA
           'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
         }
         @obj.datastreams[ds].content = opts.to_json
+      end
+    end
+
+    def delete_local_files
+      self.content_files.each do |ds, fp|
         # delete file
-        @obj.delete_file(oldLoc)
+        @obj.delete_local_copy(ds, fp)
       end
       # Delete directory if empty
       @obj.delete_dir
     end
-  
+
     def add_to_next_queue
       # Add to ora publish queue, so record can be published in Ora
       args = {
