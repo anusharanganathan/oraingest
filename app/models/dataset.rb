@@ -84,9 +84,9 @@ class Dataset < ActiveFedora::Base
   end
 
   def save_file(file, filename)
-    location = self.save_file_to_disk(file, filename)
-    dsid = self.save_file_associated_datastream(filename, location, file.size)
-    self.save_file_metadata(location, file.size)
+    location = save_file_to_disk(file, filename)
+    dsid = save_file_associated_datastream(filename, location, file.size)
+    save_file_metadata(location, file.size)
     return dsid
   end
 
@@ -95,7 +95,7 @@ class Dataset < ActiveFedora::Base
   end
 
   def delete_dir
-    FileUtils.rmdir(directory) if Dir.exist?(self.dir) && Dir["#{self.dir}/*"].empty?
+    FileUtils.rmdir(directory) if Dir.exist?(data_dir) && Dir["#{data_dir}/*"].empty?
   end
 
   def create_external_datastream(dsid, url, file_name, file_size)
@@ -137,14 +137,14 @@ class Dataset < ActiveFedora::Base
     end
   end
 
-  def dir
+  def data_dir
     File.join(Sufia.config.data_root_dir, self.id)
   end
 
   def save_file_to_disk(file, filename)
-    FileUtils::mkdir_p(self.dir)
+    FileUtils::mkdir_p(data_dir)
     # create the file path
-    path = File.join(self.dir, filename)
+    path = File.join(data_dir, filename)
     #If the file exists, append a count to the filename
     extn = File.extname(path)
     fn = File.basename(path, extn)
