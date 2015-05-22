@@ -83,62 +83,19 @@ class Dataset < ActiveFedora::Base
     opts
   end
 
-  def save_file(file, pid, filename)
-    if pid.include?('sufia:')
-      pid = pid.gsub('sufia:', '')
-    end
-    directory = File.join(Sufia.config.data_root_dir, pid)
-    FileUtils::mkdir_p(directory) 
-    # create the file path
-    path = File.join(directory, filename)
-    #If the file exists, append a count to the filename
-    extn = File.extname(path)
-    fn = File.basename(path, extn)
-    dirname = File.dirname(path)
-    count = 0
-    while File.file?(path)
-      count += 1
-      fnNew = "#{fn}-#{count}"
-      path = File.join(dirname,"#{fnNew}#{extn}")
-    end
-    # write the file
-    File.open(path, "wb") { |f| f.write(file.read) }
-    path
-  end
-
-  def save_file_associated_datastream(filename, location, file_size)
-    # Prepare data for associated datastream
-    dsid = self.mint_datastream_id()
-    mime_types = MIME::Types.of(filename)
-    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
-    opts = {:dsLabel => filename, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
-
-    # Add the datastream associated to the file
-    dsfile = StringIO.new(opts.to_json)
-    self.add_file(dsfile, dsid, "attributes.json")
-    dsid
-  end
-
-  def save_file_metadata(location, file_size)
-    # Add the file location to the admin metadata
-    if !self.adminLocator.include?(File.dirname(location))
-      self.adminLocator << File.dirname(location)
-    end
-    size = Integer(self.adminDigitalSize.first) rescue 0
-    self.adminDigitalSize = size + file_size
+  def save_file(file, filename)
+    location = self.save_file_to_disk(file, filename)
+    dsid = self.save_file_associated_datastream(filename, location, file.size)
+    self.save_file_metadata(location, file.size)
+    return dsid
   end
 
   def delete_file(file_location)
     File.delete(file_location) if File.exist?(file_location)
   end
 
-  def delete_dir(pid)
-    directory = "/data/%s" % pid
-    FileUtils.rm_rf(directory) if File.exist?(directory)
-  end
-
-  def dir(pid)
-    directory = "/data/%s" % pid
+  def delete_dir
+    FileUtils.rmdir(directory) if Dir.exist?(self.dir) && Dir["#{self.dir}/*"].empty?
   end
 
   def create_external_datastream(dsid, url, file_name, file_size)
@@ -178,6 +135,52 @@ class Dataset < ActiveFedora::Base
     rescue ActiveFedora::ObjectNotFoundError
       Dataset.create({pid: pid})
     end
+  end
+
+  def dir
+    File.join(Sufia.config.data_root_dir, self.id)
+  end
+
+  def save_file_to_disk(file, filename)
+    FileUtils::mkdir_p(self.dir)
+    # create the file path
+    path = File.join(self.dir, filename)
+    #If the file exists, append a count to the filename
+    extn = File.extname(path)
+    fn = File.basename(path, extn)
+    dirname = File.dirname(path)
+    count = 0
+    while File.file?(path)
+      count += 1
+      fnNew = "#{fn}-#{count}"
+      path = File.join(dirname,"#{fnNew}#{extn}")
+    end
+    # write the file
+    File.open(path, "wb") { |f| f.write(file.read) }
+    path
+  end
+
+  def save_file_associated_datastream(filename, location, file_size)
+    # Prepare data for associated datastream
+    dsid = self.mint_datastream_id()
+    mime_types = MIME::Types.of(filename)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    opts = {:dsLabel => filename, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
+
+    # Add the datastream associated to the file
+    dsfile = StringIO.new(opts.to_json)
+    self.add_file(dsfile, dsid, "attributes.json")
+    dsid
+  end
+
+  def save_file_metadata(location, file_size)
+    # Add the file location to the admin metadata
+    if !self.adminLocator.include?(File.dirname(location))
+      self.adminLocator << File.dirname(location)
+    end
+    size = Integer(self.adminDigitalSize.first) rescue 0
+    self.adminDigitalSize = size + file_size
+    self.medium = Sufia.config.data_medium["Digital"]
   end
 
 end
