@@ -34,7 +34,7 @@ module Qa::Authorities
       rows = 10 #This is not working
       query_url = "#{Sufia.config.cud_base_url}/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
       begin
-        timeout(2) { @raw_response = get_json(query_url) }
+        timeout(3) { @raw_response = get_json(query_url) }
       rescue
         @raw_response = {}
       end
@@ -195,14 +195,16 @@ module Qa::Authorities
       end
       # Data['attributes'] no longer has affiliation information. They are passed seperately
       aff = []
-      data['affiliations'].each do |field|
-        # field has the following keys - source, affiliation, status, startDate, endDate, lastUpdated, dateAdded
-        # The affiliations have endDate. If endDate < today - 1 year, we should not use that affiliation
-        endDate = Time.parse(field['endDate']["$date"]) rescue nil
-        if field['source'] != "UAS_DARS" && endDate && endDate > Time.now.ago(1.year)
-          aff.push(field["affiliation"])
+      if data.fetch('affiliations', nil) && data['affiliations'].any?
+        data['affiliations'].each do |field|
+          # field has the following keys - source, affiliation, status, startDate, endDate, lastUpdated, dateAdded
+          # The affiliations have endDate. If endDate < today - 1 year, we should not use that affiliation
+          endDate = Time.parse(field['endDate']["$date"]) rescue nil
+          if field['source'] != "UAS_DARS" && endDate && endDate > Time.now.ago(1.year)
+            aff.push(field["affiliation"])
+          end
         end
-      end  
+      end
       if !aff.empty?
         val = aff.max_by(&:length)
         resp["current_affiliation"] = val
