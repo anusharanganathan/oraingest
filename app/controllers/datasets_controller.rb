@@ -110,7 +110,7 @@ class DatasetsController < ApplicationController
     @pid = params[:id]
     @doi = @dataset.doi(mint=true)
     @files = contents
-    if !@files and @dataset.medium[0].empty?
+    if @files.any? and @dataset.medium[0].empty?
       @dataset.medium[0] = Sufia.config.data_medium["Digital"]
     end
     relevant_agreements
@@ -165,7 +165,7 @@ class DatasetsController < ApplicationController
     elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
-    @dataset.delete_dir(@dataset.id)
+    @dataset.delete_dir
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url }
@@ -281,15 +281,7 @@ class DatasetsController < ApplicationController
   def process_file(file)
     # Save file to disk
     filename = File.basename(file.original_filename)
-    location = @dataset.save_file(file, @dataset.id, filename)
-    dsid = @dataset.save_file_associated_datastream(filename, location, file.size)
-    @dataset.save_file_metadata(location, file.size)
-    # Set the medium to digital in metadata
-    @dataset.medium = Sufia.config.data_medium["Digital"]
-    #Set the title of the dataset if it is empty or nil
-    unless @dataset.title && @dataset.title.first
-      @dataset.title = file.original_filename
-    end
+    dsid = @dataset.save_file(file, filename)
     # Save the dataset
     save_tries = 0
     begin
@@ -354,7 +346,7 @@ class DatasetsController < ApplicationController
     end
     # Update params
     @dataset.buildMetadata(dataset_params, contents, current_user.user_key)
-    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
+    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && contents.any?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
     if @dataset_agreement
