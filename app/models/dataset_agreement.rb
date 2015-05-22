@@ -11,7 +11,6 @@ class DatasetAgreement < ActiveFedora::Base
   include Sufia::Noid
   include Hydra::ModelMethods
   include WorkflowMethods
-  include BuildMetadata
 
   attr_accessible *(DatasetAgreementRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes])
   

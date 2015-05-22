@@ -49,7 +49,7 @@ shared_examples_for "doi_methods" do
   describe '#doi' do
     context ' when publication is present' do
       before do
-        model.buildPublicationActivity(publication_params)
+        MetadataBuilder.new(model).buildPublicationActivity(publication_params)
       end
 
       it 'returns the doi' do
@@ -88,7 +88,7 @@ shared_examples_for "doi_methods" do
   describe '#doi_data' do
     before do
       model.title = 'Some article'
-      model.buildPublicationActivity(publication_params)
+      MetadataBuilder.new(model).buildPublicationActivity(publication_params)
 
       creation_params = {
               :creator_attributes => {
@@ -104,7 +104,7 @@ shared_examples_for "doi_methods" do
                   }
               }
           }.with_indifferent_access
-      model.buildCreationActivity(creation_params)
+      MetadataBuilder.new(model).buildCreationActivity(creation_params)
 
       subject_params = {
           '0' => {
@@ -118,7 +118,7 @@ shared_examples_for "doi_methods" do
               'subjectScheme' => 'FAST'
           }
       }.with_indifferent_access
-      model.buildSubject(subject_params)
+      MetadataBuilder.new(model).buildSubject(subject_params)
     end
 
     it 'returns the doi_data' do

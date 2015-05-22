@@ -353,7 +353,7 @@ class DatasetsController < ApplicationController
       dataset_params[:hasAgreement] = @dataset_agreement.id
     end
     # Update params
-    @dataset.buildMetadata(dataset_params, contents, current_user.user_key)
+    MetadataBuilder.new(@dataset).build(dataset_params, contents, current_user.user_key)
     if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
@@ -423,7 +423,7 @@ class DatasetsController < ApplicationController
       dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
       dataset_agreement_params[:agreementType] = "Individual"
       dataset_agreement_params[:contributor] = current_user.user_key
-      @dataset_agreement.buildMetadata(dataset_agreement_params, [], current_user.user_key)
+      MetadataBuilder.new(@dataset_agreement).build(dataset_agreement_params, [], current_user.user_key)
       if !@dataset_agreement.save
         @dataset_agreement = nil
       end 
