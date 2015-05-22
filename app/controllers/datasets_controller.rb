@@ -165,7 +165,7 @@ class DatasetsController < ApplicationController
     elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
-    @dataset.delete_dir
+    @dataset.delete_dir(force=true)
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url }

@@ -154,8 +154,12 @@ class Dataset < ActiveFedora::Base
     delete_file(local_path)
   end
 
-  def delete_dir
-    FileUtils.rmdir(directory) if Dir.exist?(data_dir) && Dir["#{data_dir}/*"].empty?
+  def delete_dir(force=false)
+    unless force
+      FileUtils.rmdir(data_dir) if Dir.exist?(data_dir) && Dir["#{data_dir}/*"].empty?
+    else
+      FileUtils.rm_rf(data_dir) if Dir.exist?(data_dir)
+    end
   end
 
   def create_external_datastream(dsid, url, file_name, file_size)
