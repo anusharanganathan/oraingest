@@ -167,17 +167,21 @@ module DoiMethods
     doi_data
   end
 
-  def normalize_doi(value)
+  def normalize_doi(value, with_prefix=true)
     resolver_url = Sufia.config.doi_credentials.fetch(:resolver_url)
-    value.to_s.strip.
-        sub(/\A#{resolver_url}/, '').
-        sub(/\A\s*doi:\s+/, 'doi:').
-        sub(/\A(\d)/, 'doi:\1')
+    value = value.to_s.strip.
+      sub(/\A#{resolver_url}/, '').
+      sub(/\s*doi\s*:*\s*/i, '')
+    if with_prefix
+      "doi:#{value}"
+    else
+      value
+    end
   end
 
   def remote_uri_for(identifier)
     resolver_url = Sufia.config.doi_credentials.fetch(:resolver_url)
-    URI.parse(File.join(resolver_url, normalize_doi(identifier)))
+    URI.parse(File.join(resolver_url, normalize_doi(identifier, with_prefix=false)))
   end
 
 end
