@@ -137,9 +137,7 @@ module ORA
         @obj.delete_file(oldLoc)
       end
       # Delete directory if empty
-      if Dir["#{@obj.dir(self.pid)}/*"].empty?
-        @obj.delete_dir(self.pid)
-      end
+      @obj.delete_dir
     end
   
     def add_to_next_queue
