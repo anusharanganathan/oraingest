@@ -5,6 +5,7 @@ require "datastreams/dataset_admin_rdf_datastream"
 require "dataset_agreement"
 #require "person"
 require "rdf"
+require 'uri'
 require "fileutils"
 
 class Dataset < ActiveFedora::Base
@@ -83,15 +84,74 @@ class Dataset < ActiveFedora::Base
     opts
   end
 
-  def save_file(file, filename)
+  def mint_datastream_id
+    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
+    dsid
+  end
+
+  def file_location(dsid)
+    opts = self.datastream_opts(dsid)
+    location = opts.fetch('dsLocation', nil)
+    dsid_location = nil
+    if location.is_a?(String)
+      if location.include?(data_dir)
+        dsid_location = location
+      elsif location =~ /\A#{URI::regexp}\z/
+        dsid_location = location
+      end
+    elsif location.is_a? Hash && ['silo', 'dataset', 'filename'].all? {|k| location.key? k}
+      filename = File.basename(location['filename'])
+      @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
+      dsid_location = @databank.getUrl(location['silo'], dataset=location['dataset'], filename=location['filename'])
+    end
+    dsid_location
+  end
+
+  def is_url?(location)
+    location =~ /\A#{URI::regexp}\z/
+  end
+
+  def is_on_disk?(location)
+    location.include?(data_dir) && File.exist?(location)    
+  end
+
+  def add_content(file, filename)
     location = save_file_to_disk(file, filename)
     dsid = save_file_associated_datastream(filename, location, file.size)
     save_file_metadata(location, file.size)
     return dsid
   end
 
-  def delete_file(file_location)
-    File.delete(file_location) if File.exist?(file_location)
+  def delete_content(dsid)
+    location = self.file_location(dsid)
+    #TODO: Delete file in Databank and ORA, if location is url
+    if self.is_on_disk?(location)
+      delete_file(opts['dsLocation'])
+      self.datastreams[dsid].delete
+      parts = self.hasPart
+      self.hasPart = nil
+      self.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
+      self.adminDigitalSize = Integer(self.adminDigitalSize.first) - Integer(opts['size']) rescue self.adminDigitalSize
+    end
+  end
+
+  def delete_local_copy(dsid, local_path)
+    # Check the datastream associated to the file has remote location of file
+    location = self.file_location(dsid)
+    unless self.is_url?(location)
+      return false
+    end
+    # Check the remote location (url) is correct
+    begin
+      timeout(5) { @stream = open(location, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
+    rescue
+      return false
+    end
+    if @stream.status[0].to_i < 200 || @stream.status[0].to_i > 299 
+      return false
+    end
+    # Delete file
+    delete_file(local_path)
   end
 
   def delete_dir
@@ -105,11 +165,6 @@ class Dataset < ActiveFedora::Base
     attrs = {:dsLabel => dsid, :controlGroup => "E", :dsLocation=>url, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
     ds = create_datastream(ActiveFedora::Datastream, dsid, attrs)
     ds
-  end
-
-  def mint_datastream_id
-    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
-    dsid
   end
 
   private
@@ -181,6 +236,10 @@ class Dataset < ActiveFedora::Base
     size = Integer(self.adminDigitalSize.first) rescue 0
     self.adminDigitalSize = size + file_size
     self.medium = Sufia.config.data_medium["Digital"]
+  end
+
+  def delete_file(filepath)
+    File.delete(filepath) if File.exist?(filepath)
   end
 
 end
