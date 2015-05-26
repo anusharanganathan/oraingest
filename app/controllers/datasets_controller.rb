@@ -315,8 +315,8 @@ class DatasetsController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = @dataset.validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
-      respond_to do |format|
+      new_params = MetadataBuilder.new(@dataset).validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
+          respond_to do |format|
         if @dataset.update(new_params)
           format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
           format.json { head :no_content }
