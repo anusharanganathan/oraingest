@@ -3,34 +3,34 @@ require 'ora/databank'
 module ORA
   class MigrateData
   
-    attr_reader :dataset, :status, :msg, :silo
+    attr_accessor :dataset, :status, :msg, :silo
   
     def initialize(pid, datastreams, model, numberOfFiles)
-      self.pid = pid
-      self.datastreams = datastreams
-      self.model = model
-      self.numberOfFiles = numberOfFiles
+      @pid = pid
+      @datastreams = datastreams
+      @model = model
+      @numberOfFiles = numberOfFiles
+      @content_files = {}
       self.dataset = pid.sub('uuid:', '')
       self.status = true
       self.msg = []
-      self.content_files = {}
       dc = Sufia.config.databank_credentials
       self.silo = dc['silo']
-      @obj = Dataset.find(self.pid)
+      @obj = Dataset.find(@pid)
       @databank = Databank.new(dc['host'], username=dc['username'], password=dc['password'])
     end
   
     def migrate
-      self.create_dataset
-      self.upload_to_databank
-      self.update_status
+      create_dataset
+      upload_to_databank
+      update_status
       if self.status
-        self.update_content_datastreams
+        update_content_datastreams
       end
-      self.save
+      save
       if self.status
-        self.delete_local_files
-        self.add_to_next_queue
+        delete_local_files
+        add_to_next_queue
       end
     end
   
@@ -59,7 +59,9 @@ module ORA
           next if ds == 'DC'
           if ds.start_with?('content')
             filepath = upload_content(ds)
-            self.content_files[ds] = filepath
+            if filepath
+              @content_files[ds] = filepath
+            end
           else
             upload_metadata(ds)
           end
@@ -70,7 +72,10 @@ module ORA
     def upload_content(ds)
       # Get file path and file name of content files and upload to Databank.
       opts = @obj.datastream_opts(ds)
-      filepath = opts["dsLocation"]
+      filepath = @obj.file_location(ds)
+      unless @obj.is_on_disk?(filepath)
+        return nil
+      end
       filename = File.basename filepath
       ans = @databank.uploadFile(self.silo, self.dataset, filepath, filename=filename)
       if @databank.responseGood(ans['code'])
@@ -124,7 +129,7 @@ module ORA
   
     def update_content_datastreams
       # Update the content datastreams in the dataset object with the new Databank location of the content files and delete local copy of content file
-      self.content_files.each do |ds, fp|
+      @content_files.each do |ds, fp|
         filename = File.basename fp
         opts = @obj.datastream_opts(ds)
         old_location = opts["dsLocation"]
@@ -140,7 +145,7 @@ module ORA
     end
 
     def delete_local_files
-      self.content_files.each do |ds, fp|
+      @content_files.each do |ds, fp|
         # delete file
         @obj.delete_local_copy(ds, fp)
       end
@@ -151,10 +156,10 @@ module ORA
     def add_to_next_queue
       # Add to ora publish queue, so record can be published in Ora
       args = {
-        'pid' => self.pid,
-        'datastreams' => self.datastreams,
-        'model' => self.model,
-        'numberOfFiles' => self.numberOfFiles
+        'pid' => @pid,
+        'datastreams' => @datastreams,
+        'model' => @model,
+        'numberOfFiles' => @numberOfFiles
       }
       Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
     end
