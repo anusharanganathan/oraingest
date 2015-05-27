@@ -108,7 +108,11 @@ class Dataset < ActiveFedora::Base
   end
 
   def is_url?(location)
-    location =~ /\A#{URI::regexp}\z/
+    match = location =~ /\A#{URI::regexp}\z/
+    unless match
+      return false
+    end
+    return true
   end
 
   def is_on_disk?(location)
