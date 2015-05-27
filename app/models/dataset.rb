@@ -99,7 +99,7 @@ class Dataset < ActiveFedora::Base
       elsif location =~ /\A#{URI::regexp}\z/
         dsid_location = location
       end
-    elsif location.is_a? Hash && ['silo', 'dataset', 'filename'].all? {|k| location.key? k}
+    elsif location.is_a?(Hash) && ['silo', 'dataset', 'filename'].all? {|k| location.key? k}
       filename = File.basename(location['filename'])
       @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
       dsid_location = @databank.getUrl(location['silo'], dataset=location['dataset'], filename=location['filename'])
@@ -128,9 +128,10 @@ class Dataset < ActiveFedora::Base
 
   def delete_content(dsid)
     location = self.file_location(dsid)
+    opts = self.datastream_opts(dsid)
     #TODO: Delete file in Databank and ORA, if location is url
     if self.is_on_disk?(location)
-      delete_file(opts['dsLocation'])
+      delete_file(location)
       self.datastreams[dsid].delete
       parts = self.hasPart
       self.hasPart = nil
