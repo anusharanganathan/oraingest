@@ -59,6 +59,7 @@ class DatasetFilesController < ApplicationController
         render :status => @stream.status[0].to_i
       end
       @file = Tempfile.new(opts['dsLabel'], 'tmp/files/')
+      @file.binmode
       @file.write(@stream.read)
       @file.close
       send_file( @file.path, :filename => opts['dsLabel'] )
