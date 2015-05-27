@@ -99,6 +99,7 @@ module ORA
       end
       cont = @obj.datastreams[ds].content
       file = Tempfile.new([ ds, ext ], Sufia.config.tmp_file_dir)
+      file.binmode
       file.write(cont)
       file.close
       filepath = file.path
