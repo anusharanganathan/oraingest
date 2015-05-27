@@ -110,8 +110,10 @@ class DatasetsController < ApplicationController
     @pid = params[:id]
     @doi = @dataset.doi(mint=true)
     @files = contents
-    if @files.any? and @dataset.medium[0].empty?
-      @dataset.medium[0] = Sufia.config.data_medium["Digital"]
+    if @files.any?
+      unless @dataset.medium.any? && @dataset.medium.include?(Sufia.config.data_medium["Digital"])
+        @dataset.medium[0] = Sufia.config.data_medium["Digital"]
+      end
     end
     relevant_agreements
     principal_agreement
