@@ -45,22 +45,23 @@ class DatasetFilesController < ApplicationController
 
   def show
     authorize! :show, params[:id]
-    location = @dataset.file_location(dsid)
+    location = @dataset.file_location(params[:dsid])
+    opts = @dataset.datastream_opts(params[:dsid])
     if @dataset.is_on_disk?(location)
       send_file location, :type => opts['mimeType']
     elsif @dataset.is_url?(location)
       begin
-        timeout(10) { @stream = open(url, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
+        timeout(10) { @stream = open(location, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
       rescue
         render :status => 502
       end
       if @stream.status[0].to_i < 200 || @stream.status[0].to_i > 299 
         render :status => @stream.status[0].to_i
       end
-      @file = Tempfile.new(filename, 'tmp/files/')
+      @file = Tempfile.new(opts['dsLabel'], 'tmp/files/')
       @file.write(@stream.read)
       @file.close
-      send_file( @file.path, :filename => filename )
+      send_file( @file.path, :filename => opts['dsLabel'] )
     else 
       render :status => 404
     end
