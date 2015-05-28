@@ -315,8 +315,8 @@ class DatasetsController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = @dataset.validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
-      respond_to do |format|
+      new_params = MetadataBuilder.new(@dataset).validatePermissionsToRevoke(params, @dataset.workflowMetadata.depositor[0])
+          respond_to do |format|
         if @dataset.update(new_params)
           format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.' }
           format.json { head :no_content }
@@ -347,7 +347,7 @@ class DatasetsController < ApplicationController
       dataset_params[:hasAgreement] = @dataset_agreement.id
     end
     # Update params
-    @dataset.buildMetadata(dataset_params, contents, current_user.user_key)
+    MetadataBuilder.new(@dataset).build(dataset_params, contents, current_user.user_key)
     if @dataset.medium.first != Sufia.config.data_medium["Digital"] && contents.any?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
@@ -416,7 +416,7 @@ class DatasetsController < ApplicationController
       dataset_agreement_params[:title] = "Agreement for #{@dataset.id}"
       dataset_agreement_params[:agreementType] = "Individual"
       dataset_agreement_params[:contributor] = current_user.user_key
-      @dataset_agreement.buildMetadata(dataset_agreement_params, [], current_user.user_key)
+      MetadataBuilder.new(@dataset_agreement).build(dataset_agreement_params, [], current_user.user_key)
       if !@dataset_agreement.save
         @dataset_agreement = nil
       end 

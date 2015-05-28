@@ -258,7 +258,7 @@ class ArticlesController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = @article.validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
+      new_params = MetadataBuilder.new(@article).validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
       respond_to do |format|
         if @article.update(new_params)
           if can? :review, @article
@@ -291,7 +291,7 @@ class ArticlesController < ApplicationController
     else
       old_status = nil
     end
-    @article.buildMetadata(article_params, contents, current_user.user_key)
+    MetadataBuilder.new(@article).build(article_params, contents, current_user.user_key)
     if old_status != @article.workflows.first.current_status
       @article.perform_action(current_user.user_key)
     end

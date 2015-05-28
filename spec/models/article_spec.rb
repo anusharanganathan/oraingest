@@ -1,6 +1,8 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Article do
+
+  it_behaves_like 'doi_methods'
 
   describe 'attributes' do
 
@@ -56,6 +58,10 @@ describe Article do
   describe 'when creating a new article' do
     before do
       @article = Article.new
+    end
+
+    after do
+      @article.delete
     end
 
     it 'initializes the submission workflow' do
