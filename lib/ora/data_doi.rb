@@ -29,7 +29,8 @@ module ORA
       resolver_url: 'http://dx.doi.org/'
     }
 
-    attr_reader :username, :password, :shoulder, :resolver_url
+    attr_accessor :msg, :status
+
     def initialize(options = {})
       configuration = options.with_indifferent_access
       @username = configuration.fetch(:username)
@@ -37,7 +38,9 @@ module ORA
       @shoulder = configuration.fetch(:shoulder)
       @url = configuration.fetch(:url)
       @resolver_url = configuration.fetch(:resolver_url) { default_resolver_url }
-      @resource = RestClient::Resource.new(@url, :user => @username, :password => @password)
+      @resource = RestClient::Resource.new(@url, :user => @username, :password => @password, :ssl_version => :TLSv1)
+      self.msg = []
+      self.status = false
     end
 
     def normalize_identifier(value)
@@ -57,8 +60,22 @@ module ORA
     end
 
     def call(payload)
-      request(data_for_create(payload.with_indifferent_access))
-      add_metadata(to_xml(payload))
+      response = add_metadata(to_xml(payload))
+      if response_good?(response['code'])
+        self.status = true
+      else
+        self.status = false
+        self.msg << response['description']
+        return
+      end
+      response = request(data_for_create(payload.with_indifferent_access))
+      if response_good?(response['code'])
+        self.status = true
+        self.msg << "Doi with metadata registered"
+      else
+        self.status = false
+        self.msg << response['description']
+      end
     end
 
     def validate_required(payload)
@@ -91,16 +108,20 @@ module ORA
 
     def request(data)
       response = @resource['doi'].post(data, content_type: 'text/plain;charset=UTF-8')
-      puts response.body, response.code
-      matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
-      matched_data[:doi].strip
+      return create_response(response)
     end
 
     def add_metadata(data)
       response = @resource['metadata'].post(data, content_type: 'application/xml;charset=UTF-8')
-      puts response.body, response.code
-      matched_data = /\Asuccess:(.*)(?<doi>doi:[^\|]*)(.*)\Z/.match(response.body)
-      matched_data[:doi].strip
+      return create_response(response)
+    end
+
+    def response_good?(code)
+      return code >= 200 && code < 300
+    end
+
+    def create_response(response)
+      return {'code' => response.code, 'description' => response.description, 'body' => response.body}
     end
 
     def data_for_create(payload)
