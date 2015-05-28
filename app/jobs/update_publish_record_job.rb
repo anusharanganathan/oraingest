@@ -9,13 +9,15 @@ class UpdatePublishRecordJob
     elsif data["model"] == "Dataset"
       obj = Dataset.find(data["pid"])
     end
-    wf = obj.workflows.first
-    wf.entries.build
-    wf.entries.last.status = "Published"
-    wf.entries.last.creator = "ORA Deposit system"
-    wf.entries.last.description = data["msg"]
-    wf.entries.last.date = Time.now.to_s
+    obj.update_status('Published', data["msg"])
     obj.save!
+    if data["model"] == "Dataset" && obj.doi_requested? 
+      unless obj.doi_registered?
+        Resque.redis.rpush('register_doi', data["pid"])
+      end
+    end
   end
+
+
 
 end
