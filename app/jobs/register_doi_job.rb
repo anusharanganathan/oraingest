@@ -9,7 +9,7 @@ class RegisterDoiJob
     unless obj.doi_requested?
       return
     end
-    payload = d.doi_data
+    payload = obj.doi_data
     dd = ORA::DataDoi.new(Sufia.config.doi_credentials)
     # validate required fields
     begin
