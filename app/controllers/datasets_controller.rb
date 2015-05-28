@@ -102,9 +102,10 @@ class DatasetsController < ApplicationController
   def edit
     # Only edits for drafts and referred allowed. Not published items. So need not check for doi_requested in workflow
     authorize! :edit, params[:id]
-    if @dataset.workflows.first.current_status == "Migrate"
+    unless Sufia.config.next_workflow_status.keys.include?(@dataset.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
-    elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+    end
+    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
       authorize! :review, params[:id]
     end
     @pid = params[:id]
@@ -162,9 +163,10 @@ class DatasetsController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @dataset.workflows.first.current_status == "Migrate"
+    unless Sufia.config.next_workflow_status.keys.include?(@dataset.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
-    elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+    end
+    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
     @dataset.delete_dir(force=true)
