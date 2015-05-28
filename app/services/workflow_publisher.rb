@@ -7,7 +7,7 @@ class WorkflowPublisher
   end
 
   def perform_action(current_user)
-    model_klass = parent_model.class.model_name.to_s
+    model_klass = parent_model.model_klass
     # send email
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
     record_url = Rails.application.routes.url_helpers.url_for(:controller => models[model_klass], :action=>'show', :id => parent_model.id)
@@ -24,7 +24,7 @@ class WorkflowPublisher
     # Send pid and list of open datastreams to queue
     # If datastreams are empty, that means record is all dark
     wf = parent_model.workflows.select{|wf| wf.identifier.first == wf_id}.first
-    model_klass = parent_model.class.model_name.to_s
+    model_klass = parent_model.model_klass
     #Use Sufia.config.publish_to_queue_options to determine if method needs to be called
     if wf && Sufia.config.publish_to_queue_options.keys.include?(model_klass.downcase) && Sufia.config.publish_to_queue_options[model_klass.downcase].include?(wf.current_status)
       # The status is available for this model in the config
@@ -60,7 +60,7 @@ class WorkflowPublisher
           # If catalogue record is open access, gather datastreams to migrate
         elsif parent_model.accessRights[0].embargoStatus[0] == "Open access"
           if parent_model.datastreams.keys().include? "descMetadata"
-            status = "Migrate"
+            status = "System verified"
             toMigrate = true
             datastreams << "descMetadata"
             if parent_model.datastreams.keys().include? "relationsMetadata"
@@ -79,7 +79,7 @@ class WorkflowPublisher
           # If catalogue record is not open access, no datastreams to gather
         elsif parent_model.accessRights[0].embargoStatus[0] != "Open access"
           toMigrate = true
-          status = "Migrate" #Set to Migrate, depending on archive policy
+          status = "System verified" #Set to Migrate, depending on archive policy
           msg << "Catalogue record is #{parent_model.accessRights[0].embargoStatus[0]}."
         end
         # Update status of object
