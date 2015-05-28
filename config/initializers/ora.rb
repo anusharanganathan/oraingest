@@ -289,7 +289,7 @@ Sufia.config do |config|
     "Migrate" => "Migrate",
     "Data migrated" => "Data migrated",
     "Published" => "Published",
-    "DOI Registered" => "DOI registered"
+    "DOI registered" => "DOI registered"
  }
 
   config.next_workflow_status = {
@@ -303,7 +303,8 @@ Sufia.config do |config|
     "Referred" =>  ["Submitted"],
     "Approved" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected"],
     "System failure" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
-    "Published" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"]
+    "Published" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
+    "DOI registered" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Approved"]
   }
 
   config.publish_to_queue_options = {
