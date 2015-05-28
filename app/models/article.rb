@@ -73,6 +73,10 @@ class Article < ActiveFedora::Base
     end
   end
 
+  def model_klass
+    self.class.model_name.to_s
+  end
+
   private
   
   def initialize_submission_workflow
