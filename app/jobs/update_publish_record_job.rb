@@ -17,11 +17,9 @@ class UpdatePublishRecordJob
     obj.save!
     if data['status'] && data['model'] == 'Dataset' && obj.doi_requested?
       unless obj.doi_registered?
-        Resque.redis.rpush('register_doi', data['pid'])
+        Resque.enqueue(RegisterDoiJob, data['pid'])
       end
     end
   end
-
-
 
 end
