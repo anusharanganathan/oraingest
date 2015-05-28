@@ -293,7 +293,7 @@ class ArticlesController < ApplicationController
     end
     MetadataBuilder.new(@article).build(article_params, contents, current_user.user_key)
     if old_status != @article.workflows.first.current_status
-      WorkflowPublisher.new(@article).perform_action(current_user.user_key)
+      @article.perform_action(current_user.user_key)
     end
     respond_to do |format|
       if @article.save
