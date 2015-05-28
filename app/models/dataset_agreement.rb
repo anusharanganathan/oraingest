@@ -54,6 +54,10 @@ class DatasetAgreement < ActiveFedora::Base
     }
   end
 
+  def model_klass
+    self.class.model_name.to_s
+  end
+
   private
   
   def remove_blank_assertions
