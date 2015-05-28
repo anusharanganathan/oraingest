@@ -53,15 +53,24 @@ shared_examples_for "doi_methods" do
       end
 
       it 'returns the doi' do
-        expect(model.doi).to eq('10.5072/bodleian:nn999n999')
+        if model.is_a?(Dataset)
+          expect(model.doi).to eq('10.5072/bodleian:nn999n999')
+        else
+          expect(model.doi).to be_nil
+        end
       end
     end
 
     context ' when publication is not present' do
       context 'when mint is true' do
         it 'returns the doi' do
-          expect(model.doi()).not_to be_nil
-          expect(model.doi(true)).not_to be_nil
+          if model.is_a?(Dataset)
+            expect(model.doi()).not_to be_nil
+            expect(model.doi(true)).not_to be_nil
+          else
+            expect(model.doi).to be_nil
+            expect(model.doi(true)).to be_nil
+          end
         end
       end
       context 'when mint is false' do
@@ -72,14 +81,14 @@ shared_examples_for "doi_methods" do
     end
   end
 
-  describe '#doi_requested' do
+  describe '#doi_requested?' do
     context 'when workflows are present' do
       it 'returns true'
 
     end
     context 'when workflows are not present' do
       it 'returns false' do
-        expect(model.doi_requested).to be false
+        expect(model.doi_requested?).to be false
       end
     end
 
