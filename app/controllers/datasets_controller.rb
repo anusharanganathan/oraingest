@@ -110,8 +110,10 @@ class DatasetsController < ApplicationController
     @pid = params[:id]
     @doi = @dataset.doi(mint=true)
     @files = contents
-    if !@files and @dataset.medium[0].empty?
-      @dataset.medium[0] = Sufia.config.data_medium["Digital"]
+    if @files.any?
+      unless @dataset.medium.any? && @dataset.medium.include?(Sufia.config.data_medium["Digital"])
+        @dataset.medium[0] = Sufia.config.data_medium["Digital"]
+      end
     end
     relevant_agreements
     principal_agreement
@@ -165,7 +167,7 @@ class DatasetsController < ApplicationController
     elsif @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
-    @dataset.delete_dir(@dataset.id)
+    @dataset.delete_dir(force=true)
     @dataset.destroy
     respond_to do |format|
       format.html { redirect_to datasets_url }
@@ -281,15 +283,7 @@ class DatasetsController < ApplicationController
   def process_file(file)
     # Save file to disk
     filename = File.basename(file.original_filename)
-    location = @dataset.save_file(file, @dataset.id, filename)
-    dsid = @dataset.save_file_associated_datastream(filename, location, file.size)
-    @dataset.save_file_metadata(location, file.size)
-    # Set the medium to digital in metadata
-    @dataset.medium = Sufia.config.data_medium["Digital"]
-    #Set the title of the dataset if it is empty or nil
-    if @dataset.title.nil? || @dataset.title.empty? || @dataset.title.first.empty?
-      @dataset.title = file.original_filename
-    end
+    dsid = @dataset.add_content(file, filename)
     # Save the dataset
     save_tries = 0
     begin
@@ -354,7 +348,7 @@ class DatasetsController < ApplicationController
     end
     # Update params
     @dataset.buildMetadata(dataset_params, contents, current_user.user_key)
-    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
+    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && contents.any?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
     if @dataset_agreement
@@ -379,9 +373,8 @@ class DatasetsController < ApplicationController
   end
 
   def contents
-    content_datastreams = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
     files = []
-    content_datastreams.each do |dsid|
+    @dataset.content_datastreams.each do |dsid|
       opts = @dataset.datastream_opts(dsid)
       files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end

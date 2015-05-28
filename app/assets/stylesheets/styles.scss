@@ -1538,7 +1538,7 @@ table th { width: 120px; }
 
 table th, table td {
 	vertical-align: top;
-	padding: 5px 0;
+	padding: 5px 5px;
 }
 
 table td input,
@@ -2276,4 +2276,8 @@ input[type="submit"][disabled] {
 
 .ui-helper-hidden-accessible {
   display: none;
+}
+
+.thin {
+  margin-bottom: 0px;
 }

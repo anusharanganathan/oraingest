@@ -45,31 +45,24 @@ class DatasetFilesController < ApplicationController
 
   def show
     authorize! :show, params[:id]
+    location = @dataset.file_location(params[:dsid])
     opts = @dataset.datastream_opts(params[:dsid])
-    if !opts.empty? && opts['dsLocation'].is_a?(String) && opts['dsLocation'].include?('/data/') && File.exist?(opts['dsLocation']) 
-      send_file opts['dsLocation'], :type => opts['mimeType']
-    elsif !opts.empty? && (opts['dsLocation'].is_a?(String) || opts['dsLocation'].is_a?(Hash))
-      if opts['dsLocation'].is_a? String
-        parts = opts['dsLocation'].split("/")
-        filename = parts[-1]
-        url = opts['dsLocation']
-      elsif opts['dsLocation'].is_a? Hash
-        filename = File.basename(opts['dsLocation']['filename'])
-        @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
-        url = @databank.getUrl(opts['dsLocation']['silo'], dataset=opts['dsLocation']['dataset'], filename=opts['dsLocation']['filename']) 
-      end
+    if @dataset.is_on_disk?(location)
+      send_file location, :type => opts['mimeType']
+    elsif @dataset.is_url?(location)
       begin
-        timeout(10) { @stream = open(url, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
+        timeout(10) { @stream = open(location, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
       rescue
         render :status => 502
       end
       if @stream.status[0].to_i < 200 || @stream.status[0].to_i > 299 
         render :status => @stream.status[0].to_i
       end
-      @file = Tempfile.new(filename, 'tmp/files/')
+      @file = Tempfile.new(opts['dsLabel'], 'tmp/files/')
+      @file.binmode
       @file.write(@stream.read)
       @file.close
-      send_file( @file.path, :filename => filename )
+      send_file( @file.path, :filename => opts['dsLabel'] )
     else 
       render :status => 404
     end
@@ -81,15 +74,21 @@ class DatasetFilesController < ApplicationController
        authorize! :review, params[:id]
     end
     if @dataset.datastreams.keys.include?(params[:dsid])
-      opts =  @dataset.datastream_opts(params[:dsid])
-      #TODO: Delete file in Databank and ORA
-      @dataset.delete_file(opts['dsLocation'])
-      @dataset.datastreams[params[:dsid]].delete
-      parts = @dataset.hasPart
-      @dataset.hasPart = nil
-      @dataset.hasPart = parts.select { |key| not key.id.to_s.include? params[:dsid] }
-      @dataset.adminDigitalSize = Integer(@dataset.adminDigitalSize.first) - Integer(opts['size']) rescue @dataset.adminDigitalSize
-      @dataset.save
+      @dataset.delete_content(params[:dsid])
+      # Save the dataset
+      save_tries = 0
+      begin
+        @dataset.save!
+      rescue RSolr::Error::Http => error
+        logger.warn "DatasetFilesController::destroy caught error #{error.inspect}"
+        save_tries+=1
+        # fail for good if the tries is greater than 3
+        raise error if save_tries >=3
+        sleep 0.01
+        retry
+      end
+    else
+      render :status => 404
     end
     respond_to do |format|
       format.html { redirect_to dataset_url }

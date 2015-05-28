@@ -20,12 +20,11 @@
       <% end %>
     <% end %>
     <% if !select.nil? %>
-      <% if !select.description.empty? %>
-        <span class="small"><%= simple_format(select.description.first) %></span>
+      <% if select.description.first %>
+        <span class="small"><%= select.description.first %></span>
       <% end %>
-      <% if !select.type.empty? %>
-        <h6>Type:</h6>
-        <span class="small"><%= select.type.first %></span>
+      <% if select.type.first %>
+        <h6 class="thin">Type: <span class="small"><%= select.type.first %></span></h6>
       <% end %>
       <% if !select.accessRights.empty? %>
         <%= render partial: 'shared/embargo/file_fields_show', as: :article, :locals => { :hp => select } %>
