@@ -286,7 +286,7 @@ Sufia.config do |config|
     "Rejected" => "Rejected",
     "Approved" => "Approved",
     "System failure" => "System failure",
-    "Migrate" => "Migrate",
+    "System verified" => "System verified",
     "Data migrated" => "Data migrated",
     "Published" => "Published",
     "DOI registered" => "DOI registered"
@@ -294,7 +294,6 @@ Sufia.config do |config|
 
   config.next_workflow_status = {
     # The workflow states a reviewer can set. 
-    # Ignoring Approved => [System failure, Migrate, Published] as these are set by the system.
     "Draft" => ["Submitted"],
     "Submitted" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
     "Assigned" =>  ["Escalated", "Referred", "Rejected", "Approved"],
@@ -308,7 +307,7 @@ Sufia.config do |config|
   }
 
   config.publish_to_queue_options = {
-    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, System verified, Published
     # occurence 
     #   can be a number or 'all'
     "article" => {
@@ -326,7 +325,7 @@ Sufia.config do |config|
   config.rt_queue = 'ora.system'
 
   config.email_options = {
-    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, System verified, Published
     # occurence 
     #   can be a number or 'all'
     # template 
