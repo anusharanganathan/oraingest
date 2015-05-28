@@ -71,5 +71,22 @@ module WorkflowMethods
     return (occurences.length == occurence) || occurence == "all"
   end
 
+  def update_status(status, description, creator='ORA Deposit system')
+    #Update the workflow status. Add a new workflow entry.
+    unless Sufia.config.workflow_status.include?(status)
+      return false
+    end
+    wf = self.workflows.first
+    wf.entries.build
+    wf.entries.last.status = Sufia.config.workflow_status[status]
+    wf.entries.last.creator = creator
+    if description.is_a?(Array)
+      description = description.join('\n')
+    end
+    wf.entries.last.description = description
+    wf.entries.last.date = Time.now.to_s
+    return true
+  end
+
 end
 
