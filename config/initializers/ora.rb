@@ -288,7 +288,8 @@ Sufia.config do |config|
     "System failure" => "System failure",
     "Migrate" => "Migrate",
     "Data migrated" => "Data migrated",
-    "Published" => "Published"
+    "Published" => "Published",
+    "DOI Registered" => "DOI registered"
  }
 
   config.next_workflow_status = {
