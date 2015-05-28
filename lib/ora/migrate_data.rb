@@ -116,16 +116,11 @@ module ORA
   
     def update_status
       #Update the workflow status based on the outcome of create and uploads to Databank
-      wf = @obj.workflows.first
-      wf.entries.build
-      if status
-        wf.entries.last.status = Sufia.config.workflow_status["Data migrated"]
+      if self.status
+        @obj.update_status('Data migrated', self.msg)
       else
-        wf.entries.last.status = Sufia.config.workflow_status["System failure"]
+        @obj.update_status('System failure', self.msg)
       end
-      wf.entries.last.creator = "ORA Deposit system"
-      wf.entries.last.description = msg.join('\n')
-      wf.entries.last.date = Time.now.to_s
     end
   
     def update_content_datastreams
