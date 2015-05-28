@@ -31,6 +31,16 @@ module DoiMethods
     status
   end
 
+  def doi_registered?
+    status = false
+    if self.workflows.first && self.workflows.first.all_statuses
+      if self.workflows.first.all_statuses.include?("DOI Registered")
+        status = true
+      end
+    end
+    status
+  end
+
   def doi_data
     if self.class.model_name.to_s != "Dataset"
       return {}
