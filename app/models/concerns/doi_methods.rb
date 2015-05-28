@@ -5,7 +5,7 @@ module DoiMethods
 
   def doi(mint=true)
     doi = nil
-    if self.class.model_name.to_s != "Dataset"
+    if self.model_klass != "Dataset"
       return doi
     end
     if (self.publication.first && 
@@ -34,7 +34,7 @@ module DoiMethods
   def doi_registered?
     status = false
     if self.workflows.first && self.workflows.first.all_statuses
-      if self.workflows.first.all_statuses.include?("DOI Registered")
+      if self.workflows.first.all_statuses.include?("DOI registered")
         status = true
       end
     end
@@ -42,7 +42,7 @@ module DoiMethods
   end
 
   def doi_data
-    if self.class.model_name.to_s != "Dataset"
+    if self.model_klass != "Dataset"
       return {}
     end
     contributorTypes = [

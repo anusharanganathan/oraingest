@@ -175,6 +175,10 @@ class Dataset < ActiveFedora::Base
     ds
   end
 
+  def model_klass
+    self.class.model_name.to_s
+  end
+
   private
   
   def initialize_submission_workflow

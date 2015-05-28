@@ -231,16 +231,15 @@ class MetadataBuilder
   def buildWorktype(params)
     params = params.except(:typeAuthority)
     model.worktype = nil
-    model_klass = model.class.to_s.downcase
     if !params[:typeLabel].empty?
-      if Sufia.config.type_authorities[model_klass].include?(params[:typeLabel])
-        params[:typeAuthority] = Sufia.config.type_authorities[model_klass][params[:typeLabel]]
+      if Sufia.config.type_authorities[model.model_klass.downcase].include?(params[:typeLabel])
+        params[:typeAuthority] = Sufia.config.type_authorities[model.model_klass.downcase][params[:typeLabel]]
       end
       params['id'] = "info:fedora/#{model.id}#type"
       model.worktype.build(params)
     else
-      params[:typeLabel] = model_klass.capitalize
-      params[:typeAuthority] = Sufia.config.type_authorities[model_klass][model_klass.capitalize]
+      params[:typeLabel] = model.model_klass
+      params[:typeAuthority] = Sufia.config.type_authorities[model.model_klass.downcase][model.model_klass]
       params['id'] = "info:fedora/#{model.id}#type"
       model.worktype.build(params)
     end
