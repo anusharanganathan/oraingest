@@ -43,6 +43,10 @@ describe DatasetAgreement do
       @agreement = DatasetAgreement.new
     end
 
+    after do
+      @agreement.delete
+    end
+
     it 'removes blank assertions' do
       @agreement.title = 'Test title'
       @agreement.annotation = ''
