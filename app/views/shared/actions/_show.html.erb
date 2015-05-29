@@ -1,6 +1,6 @@
 <a href="<%= path[:list] %>" class="button button-small light-blue">Browse all records <img src="/assets/ora/icons/read.svg"/ class="icon icon-read"></a>
 <% if can? :review, :all %>
-  <% unless Sufia.config.next_workflow_status.keys.include?(current_status) %>
+  <% if Sufia.config.next_workflow_status.keys.include?(current_status) %>
     <a href="<%= path[:edit] %>" class="button button-small light-blue">Edit <img src="/assets/ora/icons/edit.svg" class="icon icon-edit"/></a>
     <a href="<%= path[:show] %>" data-method="delete" data-confirm="Are you sure?" class="button button-small light-blue">Delete <img src="/assets/ora/icons/delete.svg" class="icon icon-delete"/></a>
   <% end %>

@@ -1,7 +1,7 @@
 <% if can? :review, :all %>
   <!-- show button -->
   <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
-  <% unless Sufia.config.next_workflow_status.keys.include?(document.submission_workflow_status) %>
+  <% if Sufia.config.next_workflow_status.keys.include?(document.submission_workflow_status) %>
     <!-- edit button -->
     <a href="<%= document_url(document.modelName, 'edit', document.id) %>" class="button button-small light-blue">Edit<%= image_tag "ora/icons/edit.svg", class: "icon icon-read" %></a>
     <!-- delete button -->
