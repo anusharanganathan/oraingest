@@ -1,7 +1,7 @@
 module WorkflowHelper
   
   def application_name
-    'ORA Contribute'
+    'ORA'
   end
   
   # Renders a <span> with submission workflow status, flagged in css with either info, success, or important
