@@ -14,7 +14,6 @@ class Dataset < ActiveFedora::Base
   #include Sufia::GenericFile::WebForm
   include Sufia::Noid
   include Hydra::ModelMethods
-  include WorkflowMethods
   include DoiMethods
   include ContentMethods
 
