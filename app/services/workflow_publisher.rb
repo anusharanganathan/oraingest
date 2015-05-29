@@ -19,6 +19,8 @@ class WorkflowPublisher
     publish_record("MediatedSubmission", current_user)
   end
 
+  private
+
   def publish_record(wf_id, current_user)
     # Send pid and list of open datastreams to queue
     # If datastreams are empty, that means record is all dark
@@ -46,7 +48,7 @@ class WorkflowPublisher
         Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
       end
     end
-    update_status(status, msg)
+    parent_model.workflowMetadata.update_status(status, msg)
   end
 
   def ready_to_publish?(wf_id="MediatedSubmission")
@@ -101,23 +103,6 @@ class WorkflowPublisher
       end
     end
     return status, msg
-  end
-
-  def update_status(status, description, creator='ORA Deposit system', wf_id="MediatedSubmission")
-    #Update the workflow status. Add a new workflow entry.
-    unless Sufia.config.workflow_status.include?(status)
-      return false
-    end
-    wf = parent_model.workflows.select{|wf| wf.identifier.first == wf_id}.first
-    wf.entries.build
-    wf.entries.last.status = Sufia.config.workflow_status[status]
-    wf.entries.last.creator = creator
-    if description.is_a?(Array)
-      description = description.join('\n')
-    end
-    wf.entries.last.description = description
-    wf.entries.last.date = Time.now.to_s
-    return true
   end
 
 end

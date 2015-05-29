@@ -117,9 +117,9 @@ module ORA
     def update_status
       #Update the workflow status based on the outcome of create and uploads to Databank
       if self.status
-        @obj.update_status('Data migrated', self.msg)
+        @obj.workflowMetadata.update_status('Data migrated', self.msg)
       else
-        @obj.update_status('System failure', self.msg)
+        @obj.workflowMetadata.update_status('System failure', self.msg)
       end
     end
   
