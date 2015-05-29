@@ -1864,6 +1864,12 @@ table td textarea {
 .accordian .accordian-content p:first-child { margin-top: 0; }
 .accordian .accordian-content p:last-child { margin-bottom: 10px; }
 
+.accordian .accordian-content table {
+	font-size: 12px;
+	margin: 10px 0;
+	color: #505050;
+}
+
 /* Pagination
 ------------------------------------------- */
 

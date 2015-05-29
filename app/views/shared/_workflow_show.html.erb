@@ -9,7 +9,7 @@
       <p>This <%=@model.capitalize()%> has never been submitted for review.</p>
 
     <% else %>
-      <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+      <table>
         <tr>
           <th class="col1of5"><strong>Date</strong></th>
           <th class="col1of5"><strong>Modified by</strong></th>
@@ -32,7 +32,7 @@
       </table>
       <% if !wf.comments.nil? and !wf.comments.empty? %>
         <h4>Comments</h4>
-        <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+        <table>
           <tr>
             <th class="col1of5"><strong>Date</strong></th>
             <th class="col1of5"><strong>Comment Author</strong></th>
@@ -49,7 +49,7 @@
       <% end %>
       <% if !wf.emailThreads.nil? and !wf.emailThreads.empty? %>
         <h4>Email threads</h4>
-        <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+        <table>
           <tr>
             <th><strong>Date</strong></th>
             <th><strong>Email thread</strong></th>
@@ -64,7 +64,7 @@
       <% end %>
       <% if wf.involves.any? %>
         <h4>Events involved</h4>
-        <table style="font-size: 12px; margin: 10px 0; color: #505050;">
+        <table>
           <% wf.involves.each do |event| %>
             <tr>
               <td><%=event%></td>
