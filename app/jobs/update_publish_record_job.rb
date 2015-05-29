@@ -10,9 +10,9 @@ class UpdatePublishRecordJob
       obj = Dataset.find(data['pid'])
     end
     if data['status']
-      obj.update_status('Published', data['msg'])
+      obj.workflowMetadata.update_status('Published', data['msg'])
     else
-      obj.update_status('System failure', data['msg'])
+      obj.workflowMetadata.update_status('System failure', data['msg'])
     end
     obj.save!
     if data['status'] && data['model'] == 'Dataset' && obj.doi_requested?

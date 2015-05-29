@@ -15,7 +15,7 @@ class RegisterDoiJob
     begin
       dd.validate_required(payload)
     rescue ORA::DataValidationError => e
-      obj.update_status("System failure", e.message)
+      obj.workflowMetadata.update_status("System failure", e.message)
       obj.save!
       return
     end
@@ -23,16 +23,16 @@ class RegisterDoiJob
     begin
       dd.validate_xml(payload)
     rescue ORA::DataValidationError => e
-      obj.update_status("System failure", e.message)
+      obj.workflowMetadata.update_status("System failure", e.message)
       obj.save!
       return
     end
     # Register doi
     dd.call(payload)
     if dd.status
-      obj.update_status("DOI registered", dd.msg)
+      obj.workflowMetadata.update_status("DOI registered", dd.msg)
     else
-      obj.update_status("System failure", dd.msg)
+      obj.workflowMetadata.update_status("System failure", dd.msg)
     end
     obj.save!
   end
