@@ -1,108 +1,121 @@
-require 'ora/resque'
+require 'ora/data_doi'
 
 module WorkflowMethods
   extend ActiveSupport::Concern
 
   def perform_action(current_user)
-    model = self.class.model_name.to_s
     # send email
     models = { "Article" => 'articles', "DatasetAgreement" => "dataset_agreements", "Dataset" => "datasets" }
-    record_url = Rails.application.routes.url_helpers.url_for(:controller => models[model], :action=>'show', :id => self.id)
-    data = {"record_id" => self.id, "record_url" => record_url, "doi_requested"=>self.doi_requested}
-    if self.doi_requested
+    record_url = Rails.application.routes.url_helpers.url_for(:controller => models[self.model_klass], :action=>'show', :id => self.id)
+    data = {"record_id" => self.id, "record_url" => record_url, "doi_requested"=>self.doi_requested?}
+    if self.doi_requested?
       data["doi"] = self.doi(mint=false)
     end
-    ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, model)
+    ans = self.datastreams["workflowMetadata"].send_email("MediatedSubmission", data, current_user, self.model_klass)
     # publish record
-    publishRecord("MediatedSubmission", current_user)
+    publish_record("MediatedSubmission", current_user)
   end
 
-  def publishRecord(wf_id, current_user)
+  def publish_record(wf_id, current_user)
     # Send pid and list of open datastreams to queue
     # If datastreams are empty, that means record is all dark
-    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
-    model = self.class.model_name.to_s
-    #Use Sufia.config.publish_to_queue_options to determine if method needs to be called
-    if wf && Sufia.config.publish_to_queue_options.keys.include?(model.downcase) && Sufia.config.publish_to_queue_options[model.downcase].include?(wf.current_status)
-      # The status is available for this model in the config
-      occurences = wf.all_statuses.select{|s| s == wf.current_status}
-      occurence = Sufia.config.publish_to_queue_options[model.downcase][wf.current_status]['occurence']
-      if (occurences.length == occurence) || occurence == "all"
-        # The occurence count matches and so procedd to performing action
-        toMigrate = false
-        msg = []
-        datastreams = []
-        numberOfFiles = 0
-        #Get list of all datastreams without access rights
-        conts = self.datastreams.keys.select { |key| key.start_with?('content') and self.datastreams[key].content != nil }
-        self.hasPart.each do |hp|
-          if conts.include?(hp.identifier[0])
-            numberOfFiles = numberOfFiles + 1
-            if !hp.accessRights.nil? && !hp.accessRights[0].embargoStatus.nil? && !hp.accessRights[0].embargoStatus[0].nil? && !hp.accessRights[0].embargoStatus[0].empty?
-              conts.delete(hp.identifier[0])
-            end
-          end
-        end
-        # If access rights not defined for file or catalogue record, mark as system failure
-        if !conts.empty? || self.accessRights.nil? || self.accessRights[0].embargoStatus.nil?
-          status = "System failure"
-          if self.accessRights.nil? || self.accessRights[0].embargoStatus.nil?
-            msg << "No embargo details for catalogue record."
-          end
-          if !conts.empty?
-            conts.each do |ds|
-              msg << "No embargo details for #{ds}."
-            end
-          end
-        # If catalogue record is open access, gather datastreams to migrate
-        elsif self.accessRights[0].embargoStatus[0] == "Open access"
-          if self.datastreams.keys().include? "descMetadata"
-            status = "Migrate"
-            toMigrate = true
-            datastreams << "descMetadata"
-            if self.datastreams.keys().include? "relationsMetadata"
-              datastreams << "relationsMetadata"
-            end
-            self.hasPart.each do |hp|
-              if hp.accessRights[0].embargoStatus[0] == "Open access"
-                datastreams << "#{hp.identifier[0]}"
-              end
-            end
-            msg << "Datastreams to migrate: %s."%datastreams.join(", ")
-          else
-            msg << "No descMetadata available."
-            status = "System failure"
-          end
-        # If catalogue record is not open access, no datastreams to gather
-        elsif self.accessRights[0].embargoStatus[0] != "Open access"
-          toMigrate = true
-          status = "Migrate" #Set to Migrate, depending on archive policy
-          msg << "Catalogue record is #{self.accessRights[0].embargoStatus[0]}."
-        end
-        # Update status of object
-        self.workflows.first.entries.build(description:msg.join(" "), creator:current_user, date:Time.now.to_s, status:status)
-        # Push object to queue
-        if toMigrate
-          if model == "Dataset"
-            Sufia.queue.push(DatabankPublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
-          else
-            Sufia.queue.push_raw(PublishRecordJob.new(self.id.to_s, datastreams, model, numberOfFiles.to_s))
-          end
-        end
-      #else
-      #  # Note: Not doing this as we may just add a whole lot of comments for redundant clicks
-      #  # Cannot publish as not not the correct occurence. Add comment and return
-      #  msg = "Record cannot be processed for count of current status is #{occurence.to_s}."
-      #  comment = {:description => msg, :creator => current_user, :date => Time.now.to_s}
-      #  self.workflows.first.comments.build(comment)
-      end
-    #else
-    #  # Note: Not doing this as we may just add a whole lot of comments for redundant clicks
-    #  # Cannot publish as not approved. Add comment and return
-    #  msg = "Record cannot be processed for current status #{self.workflows.first.current_status}."
-    #  comment = {:description => msg, :creator => current_user, :date => Time.now.to_s}
-    #  self.workflows.first.comments.build(comment)
+    unless self.ready_to_publish?(wf_id=wf_id)
+      return
     end
+    ans, msg = self.check_minimum_metadata
+    unless ans
+      status = "System failure"
+    else
+      status = "System verified"
+      open_access_content = self.list_open_access_content
+      numberOfFiles = (open_access_content.select { |key| key.start_with?('content') }).length
+      msg << "Open access datastreams: %s."%open_access_content.join(", ")
+      if self.model_klass == "Dataset"
+        Resque.enqueue(DatabankPublishRecordJob, self.id.to_s, open_access_content, self.model_klass, numberOfFiles.to_s)
+      else
+        # Add to ora publish queue
+        args = {
+          'pid' => self.id.to_s,
+          'datastreams' => open_access_content,
+          'model' => self.model_klass,
+          'numberOfFiles' => numberOfFiles.to_s
+        }
+        Resque.redis.rpush(Sufia.config.ora_publish_queue_name, args.to_json)
+      end
+    end
+    self.update_status(status, msg)
+  end
+
+  def ready_to_publish?(wf_id="MediatedSubmission")
+    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
+    status = false
+    if wf.nil?
+      return status
+    end
+    unless Sufia.config.publish_to_queue_options.keys.include?(self.model_klass.downcase)
+      return status
+    end
+    unless Sufia.config.publish_to_queue_options[self.model_klass.downcase].include?(wf.current_status)
+      return status
+    end
+    occurences = wf.all_statuses.select{|s| s == wf.current_status}
+    occurence = Sufia.config.publish_to_queue_options[self.model_klass.downcase][wf.current_status]['occurence']
+    return (occurences.length == occurence) || occurence == "all"
+  end
+
+  def check_minimum_metadata
+    status = true
+    msg = []
+    # descMetadata has to exist
+    unless self.datastreams.keys().include? 'descMetadata'
+      status = false
+      msg << 'No descMetadata available.'
+    end
+    # All of the access rights should be in place
+    unless self.has_all_access_rights?
+      status = false
+      msg << 'Not all files or the catalogue record has embargo details'
+    end
+    # The metadata for regsitering DOI should exist
+    if self.model_klass == 'Dataset' && self.doi_requested?
+      unless self.doi_registered?
+        payload = self.doi_data
+        dd = ORA::DataDoi.new(Sufia.config.doi_credentials)
+        # validate required fields
+        begin
+          dd.validate_required(payload)
+        rescue ORA::DataValidationError => e
+          status = false
+          msg << e.message
+        end
+        # validate xml to schema
+        begin
+          dd.validate_xml(payload)
+        rescue ORA::DataValidationError => e
+          status = false
+          msg << e.message
+        end
+      end
+    end
+    return status, msg
+  end
+
+  def update_status(status, description, creator='ORA Deposit system', wf_id="MediatedSubmission")
+    #Update the workflow status. Add a new workflow entry.
+    unless Sufia.config.workflow_status.include?(status)
+      return false
+    end
+    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
+    wf.entries.build
+    wf.entries.last.status = Sufia.config.workflow_status[status]
+    wf.entries.last.creator = creator
+    if description.is_a?(Array)
+      description = description.join('\n')
+    end
+    wf.entries.last.description = description
+    wf.entries.last.date = Time.now.to_s
+    return true
   end
 
 end
+

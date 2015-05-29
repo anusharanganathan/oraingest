@@ -4,10 +4,15 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'simplecov'
+
+SimpleCov.start 'rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/models/concerns/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/models/fields/**/*.rb")].each {|f| require f}
 
 FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 # FactoryGirl.find_definitions

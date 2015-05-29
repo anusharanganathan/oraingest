@@ -77,4 +77,7 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.2.1"
   gem 'capybara', '~>2.4.0'
 #  gem "debugger"
+  gem 'timecop', '~> 0.7.3'
 end
+
+gem 'simplecov', :require => false, :group => :test

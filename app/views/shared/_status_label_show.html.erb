@@ -1,9 +1,22 @@
 <% if !status.nil? %>
   <% #Colours defined in css %>
-  <% states = ['draft', 'submitted', 'assigned', 'claimed', 'approved', 'escalated', 'referred', 'rejected', 'published', 'unassigned'] %>
-  <% if states.include?(status.downcase) %>
-    <% tag = status.downcase %>
-  <% else %>
+  <% states = [
+	'draft',
+	'submitted',
+	'assigned',
+	'claimed',
+	'approved',
+	'escalated',
+	'referred',
+	'rejected',
+	'published',
+	'system-verified',
+	'doi-registered',
+	'data-migrated',
+	'system-failure',
+	'unassigned'] %>
+  <% tag = status.downcase.sub(" ", "-") %>
+  <% unless states.include?(tag) %>
     <% tag = "unassigned" %>
   <% end %>
 <% else %>

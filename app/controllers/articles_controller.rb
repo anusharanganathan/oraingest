@@ -90,9 +90,10 @@ class ArticlesController < ApplicationController
 
   def edit
     authorize! :edit, params[:id]
-    if @article.workflows.first.current_status == "Migrate"
+    unless Sufia.config.next_workflow_status.keys.include?(@article.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
-    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    end
+    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
       authorize! :review, params[:id]
     end
     @pid = params[:id]
@@ -102,7 +103,7 @@ class ArticlesController < ApplicationController
 
   def edit_detailed
     authorize! :edit, params[:id]
-    if @article.workflows.first.current_status == "Migrate"
+    unless Sufia.config.next_workflow_status.keys.include?(@article.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Article)
     end
     authorize! :review, params[:id]
@@ -150,9 +151,10 @@ class ArticlesController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @article.workflows.first.current_status == "Migrate"
+    unless Sufia.config.next_workflow_status.keys.include?(@article.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to delete while record is being migrated!", :read, Article)
-    elsif @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
+    end
+    if @article.workflows.first.current_status != "Draft" && @article.workflows.first.current_status !=  "Referred"
        authorize! :review, params[:id]
     end
     @article.destroy
@@ -226,6 +228,7 @@ class ArticlesController < ApplicationController
 
   def process_file(file)
     #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
+    datastream_id = @article.mint_datastream_id()
     @article.add_file(file, datastream_id, file.original_filename)
     save_tries = 0
     begin
@@ -257,7 +260,7 @@ class ArticlesController < ApplicationController
   def revoke_permissions
     authorize! :destroy, params[:id]
     if params.has_key?(:access) && params.has_key?(:name) && params.has_key?(:type)
-      new_params = @article.validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
+      new_params = MetadataBuilder.new(@article).validatePermissionsToRevoke(params, @article.workflowMetadata.depositor[0])
       respond_to do |format|
         if @article.update(new_params)
           if can? :review, @article
@@ -290,7 +293,7 @@ class ArticlesController < ApplicationController
     else
       old_status = nil
     end
-    @article.buildMetadata(article_params, contents, current_user.user_key)
+    MetadataBuilder.new(@article).build(article_params, contents, current_user.user_key)
     if old_status != @article.workflows.first.current_status
       @article.perform_action(current_user.user_key)
     end
@@ -314,21 +317,11 @@ class ArticlesController < ApplicationController
   end
 
   def contents
-    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
     files = []
-    for dsid in choicesUsed
+    @article.content_datastreams.each do |dsid|
       files.push(@article.to_jq_upload(@article.datastreams[dsid].label, @article.datastreams[dsid].size, @article.id, dsid))
     end
     files
-  end
-
-  def datastream_id
-    choicesUsed = @article.datastreams.keys.select { |key| key.match(/^content\d+/) and @article.datastreams[key].content != nil }
-    begin
-      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
-    rescue
-      "content01"
-    end
   end
 
   private

@@ -33,7 +33,11 @@ module Qa::Authorities
       return_fields="cud:cas:fullname,cud:cas:lastname,cud:cas:firstname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"
       rows = 10 #This is not working
       query_url = "#{Sufia.config.cud_base_url}/cgi-bin/querycud.py?q=#{query}&fields=#{return_fields}&format=json"
-      @raw_response = get_json(query_url)
+      begin
+        timeout(3) { @raw_response = get_json(query_url) }
+      rescue
+        @raw_response = {}
+      end
       @response = parse_authority_response(@raw_response)
     end
 
@@ -142,6 +146,9 @@ module Qa::Authorities
 
     def parse_authority_response(raw_response)
       ans = []
+      if !raw_response.keys.include?('cudSubjects')
+        return ans
+      end
       raw_response['cudSubjects'].each do |doc|
         ans.push(cud_response_to_qa(doc))
         if ans.length == 10 then
@@ -188,14 +195,16 @@ module Qa::Authorities
       end
       # Data['attributes'] no longer has affiliation information. They are passed seperately
       aff = []
-      data['affiliations'].each do |field|
-        # field has the following keys - source, affiliation, status, startDate, endDate, lastUpdated, dateAdded
-        # The affiliations have endDate. If endDate < today - 1 year, we should not use that affiliation
-        endDate = Time.parse(field['endDate']["$date"]) rescue nil
-        if field['source'] != "UAS_DARS" && endDate && endDate > Time.now.ago(1.year)
-          aff.push(field["affiliation"])
+      if data.fetch('affiliations', nil) && data['affiliations'].any?
+        data['affiliations'].each do |field|
+          # field has the following keys - source, affiliation, status, startDate, endDate, lastUpdated, dateAdded
+          # The affiliations have endDate. If endDate < today - 1 year, we should not use that affiliation
+          endDate = Time.parse(field['endDate']["$date"]) rescue nil
+          if field['source'] != "UAS_DARS" && endDate && endDate > Time.now.ago(1.year)
+            aff.push(field["affiliation"])
+          end
         end
-      end  
+      end
       if !aff.empty?
         val = aff.max_by(&:length)
         resp["current_affiliation"] = val

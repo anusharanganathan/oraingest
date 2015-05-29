@@ -1,33 +1,25 @@
 class UpdatePublishRecordJob
 
-  def queue_name
-    :ora_publish_status
-  end
+  @queue = :ora_publish_status
 
-  attr_accessor :pid, :datastreams, :model, :numberOfFiles, :status, :msg
-
-  def initialize(pid, datastreams, model, numberOfFiles, status, msg)
-    self.pid = pid
-    self.datastreams = datastreams
-    self.model = model
-    self.numberOfFiles = numberOfFiles
-    self.status = status
-    self.msg = msg
-  end
-
-  def self.perform()
-    if self.model == "Article"
-      obj = Article.find(self.pid)
-    elsif self.model == "Dataset"
-      obj = Dataset.find(self.pid)
+  def self.perform(data)
+    data = JSON.parse(data)
+    if data['model'] == 'Article'
+      obj = Article.find(data['pid'])
+    elsif data['model'] == 'Dataset'
+      obj = Dataset.find(data['pid'])
     end
-    wf = obj.workflows.first
-    wf.entries.build
-    wf.entries.last.status = "Published"
-    wf.entries.last.reviewer_id = "ORA Deposit system"
-    wf.entries.last.description = self.msg
-    wf.entries.last.date = Time.now.to_s
+    if data['status']
+      obj.update_status('Published', data['msg'])
+    else
+      obj.update_status('System failure', data['msg'])
+    end
     obj.save!
+    if data['status'] && data['model'] == 'Dataset' && obj.doi_requested?
+      unless obj.doi_registered?
+        Resque.enqueue(RegisterDoiJob, data['pid'])
+      end
+    end
   end
 
 end
