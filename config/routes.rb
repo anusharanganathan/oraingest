@@ -19,6 +19,7 @@ OraHydra::Application.routes.draw do
         mount Resque::Server, at: 'queues'
       end
     end
+    resources :qs
   end
   
   get 'deposit_licence', to: 'static#deposit_licence'
