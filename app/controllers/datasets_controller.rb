@@ -64,20 +64,16 @@ class DatasetsController < ApplicationController
       redirect_to action: 'show', alert: "You do not have sufficient privileges to modify this dataset"
       #redirect_to action: 'show'
     elsif exception.action == :show
-      redirect_to list_datasets_path, alert: "You do not have sufficient privileges to view this dataset"
+      redirect_to datasets_path, alert: "You do not have sufficient privileges to view this dataset"
       #redirect_to action: 'index', alert: "You do not have sufficient privileges to view this dataset"
     elsif current_user and current_user.persisted?
-      redirect_to list_datasets_path, alert: exception.message
+      redirect_to datasets_path, alert: exception.message
       #redirect_to action: 'index', alert: exception.message
     else
       session["user_return_to"] = request.url
       redirect_to new_user_session_url, :alert => exception.message
       #redirect_to new_user_session_url
     end
-  end
-
-  def index
-    redirect_to list_datasets_path
   end
 
   def show
