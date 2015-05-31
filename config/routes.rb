@@ -39,15 +39,14 @@ OraHydra::Application.routes.draw do
   get 'articles/:id/file/:dsid', to: 'article_files#show'
   delete 'articles/:id/file/:dsid', to: 'article_files#destroy'
 
-  resources 'list_datasets', :only=>:index do
+  resources :datasets, :except => :index do
     collection do
-      get 'page/:page', :action => :index
-      get 'activity', :action => :activity, :as => :dashboard_activity
-      get 'facet/:id', :action => :facet, :as => :dashboard_facet
+      get '/', :controller => 'list_datasets', :action => :index
+      get 'page/:page', :controller => 'list_datasets', :action => :index
+      get 'activity', :controller => 'list_datasets', :action => :activity, :as => :dashboard_activity
+      get 'facet/:id', :controller => 'list_datasets', :action => :facet, :as => :dashboard_facet
     end
   end
-
-  resources :datasets
   delete 'datasets/:id/permissions', to: 'datasets#revoke_permissions'
   get 'datasets/:id/agreement', to: 'datasets#agreement'
   
