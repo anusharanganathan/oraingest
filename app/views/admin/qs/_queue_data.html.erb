@@ -1,0 +1,21 @@
+<div class="accordian">
+  <div class="accordian-header"><%=queue_name%></div>
+  <div class="accordian-content">
+    <p><%=@queues[queue_name]%></p>
+    <p>Number of records in queue: <%=@data[queue_name].length%></p>
+    <table>
+      <tbody>
+        <tr>
+          <th><strong>Index</strong></th>
+          <th><strong>Content</strong></th>
+        </tr>
+        <% @data[queue_name].each_with_index do |d, index| %>
+          <tr>
+            <td><%= index %></td>
+            <td><%= d %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
