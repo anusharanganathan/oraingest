@@ -14,8 +14,7 @@
 # limitations under the License.
 
 # -*- encoding : utf-8 -*-
-
-class QsController < ApplicationController
+class Admin::QsController < ApplicationController
 
   # These before_filters apply the hydra access controls
   #before_filter :enforce_show_permissions, :only=>:show
