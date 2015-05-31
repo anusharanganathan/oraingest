@@ -17,9 +17,9 @@ OraHydra::Application.routes.draw do
     namespace :admin do
       constraints Sufia::ResqueAdmin do
         mount Resque::Server, at: 'queues'
+        resources :qs
       end
     end
-    resources :qs
   end
   
   get 'deposit_licence', to: 'static#deposit_licence'
