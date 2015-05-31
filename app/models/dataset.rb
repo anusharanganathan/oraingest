@@ -83,10 +83,8 @@ class Dataset < ActiveFedora::Base
   end
 
   def save_file(file, pid)
-    name = File.basename(file.original_filename) 
-    if pid.include?('sufia:')
-      pid = pid.gsub('sufia:', '')
-    end
+    name =  file.original_filename
+    name = File.basename(name) 
     directory = File.join(Sufia.config.data_root_dir, pid)
     FileUtils::mkdir_p(directory) 
     # create the file path
@@ -111,11 +109,12 @@ class Dataset < ActiveFedora::Base
   end
 
   def delete_dir(pid)
-    if pid.include?('sufia:')
-      pid = pid.gsub('sufia:', '')
-    end
     directory = "/data/%s" % pid
     FileUtils.rm_rf(directory) if File.exist?(directory)
+  end
+
+  def dir(pid)
+    directory = "/data/%s" % pid
   end
 
   def create_external_datastream(dsid, url, file_name, file_size)
