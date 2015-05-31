@@ -126,8 +126,6 @@ class MetadataBuilder
     model.attributes = params
   end
 
-  private
-
   def normalizeParams(params)
     if params.kind_of?(Hash)# && (params.keys.include?("0") || params.keys.include?("info:fedora"))
       params = params.values

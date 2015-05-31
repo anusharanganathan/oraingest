@@ -291,7 +291,7 @@ class ArticlesController < ApplicationController
     else
       old_status = nil
     end
-    @article.buildMetadata(article_params, contents, current_user.user_key)
+    MetadataBuilder.new(@article).build(article_params, contents, current_user.user_key)
     if old_status != @article.workflows.first.current_status
       @article.perform_action(current_user.user_key)
     end
