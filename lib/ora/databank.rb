@@ -157,10 +157,18 @@ class Databank
       path = "/#{silo}"
     end
     # Construct the url
-    if @host.start_with?("http://")
-      url = URI::HTTP.build({:host => @host.sub("http://", ""), :path => path}).to_s
-    elsif @host.start_with?("https://")
-      url = URI::HTTPS.build({:host => @host.sub("https://", ""), :path => path}).to_s
+    begin
+      if @host.start_with?("http://")
+        url = URI::HTTP.build({:host => @host.sub("http://", ""), :path => path}).to_s
+      elsif @host.start_with?("https://")
+        url = URI::HTTPS.build({:host => @host.sub("https://", ""), :path => path}).to_s
+      end
+    rescue URI::InvalidComponentError
+      if @host.end_with?('/')
+        url = "#{@host.sub(/\/$/, '')}#{path}"
+      else
+        url = "#{@host}#{path}"
+      end
     end
     url
   end
