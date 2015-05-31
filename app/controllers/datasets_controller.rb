@@ -267,8 +267,6 @@ class DatasetsController < ApplicationController
       return json_error "Error! No file for upload", 'unknown file', :status => :unprocessable_entity
     elsif (empty_file?(file))
       return json_error "Error! Zero Length File!", file.original_filename
-    #elsif (!terms_accepted?)
-    #  return json_error "You must accept the terms of service!", file.original_filename
     else
       process_file(file)
     end
@@ -281,41 +279,17 @@ class DatasetsController < ApplicationController
   end
 
   def process_file(file)
-    dsid = datastream_id
     # Save file to disk
-    location = @dataset.save_file(file, @dataset.id)
-
-    # Add the file location to the admin metadata
-    if !@dataset.adminLocator.include?(File.dirname(location))
-      @dataset.adminLocator << File.dirname(location)
-    end
-
-    # Increment total file size in metadata
-    size = Integer(@dataset.adminDigitalSize.first) rescue 0
-    @dataset.adminDigitalSize = size + file.size
-
+    filename = File.basename(file.original_filename)
+    location = @dataset.save_file(file, @dataset.id, filename)
+    dsid = @dataset.save_file_associated_datastream(filename, location, file.size)
+    @dataset.save_file_metadata(location, file.size)
     # Set the medium to digital in metadata
     @dataset.medium = Sufia.config.data_medium["Digital"]
-     
-    # Not doing this as the URI may break if the file names are funny and the size of the file is stored as 0, not the value passed in
-    #ds = @dataset.create_external_datastream(dsid, url, File.basename(location), file.size)
-    #@dataset.add_datastream(ds)
-
-    # Prepare data for associated datastream
-    file_name = File.basename(file.original_filename)
-    mime_types = MIME::Types.of(file_name)
-    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
-    opts = {:dsLabel => file_name, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file.size}
-
-    # Add the datastream associated to the file
-    dsfile = StringIO.new(opts.to_json)
-    @dataset.add_file(dsfile, dsid, "attributes.json")
-
     #Set the title of the dataset if it is empty or nil
     if @dataset.title.nil? || @dataset.title.empty? || @dataset.title.first.empty?
       @dataset.title = file.original_filename
     end
-
     # Save the dataset
     save_tries = 0
     begin
@@ -405,9 +379,9 @@ class DatasetsController < ApplicationController
   end
 
   def contents
-    choicesUsed = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
+    content_datastreams = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
     files = []
-    for dsid in choicesUsed
+    content_datastreams.each do |dsid|
       opts = @dataset.datastream_opts(dsid)
       files.push(@dataset.to_jq_upload(opts['dsLabel'], opts['size'], @dataset.id, dsid))
     end
@@ -455,11 +429,6 @@ class DatasetsController < ApplicationController
       end 
     end
     return @dataset_agreement, created
-  end
-
-  def datastream_id
-    #choicesUsed = @dataset.datastreams.keys.select { |key| key.start_with?('content') and @dataset.datastreams[key].content != nil }
-    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
   end
 
   private
