@@ -1,0 +1,22 @@
+language: ruby
+cache: bundler
+sudo: false
+rvm:
+  - 2.1
+
+before_script:
+  - cp config/doi_credentials_example.yml config/doi_credentials.yml
+  - cp config/databank_credentials_example.yml config/databank_credentials.yml
+  - bundle exec rake db:migrate
+  - bundle exec rails g hydra:jetty
+
+gemfile:
+  - Gemfile
+
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+script: bundle exec rake ora:travis:build
+
+
