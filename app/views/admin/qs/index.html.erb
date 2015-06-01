@@ -1,0 +1,18 @@
+<% @page_title = application_name + " Monitor Queues" %>
+<h2>Monitor Queues</h2>
+
+<div class="gutter-container">
+	<div class="col col1of6"></div>
+	<div class="col col5of6">
+		<div class="content-box padding-0">
+			<div class="padding-25 overflow">
+				<% unless @data.blank? %>
+					<% @data.keys.each do |k| %>
+						<%= render partial: "queue_data", :locals => { :queue_name => k } %>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -91,7 +91,7 @@ class DatasetFilesController < ApplicationController
       render :status => 404
     end
     respond_to do |format|
-      format.html { redirect_to dataset_url }
+      format.html { redirect_to edit_dataset_path(@dataset), notice: 'File was successfully deleted.' }
       format.json { head :no_content }
     end
   end

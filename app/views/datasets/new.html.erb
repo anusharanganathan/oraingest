@@ -1,3 +1,5 @@
+<% @page_title = application_name + " Add Dataset" %>
+
   <h2 style="margin-left: 10px;">Create dataset</h2>
   <% path = { :list => datasets_path } %>
   <br/><%= render partial: "shared/actions/new", :locals => { :path => path } %>
