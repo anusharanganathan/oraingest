@@ -1,6 +1,6 @@
 # ORA: Oxford University Research Archives
 
-![build](https://travis-ci.org/bodleian/oraingest.svg?branch=dev)
+![build](https://travis-ci.org/bodleian/oraingest.svg?branch=dev)(https://travis-ci.org/bodleian/oraingest)
 
 This is a [Sufia](https://github.com/projecthydra/sufia)-based [Hydra Head](http://projecthydra.org)
 
