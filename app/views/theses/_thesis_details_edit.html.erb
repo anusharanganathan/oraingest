@@ -1,0 +1,66 @@
+<div class="fieldset">
+  <p class="small">Type of degree</p>
+  <%= f.select :degreeName, options_for_select(Sufia.config.thesis_degree_types, selected: @thesis.degreeName.first), { include_blank: 'Select a degree type' }, data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Type of degree" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Level of degree</p>
+  <%= f.select :degreeType, options_for_select(Sufia.config.thesis_award_levels, selected: @thesis.degreeType.first), { include_blank: 'Select a degree level' }, data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Level of degree" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Awarding institution</p>
+  <% institution = @thesis.awardingBody.first || 'University of Oxford' %>
+  <%= f.text_field :awardingBody, value: institution, style: 'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Awarding institution" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Year leave to supplicate granted</p>
+  <%= f.text_field :dateOfAward, value: @thesis.dateOfAward.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Year leave to supplicate granted" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Year printed on thesis</p>
+  <%= f.text_field :dateCopyrighted, value: @thesis.dateCopyrighted.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Year printed on thesis" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Examiner</p>
+  <%= f.text_field :examinerRole, value: @thesis.examinerRole.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Examiner" , :tipDescription => "TODO" } %>
+</div>
+
+<div class="fieldset">
+  <p class="small">Examiner affiliation</p>
+  <%= f.text_field :examinerAffiliation, value: @thesis.examinerAffiliation.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Examiner affiliation" , :tipDescription => "TODO" } %>
+</div>
+
+
+<div class="fieldset">
+
+  <h4>Supervisors</h4>
+
+  <div class="field-repeater">
+    <ol>
+      <li>
+        <%= f.text_field :supervisor, multiple: true, value: @thesis.supervisor.first, id: "supervisor0", data: {"progress" => "discoverability"} %>
+        <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+      </li>
+      <% @thesis.supervisor.from(1).each_with_index do |s, index | %>
+          <li>
+            <%= f.text_field :supervisor, multiple: true, value: s, id: "supervisor#{index+1}", data: {"progress" => "discoverability"} %>
+            <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          </li>
+    <% end %>
+    </ol>
+    <a href="#" class="add-field">Add another supervisor</a>
+  </div>
+  <%= render partial: '/shared/tooltip', locals: {:tipType => "discoverability" , :tipTitle => "Supervisor" , :tipDescription => "TODO" } %>
+</div>
+

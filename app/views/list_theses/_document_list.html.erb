@@ -1,0 +1,39 @@
+<%#
+Copyright © 2012 The Pennsylvania State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+%>
+
+<% msg = '<a href="%s">Login</a> to see your recently added theses'%new_user_session_path if msg.blank? and current_user.blank? %>
+<% msg = 'You have no theses to display. Contribute some of your theses!' if msg.blank? %>
+
+<% # container for all documents in index view -%>
+<% if docs.blank? %>
+    <p>  <%= raw(msg) %> </p>
+<% else %>
+    <table class="article-table">
+      <thead>
+      <tr>
+        <th>Thesis details</th>
+        <th width="150">Status and action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% docs.each do |document| %>
+          <% path = document_url(document.modelName, 'show', document.id) %>
+          <%= render partial: "show_thesis", locals: {:document => document } %>
+      <% end %>
+      </tbody>
+    </table>
+<% end %>
+<div id="documents" class="clear">

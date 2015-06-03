@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<h6>Title:</h6>
+<% if thesis.title.any? %>
+    <h3><%= thesis.title.first %></h3>
+<% else %>
+    <h3>Article</h3>
+<% end %>
+
+<% if thesis.subtitle.any? %>
+    <h6>Subtitle:</h6>
+    <h3><%= thesis.subtitle.first %></h3>
+<% end %>
+
+<%= render partial: "shared/work_type_fields_show", :locals => { :article => @thesis } %>
+
+<% if thesis.abstract.any? %>
+    <h6>Abstract:</h6>
+    <p><%= simple_format(thesis.abstract.first) %></p>
+<% end %>
+
+<% if thesis.medium.any? %>
+    <h6>Medium or material:</h6>
+    <p><%= thesis.medium.first %></p>
+<% end %>
+
+<% if thesis.keyword.any? %>
+    <h6>Keywords:</h6>
+    <% thesis.keyword.each do |tag|%>
+        <p style="margin: 0"><%=tag %></p>
+    <% end %>
+    </p>
+<% end %>
+
+<%= render partial: "shared/mads_language_fields_show", locals: { :article => @thesis } %>
+<%= render partial: "shared/mads_subject_fields_show", locals: { :article => @thesis } %>

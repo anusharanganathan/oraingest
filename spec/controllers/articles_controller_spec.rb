@@ -151,7 +151,7 @@ describe ArticlesController do
       article.delete
     end
 
-    it 'creates a new article' do
+    it 'updates the article' do
       params = {'title' => 'Article title'}
       sign_in @user
       expect(article.title).to eq([])

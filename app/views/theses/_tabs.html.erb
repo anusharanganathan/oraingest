@@ -1,0 +1,13 @@
+<nav class="form-steps extra-step">
+  <ol>
+    <li class="current">Upload<br/> files<span></span></li>
+    <li>About<br/> your award<span></span></li>
+    <li>About<br/> your thesis<span></span></li>
+    <li>About<br/> you<span></span></li>
+    <li>Related<br/> publications<span></span></li>
+    <li>Making your<br/> thesis available<span></span></li>
+    <% if can? :review, :all %>
+        <li>Review<br/> workflow<span></span></li>
+    <% end %>
+  </ol>
+</nav>

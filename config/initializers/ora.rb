@@ -42,8 +42,11 @@ Sufia.config do |config|
       'Edited volume' => 'Edited volume',
       'Monograph' => 'Monograph'
     },
-    'dataset' => {
-      'Dataset'=>'Dataset'
+    "dataset" => {
+      "Dataset"=>"Dataset"
+    },
+    'thesis' => {
+        'Thesis' => 'Thesis'
     }
   }
 
@@ -64,8 +67,11 @@ Sufia.config do |config|
       'Working paper' => RDF::CAMELOT::workingPaper,
       'Other' => RDF::CAMELOT::article
     },
-    'dataset' => {
-      'Dataset' => RDF::CAMELOT::dataset,
+    "dataset" => {
+      "Dataset" => RDF::CAMELOT::dataset,
+    },
+    'thesis' => {
+        'Thesis' => RDF::CAMELOT::thesis
     }
   }
 
@@ -365,6 +371,17 @@ Sufia.config do |config|
     },
   }
 
+  config.thesis_award_levels = {
+      'Doctoral' => 'Doctoral',
+      'Postdoctoral' => 'Postdoctoral',
+      'Masters' => 'Masters',
+      'Bachelors' => 'Bachelors',
+  }
+
+  config.thesis_degree_types = {
+      'Degree type #1' => 'Degree type #1',
+      'Degree type #2' => 'Degree type #2'
+  }
 
   # Map hostnames onto Google Analytics tracking IDs
   # config.google_analytics_id = 'UA-99999999-1'

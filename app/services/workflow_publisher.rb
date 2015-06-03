@@ -1,11 +1,9 @@
-require 'ora/data_doi'
-
 class WorkflowPublisher
 
   attr_accessor :parent_model
   
   def initialize(model)
-    @parent_model = model
+    @parent_model
   end
   
   def perform_action(current_user)
@@ -81,7 +79,7 @@ class WorkflowPublisher
       msg = msg + msg2
       status = Sufia.config.verified_status
     end
-    @parent_model.workflowMetadata.update_status(status, msg)
+    parent_model.workflowMetadata.update_status(status, msg)
   end
 
   def ready_to_publish?(wf_id='MediatedSubmission')
@@ -90,10 +88,10 @@ class WorkflowPublisher
     if wf.nil?
       return status
     end
-    unless Sufia.config.publish_to_queue_options.keys.include?(@parent_model.model_klass.downcase)
+    unless Sufia.config.publish_to_queue_options.keys.include?(parent_model.model_klass.downcase)
       return status
     end
-    unless Sufia.config.publish_to_queue_options[@parent_model.model_klass.downcase].include?(wf.current_status)
+    unless Sufia.config.publish_to_queue_options[parent_model.model_klass.downcase].include?(wf.current_status)
       return status
     end
     occurences = wf.all_statuses.select{|s| s == wf.current_status}
@@ -105,19 +103,19 @@ class WorkflowPublisher
     status = true
     msg = []
     # descMetadata has to exist
-    unless @parent_model.datastreams.keys().include? 'descMetadata'
+    unless parent_model.datastreams.keys().include? 'descMetadata'
       status = false
       msg << 'No descMetadata available.'
     end
     # All of the access rights should be in place
-    unless @parent_model.has_all_access_rights?
+    unless parent_model.has_all_access_rights?
       status = false
       msg << 'Not all files or the catalogue record has embargo details'
     end
     # The metadata for regsitering DOI should exist
-    if @parent_model.model_klass == 'Dataset' && @parent_model.doi_requested?
-      unless @parent_model.doi_registered?
-        payload = @parent_model.doi_data
+    if parent_model.model_klass == 'Dataset' && parent_model.doi_requested?
+      unless parent_model.doi_registered?
+        payload = parent_model.doi_data
         dd = ORA::DataDoi.new(Sufia.config.doi_credentials)
         # validate required fields
         begin

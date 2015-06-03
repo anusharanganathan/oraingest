@@ -73,5 +73,15 @@ module RDF
     property :translator
     # funding
     property :hasFundingAward
+    #thesis
+    property :degreeName
+    property :degreeType
+    property :awardingBody
+    property :dateOfAward
+    property :examinerRole
+    property :examinerAffiliation
+    property :supervisor
+    property :dispensationFromConsultation
+    property :thirdPartyCopyright
   end
 end

@@ -69,6 +69,16 @@ OraHydra::Application.routes.draw do
 
   resources :dataset_agreements
 
+  resources :theses, except: :index do
+    member do
+      get 'file/:dsid', controller: :thesis_files, action: :show
+      delete 'file/:dsid', controller: :thesis_files, action: :destroy
+    end
+    collection do
+      get '/', controller: :list_theses, action: :index
+    end
+  end
+
   #mount Hydra::Collections::Engine => '/' 
   mount Sufia::Engine => '/'
 

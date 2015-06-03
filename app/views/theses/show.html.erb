@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<% if false %>
+    <h3><span class="label label-<%=@article.relationsMetadata.embargoClass%>"><%= @article.relationsMetadata.embargoStatus %></span> </h3>
+<% end %>
+
+</div>
+<div class="gutter-container">
+  <div class="col col1of6">
+    <aside class="filters">
+      <% path = { :new => new_thesis_path, :show => thesis_path(@thesis), :edit => document_url("Thesis", "edit", @thesis.id), :list => theses_path } %>
+      <%= render partial: "shared/actions/show", :locals => { :path => path, :current_status => @thesis.workflows.first.current_status, :document_id => @thesis.id.to_s } %>
+      <%#= TODO: Add stats and open access state, once published in ORA %>
+      <%#= render partial: "shared/access_logo_and_stats_show", :locals => { :article => @article } %>
+      <%#= TODO: Compute and add stats for fill factor by category %>
+      <%#= render partial: "shared/fill_factor_by_category_show", :locals => { :article => @article } %>
+    </aside>
+  </div>
+
+  <div class="col col5of6">
+    <div class="content-box padding-0">
+      <div class="content-box-header green-bg font-26">
+        Thesis
+      </div>
+      <div class="padding-25 overflow">
+        <div class="record-content">
+          <%= render partial: "describe_fields_show", :locals => { :thesis => @thesis } %>
+          <%= render partial: "shared/publication_activity/article_fields_show", :locals => { :article => @thesis } %>
+          <%= render partial: "shared/creation_activity_fields_show", :locals => { :article => @thesis } %>
+          <%#= render partial: "shared/funding_activity_fields_show", :locals => { :article => @thesis } %>
+          <%= render partial: "shared/relation_fields_show", :locals => { :article => @thesis } %>
+          <%#= render partial: "shared/rights_activity_fields_show", :locals => { :article => @thesis } %>
+          <%#= render partial: "shared/embargo/catalogue_fields_show", :locals => { :article => @thesis } %>
+          <%= render partial: "shared/workflow_show", :locals => { :article => @thesis } %>
+          <% if can? :review, :all %>
+              <%= render partial: "shared/permissions_show", :locals => { :article => @thesis } %>
+          <% end %>
+        </div>
+        <aside class="record-sidebar">
+          <h6>Downloads</h6>
+          <%= render partial: "shared/file_info_fields_show", :locals => { :article => @thesis } %>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+

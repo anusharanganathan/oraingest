@@ -1,0 +1,8 @@
+<% msg = "<a href=#{new_user_session_path}>Login</a> to see your recently added theses" if msg.blank? and current_user.blank? %>
+<% msg = 'You have no documents to display. Contribute some of your theses!' if msg.blank? %>
+<% if recent_theses.blank? %>
+    <p><%= raw(msg) %></p>
+<% else %>
+    <h3>Latest theses</h3>
+    <%= render partial: "catalog/_index_partials/document_list", locals: {:recent_documents => recent_theses} %>
+<% end %>

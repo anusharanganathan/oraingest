@@ -56,6 +56,7 @@ class CatalogController < ApplicationController
     my_recent_publications
     #grab my recent publications
     my_recent_datasets
+    my_recent_theses
   end
 
   def recent
@@ -90,6 +91,13 @@ class CatalogController < ApplicationController
     end
   end
 
+  def my_recent_theses
+    if user_signed_in?
+      (_, @recent_theses) = get_search_results(:q =>filter_mine_theses,
+                                               :sort=>sort_field, :rows=>5)
+    end
+  end
+
   protected
 
   # Limits search results just to needed models
@@ -97,7 +105,7 @@ class CatalogController < ApplicationController
   # @param user_parameters the current user-subitted parameters
   def exclude_unwanted_models(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Article\" OR #{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Dataset\""
+    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Article\" OR #{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Dataset\" OR #{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:Thesis\""
   end
 
   def depositor 
@@ -119,6 +127,10 @@ class CatalogController < ApplicationController
 
   def filter_mine_datasets
     "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
+  end
+
+  def filter_mine_theses
+    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Thesis\""
   end
 
   def sort_field
