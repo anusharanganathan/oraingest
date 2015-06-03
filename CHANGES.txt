@@ -1,6 +1,47 @@
 Changelog
 =========
 
+1.2
+------------------
+
+- Improve workflow and limits for file upload in forms and add help text
+- Modify inheritance of javascript files
+- Mint DOIs for Datasets and register once published
+- Funder field is no longer mandatory
+- Fix rdf model for publication activity
+- Index and display published records in ORA
+- Modify workflow and corresponding states for reviewing
+- Display DOI's as hypertexts
+- Updated helper text
+- List of roles for data steward expanded
+- Removed the form fill tracker
+- Disambiguate user and admin file sizes
+
+1.1
+------------------
+
+- Embargo options are displayed in archving section in form
+- Enabled search
+- Added sections to manage workflow and permissions in dataset form
+- Added facets to list of publications and datasets
+- Added new form for article review
+- Published records pushed to redis queue
+- Embargo options displayed in an accoridon on the record page
+- Page redirects made based on user roles
+- Cleaned up the data progress in forms
+- Display of file embargo options in form improved
+- Made improvements to reviewer dashboard
+- Improved checks for mandatory fields
+- Improved code sharing by adding commn classes to models
+- Removed unused views 
+- Form user experience improved
+
+1.0.1
+------------------
+
+- Replaced CUD IP with domain name
+- Added sso ids to rolemap
+
 1.0.0 - Unreleased
 ------------------
 
