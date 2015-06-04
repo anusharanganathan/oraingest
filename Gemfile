@@ -80,3 +80,5 @@ group :development, :test do
 end
 
 gem 'simplecov', :require => false, :group => :test
+
+gem 'god'
