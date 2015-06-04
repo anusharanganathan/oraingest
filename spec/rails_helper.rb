@@ -5,6 +5,11 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'simplecov'
+require 'coveralls'
+
+SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+SimpleCov.start do
+end
 
 SimpleCov.start 'rails'
 
@@ -53,3 +58,4 @@ module FactoryGirl
     tmpl.class.send("find_by_#{by}".to_sym, tmpl.send(by)) || FactoryGirl.create(handle)
   end
 end
+
