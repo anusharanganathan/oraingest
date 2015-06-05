@@ -1,5 +1,5 @@
 <% unless @response.response['numFound'] < 2 %>
-  <%= form_tag list_datasets_path, :method=>:get do %>
+  <%= form_tag datasets_path, :method=>:get do %>
     Sorted by
     <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>			      
     &nbsp;&nbsp;&nbsp;

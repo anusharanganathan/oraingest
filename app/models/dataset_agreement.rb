@@ -10,8 +10,6 @@ class DatasetAgreement < ActiveFedora::Base
   #include Sufia::GenericFile::WebForm
   include Sufia::Noid
   include Hydra::ModelMethods
-  include WorkflowMethods
-  include BuildMetadata
 
   attr_accessible *(DatasetAgreementRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes])
   
@@ -53,6 +51,10 @@ class DatasetAgreement < ActiveFedora::Base
       "delete_url" => "/dataset_agreements/#{pid}/file/#{dsid}", #"/dataset/#{noid}",
       "delete_type" => "DELETE"
     }
+  end
+
+  def model_klass
+    self.class.model_name.to_s
   end
 
   private

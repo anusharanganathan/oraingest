@@ -1,6 +1,10 @@
 <% if !@files.empty? %>
   <div>
-    <p>You can choose to apply an embargo to your file(s) on the <i>Data archiving and access</i> tab (Step 5).</p>
+    <% if @model=='article' %>
+      <p>You can choose to apply an embargo to your file(s) on the <i>'Archiving and access'</i> tab (Step 5).</p>
+    <% elsif @model=='dataset' %>
+      <p>You can choose to apply an embargo to your file(s) on the <i>'Data archiving and access'</i> tab (Step 5).</p>
+    <% end %>
     <table>
     <% @files.each do |file| %>
       <tr class="template-download">

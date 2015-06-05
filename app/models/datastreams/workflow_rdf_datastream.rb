@@ -53,6 +53,23 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       end
     end
   end 
+
+  def update_status(status, description, creator='ORA Deposit system', wf_id="MediatedSubmission")
+    #Update the workflow status. Add a new workflow entry.
+    unless Sufia.config.workflow_status.include?(status)
+      return false
+    end
+    wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
+    wf.entries.build
+    wf.entries.last.status = Sufia.config.workflow_status[status]
+    wf.entries.last.creator = creator
+    if description.is_a?(Array)
+      description = description.join('\n')
+    end
+    wf.entries.last.description = description
+    wf.entries.last.date = Time.now.to_s
+    return true
+  end
   
   def to_solr(solr_doc={})
     super

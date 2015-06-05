@@ -223,7 +223,6 @@ Sufia.config do |config|
       "Translator" => RDF::ORA.translator
     },
     "data_steward" => {
-      "Creator" => RDF::DC.creator,
       "Departmental Administrator" => RDF::ORA.departmentalAdministrator,
       "Head of Department" => RDF::ORA.headOfDepartment,
       "Head of Faculty" => RDF::ORA.headOfFaculty,
@@ -286,13 +285,14 @@ Sufia.config do |config|
     "Rejected" => "Rejected",
     "Approved" => "Approved",
     "System failure" => "System failure",
-    "Migrate" => "Migrate",
-    "Published" => "Published"
+    "System verified" => "System verified",
+    "Data migrated" => "Data migrated",
+    "Published" => "Published",
+    "DOI registered" => "DOI registered"
  }
 
   config.next_workflow_status = {
     # The workflow states a reviewer can set. 
-    # Ignoring Approved => [System failure, Migrate, Published] as these are set by the system.
     "Draft" => ["Submitted"],
     "Submitted" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
     "Assigned" =>  ["Escalated", "Referred", "Rejected", "Approved"],
@@ -301,11 +301,12 @@ Sufia.config do |config|
     "Referred" =>  ["Submitted"],
     "Approved" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected"],
     "System failure" => ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
-    "Published" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"]
+    "Published" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Rejected", "Approved"],
+    "DOI registered" =>  ["Assigned", "Claimed", "Escalated", "Referred", "Approved"]
   }
 
   config.publish_to_queue_options = {
-    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, System verified, Published
     # occurence 
     #   can be a number or 'all'
     "article" => {
@@ -323,7 +324,7 @@ Sufia.config do |config|
   config.rt_queue = 'oraq'
 
   config.email_options = {
-    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, Migrate, Published
+    # Possible states are: Draft, Submitted, Assigned, Claimed, Escalated, Referred, Rejected, Approved, System failure, System verified, Published
     # occurence 
     #   can be a number or 'all'
     # template 
@@ -366,5 +367,9 @@ Sufia.config do |config|
   config.from_email = "no-reply@bodleian.ox.ac.uk"
   config.data_root_dir = "/data/oradeposit/"
   config.cud_base_url = "http://dams-auth.bodleian.ox.ac.uk" #"http://10.0.0.203"
+
+  # For migrating records
+  config.ora_publish_queue_name = "ora_publish"
+  config.tmp_file_dir = "tmp/files/"
 end
 

@@ -230,7 +230,7 @@ class DatasetAgreementsController < ApplicationController
 
   def add_metadata(dataset_agreement_params)
     #TODO: All data stewards should be added to list of contibutors
-    @dataset_agreement.buildMetadata(dataset_agreement_params, contents, current_user.user_key)
+    MetadataBuilder.new(@dataset_agreement).build(dataset_agreement_params, contents, current_user.user_key)
     respond_to do |format|
       if @dataset_agreement.save
         format.html { redirect_to edit_dataset_agreement_path(@dataset_agreement), notice: 'Dataset agreement was successfully updated.' }

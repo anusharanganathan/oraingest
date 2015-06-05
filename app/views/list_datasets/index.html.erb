@@ -33,7 +33,7 @@ limitations under the License.
     <hr />
     <%= render 'list_datasets/sort_and_per_page' %>
     <% render_pagination_info @response, :entry_name=>'item' %>
-    <%#= render 'dashboard/results_pagination' %>
+    <%= render 'dashboard/results_pagination' %>
   </div>
 
 <% end %>
@@ -46,6 +46,8 @@ limitations under the License.
   <%= render :partial => 'dashboard/did_you_mean' %>
 
   <%= render :partial=>'list_datasets/document_list', :locals => {:docs => @response.docs.map { |x| SolrDocument.new(x) }, :facet_value => nil}  %>
+
+  <%= render 'dashboard/results_pagination' %>
 </div>
 
 <% content_for :sidebar do %>
