@@ -223,6 +223,7 @@ Sufia.config do |config|
       "Translator" => RDF::ORA.translator
     },
     "data_steward" => {
+      "Designated Data Steward" => RDF::ORA.designatedDataSteward,
       "Departmental Administrator" => RDF::ORA.departmentalAdministrator,
       "Head of Department" => RDF::ORA.headOfDepartment,
       "Head of Faculty" => RDF::ORA.headOfFaculty,
