@@ -223,8 +223,8 @@ Sufia.config do |config|
       "Translator" => RDF::ORA.translator
     },
     "data_steward" => {
-      "Designated Data Steward" => RDF::ORA.designatedDataSteward,
       "Departmental Administrator" => RDF::ORA.departmentalAdministrator,
+      "Designated Data Steward" => RDF::ORA.designatedDataSteward,
       "Head of Department" => RDF::ORA.headOfDepartment,
       "Head of Faculty" => RDF::ORA.headOfFaculty,
       "Head of Research Group" => RDF::ORA.headOfResearchGroup,  
@@ -232,6 +232,7 @@ Sufia.config do |config|
       "Laboratory Manager" => RDF::ORA.laboratoryManager,         
       "Principal Investigator (PI)" => RDF::ORA.principalInvestigator,
       "Subject Librarian" => RDF::ORA.subjectLibrarian, 
+      "Thesis Supervisor" => RDF::ORA.thesisSupervisor,
     },
     "dataset_agreement" => {
       "Data steward" => RDF::ORA.DataSteward

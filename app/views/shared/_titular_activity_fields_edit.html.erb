@@ -37,8 +37,12 @@
                 <% end %>
 
                 <label>
-                  <p><span class="small reqlabel">Role</span>
-                  <%= f_c.select :role, options_for_select(Sufia.config.role_types["data_steward"], :selected=>c.role.first),  { :include_blank => 'Select a role' }, id: "titularRole%d"%c_index, :required => true, data: {"progress" => "preservation"}  %>
+                  <% selectedRole = c.role.first %>
+                  <% if selectedRole.blank? %>
+                  <% selectedRole = Sufia.config.role_types["data_steward"]['Designated Data Steward'] %>
+                  <% end %>
+                  <p><span class="small reqlabel">Role </span>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types["data_steward"], :selected=>selectedRole),  { :include_blank => 'Select a role' }, id: "titularRole%d"%c_index, :required => true, data: {"progress" => "preservation"}  %>
                   </p>
                 </label>
 
