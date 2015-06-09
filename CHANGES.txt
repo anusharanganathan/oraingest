@@ -13,7 +13,7 @@ Changelog
 - Modify workflow and corresponding states for reviewing
 - Display DOI's as hypertexts
 - Updated helper text
-- List of roles for data steward expanded and a default value is selected
+- List of roles for data steward expanded
 - Removed the form fill tracker
 - Disambiguate user and admin file sizes
 
