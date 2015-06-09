@@ -17,7 +17,7 @@ module ORA
       dc = Sufia.config.databank_credentials
       self.silo = dc['silo']
       @obj = Dataset.find(@pid)
-      @databank = Databank.new(dc['host'], username=dc['username'], password=dc['password'])
+      @databank = Databank.new(dc['host'], username=dc['username'], password=dc['password'], timeout=dc['timeout'])
     end
   
     def migrate
