@@ -34,6 +34,7 @@ Changelog
 - Added controller to monitor queues in redis (for non-oradeposit jobs)
 - Labels and text messages in webui cutomized for articles
 - Logic for edits allowed based on next workflow status being defined
+- List of roles for data steward expanded further and a default value is selected
 
 1.2
 ------------------

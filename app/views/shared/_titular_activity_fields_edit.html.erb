@@ -37,8 +37,12 @@
                 <% end %>
 
                 <label>
-                  <p><span class="small reqlabel">Role</span>
-                  <%= f_c.select :role, options_for_select(Sufia.config.role_types["data_steward"], :selected=>c.role.first),  { :include_blank => 'Select a role' }, id: "titularRole%d"%c_index, :required => true, data: {"progress" => "preservation"}  %>
+                  <% selectedRole = c.role.first %>
+                  <% if selectedRole.blank? %>
+                  <% selectedRole = Sufia.config.role_types["data_steward"]['Designated Data Steward'] %>
+                  <% end %>
+                  <p><span class="small reqlabel">Role </span>
+                  <%= f_c.select :role, options_for_select(Sufia.config.role_types["data_steward"], :selected=>selectedRole),  { :include_blank => 'Select a role' }, id: "titularRole%d"%c_index, :required => true, data: {"progress" => "preservation"}  %>
                   </p>
                 </label>
 
@@ -70,11 +74,14 @@
     </ol>
     <a href="#" class="add-field">Add another data steward</a>
   </div>
-  <% desc = "Please enter the name and role of a person who has agreed to act as a data steward for this dataset post-project or for the entire lifetime of the data
-        – i.e. the person who can act as a point of contact for ORA staff in the event of any queries arising about this dataset.
-        The individual must have agreed to take on this role and to have their personal details displayed on the item record. Post-project,
-        this is likely to be someone in a role such as ‘Head of X Department/Faculty’ or ‘Head of X Research Group’. If the person is based at Oxford,
-        their name, email address and departmental affiliation should auto-complete as you type." %>
+  <% desc = "Data steward for post-project:
+            Please enter the name and role of a person who has agreed to act as a data steward for this dataset post-project or for the entire lifetime of the data
+            – i.e. someone who is NOT already listed as a creator but who can act as a point of contact for ORA staff in the event of any queries 
+            arising about this dataset should the creator/s be unavailable. The individual must have agreed to take on this role and 
+            to have their personal details displayed on the item record. 
+            Ideally, your department or unit will have designated a data steward role for this purpose but, if not, 
+            this is likely to be someone in a role such as ‘Head of X Department/Faculty’ or ‘Head of X Research Group’.
+            If the person is based at Oxford, their name, email address and departmental affiliation should auto-complete as you type." %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "preservation" , :tipTitle => "Data steward for post-project" , :tipDescription => desc } %>
 </div>
 
