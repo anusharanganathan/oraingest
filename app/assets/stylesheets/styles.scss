@@ -381,16 +381,20 @@ dl {
 	.tag-technical 		{ background: #4f5858; }
 	.tag-publication	{ background: #660033; }
 
-	.tag-draft	{ background: #99CCFF; }
-	.tag-submitted	{ background: #006699; }
-	.tag-assigned	{ background: #FF3399; }
-	.tag-claimed	{ background: #FF9933; }
-	.tag-approved	{ background: #009900; }
-	.tag-escalated	{ background: #CC3300; }
-	.tag-referred	{ background: #336699; }
-	.tag-rejected	{ background: #660033; }
-	.tag-published	{ background: #00CC99; }
-	.tag-unassigned	{ background: #996633; }
+	.tag-draft		{ background: #99CCFF; }
+	.tag-submitted		{ background: #5C7A99; }
+	.tag-assigned		{ background: #5C3D99; }
+	.tag-claimed		{ background: #9966FF; }
+	.tag-approved		{ background: #47DA91; }
+	.tag-escalated		{ background: #FF4719; }
+	.tag-referred		{ background: #FF7519; }
+	.tag-rejected		{ background: #FF8080; }
+	.tag-published		{ background: #008F00; }
+	.tag-system-verified	{ background: #009999; }
+	.tag-doi-registered	{ background: #008F00; }
+	.tag-data-migrated	{ background: #5FDF5F; }
+	.tag-system-failure	{ background: #FF1919; }
+	.tag-unassigned		{ background: #996633; }
 
 /* Header
 ------------------------------------------- */
@@ -1538,7 +1542,7 @@ table th { width: 120px; }
 
 table th, table td {
 	vertical-align: top;
-	padding: 5px 0;
+	padding: 5px 5px;
 }
 
 table td input,
@@ -1859,6 +1863,12 @@ table td textarea {
 .accordian .accordian-content p { margin: 5px 0; }
 .accordian .accordian-content p:first-child { margin-top: 0; }
 .accordian .accordian-content p:last-child { margin-bottom: 10px; }
+
+.accordian .accordian-content table {
+	font-size: 12px;
+	margin: 10px 0;
+	color: #505050;
+}
 
 /* Pagination
 ------------------------------------------- */
@@ -2274,3 +2284,10 @@ input[type="submit"][disabled] {
   display:inline;
 }
 
+.ui-helper-hidden-accessible {
+  display: none;
+}
+
+.thin {
+  margin-bottom: 0px;
+}

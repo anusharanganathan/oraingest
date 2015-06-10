@@ -19,7 +19,7 @@
   <p><%= simple_format(article.abstract.first) %></p>
 <% end %>
 
-<% if !article.medium.empty? && !article.medium[0].empty? %>
+<% if article.medium.any? && article.medium.first %>
   <h6>Medium or material:</h6>
   <p><%= article.medium.first %></p>
 <% end %>

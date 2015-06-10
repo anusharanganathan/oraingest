@@ -52,6 +52,8 @@ module RDF
     property :adapter
     property :author
     property :copyrightHolder
+    property :designatedDataSteward
+    property :thesisSupervisor
     property :departmentalAdministrator
     property :depositor
     property :editor

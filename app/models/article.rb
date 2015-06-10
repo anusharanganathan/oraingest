@@ -11,9 +11,8 @@ class Article < ActiveFedora::Base
   #include Sufia::GenericFile::WebForm
   include Sufia::Noid
   include Hydra::ModelMethods
-  include WorkflowMethods
-  include BuildMetadata
   include DoiMethods
+  include ContentMethods
 
   attr_accessible *(ArticleRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + ArticleAdminRdfDatastream.fields)
   
@@ -64,6 +63,19 @@ class Article < ActiveFedora::Base
     }
   end
 
+  def mint_datastream_id
+    choicesUsed = self.datastreams.keys.select { |key| key.match(/^content\d+/) and self.datastreams[key].content != nil }
+    begin
+      "content%02d"%(choicesUsed[-1].last(2).to_i+1)
+    rescue
+      "content01"
+    end
+  end
+
+  def model_klass
+    self.class.model_name.to_s
+  end
+
   private
   
   def initialize_submission_workflow
@@ -85,22 +97,6 @@ class Article < ActiveFedora::Base
     rescue ActiveFedora::ObjectNotFoundError
       Article.create({pid: pid})
     end
-  end
-
-  def thumbnail_url(filename, size)
-    icon = "fileIcons/default-icon-#{size}x#{size}.png"
-    begin
-      mt = MIME::Types.of(filename)
-      extensions = mt[0].extensions
-    rescue
-      extensions = []
-    end
-    for ext in extensions
-      if Rails.application.assets.find_asset("fileIcons/#{ext}-icon-#{size}x#{size}.png")
-        icon = "fileIcons/#{ext}-icon-#{size}x#{size}.png"
-      end
-    end
-    icon
   end
 
 end

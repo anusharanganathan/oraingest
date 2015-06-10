@@ -7,7 +7,11 @@
 <%= f.fields_for :license do |l| %>
   <div class="fieldset">
     <label>
-      <p class="small">Assign a licence to your data</p>
+      <% if @model=='article' %>
+        <p class="small">Assign a licence to your publication</p>
+      <% elsif @model=='dataset' %>
+        <p class="small">Assign a licence to your data</p>
+      <% end %>
       <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
     </label>
     

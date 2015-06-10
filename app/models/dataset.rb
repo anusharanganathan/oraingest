@@ -5,6 +5,7 @@ require "datastreams/dataset_admin_rdf_datastream"
 require "dataset_agreement"
 #require "person"
 require "rdf"
+require 'uri'
 require "fileutils"
 
 class Dataset < ActiveFedora::Base
@@ -13,9 +14,8 @@ class Dataset < ActiveFedora::Base
   #include Sufia::GenericFile::WebForm
   include Sufia::Noid
   include Hydra::ModelMethods
-  include WorkflowMethods
-  include BuildMetadata
   include DoiMethods
+  include ContentMethods
 
   attr_accessible *(DatasetRdfDatastream.fields + RelationsRdfDatastream.fields + [:permissions, :permissions_attributes, :workflows, :workflows_attributes] + DatasetAdminRdfDatastream.fields)
   
@@ -82,31 +82,87 @@ class Dataset < ActiveFedora::Base
     opts
   end
 
-  def save_file(file, pid)
-    name =  file.original_filename
-    name = File.basename(name) 
-    if pid.include?('sufia:')
-      pid = pid.gsub('sufia:', '')
-    end
-    directory = File.join(Sufia.config.data_root_dir, pid)
-    FileUtils::mkdir_p(directory) 
-    # create the file path
-    path = File.join(directory, name)
-    # write the file
-    File.open(path, "wb") { |f| f.write(file.read) }
-    path
+  def mint_datastream_id
+    dsid = "content%s"% Sufia::Noid.noidify(Sufia::IdService.mint)
+    dsid
   end
 
-  def delete_file(file_location)
-    File.delete(file_location) if File.exist?(file_location)
+  def file_location(dsid)
+    opts = self.datastream_opts(dsid)
+    location = opts.fetch('dsLocation', nil)
+    dsid_location = nil
+    if location.is_a?(String)
+      if location.include?(data_dir)
+        dsid_location = location
+      elsif location =~ /\A#{URI::regexp}\z/
+        dsid_location = location
+      end
+    elsif location.is_a?(Hash) && ['silo', 'dataset', 'filename'].all? {|k| location.key? k}
+      filename = File.basename(location['filename'])
+      @databank = Databank.new(Sufia.config.databank_credentials['host'], username=Sufia.config.databank_credentials['username'], password=Sufia.config.databank_credentials['password'])
+      dsid_location = @databank.getUrl(location['silo'], dataset=location['dataset'], filename=location['filename'])
+    end
+    dsid_location
   end
 
-  def delete_dir(pid)
-    if pid.include?('sufia:')
-      pid = pid.gsub('sufia:', '')
+  def is_url?(location)
+    match = location =~ /\A#{URI::regexp}\z/
+    unless match
+      return false
     end
-    directory = "/data/%s" % pid
-    FileUtils.rm_rf(directory) if File.exist?(directory)
+    return true
+  end
+
+  def is_on_disk?(location)
+    location.include?(data_dir) && File.exist?(location)    
+  end
+
+  def add_content(file, filename)
+    location = save_file_to_disk(file, filename)
+    dsid = save_file_associated_datastream(filename, location, file.size)
+    save_file_metadata(location, file.size)
+    return dsid
+  end
+
+  def delete_content(dsid)
+    location = self.file_location(dsid)
+    opts = self.datastream_opts(dsid)
+    #TODO: Delete file in Databank and ORA, if location is url
+    if self.is_on_disk?(location)
+      delete_file(location)
+      self.datastreams[dsid].delete
+      parts = self.hasPart
+      self.hasPart = nil
+      self.hasPart = parts.select { |key| not key.id.to_s.include? dsid }
+      self.adminDigitalSize = Integer(self.adminDigitalSize.first) - Integer(opts['size']) rescue self.adminDigitalSize
+    end
+  end
+
+  def delete_local_copy(dsid, local_path)
+    # Check the datastream associated to the file has remote location of file
+    location = self.file_location(dsid)
+    unless self.is_url?(location)
+      return false
+    end
+    # Check the remote location (url) is correct
+    begin
+      timeout(5) { @stream = open(location, :http_basic_authentication=>[Sufia.config.databank_credentials['username'], Sufia.config.databank_credentials['password']]) }
+    rescue
+      return false
+    end
+    if @stream.status[0].to_i < 200 || @stream.status[0].to_i > 299 
+      return false
+    end
+    # Delete file
+    delete_file(local_path)
+  end
+
+  def delete_dir(force=false)
+    unless force
+      FileUtils.rmdir(data_dir) if Dir.exist?(data_dir) && Dir["#{data_dir}/*"].empty?
+    else
+      FileUtils.rm_rf(data_dir) if Dir.exist?(data_dir)
+    end
   end
 
   def create_external_datastream(dsid, url, file_name, file_size)
@@ -116,6 +172,10 @@ class Dataset < ActiveFedora::Base
     attrs = {:dsLabel => dsid, :controlGroup => "E", :dsLocation=>url, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
     ds = create_datastream(ActiveFedora::Datastream, dsid, attrs)
     ds
+  end
+
+  def model_klass
+    self.class.model_name.to_s
   end
 
   private
@@ -143,20 +203,54 @@ class Dataset < ActiveFedora::Base
     end
   end
 
-  def thumbnail_url(filename, size)
-    icon = "fileIcons/default-icon-#{size}x#{size}.png"
-    begin
-      mt = MIME::Types.of(filename)
-      extensions = mt[0].extensions
-    rescue
-      extensions = []
+  def data_dir
+    File.join(Sufia.config.data_root_dir, self.id)
+  end
+
+  def save_file_to_disk(file, filename)
+    FileUtils::mkdir_p(data_dir)
+    # create the file path
+    path = File.join(data_dir, filename)
+    #If the file exists, append a count to the filename
+    extn = File.extname(path)
+    fn = File.basename(path, extn)
+    dirname = File.dirname(path)
+    count = 0
+    while File.file?(path)
+      count += 1
+      fnNew = "#{fn}-#{count}"
+      path = File.join(dirname,"#{fnNew}#{extn}")
     end
-    for ext in extensions
-      if Rails.application.assets.find_asset("fileIcons/#{ext}-icon-#{size}x#{size}.png")
-        icon = "fileIcons/#{ext}-icon-#{size}x#{size}.png"
-      end
+    # write the file
+    File.open(path, "wb") { |f| f.write(file.read) }
+    path
+  end
+
+  def save_file_associated_datastream(filename, location, file_size)
+    # Prepare data for associated datastream
+    dsid = self.mint_datastream_id()
+    mime_types = MIME::Types.of(filename)
+    mime_type = mime_types.empty? ? "application/octet-stream" : mime_types.first.content_type
+    opts = {:dsLabel => filename, :controlGroup => "E", :dsLocation=>location, :mimeType=>mime_type, :dsid=>dsid, :size=>file_size}
+
+    # Add the datastream associated to the file
+    dsfile = StringIO.new(opts.to_json)
+    self.add_file(dsfile, dsid, "attributes.json")
+    dsid
+  end
+
+  def save_file_metadata(location, file_size)
+    # Add the file location to the admin metadata
+    if !self.adminLocator.include?(File.dirname(location))
+      self.adminLocator << File.dirname(location)
     end
-    icon
+    size = Integer(self.adminDigitalSize.first) rescue 0
+    self.adminDigitalSize = size + file_size
+    self.medium = Sufia.config.data_medium["Digital"]
+  end
+
+  def delete_file(filepath)
+    File.delete(filepath) if File.exist?(filepath)
   end
 
 end

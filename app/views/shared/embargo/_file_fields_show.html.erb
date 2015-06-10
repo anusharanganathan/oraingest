@@ -13,8 +13,8 @@
     <% hasData = true %>
   <% end %>
 <% end %>
-<% if hasData %>
-  <div class="accordian">
+<div class="accordian">
+  <% if hasData %>
     <div class="accordian-header">Embargo details</div>
     <div style="display: none;" class="accordian-content">
       <% if !hp.accessRights.nil? && !hp.accessRights[0].nil? %>
@@ -37,7 +37,7 @@
         <% if hp.accessRights[0].embargoInfo.has_key?('embargoReason') %>
           <h6>Embargo reason:</h6>
           <% hp.accessRights[0].embargoInfo['embargoReason'].each do |er| %>
-            <span class="small"><%=simple_format(er)%></span>
+            <span class="small"><%=er%></span>
           <% end %>
         <% end %>
         <!-- release method -->
@@ -47,5 +47,5 @@
         <% end %>
       <% end %>
     </div>
-  </div> <!-- /.control-group -->
-<% end %>
+  <% end %>
+</div> <!-- /.control-group -->
