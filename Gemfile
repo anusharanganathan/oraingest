@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 # gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.3'
 
+gem 'mysql2'
 gem 'sqlite3'
 
 # Gems used only for assets and not required
@@ -40,8 +41,6 @@ gem 'sufia', "~> 3.7.2"
 #gem 'sufia'
 gem 'kaminari'
 gem 'jettywrapper', "~> 1.5.0"
-#gem 'jettywrapper'
-#gem 'hydra-collections'
 
 gem 'font-awesome-sass-rails'
 

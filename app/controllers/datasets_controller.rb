@@ -350,7 +350,7 @@ class DatasetsController < ApplicationController
     end
     # Update params
     MetadataBuilder.new(@dataset).build(dataset_params, contents, current_user.user_key)
-    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && contents.any?
+    if @dataset.medium.first != Sufia.config.data_medium["Digital"] && !contents.empty?
       @dataset.medium = [Sufia.config.data_medium["Digital"]]
     end
     if @dataset_agreement
