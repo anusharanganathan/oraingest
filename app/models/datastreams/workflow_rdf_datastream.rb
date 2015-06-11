@@ -39,9 +39,11 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       subject = Sufia.config.email_options[model.downcase][wf.current_status]['subject'].gsub('ID', data['record_id'])
       if (occurence == occurences.length) || occurence == "all"
         rt = Ora::RtClient.new
-        content = rt.email_content(template, data, user)
+        user_info = user.user_info
+        user_name = user.display_name(user_info) || user.name
+        content = rt.email_content(template, data, user_name)
         if content
-          ans = rt.create_ticket(subject, user.oxford_email, content)
+          ans = rt.create_ticket(subject, user.oxford_email(user_info), content)
           is_number = true if Float(ans) rescue false
           if ans and is_number
             #email_params = { :id => wf.rdf_subject.to_s }

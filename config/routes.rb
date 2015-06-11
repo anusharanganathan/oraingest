@@ -7,11 +7,15 @@ OraHydra::Application.routes.draw do
   HydraHead.add_routes(self)
   Hydra::BatchEdit.add_routes(self)
 
-  devise_for :users#, skip: [:sessions]
-  #devise_scope :user do
-  #  get "users/auth/webauth" => "login#login", as: :new_user_session
-  #  match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
-  #end
+  if Rails.env.production?
+    devise_for :users, skip: [:sessions]
+    devise_scope :user do
+      get "users/auth/webauth" => "login#login", as: :new_user_session
+      match 'users/sign_out' => 'devise/sessions#destroy', :as => :destroy_user_session, :via => Devise.mappings[:user].sign_out_via
+    end
+  else
+    devise_for :users
+  end
 
   if defined?(Sufia::ResqueAdmin)
     namespace :admin do

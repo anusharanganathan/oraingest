@@ -1,6 +1,6 @@
-<%# data hash will have 'record_url', 'record_id', 'doi_requested' and 'doi'. user will have all of the user properties. %>
-<% if user.display_name && !data['record_url'].empty? %>
-Dear <%= user.display_name %>,
+<%# data hash will have 'record_url', 'record_id', 'doi_requested' and 'doi'. user_name will have the name of the user. %>
+<% if user_name && !data['record_url'].empty? %>
+Dear <%= user_name %>,
 Thank you for submitting your record in My ORA. <%= data['record_url'] %> was recieved successfully and will be reviewed by ORA staff, before making it available in ORA (http://ora.ox.ac.uk).
 In the mean time your record will continue to be available in the My ORA interface.
 
