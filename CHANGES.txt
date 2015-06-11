@@ -38,7 +38,6 @@ Changelog
 
 1.2
 ------------------
-
 - Improve workflow and limits for file upload in forms and add help text
 - Modify inheritance of javascript files
 - Mint DOIs for Datasets and register once published
