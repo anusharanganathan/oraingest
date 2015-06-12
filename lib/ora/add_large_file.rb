@@ -6,7 +6,7 @@ module Ora
     @dataset = Dataset.find(pid)
     @file = File.open(filepath)
     filename = File.basename(@file)
-    dsid = @dataset.add_content(file, filename)
+    dsid = @dataset.add_content(@file, filename)
     # Save the dataset
     save_tries = 0
     begin
