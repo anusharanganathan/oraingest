@@ -9,12 +9,18 @@
            <p><span class="h6">Name:</span> <%= c.agent[0].name.first %></p>
         <% end %>
 
-        <% if c.role %>
-          <% if Sufia.config.role_labels.include?(c.role.first) %>
-            <p><span class="h6">Role:</span> <%= Sufia.config.role_labels[c.role.first] %></p>
-          <% else %>
-            <p><span class="h6">Role:</span> <%= c.role.first %></p>
+        <% if c.role.any? %>
+          <p><span class="h6">Role:</span>
+          <% c.role.each do |role| %>
+            <% unless role.blank? %>
+              <% if Sufia.config.role_labels.include?(role) %>
+               <span><%= Sufia.config.role_labels[role] %></span>
+              <% else %>
+                <span><%= role %></span>
+              <% end %>
+            <% end %>
           <% end %>
+          </p>
         <% end %>
 
         <% if !c.agent[0].affiliation.empty? %>

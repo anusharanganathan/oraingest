@@ -62,7 +62,7 @@ module RDF
     property :headOfDepartment
     property :headOfFaculty
     property :headOfResearchGroup
-    property :informationOrDataManager
+    property :dataManager
     property :laboratoryManager
     property :performer
     property :principalInvestigator

@@ -50,7 +50,7 @@
 
                 <label>
                   <p><span class="small">Role</span>
-                  <%= f_c.select :role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role.first), { :include_blank => 'Select a role' }, id: "creatorRole%d"%c_index, data: {"progress" => "discoverability"} %>
+                  <%= f_c.select(:role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role), { :include_blank => 'Select a role'}, :multiple=>true, :size => 5, id: "creatorRole%d"%c_index, data: {"progress" => "discoverability"}) %>
                   </p>
                 </label>
 
@@ -61,7 +61,6 @@
                         <%= f_c2.text_field :name, :value => c2.name.first, id: "creatorAffiliation%dName%d"% [c_index, c2_index], :class=>"creatorAffiliation", data: {"progress" => "discoverability"} %>
                       </p>
                     </label>
-
                     <% if can? :review, :all %>
                       <label>
                         <p><span class="small">Link to affiliation object</span>
@@ -71,9 +70,9 @@
                     <% else %>
                       <%= f_c2.hidden_field :sameAs, :value => c2.sameAs.first, id: "creatorAffiliation%dSameAs%d"% [c_index, c2_index] %>
                     <% end %>
-
                   <% end %>
                 <% end %>
+
               </li>
             <% end %>
           <% end %>

@@ -490,6 +490,9 @@ class MetadataBuilder
         c1['id'] = b2
         #c1[:agent] = b1
         c1[:type] = RDF::PROV.Association
+        if c1.has_key?(:role)
+          c1[:role].reject{|v| v.empty?}
+        end
         model.creation[0].creator.build(c1)
         model.creation[0].creator[c1_index].agent = nil
         model.creation[0].creator[c1_index].agent.build(agent)
@@ -532,6 +535,9 @@ class MetadataBuilder
         c1['id'] = b2
         #c1[:agent] = b1
         c1[:type] = RDF::PROV.Association
+        if c1.has_key?(:role)
+          c1[:role].reject{|v| v.empty?}
+        end
         model.titularActivity[0].titular.build(c1)
         model.titularActivity[0].titular[c1_index].agent = nil
         model.titularActivity[0].titular[c1_index].agent.build(agent)

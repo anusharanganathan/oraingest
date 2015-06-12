@@ -196,7 +196,8 @@ Sufia.config do |config|
     "article" => {
       "Author" => RDF::ORA.author,
       "Editor" => RDF::BIBO.editor,
-      "Contributor" => RDF::DC.contributor
+      "Contributor" => RDF::DC.contributor,
+      "Copyright holder" => RDF::ORA.copyrightHolder,
     },
     "thesis" => {
       "Author" => RDF::ORA.author,
@@ -228,7 +229,7 @@ Sufia.config do |config|
       "Head of Department" => RDF::ORA.headOfDepartment,
       "Head of Faculty" => RDF::ORA.headOfFaculty,
       "Head of Research Group" => RDF::ORA.headOfResearchGroup,  
-      "Information/Data Manager" => RDF::ORA.informationOrDataManager,     
+      "Information/Data Manager" => RDF::ORA.dataManager,
       "Laboratory Manager" => RDF::ORA.laboratoryManager,         
       "Principal Investigator (PI)" => RDF::ORA.principalInvestigator,
       "Subject Librarian" => RDF::ORA.subjectLibrarian, 
