@@ -207,6 +207,7 @@ GEM
     minitest (4.7.5)
     mono_logger (1.1.0)
     multi_json (1.10.1)
+    mysql2 (0.3.18)
     nest (1.1.2)
       redis
     netrc (0.7.7)
@@ -442,6 +443,7 @@ DEPENDENCIES
   jquery-rails
   jquery-validation-rails
   kaminari
+  mysql2
   paperclip (>= 3.1.0)
   qa
   rails (= 4.0.3)
