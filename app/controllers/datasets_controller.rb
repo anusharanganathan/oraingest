@@ -357,7 +357,7 @@ class DatasetsController < ApplicationController
       @dataset.hasRelatedAgreement = @dataset_agreement
     end
     if old_status != @dataset.workflows.first.current_status
-      WorkflowPublisher.new(@dataset).perform_action(current_user.user_key)
+      WorkflowPublisher.new(@dataset).perform_action(current_user)
     end
     respond_to do |format|
       if @dataset.save
