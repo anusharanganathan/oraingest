@@ -6,7 +6,7 @@
     <!-- End date --> 
     <%= f_dt.fields_for :end do |f_dt_end| %>
       <div class="row" id="embargo-date-row-<%=ele_id%>">
-        <div class="col col2of4 embargo-date">
+        <div class="col col2of4">
           <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
             <% displayEndDate = "block" %>
             <%= f_dt_end.hidden_field :label, :value => "Stated", :class=>"embargo-date-type" %>

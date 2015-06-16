@@ -111,14 +111,15 @@ module DoiMethods
              !cr.agent.first.affiliation.first.name.first.blank?)
             c[:affiliation] = cr.agent.first.affiliation.first.name.first
           end
-          if cr.role.first.to_s == "http://purl.org/dc/terms/creator"
+          if cr.role.include?(RDF::DC.creator)
             doi_data[:creator] << c
           else
-            if (Sufia.config.role_labels.include?(cr.role.first) &&
-               contributorTypes.include?(Sufia.config.role_labels[cr.role.first]))
-              c[:type] = Sufia.config.role_labels[cr.role.first]
-            elsif contributorTypes.include?(cr.role.first)
-              c[:type] = cr.role.first
+            matching_roles1 = cr.role.map { |role| Sufia.config.role_labels[role] if Sufia.config.role_labels.include?(role) && contributorTypes.include?(Sufia.config.role_labels[role]) }
+            matching_roles2 = cr.role.select { |role| contributorTypes.include?(role) }
+            if matching_roles1
+              c[:type] = matching_roles1.first
+            elsif matching_roles2
+              c[:type] = matching_roles2.first
             else
               c[:type] = "Other"
             end
