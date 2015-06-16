@@ -50,7 +50,8 @@
 
                 <label>
                   <p><span class="small">Role</span>
-                  <%= f_c.select(:role, options_for_select(Sufia.config.role_types[@model], :selected=>c.role), { :include_blank => 'Select a role'}, :multiple=>true, :size => 5, id: "creatorRole%d"%c_index, data: {"progress" => "discoverability"}) %>
+                  <%= f_c.select(:role, options_for_select(Sufia.config.role_types[@model], :selected => c.role), {}, :multiple => true,
+                      :size => Sufia.config.role_types[@model].length+1, id: "creatorRole%d"%c_index, data: {"progress" => "discoverability"}, :class => "creatorRole" ) %>
                   </p>
                 </label>
 

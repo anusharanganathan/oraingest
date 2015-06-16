@@ -326,6 +326,16 @@ $(function() {
     }
   });
 
+  $(".creatorRole").change(function(event) {
+    if ($(this).val().length > 5) {
+     alert('You can only choose 5!');
+     $("option:selected",this).each(function (index) {
+       if (index > 4) {
+         $(this).prop("selected", false);
+       }
+      });
+    }
+  });
 
   /* -------------------------------------------------------------
    * Tracker Follow
