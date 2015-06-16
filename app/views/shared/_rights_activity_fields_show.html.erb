@@ -1,14 +1,5 @@
-<% haslData = false %>
-<% if !article.license.nil? %>
-  <% article.license.each do |l|%>
-    <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) || (!l.licenseStatement.empty? && !l.licenseStatement.first.empty?) %>
-      <% haslData = true %>
-    <% end %>
-  <% end %>
-<% end %>
-
 <% hasrData = false %>
-<% if !article.rightsHolder.empty? || (!article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty?) || (!article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty?) %>
+<% if article.rightsHolder.any? || (!article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty?) %>
   <% hasrData = true %>
 <% end %>
 <% if !article.rights.nil? %>
@@ -19,45 +10,12 @@
   <% end %>
 <% end %>
 
-<% if haslData or hasrData %>
+<% if hasrData %>
   <div class="accordian">
     <div class="accordian-header">Rights</div>
     <div class="accordian-content">
 
-      <% if haslData %>
-        <% article.license.each do |l|%>
-          <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
-            <p><span class="h6">License:</span> 
-            <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) && (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
-              <%=link_to l.licenseLabel.first, l.licenseURI.first %>
-            <% elsif !l.licenseLabel.empty? && !l.licenseLabel.first.empty? %>
-              <%= l.licenseLabel.first %>
-            <% elsif !l.licenseURI.empty? && !l.licenseURI.first.empty? %>
-              <%=link_to l.licenseURI.first, l.licenseURI.first %>
-            <% end %>
-            </p>
-          <% end %>
-          <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
-              <p><span class="h6">License statement:</span> 
-              <%= simple_format(l.licenseStatement.first) %></p>
-            </p>
-          <% end %>
-        <% end #each License %>
-      <% end #haslData %>
-
       <% if hasrData %>
-        <% if !article.rightsHolder.empty? || (!article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty?) %>
-          <p><span class="h6">Rights holder:</span> 
-          <% if !article.rightsHolder.empty? %>
-            <% article.rightsHolder.each do |rh| %>
-              <%= rh %>
-            <% end %>
-          <% end %>
-          <% if !article.rightsHolderGroup.empty? && !article.rightsHolderGroup.first.empty? %>
-            <%= article.rightsHolderGroup.first %>
-          <% end %>
-          </p>
-        <% end %>
         <% if !article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty? %>
             <p><span class="h6">Copyright date:</span>
             <%= article.dateCopyrighted.first %></p>

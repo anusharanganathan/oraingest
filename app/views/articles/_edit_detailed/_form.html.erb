@@ -172,9 +172,10 @@
 
   <div class="content-box padding-0">
     <div class="content-box-header expand-header">
-      <div class="space-right">License your publication</div>
+      <div class="space-right">Rights and Licence</div>
     </div>
     <div class="expand-content">
+      <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @article } %>
       <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
     </div>
   </div>

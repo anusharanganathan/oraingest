@@ -84,13 +84,6 @@ Sufia.config do |config|
     "Not peer reviewed" => "Not peer reviewed"
   }
 
-  config.rights_holder_group = {
-    "Sole authorship" => "Sole authorship",
-    "Joint authorship" => "Joint authorship",
-    "Other party" => "Other party",
-    "Publisher has copyright" => "Publisher has copyright"
-  }
-
   config.licenses = {
     "article" => {
       "CC Attribution (CC BY 2.5)" => "CC Attribution (CC BY 2.5)",
@@ -196,7 +189,8 @@ Sufia.config do |config|
     "article" => {
       "Author" => RDF::ORA.author,
       "Editor" => RDF::BIBO.editor,
-      "Contributor" => RDF::DC.contributor
+      "Contributor" => RDF::DC.contributor,
+      "Copyright holder" => RDF::ORA.copyrightHolder,
     },
     "thesis" => {
       "Author" => RDF::ORA.author,

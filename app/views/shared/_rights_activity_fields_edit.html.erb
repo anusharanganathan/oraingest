@@ -1,46 +1,44 @@
-<% if article.license.empty? %>
-  <% article.license.build %>
-<% end %>
 <% if article.rights.empty? %>
   <% article.rights.build %>
 <% end %>
-<%= f.fields_for :license do |l| %>
-  <div class="fieldset">
-    <label>
-      <% if @model=='article' %>
-        <p class="small">Assign a licence to your publication</p>
-      <% elsif @model=='dataset' %>
-        <p class="small">Assign a licence to your data</p>
-      <% end %>
-      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
-    </label>
-    
-    
-    <% if @model=='article' %>
-      <% desc = "Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text 
-        of any bespoke licence, access terms and conditions." %>
-    <% elsif @model=='dataset' %>
-      <% desc = "If you wish, you may select a standard licence from the list, or 
-        choose 'bespoke licence' and enter (or paste in) the text of any bespoke licence, access terms and conditions.
-	For guidance on how to license research data, please see: 
-	Ball, A. (2012). ‘How to License Research Data’. DCC How-to Guides. Edinburgh: Digital Curation Centre.
-	Available online: <a href='http://www.dcc.ac.uk/resources/how-guides/license-research-data'>
-        http://www.dcc.ac.uk/resources/how-guides/license-research-data</a>" %>
-    <% end %>
-    
-    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Assign a licence", :tipDescription => desc } %>
-  </div>
+<div class="fieldset">
+  <p class="small reqlabel">Copyright date</p>
+  <%= f.text_field :dateCopyrighted, :required => true, :value => p.dateCopyrighted.first || Time.now.year, data: {"progress" => "documentation" } %>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Copyright date" , :tipDescription => "Enter the copyright year of the article" } %>
+</div>
 
-  <div class="fieldset" style="display: none;" id="license-statement">
-    <label>
-      <p class="small">Licence statement</p>
-      <% if !article.license[0].nil? %>
-        <%= l.text_area :licenseStatement, :value=>article.license[0].licenseStatement.first, data: {"progress" => "documentation"} %>
-      <% else %>
-        <%= l.text_area :licenseStatement, :value=>"", data: {"progress" => "documentation"} %>
+<div class="fieldset">
+
+  <h4>Rights Holder</h4>
+
+  <div class="field-repeater">
+  <!-- <div class="field-repeater" data-max-fields="10"> -->
+    <ol>
+      <li>
+	<% rightsHolders = article.rightsHolder.select {|item| item.start_with?("info:fedora/%s#creator" % [@pid]) %>
+        <%= f.text_field :rightsHolder, :multiple => true, :value=>rightsHolders.first, id: "rightsHolder0", data: {"progress" => "documentation"} %>
+        <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+      </li>
+      <% rcount = 1 %>
+      <% for r in rightsHolders.from(1) %>
+        <li>
+          <%= f.text_field :rightsHolder, :multiple => true, :value=>r, id: "rightsHolder%d"%rcount, data: {"progress" => "documentation"} %>
+          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+        </li>
+        <% rcount += 1 %>
       <% end %>
-    </label>
-    <% desc = "Please enter (or paste in) the text of any bespoke licence, access terms and conditions." %>
-    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Licence statement", :tipDescription => desc } %>
+    </ol>
+    <a href="#" class="add-field">Add another rights holder</a>
+  </div>
+  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Keywords" , :tipDescription => "Enter the rights holders (apart form authors) for this work." } %>
+</div>
+
+<%= f.fields_for :rights do |f_r| %>
+  <div class="fieldset">
+    <p class="small">Rights statement (from publisher)</p>
+    <%= f_r.text_area :rightsStatement, :value => article.rights[0].rightsStatement.first, data: {"progress" => "documentation"} %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Rights statement" , :tipDescription => "Enter the rights statement as required by the publisher or other legal entity" } %>
   </div>
 <% end %>
+
+

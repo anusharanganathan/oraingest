@@ -1,0 +1,43 @@
+<% if article.license.empty? %>
+  <% article.license.build %>
+<% end %>
+<%= f.fields_for :license do |l| %>
+  <div class="fieldset">
+    <label>
+      <% if @model=='article' %>
+        <p class="small">Assign a licence to your publication</p>
+      <% elsif @model=='dataset' %>
+        <p class="small">Assign a licence to your data</p>
+      <% end %>
+      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
+    </label>
+    
+    
+    <% if @model=='article' %>
+      <% desc = "Select a standard licence from the list, or choose 'bespoke licence' and enter (or paste in) the text 
+        of any bespoke licence, access terms and conditions." %>
+    <% elsif @model=='dataset' %>
+      <% desc = "If you wish, you may select a standard licence from the list, or 
+        choose 'bespoke licence' and enter (or paste in) the text of any bespoke licence, access terms and conditions.
+	For guidance on how to license research data, please see: 
+	Ball, A. (2012). ‘How to License Research Data’. DCC How-to Guides. Edinburgh: Digital Curation Centre.
+	Available online: <a href='http://www.dcc.ac.uk/resources/how-guides/license-research-data'>
+        http://www.dcc.ac.uk/resources/how-guides/license-research-data</a>" %>
+    <% end %>
+    
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Assign a licence", :tipDescription => desc } %>
+  </div>
+
+  <div class="fieldset" style="display: none;" id="license-statement">
+    <label>
+      <p class="small">Licence statement</p>
+      <% if !article.license[0].nil? %>
+        <%= l.text_area :licenseStatement, :value=>article.license[0].licenseStatement.first, data: {"progress" => "documentation"} %>
+      <% else %>
+        <%= l.text_area :licenseStatement, :value=>"", data: {"progress" => "documentation"} %>
+      <% end %>
+    </label>
+    <% desc = "Please enter (or paste in) the text of any bespoke licence, access terms and conditions." %>
+    <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation", :tipTitle => "Licence statement", :tipDescription => desc } %>
+  </div>
+<% end %>

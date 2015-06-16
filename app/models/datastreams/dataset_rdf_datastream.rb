@@ -22,7 +22,7 @@ require 'fields/location'
 class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
   #include ModelHelper
 
-  attr_accessor :title, :subtitle, :abstract, :subject, :keyword, :worktype, :language, :license, :dateCopyrighted, :rightsHolder, :rightsHolderGroup, :rights, :rightsActivity, :creation, :funding, :publication
+  attr_accessor :title, :subtitle, :abstract, :subject, :keyword, :worktype, :language, :license, :dateCopyrighted, :rightsHolder, :rights, :rightsActivity, :creation, :funding, :publication
 
   rdf_type rdf_type RDF::PROV.Entity
   map_predicates do |map|
@@ -62,7 +62,6 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     map.license(:in => RDF::DC, class_name:"LicenseStatement")
     map.dateCopyrighted(:in => RDF::DC)
     map.rightsHolder(:in => RDF::DC)
-    map.rightsHolderGroup(:in => RDF::ORA)
     map.rights(:in => RDF::DC, class_name:"RightsStatement")
     map.rightsActivity(:in => RDF::PROV, :to => "hadActivity", class_name:"RightsActivity")
     # -- creation activity --
@@ -106,7 +105,6 @@ class DatasetRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     solr_doc[Solrizer.solr_name("desc_metadata__version", :stored_searchable)] = self.version
     solr_doc[Solrizer.solr_name("desc_metadata__dateCopyrighted", :stored_searchable)] = self.dateCopyrighted
     solr_doc[Solrizer.solr_name("desc_metadata__rightsHolder", :stored_searchable)] = self.rightsHolder
-    solr_doc[Solrizer.solr_name("desc_metadata__rightsHolderGroup", :stored_searchable)] = self.rightsHolderGroup
     # Temporal coverage of data 
     if !self.temporal.nil? && !self.temporal.first.nil?
       temporalDate = nil

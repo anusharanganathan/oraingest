@@ -31,7 +31,6 @@ describe Article do
       it { is_expected.to respond_to(:license) }
       it { is_expected.to respond_to(:dateCopyrighted) }
       it { is_expected.to respond_to(:rightsHolder) }
-      it { is_expected.to respond_to(:rightsHolderGroup) }
       it { is_expected.to respond_to(:rights) }
       it { is_expected.to respond_to(:rightsActivity) }
       it { is_expected.to respond_to(:creation) }

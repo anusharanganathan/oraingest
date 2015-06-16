@@ -4,7 +4,6 @@ module RDF
     property :annotation
     # copyright
     property :copyrightNote
-    property :rightsHolderGroup
     # payment
     property :apcPaid
     property :monetaryValue

@@ -1,0 +1,38 @@
+<% haslData = false %>
+<% if !article.license.nil? %>
+  <% article.license.each do |l|%>
+    <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) || (!l.licenseStatement.empty? && !l.licenseStatement.first.empty?) %>
+      <% haslData = true %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if haslData %>
+  <div class="accordian">
+    <div class="accordian-header">Licence</div>
+    <div class="accordian-content">
+
+      <% if haslData %>
+        <% article.license.each do |l|%>
+          <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) || (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
+            <p><span class="h6">Licence:</span> 
+            <% if (!l.licenseLabel.empty? && !l.licenseLabel.first.empty?) && (!l.licenseURI.empty? && !l.licenseURI.first.empty?) %>
+              <%=link_to l.licenseLabel.first, l.licenseURI.first %>
+            <% elsif !l.licenseLabel.empty? && !l.licenseLabel.first.empty? %>
+              <%= l.licenseLabel.first %>
+            <% elsif !l.licenseURI.empty? && !l.licenseURI.first.empty? %>
+              <%=link_to l.licenseURI.first, l.licenseURI.first %>
+            <% end %>
+            </p>
+          <% end %>
+          <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
+              <p><span class="h6">Licence statement:</span> 
+              <%= simple_format(l.licenseStatement.first) %></p>
+            </p>
+          <% end %>
+        <% end #each License %>
+      <% end #haslData %>
+
+    </div>
+  </div>
+<% end %>
