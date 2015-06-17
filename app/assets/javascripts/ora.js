@@ -121,7 +121,7 @@ $(function() {
   });
 
   // Show licence form thingy
-  $("select#dataset_license_licenseLabel").on("change",function(){
+  $("select.licenseLabel").on("change",function(){
     var val = $(this).val();
     if(val == "Bespoke licence") $("#license-statement").show();
     else $("#license-statement").hide();

@@ -9,7 +9,8 @@
       <% elsif @model=='dataset' %>
         <p class="small">Assign a licence to your data</p>
       <% end %>
-      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first), { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"} %>
+      <%= l.select :licenseLabel, options_for_select(Sufia.config.licenses[@model], :selected=>article.license[0].licenseLabel.first),
+          { :include_blank => 'Select a licence' }, data: {"progress" => "documentation"}, class: "licenseLabel" %>
     </label>
     
     
