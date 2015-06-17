@@ -326,11 +326,12 @@ $(function() {
     }
   });
 
+  // Limit multi-valued roles to 3
   $(".creatorRole").change(function(event) {
-    if ($(this).val().length > 5) {
-     alert('You can only choose 5!');
+    if ($(this).val().length > 3) {
+     alert('You can only choose 3!');
      $("option:selected",this).each(function (index) {
-       if (index > 4) {
+       if (index > 2) {
          $(this).prop("selected", false);
        }
       });
