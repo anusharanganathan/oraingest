@@ -24,11 +24,23 @@
             <%= article.dateCopyrighted.first %></p>
         <% end %>
         <% if !article.rightsHolder.empty? && !article.rightsHolder.first.empty? %>
-            <p><span class="h6">Rights holder(s):</span>
-            <% article.rightsHolder.each do |r| %>
+          <p><span class="h6">Rights holder(s):</span>
+          <% article.rightsHolder.each do |r| %>
+            <% if r.start_with?("info:fedora/%s#creator" % [@pid]) %>
+              <% article.creation[0].creator.each do |c| %>
+                <% if c.agent.first.id == r %>
+                  <% if !c.agent[0].name.empty? and !c.agent[0].sameAs.empty? %>
+                    <%=link_to c.agent[0].name.first, c.agent[0].sameAs.first %><br/>
+                  <% elsif !c.agent[0].name.empty? %>
+                    <%= c.agent[0].name.first %><br/>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% else %>
               <%= r %><br/>
             <% end %>
-            </p>
+          <% end %>
+          </p>
         <% end %>
         <% if !article.rights.nil? %>
           <% article.rights.each do |r|%>

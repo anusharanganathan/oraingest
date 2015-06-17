@@ -1,3 +1,5 @@
+require 'vocabulary/ora'
+
 class MetadataBuilder
 
   attr_accessor :model
@@ -56,13 +58,6 @@ class MetadataBuilder
       params.except!(:storageAgreement)
     end
 
-    # Remove blank assertions for rights activity and build
-    if params.has_key?(:license) || params.has_key?(:rights)
-      buildRightsActivity(params)
-      params.except!(:license)
-      params.except!(:rights)
-    end
-
     #remove_blank_assertions for publication activity and build
     if params.has_key?(:publication)
       buildPublicationActivity(params[:publication])
@@ -110,6 +105,14 @@ class MetadataBuilder
     if params.has_key?(:titularActivity)
       buildTitularActivity(params[:titularActivity])
       params.except!(:titularActivity)
+    end
+
+    # Remove blank assertions for rights activity and build
+    #NOTE: do this after building creation activity (need author roles)!!!
+    if params.has_key?(:license) || params.has_key?(:rights)
+      buildRightsActivity(params)
+      params.except!(:license)
+      params.except!(:rights)
     end
 
     #Remove blank assertions for validity date and build
@@ -264,6 +267,16 @@ class MetadataBuilder
         end
         model.license.build(lsp)
         ag.push("info:fedora/#{model.id}#license")
+      end
+    end
+    if model.creation.first && model.creation.first.creator
+      unless params.has_key?(:rightsHolder)
+        params[:rightsHolder] = []
+      end
+      model.creation[0].creator.each do |creator|
+        if creator.role.any? and creator.role.include?(RDF::ORA.copyrightHolder)
+          params[:rightsHolder].push(creator.agent.first.id)
+        end
       end
     end
     if params.has_key?(:rights)

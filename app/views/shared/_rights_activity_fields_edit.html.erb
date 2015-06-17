@@ -15,11 +15,11 @@
   <!-- <div class="field-repeater" data-max-fields="10"> -->
     <ol>
       <li>
-	<% rightsHolders = article.rightsHolder.select {|item| item.start_with?("info:fedora/%s#creator" % [@pid]) } %>
+	<% rightsHolders = article.rightsHolder.reject {|item| item.start_with?("info:fedora/%s#creator" % [@pid]) } %>
         <%= f.text_field :rightsHolder, :multiple => true, :value=>rightsHolders.first, id: "rightsHolder0", data: {"progress" => "documentation"} %>
         <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
       </li>
-      <% if rightsHolders.any? && rightholders.length > 1 %>
+      <% if rightsHolders.any? && rightsHolders.length > 1 %>
         <% rightsHolders[1..-1].each_with_index do |r, rcount| %>
           <li>
             <%= f.text_field :rightsHolder, :multiple => true, :value=>r, id: "rightsHolder%d"%rcount, data: {"progress" => "documentation"} %>
