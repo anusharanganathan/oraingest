@@ -105,7 +105,7 @@ shared_examples_for "doi_methods" do
                       'name' => 'Joe Creator',
                       'email' => '',
                       'sameAs' => '',
-                      'role' => '',
+                      'role' => [],
                       'affiliation' => {
                           'name' => 'An affiliation',
                           'sameAs' => ''

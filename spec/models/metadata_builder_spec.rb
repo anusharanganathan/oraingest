@@ -241,25 +241,42 @@ describe MetadataBuilder do
     end
 
     describe '#buildRightsActivity' do
-      context 'license' do
+      context 'license and rights' do
         context 'with valid parameters' do
-          it 'creates license' do
+          it 'creates license and rights' do
             params = {
-                'license' => {'licenseLabel' => 'Open Government Licence (OGL)', 'licenseStatement' => 'Licence statement'}
+                'license' => {'licenseLabel' => 'Open Government Licence (OGL)', 'licenseStatement' => 'Licence statement'},
+                'creator_attributes' => {
+                  '0' => {
+                      'name' => 'Joe Smith',
+                      'email' => 'jsmith@jsmith.com',
+                      'sameAs' => '',
+                      'role' => ['http://purl.org/dc/terms/contributor',  'http://vocab.ox.ac.uk/ora#copyrightHolder', '', nil, 'http://purl.org/dc/terms/creator'],
+                      'affiliation' => {
+                          'name' => '', 'sameAs' => ''
+                      }
+                  }
+                },
+                'dateCopyrighted' => '2015',
+                'rightsHolder' => ['Joe Bloggs'],
+                'rights'=>{'rightsStatement'=>'A rights statement from the publisher'}
             }.with_indifferent_access
-
+            builder.send(:buildCreationActivity, params['creator_attributes'])
             builder.send(:buildRightsActivity, params)
             expect(model.license).to be_an(Array)
             expect(model.license).not_to be_empty
             expect(model.license.size).to eq(1)
             expect(model.license.first).to be_a(LicenseStatement)
+            expect(model.dateCopyrighted).not_to be_empty
+            expect(model.dateCopyrighted).to eq("2015")
+            expect(model.rightsHolder).to be_an(Array)
+            expect(model.rightsHolder.size).to eq(2)
+            expect(model.rights).not_to be_empty
+            expect(model.rights.size).to eq(1)
+            expect(model.rights.first).to be_a(RightsStatement)
+            expect(model.rights.first.rightsType.first).to be eq('http://purl.org/dc/terms/RightsStatement')
+            expect(model.rights.first.rightsStatement.first).to be eq('A rights statement from the publisher')
           end
-        end
-      end
-
-      context 'rights' do
-        context 'with valid parameters' do
-          it 'creates rights activity'
         end
       end
     end
@@ -394,7 +411,11 @@ describe MetadataBuilder do
           params = {
               'creator_attributes' => {
                   '0' => {
-                      'name' => 'Joe Smith', 'email' => 'jsmith@jsmith.com', 'sameAs' => '', 'role' => 'http://purl.org/dc/terms/contributor', 'affiliation' => {
+                      'name' => 'Joe Smith',
+                      'email' => 'jsmith@jsmith.com',
+                      'sameAs' => '',
+                      'role' => ['http://purl.org/dc/terms/contributor',  'http://vocab.ox.ac.uk/ora#copyrightHolder', '', nil, 'http://purl.org/dc/terms/creator'],
+                      'affiliation' => {
                           'name' => '', 'sameAs' => ''
                       }
                   }
@@ -406,6 +427,8 @@ describe MetadataBuilder do
           expect(model.creation).not_to be_empty
           expect(model.creation.size).to eq(1)
           expect(model.creation.first).to be_a(CreationActivity)
+          expect(model.creation.first.creator.first.role).to be_an(Array)
+          expect(model.creation.first.creator.first.role.size).to eq(3)
         end
       end
     end
@@ -463,7 +486,7 @@ describe MetadataBuilder do
         it 'creates titular activity' do
           params = {
               'titular_attributes' => {
-                  '0' => {'name' => 'Joe Steward', 'roleHeldBy' => '', 'role' => 'http://vocab.ox.ac.uk/ora#headOfFaculty', 'affiliation' => {
+                  '0' => {'name' => 'Joe Steward', 'roleHeldBy' => '', 'role' => ['http://vocab.ox.ac.uk/ora#headOfFaculty'], 'affiliation' => {
                       'name' => 'Affiliation', 'sameAs' => ''
                   }
                   }
