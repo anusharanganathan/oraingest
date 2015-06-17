@@ -1,5 +1,8 @@
 <% hasrData = false %>
-<% if article.rightsHolder.any? || (!article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty?) %>
+<% unless article.dateCopyrighted.blank? || article.dateCopyrighted.first.blank? %>
+  <% hasrData = true %>
+<% end %>
+<% if article.rightsHolder.any? %>
   <% hasrData = true %>
 <% end %>
 <% if !article.rights.nil? %>
@@ -19,7 +22,13 @@
         <% if !article.dateCopyrighted.empty? && !article.dateCopyrighted.first.empty? %>
             <p><span class="h6">Copyright date:</span>
             <%= article.dateCopyrighted.first %></p>
-          </p>
+        <% end %>
+        <% if !article.rightsHolder.empty? && !article.rightsHolder.first.empty? %>
+            <p><span class="h6">Rights holder(s):</span>
+            <% article.rightsHolder.each do |r| %>
+              <%= r %><br/>
+            <% end %>
+            </p>
         <% end %>
         <% if !article.rights.nil? %>
           <% article.rights.each do |r|%>

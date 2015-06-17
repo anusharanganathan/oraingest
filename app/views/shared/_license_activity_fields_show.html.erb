@@ -26,9 +26,8 @@
             </p>
           <% end %>
           <% if !l.licenseStatement.empty? && !l.licenseStatement.first.empty? %>
-              <p><span class="h6">Licence statement:</span> 
-              <%= simple_format(l.licenseStatement.first) %></p>
-            </p>
+            <p><span class="h6">Licence statement:</span>
+            <%= simple_format(l.licenseStatement.first) %></p>
           <% end %>
         <% end #each License %>
       <% end #haslData %>
