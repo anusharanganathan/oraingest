@@ -3,7 +3,7 @@
 <% end %>
 <div class="fieldset">
   <p class="small reqlabel">Copyright date</p>
-  <%= f.text_field :dateCopyrighted, :required => true, :value => p.dateCopyrighted.first || Time.now.year, data: {"progress" => "documentation" } %>
+  <%= f.text_field :dateCopyrighted, :required => true, :value => article.dateCopyrighted.first || Time.now.year, data: {"progress" => "documentation" } %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Copyright date" , :tipDescription => "Enter the copyright year of the article" } %>
 </div>
 
@@ -15,17 +15,17 @@
   <!-- <div class="field-repeater" data-max-fields="10"> -->
     <ol>
       <li>
-	<% rightsHolders = article.rightsHolder.select {|item| item.start_with?("info:fedora/%s#creator" % [@pid]) %>
+	<% rightsHolders = article.rightsHolder.select {|item| item.start_with?("info:fedora/%s#creator" % [@pid]) } %>
         <%= f.text_field :rightsHolder, :multiple => true, :value=>rightsHolders.first, id: "rightsHolder0", data: {"progress" => "documentation"} %>
         <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
       </li>
-      <% rcount = 1 %>
-      <% for r in rightsHolders.from(1) %>
-        <li>
-          <%= f.text_field :rightsHolder, :multiple => true, :value=>r, id: "rightsHolder%d"%rcount, data: {"progress" => "documentation"} %>
-          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
-        </li>
-        <% rcount += 1 %>
+      <% if rightsHolders.any? && rightholders.length > 1 %>
+        <% rightsHolders[1..-1].each_with_index do |r, rcount| %>
+          <li>
+            <%= f.text_field :rightsHolder, :multiple => true, :value=>r, id: "rightsHolder%d"%rcount, data: {"progress" => "documentation"} %>
+            <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          </li>
+        <% end %>
       <% end %>
     </ol>
     <a href="#" class="add-field">Add another rights holder</a>

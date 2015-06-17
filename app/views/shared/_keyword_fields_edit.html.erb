@@ -9,13 +9,13 @@
         <%= f.text_field :keyword, :multiple => true, :value=>keyword.first, id: "keyword0", data: {"progress" => "discoverability"} %>
         <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
       </li>
-      <% kcount = 1 %>
-      <% for k in keyword.from(1) %>
-        <li>
-          <%= f.text_field :keyword, :multiple => true, :value=>k, id: "keyword%d"%kcount, data: {"progress" => "discoverability"} %>
-          <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
-        </li>
-        <% kcount += 1 %>
+      <% if keyword.any? && keyword.length > 1 %>
+        <% keyword[1..-1].each_with_index do |k, kcount| %>
+          <li>
+            <%= f.text_field :keyword, :multiple => true, :value=>k, id: "keyword%d"%kcount, data: {"progress" => "discoverability"} %>
+            <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
+          </li>
+        <% end %>
       <% end %>
     </ol>
     <a href="#" class="add-field">Add another keyword</a>
