@@ -62,6 +62,8 @@ describe Dataset do
     it 'initializes the submission workflow' do
       @dataset.save
       expect(@dataset.workflows).not_to be_empty
+      wf = @dataset.workflows.select{|wf| wf.identifier.first =="MediatedSubmission"}.first
+      expect(wf.current_status).to eq ("Draft")
     end
 
     it 'removes blank assertions' do
@@ -125,6 +127,19 @@ describe Dataset do
 
     it 'sets the delete type' do
       expect(@jq_upload['delete_type']).to eq('DELETE')
+    end
+
+  end
+
+  describe 'mint datastream id' do
+    before do
+      @dataset = Dataset.new
+      @dsid = @dataset.mint_datastream_id
+    end
+
+    it 'creates the datastream identifier' do
+      expect(@dsid).not_to be_empty
+      expect(@dsid).to be_a(String)
     end
 
   end
