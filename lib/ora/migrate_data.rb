@@ -127,16 +127,14 @@ module ORA
       # Update the content datastreams in the dataset object with the new Databank location of the content files and delete local copy of content file
       @content_files.each do |ds, fp|
         filename = File.basename fp
-        opts = @obj.datastream_opts(ds)
-        old_location = opts["dsLocation"]
         # Update file location in datastream
-        opts["dsLocation"] = {
+        location = {
           'silo' => self.silo,
           'dataset' => self.dataset,
           'filename' => filename,
           'url' => @databank.getUrl(self.silo, dataset=self.dataset, filename=filename)
         }
-        @obj.datastreams[ds].content = opts.to_json
+        @obj.update_datastream_location(ds, location)
       end
     end
 

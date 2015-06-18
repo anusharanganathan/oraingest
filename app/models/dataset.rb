@@ -178,6 +178,12 @@ class Dataset < ActiveFedora::Base
     self.class.model_name.to_s
   end
 
+  def update_datastream_location(dsid, location)
+    opts = self.datastream_opts(dsid)
+    opts["dsLocation"] = location
+    self.datastreams[dsid].content = opts.to_json
+  end
+
   private
   
   def initialize_submission_workflow
