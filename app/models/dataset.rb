@@ -106,11 +106,11 @@ class Dataset < ActiveFedora::Base
   end
 
   def is_url?(location)
-    match = location =~ /\A#{URI::regexp}\z/
-    unless match
+    if location =~ URI::regexp(['http', 'https'])
+      return true
+    else
       return false
     end
-    return true
   end
 
   def is_on_disk?(location)
