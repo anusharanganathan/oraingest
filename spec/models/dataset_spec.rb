@@ -144,4 +144,15 @@ describe Dataset do
 
   end
 
+  describe 'get the class name' do
+    before do
+      @dataset = Dataset.new
+    end
+
+    it 'returns the class name' do
+      expect(@dataset.model_klass).to eq('Dataset')
+    end
+
+  end
+
 end
