@@ -155,4 +155,37 @@ describe Dataset do
 
   end
 
+  describe 'Add a file' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      @dataset.save!
+      @opts = @dataset.datastream_opts(@dsid)
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'returns a datastream id' do
+      expect(@dsid).not_to be_empty
+      expect(@dsid).to be_a(String)
+    end
+
+    it 'saves the datastream' do
+      expected_keys = ['dsLabel', 'dsLocation', 'mimeType', 'dsid', 'size']
+      expect(@opts).to be_a(Hash)
+      expect(@opts).to include(expected_keys)
+      expect(@opts['dsLocation']).to include('test.txt')
+      expect(@opts['dsLocation']).to include(@dataset.identifier)
+    end
+    end
+    end
+  end
+
 end
