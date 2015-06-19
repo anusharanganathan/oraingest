@@ -17,7 +17,7 @@ class ReviewerDashboardController < ApplicationController
     # Extra Facets
     config.add_facet_field "MediatedSubmission_current_reviewer_id_ssim", :label => "Current Reviewer", :limit => 5
     config.add_facet_field "MediatedSubmission_all_reviewer_ids_ssim", :label => "All Reviewers", :limit => 5
-    config.add_facet_field "MediatedSubmission_status_ssim", :label => "Current status", :limit => 15
+   # config.add_facet_field "MediatedSubmission_status_ssim", :label => "Current status", :limit => 15
   end
   
   private
