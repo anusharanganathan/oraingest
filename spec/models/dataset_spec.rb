@@ -174,13 +174,13 @@ describe Dataset do
   describe 'Add a file' do
     it "is implemented but rspec add file not working" do
     skip "is skipped" do
+
     before do
       @dataset = Dataset.new
       @file = StringIO.new
       @file.write("Hello world!")
       @dsid = @dataset.add_content(@file, 'test.txt')
       @dataset.save!
-      @opts = @dataset.datastream_opts(@dsid)
     end
 
     after do
@@ -194,12 +194,264 @@ describe Dataset do
     end
 
     it 'saves the datastream' do
-      expected_keys = ['dsLabel', 'dsLocation', 'mimeType', 'dsid', 'size']
-      expect(@opts).to be_a(Hash)
-      expect(@opts).to include(expected_keys)
-      expect(@opts['dsLocation']).to include('test.txt')
-      expect(@opts['dsLocation']).to include(@dataset.identifier)
+      expect(@dataset.datastreams.keys).to include(@dsid)
     end
+
+    it 'returns the datastream options' do
+      expected_keys = ['dsLabel', 'dsLocation', 'mimeType', 'dsid', 'size']
+      opts = @dataset.datastream_opts(@dsid)
+      expect(opts).to be_a(Hash)
+      expect(opts).to include(expected_keys)
+      expect(opts['dsLocation']).to be_a(String)
+      expect(opts['dsLocation']).to include('test.txt')
+      expect(opts['dsLocation']).to include(@dataset.id)
+    end
+
+    it 'returns the file location' do
+      loc = @dataset.file_location(@dsid)
+      expect(loc).not_to be_empty
+      expect(loc).to include('test.txt')
+      expect(loc).to include(@dataset.id)
+    end
+
+    it 'adds the file size to admin metadata' do
+      expect(@dataset.adminDigitalSize).not_to be_empty
+      expect(@dataset.adminDigitalSize.first).to eq(@file.size)
+    end
+
+    it 'adds the file location to admin metadata' do
+      expect(@dataset.adminLocator).not_to be_empty
+      loc = @dataset.file_location(@dsid)
+      expect(@dataset.adminLocator).to include(loc)
+    end
+
+    it 'sets the medium to fabio:DigitalStorageMedium' do
+      expect(@dataset.medium).not_to be_empty
+      expect(@dataset.medium).to include('http://purl.org/spar/fabio/DigitalStorageMedium')
+    end
+
+    it 'file is saved on disk' do
+      loc = @dataset.file_location(@dsid)
+      expect(@dataset.is_on_disk?(loc)).to be true
+    end
+
+    it 'is not a url' do
+      loc = @dataset.file_location(@dsid)
+      expect(@dataset.is_url?(loc)).to be false
+    end
+
+    end
+    end
+  end
+
+  describe 'update datastream location' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      dataset_id = @dataset.id.gsub('uuid:', '')
+      @new_loc = {
+        'silo' => 'sandbox',
+        'dataset' => dataset_id,
+        'filename' => 'test.txt',
+        'url' => "http://10.0.0.173/sandbox/datasets/#{dataset_id}/test.txt" }
+      @dataset.update_datastream_location(@dsid, @new_loc)
+      @dataset.save!
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'updates the datastream location' do
+      expected_keys = ['dsLabel', 'dsLocation', 'mimeType', 'dsid', 'size']
+      opts = @dataset.datastream_opts(@dsid)
+      expect(opts).to be_a(Hash)
+      expect(opts).to include(expected_keys)
+      expect(opts['dsLocation']).to be_a(Hash)
+      expect(opts['dsLocation']).to eq(@new_loc)
+    end
+
+    it 'returns the file location' do
+      loc = @dataset.file_location(@dsid)
+      expect(loc).not_to be_empty
+      expect(loc).to eq(@new_loc['url'])
+    end
+
+    it 'is a url' do
+      loc = @dataset.file_location(@dsid)
+      expect(@dataset.is_url?(loc)).to be true
+    end
+
+    end
+    end
+  end
+
+  describe 'delete content' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      dataset_id = @dataset.id.gsub('uuid:', '')
+      @location = @dataset.file_location(@dsid)
+      @dataset.delete_content(@dsid)
+      @dataset.save!
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'deletes the datastream do' do
+      expect(@dataset.datastreams.keys).not_to include(@dsid)
+      @opts = @dataset.datastream_opts(@dsid)
+      expect(@opts).to be_a(Hash)
+      expect(@opts).to be_empty
+    end
+
+    it 'removes the file size from admin metadata' do
+      expect(@dataset.adminDigitalSize).not_to be_empty
+      expect(@dataset.adminDigitalSize.first).to eq(0)
+    end
+
+    it 'removes the file location from admin metadata' do
+      expect(@dataset.adminLocator).not_to include(@location)
+    end
+
+    it 'is not on disk' do
+      expect(@dataset.is_on_disk?(@location)).to be false
+    end
+
+    it 'does not have related metadata' do
+      parts = @dataset.hasPart.select { |key| key.id.to_s.include? @dsid }
+      expect(hasPart).to be_empty
+    end
+
+    end
+    end
+  end
+
+  describe 'delete file locally if url' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      @location = @dataset.file_location(@dsid)
+      dataset_id = @dataset.id.gsub('uuid:', '')
+      @dataset.save!
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'does not delete the file locally if location is not url' do
+      ans = @dataset.delete_local_copy(@dsid, @location)
+      expect(ans).to be false
+      expect(@dataset.is_on_disk?(@location)).to be true
+    end
+
+    it 'deletes the file locally' do
+      @new_loc = {
+        'silo' => 'sandbox',
+        'dataset' => dataset_id,
+        'filename' => 'test.txt',
+        'url' => "http://10.0.0.173/sandbox/datasets/#{dataset_id}/test.txt" }
+      @dataset.update_datastream_location(@dsid, @new_loc)
+      @dataset.save!
+      ans = @dataset.delete_local_copy(@dsid, @location)
+      expect(ans).to be true
+      expect(@dataset.is_on_disk?(@location)).to be false
+    end
+
+    end
+    end
+  end
+
+  describe 'delete dir if empty' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      dataset_id = @dataset.id.gsub('uuid:', '')
+      @location = @dataset.file_location(@dsid)
+      @new_loc = {
+        'silo' => 'sandbox',
+        'dataset' => dataset_id,
+        'filename' => 'test.txt',
+        'url' => "http://10.0.0.173/sandbox/datasets/#{dataset_id}/test.txt" }
+      @dataset.update_datastream_location(@dsid, @new_loc)
+      #@dataset.delete_local_copy(@dsid, @location)
+      @dataset.save!
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'does not delete dir if not empty' do
+      ans = @dataset.delete_dir
+      #ans = @dataset.delete_local_copy(@dsid, @location)
+      expect(ans).to be false
+      expect(@dataset.is_on_disk?(@location)).to be true
+    end
+
+    it 'deletes dir if empty' do
+      @dataset.delete_local_copy(@dsid, @location)
+      ans = @dataset.delete_dir
+      expect(ans).to be true
+      expect(@dataset.is_on_disk?(@location)).to be false
+    end
+
+    end
+    end
+  end
+
+  describe 'delete dir if forced and not empty' do
+    it "is implemented but rspec add file not working" do
+    skip "is skipped" do
+
+    before do
+      @dataset = Dataset.new
+      @file = StringIO.new
+      @file.write("Hello world!")
+      @dsid = @dataset.add_content(@file, 'test.txt')
+      @location = @dataset.file_location(@dsid)
+      @dataset.save!
+    end
+
+    after do
+      @dataset.delete
+      File.delete('/tmp/test.txt')
+    end
+
+    it 'delete dir if forced and not empty' do
+      expect(@dataset.is_on_disk?(@location)).to be true
+      ans = @dataset.delete_dir(force=true)
+      expect(ans).to be true
+      expect(@dataset.is_on_disk?(@location)).to be true
+    end
+
     end
     end
   end
