@@ -73,13 +73,31 @@ function displayDatasetAgreement(id, val) {
   }
 }
 
-function displayDoi(id) {
-  var doi = $("#mintedDoi").val();
-  $("#dataset_doi").val(doi);
-  $("#dataset_doi").attr("value", doi);
-  $("#workflow_submit_involves").val("Register doi:"+doi);
-  $("#workflow_submit_involves").attr("value", "Register doi:"+doi);
-  $("#dataset_doi").attr("readonly", "true");
+function displayDoi() {
+  var doiShoulder = $("#doiShoulder").val();
+  var doi = $("#dataset_doi").val();
+  if ($('#workflow_submit_involves').is(':checked')) {
+    if (doi.startsWith(doiShoulder)) {
+      $("#dataset_doi").val(doi);
+      $("#dataset_doi").prop("value", doi);
+      $("#dataset_doi").prop("readonly", true);
+      $("#dataset_doi").show();
+      $("#dataset_doi_fieldset").show();
+    } else {
+      $("#dataset_doi").val("");
+      $("#dataset_doi").prop("value", "");
+      $("#dataset_doi").prop("readonly", true);
+      $("#dataset_doi").hide();
+      $("#dataset_doi_fieldset").hide();
+    }
+    //$("#workflow_submit_involves").val("Register doi:"+doi);
+    //$("#workflow_submit_involves").attr("value", "Register doi:"+doi);
+  } else {
+    $("#dataset_doi_fieldset").show();
+    $("#dataset_doi").show();
+    $("#dataset_doi").removeAttr("disabled");
+    $("#dataset_doi").removeAttr("readonly");
+  }
 }
 
 function setStatus(eleId, wstatus) {
