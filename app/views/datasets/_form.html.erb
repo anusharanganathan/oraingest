@@ -30,6 +30,17 @@
 <%= form_for @dataset, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
 <%= hidden_field_tag(:pid, @pid) %>
 <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
+<% unless @dataset.workflows.first.nil? %>
+  <% @wf = @dataset.workflows.first %>
+  <% @wf_id = @wf.rdf_subject.to_s %>
+  <% @currentStatus = @wf.current_status %>
+<% else %>
+  <% @dataset.workflows.build %>
+  <% @wf = @dataset.workflows.first %>
+  <% @wf_id = nil %>
+  <% @currentStatus = "Draft" %>
+<% end %>
+
 <section class="form-step">
   <div class="content-box padding-0">
     <div class="content-box-header">
@@ -39,7 +50,7 @@
         <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
         <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
         <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
-        <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication } %> 
+        <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication, :wf => @wf, :doi_registered => @dataset.doi_registered? } %>
     </div>
   </div>
 
@@ -245,7 +256,7 @@
         7. Review workflow
       </div>
       <div class="padding-25 no-pad-top no-pad-bottom">
-        <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @dataset } %>
+        <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
       </div>
     </div>
 
@@ -278,7 +289,7 @@
   <div class="form-nav-next" style="text-align: right">
     <% unless can? :review, :all %>
       <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")",  data: {"submit-without-validation" => true} %>
-      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @dataset, :validate => true} %>
+      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
     <% else %>
       <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
       <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>

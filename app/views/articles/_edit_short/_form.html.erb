@@ -18,6 +18,17 @@
     <%= hidden_field_tag(:pid, @pid) %>
     <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
 
+    <% unless @dataset.workflows.first.nil? %>
+      <% @wf = @dataset.workflows.first %>
+      <% @wf_id = @wf.rdf_subject.to_s %>
+      <% @currentStatus = @wf.current_status %>
+    <% else %>
+      <% @dataset.workflows.build %>
+      <% @wf = @dataset.workflows.first %>
+      <% @wf_id = nil %>
+      <% @currentStatus = "Draft" %>
+    <% end %>
+
     <!-- publication info -->
     <div class="padding-side-25 bottom-border">
       <%= render partial: 'shared/publication_activity/article_fields_short_edit', :locals => { :f => f, :publication => @article.publication } %>
@@ -55,7 +66,7 @@
     <nav class="form-nav" style="margin-top: 20px;">
       <div class="form-nav-next" style="text-align: right">
         <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
-        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @article, :validate => true} %>
+        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
       </div>
     </nav>
   

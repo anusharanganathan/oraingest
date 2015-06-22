@@ -1,21 +1,9 @@
-<% unless article.workflows.first.nil? %>
-  <% wf = article.workflows.first %>
-  <% wf_id = wf.rdf_subject.to_s %>
-  <% currentStatus = wf.current_status %>
-<% else %>
-  <% article.workflows.build %>
-  <% wf = article.workflows.first %>
-  <% wf_id = nil %>
-  <% currentStatus = "Draft" %>
-<% end %>
-
 <% if currentStatus == "Draft" || currentStatus == "Referred" %>
   <%= f.fields_for :workflows, wf do |f_wf| %>
     <% unless wf_id.nil? %>
       <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflow_submit_id" %>
     <% end %>
     <%= f_wf.hidden_field :identifier, :value => "MediatedSubmission", :id => "workflow_submit_identifier" %>
-    <%= f_wf.hidden_field :involves, :value => wf.involves.first, :id => "workflow_submit_involves" %>
     <% wf.entries.build %>
     <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
       <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>

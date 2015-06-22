@@ -1,20 +1,8 @@
 <% if can? :review, :all %>
-  <% unless article.workflows.first.nil? %>
-    <% wf = article.workflows.first %>
-    <% wf_id = wf.rdf_subject.to_s %>
-    <% currentStatus = wf.current_status %>
-  <% else %>
-    <% article.workflows.build %>
-    <% wf = article.workflows.first %>
-    <% wf_id = nil %>
-    <% currentStatus = "Draft" %>
-  <% end %>
-
   <%= f.fields_for :workflows, wf do |f_wf| %>
     <% unless wf_id.nil? %>
       <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflows_id" %>
     <% end %>
-    <%= f_wf.hidden_field :involves, :value => wf.involves.first, :id => "workflow_submit_involves" %>
     <% if Sufia.config.next_workflow_status.include?(currentStatus) %>
       <h4>Update workflow status from <%=currentStatus%></h4>
       <% wf.entries.build %>
@@ -28,7 +16,7 @@
           <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
         </div>
 
-        <% if false %>
+        <% if false #This is only needed for assign a reviewer%>
           <div class="fieldset">
             <label>Reviewer</label>
             <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :readonly => true, data: {"progress" => "documentation"} %>
