@@ -41,6 +41,27 @@ module DoiMethods
     status
   end
 
+  def request_doi
+    doi_s = self.doi(mint=false)
+    unless doi_s.blank?
+      return doi_s
+    end
+    doi_s = self.doi(mint=true)
+    unless doi_s
+      return doi_s
+    end
+    if self.publication.blank?
+      args = {'id' => "info:fedora/%s#publicationActivity" % self.id, :type => RDF::PROV.Activity}
+      self.publication.build(args)
+    end
+    if self.publication[0].hasDocument.blank?
+      args = {'id' => "info:fedora/%s#publicationDocument" % d.id}
+      self.publication[0].hasDocument.build(args)
+    end
+    self.publication[0].hasDocument[0].doi = doi_s
+    doi_s
+  end
+
   def doi_data
     if self.model_klass != "Dataset"
       return {}

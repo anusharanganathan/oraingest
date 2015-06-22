@@ -87,7 +87,6 @@ class DatasetsController < ApplicationController
     @pid = Sufia::Noid.noidify(SecureRandom.uuid)
     @pid = Sufia::Noid.namespaceize(@pid)
     @dataset = Dataset.new
-    @doi = @dataset.doi(mint=true)
     @files = []
     @agreement = DatasetAgreement.new
     @agreement.title = "Agreement for #{@pid}"
@@ -109,7 +108,6 @@ class DatasetsController < ApplicationController
       authorize! :review, params[:id]
     end
     @pid = params[:id]
-    @doi = @dataset.doi(mint=true)
     @files = contents
     if @files.any?
       unless @dataset.medium.any? && @dataset.medium.include?(Sufia.config.data_medium["Digital"])

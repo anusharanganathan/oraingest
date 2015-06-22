@@ -5,7 +5,9 @@ Thank you for submitting your record in My ORA. <%= data['record_url'] %> was re
 In the mean time your record will continue to be available in the My ORA interface.
 
 <% if data.has_key?('doi_requested') and data['doi_requested'] and data.has_key?('doi') and data['doi'] %>
-You have requested a DOI to be registered for your record. The DOI minted for your record is "DOI: <%=data['doi']%>. This DOI will be registered with Datacite, once the record is published is ORA  and can be used to cite your data.
+You have requested a DOI to be registered for your dataset. The DOI minted for your record is "DOI: <%=data['doi']%>. This DOI will be registered with Datacite, once the record is published is ORA  and can be used to cite your data.
+<% elsif data.has_key?('doi_requested') and data['doi_requested'] %>
+You have requested a DOI to be registered for your dataset. You will be notified of the DOI once your submission has been published in ORA and the DOI has been registered with Datacite.
 <% end %>
 
 If you need to contact the ORA review team with any queries, just reply to this email, making sure you do not modify the subject.
