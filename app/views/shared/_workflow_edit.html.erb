@@ -1,8 +1,4 @@
 <% if can? :review, :all %>
-  <%= f.fields_for :workflows, wf do |f_wf| %>
-    <% unless wf_id.nil? %>
-      <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflows_id" %>
-    <% end %>
     <% if Sufia.config.next_workflow_status.include?(currentStatus) %>
       <h4>Update workflow status from <%=currentStatus%></h4>
       <% wf.entries.build %>
@@ -12,17 +8,17 @@
           <% Sufia.config.next_workflow_status[currentStatus].each do |val| %>
             <label><%= f_wf_e.radio_button :status, val, data: {"progress" => "documentation"} %><span></span><%=val%></label>
           <% end %>
-          <%#= f_wf_e.select :status, options_for_select(Sufia.config.workflow_status), { :include_blank => 'Select a status' }, id: "workflows_entries_status", data: {"progress" => "documentation"} %>
           <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
         </div>
 
-        <% if false #This is only needed for assign a reviewer%>
+        <div class="assing-reviewer" style="display:none;">
+          <%# Only needs to be displayed for 'assign to' %>
           <div class="fieldset">
-            <label>Reviewer</label>
-            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :readonly => true, data: {"progress" => "documentation"} %>
+            <label>Assign to reviewer</label>
+            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :disabled => true, data: {"progress" => "documentation"} %>
             <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
           </div>
-        <% end %>
+        </div>
 
         <div class="fieldset">
           <label>Comment on workflow status update</label>
@@ -42,7 +38,7 @@
       </div>
     <% end %>
 
-  <% end #fields_for first workflow %>
+  <%# end #fields_for first workflow %>
 
 <% end %> 
 

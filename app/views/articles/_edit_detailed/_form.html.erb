@@ -25,235 +25,241 @@
 </section>
 
 <%= form_for @article, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
-<%= hidden_field_tag(:pid, @pid) %>
-<%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
+  <%= hidden_field_tag(:pid, @pid) %>
+  <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
 
-<% unless @dataset.workflows.first.nil? %>
-  <% @wf = @dataset.workflows.first %>
-  <% @wf_id = @wf.rdf_subject.to_s %>
-  <% @currentStatus = @wf.current_status %>
-<% else %>
-  <% @dataset.workflows.build %>
-  <% @wf = @dataset.workflows.first %>
-  <% @wf_id = nil %>
-  <% @currentStatus = "Draft" %>
-<% end %>
+  <% unless @dataset.workflows.first.nil? %>
+    <% @wf = @dataset.workflows.first %>
+    <% @wf_id = @wf.rdf_subject.to_s %>
+    <% @currentStatus = @wf.current_status %>
+  <% else %>
+    <% @dataset.workflows.build %>
+    <% @wf = @dataset.workflows.first %>
+    <% @wf_id = nil %>
+    <% @currentStatus = "Draft" %>
+  <% end %>
 
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      2. About your publication
-    </div>
-    <div class="padding-0">
-      <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
-      <%= render partial: "articles/_edit_detailed/describe_fields_edit", as: :article, :locals => { :f => f } %>
-    </div>
-  </div>
-
-  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your publication more discoverable via search engines.</p>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">Add journal and publisher information to your publication</div>
-    </div>
-    <div class="expand-content">
-      <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
-    </div>
-  </div>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">Add subject, keywords, and language information to your publication</div>
-    </div>
-    <div class="expand-content">
-      <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
-      <%= render partial: "shared/keyword_fields_edit", :locals => { :f => f, :keyword => @article.keyword } %>
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
-      <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 3</strong> - About you
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      3. About you
-    </div>
-    <div class="padding-0">
-      <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator", :required => true } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 4</strong> - Related publications
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      4. Related publications
-    </div>
-    <div class="padding-0">
-      <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 5</strong> - Archiving and access
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-    
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      5. Archiving and access
-    </div>
-    <div class="padding-25 no-pad-top no-pad-bottom">
-      <%= render partial: "articles/_edit_detailed/admin_fields_edit", :locals => { :f => f, :article => @article } %>
-    </div>
-    <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
-    <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f, :accessRights => @article.accessRights, :embargo_type => "metadata" } %>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 6</strong> - Funders and licences
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      6. Funders and licences
-    </div>
-    <div class="padding-25 no-pad-top no-pad-bottom">
-      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
-    </div>
-
-  </div>
-
-  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your publication more discoverable via search engines.</p>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">Rights and Licence</div>
-    </div>
-    <div class="expand-content">
-      <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @article } %>
-      <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <% if can? :review, :all %>
-      <div class="form-nav-next">
-        <div class="float-left">
-          <strong>Continue to Step 7</strong> - Review workflow
-        </div>
-        <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-      </div>
+  <%= f.fields_for :workflows, @wf do |f_wf| %>
+    <% unless @wf_id.nil? %>
+      <%= f_wf.hidden_field :id, :value => @wf_id, :id => "workflow_submit_id" %>
     <% end %>
-  </nav>
-  
-</section>
 
-<% if can? :review, :all %>
-  <section class="form-step">
-    <div class="content-box padding-0">
-      <div class="content-box-header">
-        7. Review workflow
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          2. About your publication
+        </div>
+        <div class="padding-0">
+          <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @article.worktype } %>
+          <%= render partial: "articles/_edit_detailed/describe_fields_edit", as: :article, :locals => { :f => f } %>
+        </div>
       </div>
-      <div class="padding-25 no-pad-top no-pad-bottom">
-        <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
-      </div>
-    </div>
 
-    <div class="content-box padding-0">
-      <div class="padding-25 no-pad-top no-pad-bottom">
-        <%= render partial: "shared/workflow_show", :locals => { :article => @article } %>
-      </div>
-    </div>
+      <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+      <p>Enhance your deposit by making your publication more discoverable via search engines.</p>
 
-    <% if !@article.permissions.nil? && !@article.permissions.empty? %>       
       <div class="content-box padding-0">
         <div class="content-box-header expand-header">
-          <div class="space-right">Set permissions</div>
+          <div class="space-right">Add journal and publisher information to your publication</div>
         </div>
         <div class="expand-content">
-          <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
+          <%= render partial: 'shared/publication_activity/article_fields_edit', :locals => { :f => f, :publication => @article.publication } %>
         </div>
       </div>
+
+      <div class="content-box padding-0">
+        <div class="content-box-header expand-header">
+          <div class="space-right">Add subject, keywords, and language information to your publication</div>
+        </div>
+        <div class="expand-content">
+          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @article.subject } %>
+          <div class="padding-side-25">
+            <div class="bottom-border"></div>
+          </div>
+
+          <%= render partial: "shared/keyword_fields_edit", :locals => { :f => f, :keyword => @article.keyword } %>
+          <div class="padding-side-25">
+            <div class="bottom-border"></div>
+          </div>
+
+          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @article.language } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 3</strong> - About you
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+    
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          3. About you
+        </div>
+        <div class="padding-0">
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator", :required => true } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 4</strong> - Related publications
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          4. Related publications
+        </div>
+        <div class="padding-0">
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 5</strong> - Archiving and access
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          5. Archiving and access
+        </div>
+        <div class="padding-25 no-pad-top no-pad-bottom">
+          <%= render partial: "articles/_edit_detailed/admin_fields_edit", :locals => { :f => f, :article => @article } %>
+        </div>
+        <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @article } %>
+        <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f, :accessRights => @article.accessRights, :embargo_type => "metadata" } %>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 6</strong> - Funders and licences
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          6. Funders and licences
+        </div>
+        <div class="padding-25 no-pad-top no-pad-bottom">
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
+        </div>
+
+      </div>
+
+      <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+      <p>Enhance your deposit by making your publication more discoverable via search engines.</p>
+
+      <div class="content-box padding-0">
+        <div class="content-box-header expand-header">
+          <div class="space-right">Rights and Licence</div>
+        </div>
+        <div class="expand-content">
+          <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @article } %>
+          <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @article } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <% if can? :review, :all %>
+          <div class="form-nav-next">
+            <div class="float-left">
+              <strong>Continue to Step 7</strong> - Review workflow
+            </div>
+            <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+          </div>
+        <% end %>
+      </nav>
+
+    </section>
+
+    <% if can? :review, :all %>
+      <section class="form-step">
+        <div class="content-box padding-0">
+          <div class="content-box-header">
+            7. Review workflow
+          </div>
+          <div class="padding-25 no-pad-top no-pad-bottom">
+            <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
+          </div>
+        </div>
+
+        <div class="content-box padding-0">
+          <div class="padding-25 no-pad-top no-pad-bottom">
+            <%= render partial: "shared/workflow_show", :locals => { :article => @article } %>
+          </div>
+        </div>
+
+        <% if !@article.permissions.nil? && !@article.permissions.empty? %>
+          <div class="content-box padding-0">
+            <div class="content-box-header expand-header">
+              <div class="space-right">Set permissions</div>
+            </div>
+            <div class="expand-content">
+              <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @article.permissions, :depositor => @article.workflowMetadata.depositor[0]} %>
+            </div>
+          </div>
+        <% end %>
+
+        <nav class="form-nav">
+          <div class="form-nav-prev">
+            <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+          </div>
+        </nav>
+      </section>
     <% end %>
 
-    <nav class="form-nav">
-      <div class="form-nav-prev">
-        <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    <nav class="form-nav" style="margin-top: 20px;">
+      <div class="form-nav-next" style="text-align: right">
+        <% unless can? :review, :all %>
+          <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
+          <%= render partial: "shared/workflow_submit", :locals => {:f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
+        <% else %>
+          <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
+          <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
+        <% end %>
       </div>
     </nav>
-  </section>
-<% end %>
 
-<nav class="form-nav" style="margin-top: 20px;">
-  <div class="form-nav-next" style="text-align: right">
-    <% unless can? :review, :all %>
-      <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
-      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
-    <% else %>
-      <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
-      <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
-    <% end %>
-  </div>
-</nav>
-
-<% end %>
+  <% end #fields_for workflows %>
+<% end #form %>

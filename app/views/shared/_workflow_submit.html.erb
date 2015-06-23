@@ -1,14 +1,9 @@
 <% if currentStatus == "Draft" || currentStatus == "Referred" %>
-  <%= f.fields_for :workflows, wf do |f_wf| %>
-    <% unless wf_id.nil? %>
-      <%= f_wf.hidden_field :id, :value => wf_id, :id => "workflow_submit_id" %>
-    <% end %>
     <%= f_wf.hidden_field :identifier, :value => "MediatedSubmission", :id => "workflow_submit_identifier" %>
     <% wf.entries.build %>
     <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
       <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>
     <% end %>
-  <% end #fields_for first workflow %>
   <% if validate == false %>
     <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"Submitted\")", data: {"submit-without-validation" => true} %>
   <% else %>

@@ -28,274 +28,282 @@
 </section>
 
 <%= form_for @dataset, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
-<%= hidden_field_tag(:pid, @pid) %>
-<%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
-<% unless @dataset.workflows.first.nil? %>
-  <% @wf = @dataset.workflows.first %>
-  <% @wf_id = @wf.rdf_subject.to_s %>
-  <% @currentStatus = @wf.current_status %>
-<% else %>
-  <% @dataset.workflows.build %>
-  <% @wf = @dataset.workflows.first %>
-  <% @wf_id = nil %>
-  <% @currentStatus = "Draft" %>
-<% end %>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      2. About your data
-    </div>
-    <div class="padding-0">
-        <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
-        <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
-        <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
-        <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :publication => @dataset.publication, :wf => @wf, :doi_registered => @dataset.doi_registered? } %>
-    </div>
-  </div>
-
-  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Enhance your deposit by making your data more discoverable via search engines.</p>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">Add subject, keywords, dates, geographical location and language information to your data</div>
-    </div>
-    
-    <div class="expand-content">
-    
-      <div class="fieldset">
-        <p class="small">Abstract or brief description of research context</p>
-        <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." } %>
-      </div>
-      
-       <div class="fieldset">
-		<p class="small">Version number</p>
-		<%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
-		<%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Version number" , :tipDescription => "If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here." } %>
-	  </div>
-	  
-      <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
-
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
-      <%= render partial: "shared/keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
-
-      <div class="padding-side-25">
-        <div class="bottom-border"></div>
-      </div>
-
-      <div class="fieldset">
-        <% if @dataset.dateCollected.empty? %>
-          <% @dataset.dateCollected.build %>
-        <% end %>
-        <p class="small">When was the data collected?</p>
-        <%= f.date_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
-        <%= f.date_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType =>'discoverability', :tipTitle => 'Date collected', :tipDescription =>"If applicable, enter the date or time period when you collected or produced your data, e.g. '2014' or '15/4/2005’ or  '1998 - 2010." } %>
-      </div>
-
-      <div class="fieldset">
-        <% if @dataset.temporal.empty? %>
-          <% @dataset.temporal.build %>
-        <% end %>
-        <p class="small">Time period covered by the data</p>
-        <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
-        <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Time period covered by the data." , :tipDescription => "If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'." } %>
-      </div>
-
-      <div class="fieldset">
-        <% if @dataset.spatial.empty? %>
-          <% @dataset.spatial.build %>
-        <% end %>
-        <p class="small">Geographical location or coverage of the data</p>
-        <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
-        <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Geographical location" , :tipDescription => "If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085)." } %>
-      </div>
-
-      <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 3</strong> - About you
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      3. About you
-    </div>
-    <div class="padding-0">
-      <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator", :required => true } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 4</strong> - Related publications
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      4. Related publications
-    </div>
-    <div class="padding-0">
-      <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 5</strong> - Data archiving and access
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-    
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      5. Data archiving and access
-    </div>
-    <div class="padding-0">
-        <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
-    </div>
-    <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
-    <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f, :accessRights => @dataset.accessRights, :embargo_type => "metadata" } %>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <div class="form-nav-next">
-      <div class="float-left">
-        <strong>Continue to Step 6</strong> - Funders and licences
-      </div>
-      <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-    </div>
-  </nav>
-</section>
-
-<section class="form-step">
-  <div class="content-box padding-0">
-    <div class="content-box-header">
-      6. Funders and licences
-    </div>
-    <div class="padding-25 no-pad-top no-pad-bottom">
-      <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding, :required => true } %>
-    </div>
-
-  </div>
-
-  <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-  <p>Apply a licence to your research data and choose their terms of use.</p>
-
-  <div class="content-box padding-0">
-    <div class="content-box-header expand-header">
-      <div class="space-right">License your data</div>
-    </div>
-    <div class="expand-content">
-
-      <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
-
-    </div>
-  </div>
-
-  <nav class="form-nav">
-    <div class="form-nav-prev">
-      <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-    </div>
-    <% if can? :review, :all %>
-      <div class="form-nav-next">
-        <div class="float-left">
-          <strong>Continue to Step 7</strong> - Review workflow
-        </div>
-        <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-      </div>
+  <%= hidden_field_tag(:pid, @pid) %>
+  <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
+  <% unless @dataset.workflows.first.nil? %>
+    <% @wf = @dataset.workflows.first %>
+    <% @wf_id = @wf.rdf_subject.to_s %>
+    <% @currentStatus = @wf.current_status %>
+  <% else %>
+    <% @dataset.workflows.build %>
+    <% @wf = @dataset.workflows.first %>
+    <% @wf_id = nil %>
+    <% @currentStatus = "Draft" %>
+  <% end %>
+  <%= f.fields_for :workflows, @wf do |f_wf| %>
+    <% unless @wf_id.nil? %>
+      <%= f_wf.hidden_field :id, :value => @wf_id, :id => "workflow_submit_id" %>
     <% end %>
-  </nav>
-  
-</section>
 
-<% if can? :review, :all %>
-  <section class="form-step">
-    <div class="content-box padding-0">
-      <div class="content-box-header">
-        7. Review workflow
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          2. About your data
+        </div>
+        <div class="padding-0">
+            <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
+            <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
+            <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
+            <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :f_wf => f_wf, :publication => @dataset.publication, :wf => @wf, :doi_registered => @dataset.doi_registered? } %>
+        </div>
       </div>
-      <div class="padding-25 no-pad-top no-pad-bottom">
-        <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
-      </div>
-    </div>
 
-    <div class="content-box padding-0">
-      <div class="padding-25 no-pad-top no-pad-bottom">
-        <%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
-      </div>
-    </div>
+      <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+      <p>Enhance your deposit by making your data more discoverable via search engines.</p>
 
-    <% if !@dataset.permissions.nil? && !@dataset.permissions.empty? %>       
       <div class="content-box padding-0">
         <div class="content-box-header expand-header">
-          <div class="space-right">Set permissions</div>
+          <div class="space-right">Add subject, keywords, dates, geographical location and language information to your data</div>
+        </div>
+ 
+        <div class="expand-content">
+ 
+          <div class="fieldset">
+            <p class="small">Abstract or brief description of research context</p>
+            <%= f.text_area :abstract, :value=>@dataset.abstract.first, :style=>'width: 60%', data: {"progress" => "documentation"} %>
+            <% desc = "Use this box to enter (or paste in) an abstract of the study in which the data were generated, or provide a brief description of the context of your research." %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Abstract" , :tipDescription => desc } %>
+          </div>
+ 
+           <div class="fieldset">
+    		<p class="small">Version number</p>
+    		<%= f.text_field :version, :value=>@dataset.version.first, :style=>'width: 100px', data: {"progress" => "citation"} %>
+                <% desc = "If you are depositing a specific version of your data (e.g. 'version 4'), give the version name or number here." %>
+    		<%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Version number" , :tipDescription => desc } %>
+    	  </div>
+
+          <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @dataset.subject } %>
+
+          <div class="padding-side-25">
+            <div class="bottom-border"></div>
+          </div>
+
+          <%= render partial: "shared/keyword_fields_edit", :locals => { :f => f, :keyword => @dataset.keyword } %>
+
+          <div class="padding-side-25">
+            <div class="bottom-border"></div>
+          </div>
+
+          <div class="fieldset">
+            <% if @dataset.dateCollected.empty? %>
+              <% @dataset.dateCollected.build %>
+            <% end %>
+            <p class="small">When was the data collected?</p>
+            <%= f.date_field "dateCollected][start", :value=>@dataset.dateCollected[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+            <%= f.date_field "dateCollected][end", :value=>@dataset.dateCollected[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+            <% desc = "If applicable, enter the date or time period when you collected or produced your data, e.g. '2014' or '15/4/2005’ or  '1998 - 2010." %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType =>'discoverability', :tipTitle => 'Date collected', :tipDescription => desc } %>
+          </div>
+
+          <div class="fieldset">
+            <% if @dataset.temporal.empty? %>
+              <% @dataset.temporal.build %>
+            <% end %>
+            <p class="small">Time period covered by the data</p>
+            <%= f.text_field "temporal][start", :value=>@dataset.temporal[0].start.first, :style=>'display: inline; width: 100px; margin: 0; margin-right: 10px;', data: {"progress" => "discoverability"} %> to 
+            <%= f.text_field "temporal][end", :value=>@dataset.temporal[0].end.first, :style=>'display: inline; width: 100px; margin: 0; margin-left: 10px;', data: {"progress" => "discoverability"} %>
+            <% desc = "If applicable, enter the time period to which your data relates, e.g. '1956' or '20/02/1987' or '1485-1510' or '15/4/2005 - 30/9/2005' or '12-8 BC'." %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Time period covered by the data." , :tipDescription => desc } %>
+          </div>
+
+          <div class="fieldset">
+            <% if @dataset.spatial.empty? %>
+              <% @dataset.spatial.build %>
+            <% end %>
+            <p class="small">Geographical location or coverage of the data</p>
+            <%= f.text_field "spatial][value", :value=>@dataset.spatial.first.value.first, :style=>'width: 50%', data: {"progress" => "discoverability"} %>
+            <% desc = "If applicable, enter the geographical location to which your data relate. You may enter it as a country, place name or general area 
+               (e.g. 'France'; 'New York'; 'New Forest') or as geographical co-ordinates, preferably in decimal degrees (e.g. 51.754109, -1.254085)." %>
+            <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Geographical location" , :tipDescription => desc } %>
+          </div>
+
+          <%= render partial: "shared/mads_language_fields_edit", :locals => { :f => f, :language => @dataset.language } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 3</strong> - About you
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          3. About you
+        </div>
+        <div class="padding-0">
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @dataset.creation, :label => "creator", :required => true } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 4</strong> - Related publications
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          4. Related publications
+        </div>
+        <div class="padding-0">
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @dataset.qualifiedRelation } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 5</strong> - Data archiving and access
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          5. Data archiving and access
+        </div>
+        <div class="padding-0">
+            <%= render partial: "admin_fields_edit", :locals => { :f => f, :article => @dataset } %>
+        </div>
+        <%= render partial: 'shared/file_info_fields_edit', :locals => { :f => f, :article => @dataset } %>
+        <%= render partial: 'shared/embargo/embargo_fields_edit', :locals => { :f => f, :accessRights => @dataset.accessRights, :embargo_type => "metadata" } %>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <div class="form-nav-next">
+          <div class="float-left">
+            <strong>Continue to Step 6</strong> - Funders and licences
+          </div>
+          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+        </div>
+      </nav>
+    </section>
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          6. Funders and licences
+        </div>
+        <div class="padding-25 no-pad-top no-pad-bottom">
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding, :required => true } %>
+        </div>
+
+      </div>
+
+      <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+      <p>Apply a licence to your research data and choose their terms of use.</p>
+
+      <div class="content-box padding-0">
+        <div class="content-box-header expand-header">
+          <div class="space-right">License your data</div>
         </div>
         <div class="expand-content">
-          <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
+          <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
         </div>
       </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <% if can? :review, :all %>
+          <div class="form-nav-next">
+            <div class="float-left">
+              <strong>Continue to Step 7</strong> - Review workflow
+            </div>
+            <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+          </div>
+        <% end %>
+      </nav>
+
+    </section>
+
+    <% if can? :review, :all %>
+      <section class="form-step">
+        <div class="content-box padding-0">
+          <div class="content-box-header">
+            7. Review workflow
+          </div>
+          <div class="padding-25 no-pad-top no-pad-bottom">
+            <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
+          </div>
+        </div>
+
+        <div class="content-box padding-0">
+          <div class="padding-25 no-pad-top no-pad-bottom">
+            <%= render partial: "shared/workflow_show", :locals => { :article => @dataset } %>
+          </div>
+        </div>
+
+        <% if !@dataset.permissions.nil? && !@dataset.permissions.empty? %>
+          <div class="content-box padding-0">
+            <div class="content-box-header expand-header">
+              <div class="space-right">Set permissions</div>
+            </div>
+            <div class="expand-content">
+              <%= render partial: "shared/permissions_edit", :locals => {:f => f, :permissions => @dataset.permissions, :depositor => @dataset.workflowMetadata.depositor[0]} %>
+            </div>
+          </div>
+        <% end %>
+
+        <nav class="form-nav">
+          <div class="form-nav-prev">
+            <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+          </div>
+        </nav>
+      </section>
     <% end %>
 
-    <nav class="form-nav">
-      <div class="form-nav-prev">
-        <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+    <nav class="form-nav" style="margin-top: 20px;">
+      <div class="form-nav-next" style="text-align: right">
+        <% unless can? :review, :all %>
+          <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")",  data: {"submit-without-validation" => true} %>
+          <%= render partial: "shared/workflow_submit", :locals => {:f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
+        <% else %>
+          <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
+          <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
+        <% end %>
       </div>
     </nav>
-  </section>
-<% end %>
-
-<nav class="form-nav" style="margin-top: 20px;">
-  <div class="form-nav-next" style="text-align: right">
-    <% unless can? :review, :all %>
-      <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")",  data: {"submit-without-validation" => true} %>
-      <%= render partial: "shared/workflow_submit", :locals => {:f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
-    <% else %>
-      <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
-      <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
-    <% end %>
-  </div>
-</nav>
-
-<% end %>
+  <% end #fields_for workflows %>
+<% end #form %>
 

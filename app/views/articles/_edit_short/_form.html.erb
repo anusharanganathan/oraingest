@@ -28,48 +28,53 @@
       <% @wf_id = nil %>
       <% @currentStatus = "Draft" %>
     <% end %>
+    <%= f.fields_for :workflows, @wf do |f_wf| %>
+      <% unless @wf_id.nil? %>
+        <%= f_wf.hidden_field :id, :value => @wf_id, :id => "workflow_submit_id" %>
+      <% end %>
 
-    <!-- publication info -->
-    <div class="padding-side-25 bottom-border">
-      <%= render partial: 'shared/publication_activity/article_fields_short_edit', :locals => { :f => f, :publication => @article.publication } %>
-    </div>
-
-    <!-- apc info -->  
-    <div class="padding-side-25"> 
-      <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
-    </div>
-  
-    <!-- Expander -->
-    <div class="content-box padding-0" style="margin-top: 20px;">
-      <div class="content-box-header expand-header">
-        <div class="space-right">Add funder and other information to your article record</div>
+      <!-- publication info -->
+      <div class="padding-side-25 bottom-border">
+        <%= render partial: 'shared/publication_activity/article_fields_short_edit', :locals => { :f => f, :publication => @article.publication } %>
       </div>
-      <div class="expand-content">
 
-        <!-- funder info -->
-        <div class="padding-side-25"> 
-          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
+      <!-- apc info -->
+      <div class="padding-side-25">
+        <%= render partial: "/articles/_edit_short/admin_fields_edit", :locals => { :f => f, :article => @article } %>
+      </div>
+
+      <!-- Expander -->
+      <div class="content-box padding-0" style="margin-top: 20px;">
+        <div class="content-box-header expand-header">
+          <div class="space-right">Add funder and other information to your article record</div>
         </div>
-        <div class="bottom-border padding-side-25"></div>
+        <div class="expand-content">
 
-        <!-- creator info -->
-        <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator", :required => false } %>
-        <div class="bottom-border padding-side-25"></div>
-  
-        <!-- Related item -->
-        <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
+          <!-- funder info -->
+          <div class="padding-side-25">
+            <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @article.funding, :required => false } %>
+          </div>
+          <div class="bottom-border padding-side-25"></div>
 
+          <!-- creator info -->
+          <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @article.creation, :label => "creator", :required => false } %>
+          <div class="bottom-border padding-side-25"></div>
+
+          <!-- Related item -->
+          <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @article.qualifiedRelation } %>
+
+        </div>
       </div>
-    </div>
-  
-    <!-- Form save and submit -->
-    <nav class="form-nav" style="margin-top: 20px;">
-      <div class="form-nav-next" style="text-align: right">
-        <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
-        <%= render partial: "shared/workflow_submit", :locals => {:f => f, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
-      </div>
-    </nav>
-  
+
+      <!-- Form save and submit -->
+      <nav class="form-nav" style="margin-top: 20px;">
+        <div class="form-nav-next" style="text-align: right">
+          <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
+          <%= render partial: "shared/workflow_submit", :locals => {:f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
+        </div>
+      </nav>
+
+    <% end #fields_fow workflows %>
   <% end %>
 
 </section>
