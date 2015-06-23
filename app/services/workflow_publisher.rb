@@ -84,7 +84,7 @@ class WorkflowPublisher
           msg = "Error minting a doi"
           status = false
         end
-      elsif doi.start_with?(Sufia.config.doi_credentials["shoulder")
+      elsif doi.start_with?(Sufia.config.doi_credentials["shoulder"])
         msg << "Using given doi '#{doi}' to register DOI"
       else
         msg << "Error: The DOI '#{doi}' is not a Bodleian DOI. It will not be registered!"
