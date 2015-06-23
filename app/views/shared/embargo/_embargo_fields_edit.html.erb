@@ -33,28 +33,24 @@
     <% end %>
   
     <fieldset class="small-text">
+      <% if embargo_type == "metadata" #Field required for catalogue record %>
+        <% req_class = "required" %>
+      <% else %>
+        <% req_class = "" %>
+      <% end %>
       <label>
-        <% if embargo_type == "metadata" #Field required for catalogue record %>
-          <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"}, :class => "required"  %>
-        <% else #Field Not required for file as it is hidden %>
-          <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"), data: {"progress" => "documentation"} %>
-        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Open access", :checked => (accessRights[0].embargoStatus[0] == "Open access"),
+          data: {"progress" => "documentation"}, :class => req_class  %>
         <span></span>Yes
       </label>
       <label panel='dataset-embargo-<%= panel_id %>'>
-        <% if embargo_type == "metadata" #Field required for catalogue record %>
-          <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "required embargoed" %>
-        <% else #Field Not required for file as it is hidden %>
-          <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"), data: {"progress" => "documentation"}, :class => "embargoed" %>
-        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Embargoed", :checked => (accessRights[0].embargoStatus[0] == "Embargoed"),
+          data: {"progress" => "documentation"}, :class => "#{req_class} embargoed" %>
         <span></span>After a certain period
       </label>
       <label>
-        <% if embargo_type == "metadata" #Field required for catalogue record %>
-          <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"}, :class => "required" %>
-        <% else #Field Not required for file as it is hidden %>
-          <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"), data: {"progress" => "documentation"} %>
-        <% end %>
+        <%= f_a.radio_button :embargoStatus, "Closed access", :checked => (accessRights[0].embargoStatus[0] == "Closed access"),
+          data: {"progress" => "documentation"}, :class => "#{req_class}" %>
         <span></span>No
       </label>
     </fieldset>
@@ -83,7 +79,8 @@
     <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => tipTitle , :tipDescription => desc } %>
   </div>
   <div class="expand-panel" id="dataset-embargo-<%= panel_id %>">
-    <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f => f, :f_a => f_a, :accessRights => accessRights, :startOption => startOption, :embargo_type => embargo_type } %>
+    <%= render partial: 'shared/embargo/embargo_inside_fields_edit', :locals => { :f => f, :f_a => f_a, :accessRights => accessRights,
+      :startOption => startOption, :embargo_type => embargo_type } %>
   </div>
 <% end %>
 

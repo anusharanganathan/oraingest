@@ -9,14 +9,16 @@
         <div class="col col2of4">
           <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
             <% displayEndDate = "block" %>
-            <%= f_dt_end.hidden_field :label, :value => "Stated", :class=>"embargo-date-type" %>
+            <% dtType = accessRights[0].embargoDate[0].end[0].label.first %>
+            <% dtVal = accessRights[0].embargoDate[0].end[0].date.first %>
             <label>
               <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" checked="checked" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
               <span></span>Embargo end date
             </label>
           <% else %>
-              <%= f_dt_end.hidden_field :label, :value => "", :class=>"embargo-date-type" %>
               <% displayEndDate = "none" %>
+              <% dtType = nil %>
+              <% dtVal = nil %>
               <label>
                 <input type="radio" name="dataset-embargo-<%=ele_id%>" data-category="documentation" onchange="toggleEmbargoFieldsDisplay(this)" value="date" id="embargo-date-<%=ele_id%>"/>
               <span></span>Embargo end date
@@ -24,16 +26,13 @@
           <% end %>
         </div>
         <div class="col col2of4 embargo-date" style="display: <%=displayEndDate%>;">
+          <%= f_dt_end.hidden_field :label, :value => dtType, :class=>"embargo-date-type" %>
           <div class="row">
             <div class="col"><label>Date</label></div>
           </div> 
           <div class="row">
             <div class="col">
-              <% if accessRights[0].embargoDate[0].end[0].label.first == "Stated" %>
-                <%= f_dt_end.date_field :date, :value => accessRights[0].embargoDate[0].end[0].date.first%>
-              <% else %>
-                <%= f_dt_end.date_field :date, :value => "" %>
-              <% end %>
+              <%= f_dt_end.date_field :date, :value => dtVal %>
             </div>
           </div>
         </div>
