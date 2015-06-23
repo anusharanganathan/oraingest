@@ -177,12 +177,15 @@ class MetadataBuilder
       if params[0].has_key?(:entries_attributes)
         # Validate entries is array
         params[0][:entries_attributes] = normalizeParams(params[0][:entries_attributes])
-        if params[0][:entries_attributes][0][:status].nil? || params[0][:entries_attributes][0][:status].empty? || model.workflows.first.current_status == params[0][:entries_attributes][0][:status]
-          params[0] = params[0].except(:entries_attributes)
+        if (params[0][:entries_attributes][0].has_key?(:status) &&
+          !params[0][:entries_attributes][0][:status].blank? &&
+          Sufia.config.workflow_status.include?(params[0][:entries_attributes][0][:status]) &&
+          model.workflows.first.current_status != params[0][:entries_attributes][0][:status])
+            # Set creator to user logged in
+            params[0][:entries_attributes][0][:creator] = [depositor]
+            params[0][:entries_attributes][0][:date] = [Time.now.to_s]
         else
-          # Set creator to user logged in
-          params[0][:entries_attributes][0][:creator] = [depositor]
-          params[0][:entries_attributes][0][:date] = [Time.now.to_s]
+          params[0] = params[0].except(:entries_attributes)
         end
       end
       if params[0].has_key?(:emailThreads_attributes)
