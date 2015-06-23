@@ -90,8 +90,6 @@ function displayDoi() {
       $("#dataset_doi").hide();
       $("#dataset_doi_fieldset").hide();
     }
-    //$("#workflow_submit_involves").val("Register doi:"+doi);
-    //$("#workflow_submit_involves").attr("value", "Register doi:"+doi);
   } else {
     $("#dataset_doi_fieldset").show();
     $("#dataset_doi").show();
