@@ -9,9 +9,9 @@ module WorkflowHelper
   def workflow_status_indicator(document)
     html_classes = ["label"]
     case document.submission_workflow_status
-    when "Approved"
+    when Sufia.config.published_status, Sufia.config.doi_status
       html_classes << "label-success"
-    when "Draft", "Rejected"
+    when Sufia.config.draft_status, sufia.config.rejected_status, Sufia.config.referred_status
       html_classes << "label-important"
     else
       html_classes << "label-info"
