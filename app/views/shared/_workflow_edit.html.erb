@@ -12,10 +12,10 @@
         </div>
 
         <div class="assing-reviewer" style="display:none;">
-          <%# Only needs to be displayed for 'assign to' %>
+          <%# Only needs to be displayed for assigned status %>
           <div class="fieldset">
             <label>Assign to reviewer</label>
-            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :disabled => true, data: {"progress" => "documentation"} %>
+            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :readonly => true, data: {"progress" => "documentation"} %>
             <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
           </div>
         </div>
