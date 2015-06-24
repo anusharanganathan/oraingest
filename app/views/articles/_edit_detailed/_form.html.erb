@@ -36,7 +36,7 @@
     <% @dataset.workflows.build %>
     <% @wf = @dataset.workflows.first %>
     <% @wf_id = nil %>
-    <% @currentStatus = "Draft" %>
+    <% @currentStatus = Sufia.config.draft_status %>
   <% end %>
 
   <%= f.fields_for :workflows, @wf do |f_wf| %>

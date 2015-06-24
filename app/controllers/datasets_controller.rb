@@ -104,7 +104,7 @@ class DatasetsController < ApplicationController
     unless Sufia.config.next_workflow_status.keys.include?(@dataset.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
     end
-    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+    unless Sufia.config.user_edit_status.include?(@dataset.workflows.first.current_status)
       authorize! :review, params[:id]
     end
     @pid = params[:id]
@@ -164,7 +164,7 @@ class DatasetsController < ApplicationController
     unless Sufia.config.next_workflow_status.keys.include?(@dataset.workflows.first.current_status)
       raise CanCan::AccessDenied.new("Not authorized to edit while record is being migrated!", :read, Dataset)
     end
-    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
+    unless Sufia.config.user_edit_status.include?(@dataset.workflows.first.current_status)
        authorize! :review, params[:id]
     end
     @dataset.delete_dir(force=true)
@@ -471,22 +471,6 @@ class DatasetsController < ApplicationController
   def s_type
     Solrizer.solr_name("desc_metadata__agreementType", :symbol)
   end
-
-  #def filter_not_mine 
-  #  "{!lucene q.op=AND #{depositor}:-#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
-  #end
-
-  #def filter_mine
-  #  "{!lucene q.op=AND #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
-  #end
-
-  #def filter_mine_draft
-  #  "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
-  #end
-
-  #def filter_mine_not_draft
-  #  "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} -#{workflow_status}:Draft #{s_model}:\"info:fedora/afmodel:Dataset\""
-  #end
 
   def filter_relevant_agreement
     # All people including the data steward should be listed in the contributor, if allowed to contribute

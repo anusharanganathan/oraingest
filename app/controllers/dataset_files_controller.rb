@@ -70,8 +70,8 @@ class DatasetFilesController < ApplicationController
 
   def destroy
     authorize! :destroy, params[:id]
-    if @dataset.workflows.first.current_status != "Draft" && @dataset.workflows.first.current_status !=  "Referred"
-       authorize! :review, params[:id]
+    unless Sufia.config.user_edit_status.include?(@dataset.workflows.first.current_status)
+      authorize! :review, params[:id]
     end
     if @dataset.datastreams.keys.include?(params[:dsid])
       @dataset.delete_content(params[:dsid])

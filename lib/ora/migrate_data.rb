@@ -117,9 +117,9 @@ module ORA
     def update_status
       #Update the workflow status based on the outcome of create and uploads to Databank
       if self.status
-        @obj.workflowMetadata.update_status('Data migrated', self.msg)
+        @obj.workflowMetadata.update_status(Sufia.config.migrated_status, self.msg)
       else
-        @obj.workflowMetadata.update_status('System failure', self.msg)
+        @obj.workflowMetadata.update_status(Sufia.config.failure_status, self.msg)
       end
     end
   

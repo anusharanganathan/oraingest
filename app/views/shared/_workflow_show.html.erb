@@ -5,7 +5,7 @@
 <div class="accordian">
   <div class="accordian-header">History</div>
   <div class="accordian-content">
-    <% if article.workflows.empty? || article.workflows.first.entries.map{|e| e.status.first } == ["Draft"]  %>
+    <% if article.workflows.empty? || article.workflows.first.entries.map{|e| e.status.first } == [Sufia.config.draft_status]  %>
       <p>This <%=@model.capitalize()%> has never been submitted for review.</p>
 
     <% else %>

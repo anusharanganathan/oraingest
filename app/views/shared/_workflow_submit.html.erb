@@ -1,12 +1,12 @@
-<% if currentStatus == "Draft" || currentStatus == "Referred" %>
+<% if Sufia.config.user_edit_status.include?(currentStatus) %>
     <%= f_wf.hidden_field :identifier, :value => "MediatedSubmission", :id => "workflow_submit_identifier" %>
     <% wf.entries.build %>
     <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
       <%= f_wf_e.hidden_field :status, :value => "", :id => "workflow_submit_entries_status", data: {"default-value" => currentStatus} %>
     <% end %>
   <% if validate == false %>
-    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"Submitted\")", data: {"submit-without-validation" => true} %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"#{Sufia.config.submitted_status}\")", data: {"submit-without-validation" => true} %>
   <% else %>
-    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"Submitted\")" %>
+    <%= f.submit "Submit", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"#{Sufia.config.submitted_status}\")" %>
   <% end %>
 <% end %>

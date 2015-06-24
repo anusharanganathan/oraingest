@@ -12,7 +12,7 @@
     <!-- show button -->
     <a href="<%= document_url(document.modelName, 'show', document.id) %>" class="button button-small light-blue">Read<%= image_tag "ora/icons/read.svg", class: "icon icon-read" %></a>
   <% end %>
-  <% if ["Draft", "Referred"].include?(document.submission_workflow_status) %>
+  <% if Sufia.config.user_edit_status.include?(document.submission_workflow_status) %>
     <!-- Status is draft or referred -->
     <% if can? :edit, document.id %>
       <!-- edit button -->

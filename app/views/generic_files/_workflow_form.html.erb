@@ -9,7 +9,7 @@
         <input type="hidden" name="generic_file[workflows_attributes][id]" value="<%= wf.rdf_subject.to_s%>" />
       <% end %>
       
-      <% if generic_file.workflows.empty? || generic_file.workflows.first.current_status == "Draft" %>
+      <% if generic_file.workflows.empty? || generic_file.workflows.first.current_status == Sufia.config.draft_status %>
         <h3>History - <small>what's happened so far</small></h3>
         This Article has never been submitted for review.
         <input type="hidden" name="generic_file[workflows_attributes][identifier]" value="MediatedSubmission" />
@@ -24,7 +24,7 @@
           <div class="controls">
             <%= label_tag "generic_file[workflows_attributes][entries_attributes][status]", "Status", :class=>"control-label" %>
       
-            <%= select_tag "generic_file[workflows_attributes][entries_attributes][status]", options_for_select(["Draft","Submitted","Assigned", "Approved", "Escalated", "Referred", "Rejected"], wf.current_status), :class=>'span20 select_perm' %>   
+            <%= select_tag "generic_file[workflows_attributes][entries_attributes][status]", options_for_select(Sufia.config.workflow_status, wf.current_status), :class=>'span20 select_perm' %>   
             <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][date]" value="<%= Time.now.to_s %>" />
             <input type="hidden" name="generic_file[workflows_attributes][entries_attributes][creator]" value="<%= current_user.user_key %>" />
             

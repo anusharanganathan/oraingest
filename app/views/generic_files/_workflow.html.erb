@@ -3,7 +3,7 @@
       <%= hidden_field_tag('redirect_tab', 'workflow') %>
       <%= render :partial => "generic_files/workflow_form", :locals => { :generic_file => @generic_file, :f=> f } %>
       <div class="row form-actions" id="workflow_submit">
-        <% if generic_file.workflows.empty? || generic_file.workflows.first.current_status == "Draft" %>
+        <% if generic_file.workflows.empty? || generic_file.workflows.first.current_status == Sufia.config.draft_status %>
           <%= button_tag '<i class="icon-save"></i> Submit for Review'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>
         <% else %>
           <%= button_tag '<i class="icon-save"></i> Update Workflow'.html_safe, :type => 'submit', :class => 'btn-primary btn-large', :onclick => "confirmation_needed = false;", :id => "upload_submit", :name => "update_workflow" %>

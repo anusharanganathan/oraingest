@@ -189,7 +189,7 @@ class Dataset < ActiveFedora::Base
   def initialize_submission_workflow
     if self.workflows.empty?  
       wf = self.workflows.build(identifier:"MediatedSubmission")
-      wf.entries.build(status:"Draft", date:Time.now.to_s)
+      wf.entries.build(status:Sufia.config.draft_status, date:Time.now.to_s)
     end
   end
 

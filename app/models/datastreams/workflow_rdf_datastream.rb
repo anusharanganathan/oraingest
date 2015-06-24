@@ -63,7 +63,7 @@ class WorkflowRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     end
     wf = self.workflows.select{|wf| wf.identifier.first == wf_id}.first
     wf.entries.build
-    wf.entries.last.status = Sufia.config.workflow_status[status]
+    wf.entries.last.status = status
     wf.entries.last.creator = creator
     if description.is_a?(Array)
       description = description.join('\n')
@@ -139,7 +139,7 @@ class Workflow
     if self.entries.empty?
       return nil
     else
-      selected_entries = self.entries.select{|e| e.status.first != "Draft" && e.status.first != "Submitted"}
+      selected_entries = self.entries.select{|e| e.status.first != Sufia.config.draft_status && e.status.first != Sufia.config.submitted_status}
       if selected_entries.empty?
         return nil
       else
@@ -151,7 +151,7 @@ class Workflow
   
   # The entry marking when the User submitted an item into workflow
   def submission_entry
-    self.entries.select{|e| e.status == ["Submitted"]}.first
+    self.entries.select{|e| e.status == [Sufia.config.submitted_status]}.first
   end
   
   # The date value from the esubmission_entry
@@ -168,7 +168,7 @@ class Workflow
   def to_solr(solr_doc)
     solr_doc[Solrizer.solr_name(self.identifier.first+"_status", :symbol)] = self.current_status 
     solr_doc[Solrizer.solr_name(self.identifier.first+"_current_reviewer_id", :symbol)] = self.current_reviewer_id
-    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.creator.first if (e.status.first != "Draft" && e.status.first != "Submitted") }.uniq.reject{|v| v.nil? || v.empty? }
+    solr_doc[Solrizer.solr_name(self.identifier.first+"_all_reviewer_ids", :symbol)] = self.entries.map{|e| e.creator.first if (e.status.first != Sufia.config.draft_status && e.status.first != Sufia.config.submitted_status) }.uniq.reject{|v| v.nil? || v.empty? }
     solr_doc[Solrizer.solr_name(self.identifier.first+"_all_email_threads", :symbol)] = self.emailThreads.map{|e| e.identifier.first }.uniq.reject{|v| v.nil? || v.empty? }
     unless self.date_submitted.nil?
       begin

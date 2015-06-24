@@ -10,9 +10,9 @@ class UpdatePublishRecordJob
       obj = Dataset.find(data['pid'])
     end
     if data['status']
-      obj.workflowMetadata.update_status('Published', data['msg'])
+      obj.workflowMetadata.update_status(Sufia.config.published_status, data['msg'])
     else
-      obj.workflowMetadata.update_status('System failure', data['msg'])
+      obj.workflowMetadata.update_status(Sufia.config.failure_status, data['msg'])
     end
     obj.save!
     if data['status'] && data['model'] == 'Dataset' && obj.doi_requested?

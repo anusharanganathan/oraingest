@@ -36,19 +36,19 @@ class WorkflowPublisher
     ans, msg2 = mint_and_check_doi
     msg = msg + msg2
     unless ans
-      status = "System failure"
+      status = Sufia.config.failure_status
     end
     #3 check minimum metadata
     ans, msg2 = check_minimum_metadata
     msg = msg + msg2
     unless ans
-      status = "System failure"
+      status = Sufia.config.failure_status
     end
     #4 Add record to publish workflow
-    unless status == "System failure"
+    unless status == Sufia.config.failure_status
       ans, msg2 = add_to_queue
       msg = msg + msg2
-      status = "System verified"
+      status = Sufia.config.verified_status
     end
     @parent_model.workflowMetadata.update_status(status, msg)
   end

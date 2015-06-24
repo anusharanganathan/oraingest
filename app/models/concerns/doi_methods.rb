@@ -23,7 +23,7 @@ module DoiMethods
     status = false
     if self.workflows.first && self.workflows.first.involves.any?
       self.workflows.first.involves.each do |event|
-        if event.include?("Register doi")
+        if event.include?(Sufia.config.doi_event)
           status = true
         end
       end
@@ -34,7 +34,7 @@ module DoiMethods
   def doi_registered?
     status = false
     if self.workflows.first && self.workflows.first.all_statuses
-      if self.workflows.first.all_statuses.include?("DOI registered")
+      if self.workflows.first.all_statuses.include?(Sufia.config.doi_status)
         status = true
       end
     end
