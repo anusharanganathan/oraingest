@@ -38,13 +38,14 @@ class ReviewerDashboardController < ApplicationController
     solr_parameters[:fq] << "active_fedora_model_ssi:Article OR active_fedora_model_ssi:Dataset"
   end
   
-  # Limits search results to exclude items whose Workflow status is "Draft" or "Approved"
+  # Limits search results to exclude items whose Workflow status is not in Sufia.config.review_dashboard_status
   # @param solr_parameters the current solr parameters
   # @param user_parameters the current user-subitted parameters
   def exclude_draft_and_approved solr_parameters, user_parameters
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << '-'+Solrizer.solr_name("MediatedSubmission_status", :symbol)+':Approved'
-    solr_parameters[:fq] << '-'+Solrizer.solr_name("MediatedSubmission_status", :symbol)+':Draft'
+    (Sufia.config.workflow_status - Sufia.config.review_dashboard_status).each do |s|
+      solr_parameters[:fq] << '-'+Solrizer.solr_name("MediatedSubmission_status", :symbol)+':'+s
+    end
   end
   
 end
