@@ -228,8 +228,12 @@ class ArticlesController < ApplicationController
 
   def process_file(file)
     #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
+    current_title = @article.title
     datastream_id = @article.mint_datastream_id()
     @article.add_file(file, datastream_id, file.original_filename)
+    unless @article.title == current_title
+      @article.title = current_title
+    end
     save_tries = 0
     begin
       @article.save!

@@ -200,7 +200,12 @@ class DatasetAgreementsController < ApplicationController
 
   def process_file(file)
     #Sufia::GenericFile::Actions.create_content(@dataset_agreement, file, file.original_filename, datastream_id, current_user)
+    current_title = @dataset_agreement.title
     @dataset_agreement.add_file(file, datastream_id, file.original_filename)
+    # Do not replace title with filename (if empty)
+    unless @dataset_agreement.title == current_title
+      @dataset_agreement.title = current_title
+    end
     save_tries = 0
     begin
       @dataset_agreement.save!
