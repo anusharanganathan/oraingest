@@ -55,7 +55,7 @@ module DoiMethods
       self.publication.build(args)
     end
     if self.publication[0].hasDocument.blank?
-      args = {'id' => "info:fedora/%s#publicationDocument" % d.id}
+      args = {'id' => "info:fedora/%s#publicationDocument" % self.id}
       self.publication[0].hasDocument.build(args)
     end
     self.publication[0].hasDocument[0].doi = doi_s

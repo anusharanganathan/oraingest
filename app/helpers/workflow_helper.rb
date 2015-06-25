@@ -11,7 +11,7 @@ module WorkflowHelper
     case document.submission_workflow_status
     when Sufia.config.published_status, Sufia.config.doi_status
       html_classes << "label-success"
-    when Sufia.config.draft_status, sufia.config.rejected_status, Sufia.config.referred_status
+    when Sufia.config.draft_status, Sufia.config.rejected_status, Sufia.config.referred_status
       html_classes << "label-important"
     else
       html_classes << "label-info"
