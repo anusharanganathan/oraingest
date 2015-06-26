@@ -212,7 +212,7 @@
         </div>
         <div class="form-nav-next">
           <div class="float-left">
-            <strong>Continue to Step 6</strong> - Funders and licences
+            <strong>Continue to Step 6</strong> - Funders, rights and licences
           </div>
           <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
         </div>
@@ -222,7 +222,7 @@
     <section class="form-step">
       <div class="content-box padding-0">
         <div class="content-box-header">
-          6. Funders and licences
+          6. Funders, rights and licences
         </div>
         <div class="padding-25 no-pad-top no-pad-bottom">
           <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @dataset.funding, :required => true } %>
@@ -235,10 +235,11 @@
 
       <div class="content-box padding-0">
         <div class="content-box-header expand-header">
-          <div class="space-right">License your data</div>
+          <div class="space-right">Rights and License for your data</div>
         </div>
         <div class="expand-content">
           <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
+          <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @dataset } %>
         </div>
       </div>
 
