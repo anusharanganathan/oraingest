@@ -174,6 +174,11 @@ class MetadataBuilder
         #TODO: Rather than assuming first workflow, select first workflow with identifier MediatedSubmission
         params[0][:id] = model.workflows.first.rdf_subject.to_s
       end
+      if params[0].has_key?(:involves) && params[0][:involves] == "false" && model.doi_requested?
+        params[0] = params[0].except(:involves)
+        events = model.workflows.first.involves.reject{|event| event.include?(Sufia.config.doi_event)}
+        model.workflows.first.involves = events
+      end
       if params[0].has_key?(:entries_attributes)
         # Validate entries is array
         params[0][:entries_attributes] = normalizeParams(params[0][:entries_attributes])

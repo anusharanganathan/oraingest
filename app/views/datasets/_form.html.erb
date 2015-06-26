@@ -54,7 +54,8 @@
             <%= render partial: "describe_extra_fields_edit", as: :dataset, :locals => { :f => f } %>
             <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @dataset.worktype } %>
             <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
-            <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :f_wf => f_wf, :publication => @dataset.publication, :wf => @wf, :doi_registered => @dataset.doi_registered? } %>
+            <%= render partial: 'shared/publication_activity/dataset_fields_edit', :locals => { :f => f, :f_wf => f_wf, :publication => @dataset.publication, 
+                :wf => @wf, :doi_registered => @dataset.doi_registered?, :currentStatus => @currentStatus } %>
         </div>
       </div>
 

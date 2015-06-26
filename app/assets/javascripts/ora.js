@@ -419,4 +419,5 @@ $(function() {
   fixTracker();
   expandPanel();
   $(document).on("scroll",fixTracker);
+  displayDoi();
 });

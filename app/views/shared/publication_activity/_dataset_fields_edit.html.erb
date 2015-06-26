@@ -43,21 +43,26 @@
       <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Year published" , :tipDescription => "Enter the year the data have been or will be published, i.e. made publicly available." } %>
     </div>
     
-    <% unless doi_registered %>
+    <% if !doi_registered && @files.any? %>
       <h4 class="padding-side-25">Register a DOI</h4>
       <div class="fieldset small">
         <%= hidden_field_tag(:doiShouder, Sufia.config.doi_credentials["shoulder"], :disabled=>true, :id=>"doiShoulder") %>
         <% if wf.involves.first && wf.involves.first.start_with?(Sufia.config.doi_event) %>
-          <% chval = wf.involves.first %>
-        <% else %>
           <% chval = Sufia.config.doi_event %>
+        <% else %>
+          <% chval = 'false' %>
         <% end %>
-        <label><%= f_wf.check_box :involves, {:value => wf.involves.first, :id => "workflow_submit_involves", data: {"progress" => "citation"}, :onchange => "displayDoi()" }, checked_value=chval, unchecked_value=nil %>
+        <%= f_wf.hidden_field :involves, :value => chval, :id => 'workflow_submit_involves_hidden' %>
+        <label><%= f_wf.check_box :involves, {:value =>chval, :id => "workflow_submit_involves", data: {"progress" => "citation"}, :onchange => "displayDoi()" }, checked_value=Sufia.config.doi_event, unchecked_value=nil %>
         <span></span>Yes, I would like a DOI registered for this dataset</label>
        <% desc = "Please select this option if you would like a <a href=\"https://www.datacite.org/\" target=\"_blank\">DOI (Digital Object Identifier)</a> registered for your dataset. <br/><br/>
           You will be notified of your DOI by the ORA review team after you have submitted your record. <br/><br/>
           You can use it to cite your data once the ORA-Data team have reviewed your deposit and published the catalogue record for your data online in ORA" %>
         <%= render partial: '/shared/tooltip', :locals => {:tipType => "citation" , :tipTitle => "Register DOI" , :tipDescription => desc } %>
+      </div>
+      <div class="small alert" id="doiNote" style="display:none; margin:15px;">
+        You will be notified of your DOI by the ORA review team after you have submitted your record.
+        You can use it to cite your data once the ORA-Data team have reviewed your deposit and published the catalogue record for your data online in ORA
       </div>
     <% end %>
 
@@ -66,6 +71,8 @@
         <div class="fieldset" id="dataset_doi_fieldset">
           <p class="small">DOI</p>
           <% if doi_registered %>
+            <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", :readonly => true, data: {"progress" => "citation"} %>
+          <% elsif Sufia.config.user_edit_status.include?(currentStatus) %>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", :readonly => true, data: {"progress" => "citation"} %>
           <% else %>
             <%= f_p2.text_field :doi, :value => p2.doi.first, :id => "dataset_doi", data: {"progress" => "citation"} %>
