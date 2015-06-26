@@ -209,7 +209,6 @@ Sufia.config do |config|
       'Funder' => RDF::ORA.funder,
       'Performer' => RDF::ORA.performer,
       'Principal Investigator' => RDF::ORA.principalInvestigator,
-      'Publisher' => RDF::DC.publisher,
       'Researcher' => RDF::ORA.researcher,
       'Reviewer' => RDF::ORA.reviewer,
       'Sponsor' => RDF::ORA.sponsor,
