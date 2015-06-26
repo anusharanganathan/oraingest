@@ -3,7 +3,7 @@
       <h4>Update workflow status from <%=currentStatus%></h4>
       <% wf.entries.build %>
       <%= f_wf.fields_for :entries, wf.entries.last do |f_wf_e| %>
-        <div class="fieldset small">
+        <div class="fieldset small" id="workflows_entries_status" >
           <label>Status</label>
           <% Sufia.config.next_workflow_status[currentStatus].each do |val| %>
             <label><%= f_wf_e.radio_button :status, val, data: {"progress" => "documentation"} %><span></span><%=val%></label>
@@ -11,18 +11,17 @@
           <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Status" , :tipDescription => "Select the status of the record based on your review" } %>
         </div>
 
-        <div class="assing-reviewer" style="display:none;">
-          <%# Only needs to be displayed for assigned status %>
+        <div id="assign-reviewer" style="display:none;">
           <div class="fieldset">
             <label>Assign to reviewer</label>
-            <%= f_wf_e.text_field :reviewer_id, :value => current_user.user_key, :id => "workflows_entires_reviewer_id", :readonly => true, data: {"progress" => "documentation"} %>
+            <%= f_wf_e.text_field :reviewer_id, :value => "", :id => "workflows_entries_reviewer_id", :disabled => true, data: {"progress" => "documentation"} %>
             <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Reviewer" , :tipDescription => "This should be autofilled with your SSO id. If it isn't, Add your SSO id here" } %>
           </div>
         </div>
 
         <div class="fieldset">
           <label>Comment on workflow status update</label>
-          <%= f_wf_e.text_area :description, :value => "", :id => "workflows_entires_description", data: {"progress" => "documentation"} %> 
+          <%= f_wf_e.text_area :description, :value => "", :id => "workflows_entries_description", data: {"progress" => "documentation"} %>
           <%= render partial: '/shared/tooltip', :locals => {:tipType => "documentation" , :tipTitle => "Comment on workflow status" , :tipDescription => "Add a comment, if needed, regarding the workflow status you have just selected." } %>
         </div>
       <% end %>

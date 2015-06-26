@@ -416,8 +416,24 @@ $(function() {
     }
   }
 
+  function assignReviewer() {
+  // Show text box for reviewer to assign to
+  $("#workflows_entries_status input[type='radio']").on("change",function(){
+    var val = $(this).val();
+    if (val == "Assigned") {
+      $("#assign-reviewer").css("display","block");
+      $("#workflows_entries_reviewer_id").removeAttr('disabled');
+    }
+    else {
+      $("#assign-reviewer").css("display","none");
+      $("#workflows_entries_reviewer_id").prop("disabled", true);
+    }
+  });
+  }
+
   fixTracker();
   expandPanel();
   $(document).on("scroll",fixTracker);
   displayDoi();
+  assignReviewer();
 });
