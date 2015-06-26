@@ -227,10 +227,10 @@ class ArticlesController < ApplicationController
   end
 
   def process_file(file)
-    #Sufia::GenericFile::Actions.create_content(@article, file, file.original_filename, datastream_id, current_user)
     current_title = @article.title
     datastream_id = @article.mint_datastream_id()
     @article.add_file(file, datastream_id, file.original_filename)
+    # Do not replace title with filename when empty
     unless @article.title == current_title
       @article.title = current_title
     end
@@ -292,15 +292,8 @@ class ArticlesController < ApplicationController
   end
 
   def add_metadata(article_params, redirect_field)
-    if !@article.workflows.nil? && !@article.workflows.first.entries.nil?
-      old_status = @article.workflows.first.current_status
-    else
-      old_status = nil
-    end
     MetadataBuilder.new(@article).build(article_params, contents, current_user.user_key)
-    if old_status != @article.workflows.first.current_status
-      WorkflowPublisher.new(@article).perform_action(current_user)
-    end
+    WorkflowPublisher.new(@article).perform_action(current_user)
     respond_to do |format|
       if @article.save
         if can? :review, @article

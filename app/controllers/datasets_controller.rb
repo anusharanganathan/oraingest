@@ -332,11 +332,6 @@ class DatasetsController < ApplicationController
   end
 
   def add_metadata(dataset_params, redirect_field)
-    if !@dataset.workflows.nil? && !@dataset.workflows.first.entries.nil?
-      old_status = @dataset.workflows.first.current_status
-    else
-      old_status = nil
-    end
     # find or create the dataset agreement, if included in the params
     if dataset_params.has_key?(:hasAgreement) or dataset_params.has_key?(:hasRelatedAgreement)
       @@dataset_agreement, created = add_agreement(dataset_params)
@@ -354,9 +349,7 @@ class DatasetsController < ApplicationController
     if @dataset_agreement
       @dataset.hasRelatedAgreement = @dataset_agreement
     end
-    if old_status != @dataset.workflows.first.current_status
-      WorkflowPublisher.new(@dataset).perform_action(current_user)
-    end
+    WorkflowPublisher.new(@dataset).perform_action(current_user)
     respond_to do |format|
       if @dataset.save
         format.html { redirect_to edit_dataset_path(@dataset), notice: 'Dataset was successfully updated.', flash: { redirect_field: redirect_field } }
