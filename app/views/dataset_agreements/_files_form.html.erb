@@ -8,6 +8,6 @@
     </div>
   <% end %>
   <%= render partial: 'shared/upload/script_templates', :locals => { :editpath => editpath } %>
-  <%= render partial: 'shared/upload/list_files' %>
+  <%= render partial: 'shared/upload/list_files', :locals => {:type => 'dataset agreement'} %>
 </div>
 

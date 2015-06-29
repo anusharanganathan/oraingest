@@ -1,9 +1,11 @@
 <% if !@files.empty? %>
   <div>
-    <% if @model=='article' %>
-      <p>You can choose to apply an embargo to your file(s) on the <i>'Archiving and access'</i> tab (Step 5).</p>
-    <% elsif @model=='dataset' %>
-      <p>You can choose to apply an embargo to your file(s) on the <i>'Data archiving and access'</i> tab (Step 5).</p>
+    <% unless type == 'article short' %>
+      <% if @model=='article' %>
+        <p>You can choose to apply an embargo to your file(s) on the <i>'Archiving and access'</i> tab (Step 5).</p>
+      <% elsif @model=='dataset' %>
+        <p>You can choose to apply an embargo to your file(s) on the <i>'Data archiving and access'</i> tab (Step 5).</p>
+      <% end %>
     <% end %>
     <table>
     <% @files.each do |file| %>
