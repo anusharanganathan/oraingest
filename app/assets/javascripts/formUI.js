@@ -94,6 +94,8 @@ function displayDoi() {
       $("#dataset_doi_fieldset").hide();
       $("#doiNote").show();
     }
+    $('#dataset_accessRights_embargoStatus_open_access').trigger('click');
+    $("#catalog_accessRights").hide();
   } else {
     $("#workflow_submit_involves_hidden").val('false');
     $("#dataset_doi_fieldset").show();
@@ -106,6 +108,9 @@ function displayDoi() {
        $("#dataset_doi").attr("value", '');
       }
     }
+    $('#catalog_accessRights').show();
+    $('#dataset_accessRights_embargoStatus_open_access').trigger('click');
+    $('#dataset_accessRights_embargoStatus_open_access').prop('checked', false);
   }
 }
 

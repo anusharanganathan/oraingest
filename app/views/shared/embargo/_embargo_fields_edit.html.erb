@@ -24,13 +24,14 @@
 <%= f.fields_for :accessRights do |f_a| %>
 
   <% panel_id = SecureRandom.uuid %>
-  <div class="fieldset">
-    <% if embargo_type == "metadata" %>
+  <% if embargo_type == "metadata" %>
+    <div class="fieldset" id="catalog_accessRights">
       <h4>Access conditions for the catalogue record</h4>
       <p class="small reqlabel">Can this ORA catalogue record be made freely available?</p>
-    <% else %>
+  <% else %>
+    <div class="fieldset">
       <p class="small">Can this file be made freely available?</p>
-    <% end %>
+  <% end %>
   
     <fieldset class="small-text">
       <% if embargo_type == "metadata" #Field required for catalogue record %>
