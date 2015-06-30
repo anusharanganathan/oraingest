@@ -56,7 +56,7 @@ class CatalogController < ApplicationController
     my_recent_publications
     #grab my recent publications
     my_recent_datasets
-    my_recent_theses
+    #my_recent_theses
   end
 
   def recent
@@ -91,12 +91,12 @@ class CatalogController < ApplicationController
     end
   end
 
-  def my_recent_theses
-    if user_signed_in?
-      (_, @recent_theses) = get_search_results(:q =>filter_mine_theses,
-                                               :sort=>sort_field, :rows=>5)
-    end
-  end
+  #def my_recent_theses
+  #  if user_signed_in?
+  #    (_, @recent_theses) = get_search_results(:q =>filter_mine_theses,
+  #                                             :sort=>sort_field, :rows=>5)
+  #  end
+  #end
 
   protected
 
@@ -129,9 +129,9 @@ class CatalogController < ApplicationController
     "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Dataset\""
   end
 
-  def filter_mine_theses
-    "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Thesis\""
-  end
+  #def filter_mine_theses
+  #  "{!lucene q.op=AND} #{depositor}:#{current_user.user_key} #{s_model}:\"info:fedora/afmodel:Thesis\""
+  #end
 
   def sort_field
     "#{Solrizer.solr_name('system_modified', :sortable)} desc"
