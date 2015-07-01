@@ -13,9 +13,3 @@
   <%= render :partial=>'/catalog/recent_datasets', :locals => {:recent_datasets=>@recent_datasets} %>
   <%= render :partial=>'/catalog/_action_partials/list_datasets' %>
 <% end %>
-<% content_for :column3 do %>
-    <h2><img src="/assets/ora/icons/details.svg" class="icon"/>Theses</h2>
-    <%= render partial: '/catalog/_action_partials/add_theses' %>
-    <%= render partial: '/catalog/recent_theses', locals: {recent_theses: @recent_theses} %>
-    <%= render partial: '/catalog/_action_partials/list_theses' %>
-<% end %>
