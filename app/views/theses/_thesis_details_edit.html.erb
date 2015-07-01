@@ -29,38 +29,3 @@
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Year printed on thesis" , :tipDescription => "TODO" } %>
 </div>
 
-<div class="fieldset">
-  <p class="small">Examiner</p>
-  <%= f.text_field :examinerRole, value: @thesis.examinerRole.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
-  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Examiner" , :tipDescription => "TODO" } %>
-</div>
-
-<div class="fieldset">
-  <p class="small">Examiner affiliation</p>
-  <%= f.text_field :examinerAffiliation, value: @thesis.examinerAffiliation.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
-  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Examiner affiliation" , :tipDescription => "TODO" } %>
-</div>
-
-
-<div class="fieldset">
-
-  <h4>Supervisors</h4>
-
-  <div class="field-repeater">
-    <ol>
-      <li>
-        <%= f.text_field :supervisor, multiple: true, value: @thesis.supervisor.first, id: "supervisor0", data: {"progress" => "discoverability"} %>
-        <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
-      </li>
-      <% @thesis.supervisor.from(1).each_with_index do |s, index | %>
-          <li>
-            <%= f.text_field :supervisor, multiple: true, value: s, id: "supervisor#{index+1}", data: {"progress" => "discoverability"} %>
-            <a href="#" class="remove-field small">Remove<span class="icon icon-remove"></span></a>
-          </li>
-    <% end %>
-    </ol>
-    <a href="#" class="add-field">Add another supervisor</a>
-  </div>
-  <%= render partial: '/shared/tooltip', locals: {:tipType => "discoverability" , :tipTitle => "Supervisor" , :tipDescription => "TODO" } %>
-</div>
-

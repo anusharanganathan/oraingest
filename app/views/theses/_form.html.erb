@@ -25,9 +25,24 @@
 </section>
 
 <%= form_for @thesis, :html => {:id => "new_record_fields", :class => "ora-validate-form"} do |f| %>
-    <%= hidden_field_tag(:pid, @pid) %>
-    <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
+  <%= hidden_field_tag(:pid, @pid) %>
+  <%= hidden_field_tag(:redirect_field, flash[:redirect_field]) %>
 
+  <% unless @thesis.workflows.first.nil? %>
+    <% @wf = @thesis.workflows.first %>
+    <% @wf_id = @wf.rdf_subject.to_s %>
+    <% @currentStatus = @wf.current_status %>
+  <% else %>
+    <% @thesis.workflows.build %>
+    <% @wf = @thesis.workflows.first %>
+    <% @wf_id = nil %>
+    <% @currentStatus = Sufia.config.draft_status %>
+  <% end %>
+
+  <%= f.fields_for :workflows, @wf do |f_wf| %>
+    <% unless @wf_id.nil? %>
+      <%= f_wf.hidden_field :id, :value => @wf_id, :id => "workflow_submit_id" %>
+    <% end %>
 
     <section class="form-step">
       <div class="content-box padding-0">
@@ -36,16 +51,17 @@
         </div>
         <div class="padding-0">
           <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @thesis.worktype } %>
-          <%= render partial: "describe_fields_edit", :locals => { :f => f } %>
+          <%= render partial: "describe_fields_edit", as: :article, :locals => { :f => f } %>
+          <%= render partial: "thesis_details_edit", as: :thesis, :locals => { :f => f } %>
         </div>
       </div>
 
       <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
-      <p>Enhance your deposit by making your publication more discoverable via search engines.</p>
+      <p>Enhance your deposit by making your thesis more discoverable via search engines.</p>
 
       <div class="content-box padding-0">
         <div class="content-box-header expand-header">
-          <div class="space-right">Add subject, keywords, and language information to your publication</div>
+          <div class="space-right">Add subject, keywords, and language information to your thesis</div>
         </div>
         <div class="expand-content">
           <%= render partial: "shared/mads_subject_fields_edit", :locals => { :f => f, :subject => @thesis.subject } %>
@@ -68,7 +84,7 @@
         </div>
         <div class="form-nav-next">
           <div class="float-left">
-            <strong>Continue to Step 3</strong> - About your thesis
+            <strong>Continue to Step 3</strong> - About you
           </div>
           <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
         </div>
@@ -80,31 +96,7 @@
     <section class="form-step">
       <div class="content-box padding-0">
         <div class="content-box-header">
-          3. About your thesis
-        </div>
-        <div class="padding-0">
-          <%= render partial: "thesis_details_edit", as: :thesis, :locals => { :f => f } %>
-        </div>
-      </div>
-
-      <nav class="form-nav">
-        <div class="form-nav-prev">
-          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
-        </div>
-        <div class="form-nav-next">
-          <div class="float-left">
-            <strong>Continue to Step 4</strong> - About you
-          </div>
-          <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
-        </div>
-      </nav>
-
-    </section>
-
-    <section class="form-step">
-      <div class="content-box padding-0">
-        <div class="content-box-header">
-          4. About you
+          3. About you
         </div>
         <div class="padding-0">
           <%= render partial: 'shared/creation_activity_fields_edit', :locals => { :f => f, :creation => @thesis.creation, :label => "creator", :required => true } %>
@@ -117,7 +109,7 @@
         </div>
         <div class="form-nav-next">
           <div class="float-left">
-            <strong>Continue to Step 5</strong> - Related publications
+            <strong>Continue to Step 4</strong> - Related publications
           </div>
           <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
         </div>
@@ -129,7 +121,7 @@
     <section class="form-step">
       <div class="content-box padding-0">
         <div class="content-box-header">
-          5. Related publications
+          4. Related publications
         </div>
         <div class="padding-0">
           <%= render partial: 'shared/relation_fields_edit', :locals => { :f => f, :qualifiedRelation => @thesis.qualifiedRelation } %>
@@ -142,7 +134,7 @@
         </div>
         <div class="form-nav-next">
           <div class="float-left">
-            <strong>Continue to Step 6</strong> - Making your thesis available
+            <strong>Continue to Step 5</strong> - Making your thesis available
           </div>
           <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
         </div>
@@ -150,10 +142,11 @@
 
     </section>
 
+
     <section class="form-step">
       <div class="content-box padding-0">
         <div class="content-box-header">
-          6. Making your thesis available
+          5. Making your thesis available
         </div>
         <div class="padding-25 no-pad-top no-pad-bottom">
           <%= render partial: "admin_fields_edit", :locals => { :f => f, :thesis => @thesis } %>
@@ -169,7 +162,7 @@
         <% if can? :review, :all %>
             <div class="form-nav-next">
               <div class="float-left">
-                <strong>Continue to Step 7</strong> - Review workflow
+                <strong>Continue to Step 6</strong> - Funders, rights and licences
               </div>
               <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
             </div>
@@ -177,6 +170,48 @@
       </nav>
 
     </section>
+
+
+    <section class="form-step">
+      <div class="content-box padding-0">
+        <div class="content-box-header">
+          6. Funders, rights and licences
+        </div>
+        <div class="padding-25 no-pad-top no-pad-bottom">
+          <%= render partial: 'shared/funding_activity_fields_edit', :locals => { :f => f, :funding => @thesis.funding, :required => false } %>
+        </div>
+
+      </div>
+
+      <h2 class="blue-text" style="margin-top: 30px;">Optional fields</h2>
+      <p>Enhance your deposit by making your thesis more discoverable via search engines.</p>
+
+      <div class="content-box padding-0">
+        <div class="content-box-header expand-header">
+          <div class="space-right">Rights and Licence</div>
+        </div>
+        <div class="expand-content">
+          <%= render partial: "shared/license_activity_fields_edit", :locals => { :f => f, :article => @thesis } %>
+          <%= render partial: "shared/rights_activity_fields_edit", :locals => { :f => f, :article => @thesis } %>
+        </div>
+      </div>
+
+      <nav class="form-nav">
+        <div class="form-nav-prev">
+          <a href="#" class="button button-back light-blue" data-action="prev_step">Back</a>
+        </div>
+        <% if can? :review, :all %>
+          <div class="form-nav-next">
+            <div class="float-left">
+              <strong>Continue to Step 7</strong> - Review workflow
+            </div>
+            <a href="#" class="button button-arrow light-blue float-right" data-action="next_step">Next step</a>
+          </div>
+        <% end %>
+      </nav>
+
+    </section>
+
 
     <% if can? :review, :all %>
         <section class="form-step">
@@ -226,4 +261,6 @@
         <% end %>
       </div>
     </nav>
-<% end %>
+
+  <% end #fields_for workflows %>
+<% end #form %>

@@ -17,13 +17,13 @@
 <div class="fieldset">
   <fieldset class="small-text">
     <label panel="dataset-third-party">
-      <%= f.radio_button :thirdPartyCopyright, "yes", checked: thesis.thirdPartyCopyright.first == "yes", class: "fundingAward" %>
+      <%= f.radio_button :hasThirdPartyCopyrightMaterial, "yes", checked: thesis.hasThirdPartyCopyrightMaterial.first == "yes", class: "fundingAward" %>
       <span></span>Yes
     </label>
     <label>
-      <%= f.radio_button :thirdPartyCopyright, "no", checked: thesis.thirdPartyCopyright.first == "no", class: "fundingAward" %>
+      <%= f.radio_button :hasThirdPartyCopyrightMaterial, "no", checked: thesis.hasThirdPartyCopyrightMaterial.first == "no", class: "fundingAward" %>
       <span></span>No
     </label>
   </fieldset>
-  <%= render partial: '/shared/tooltip', locals: {:tipType => "documentation" , :tipTitle => "Third party copyright" , :tipDescription => "TODO" } %>
+  <%= render partial: '/shared/tooltip', locals: {:tipType => "documentation" , :tipTitle => "Third party copyright material" , :tipDescription => "TODO" } %>
 </div>
