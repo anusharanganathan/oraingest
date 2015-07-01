@@ -220,7 +220,7 @@
               7. Review workflow
             </div>
             <div class="padding-25 no-pad-top no-pad-bottom">
-              <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :article => @thesis } %>
+              <%= render partial: 'shared/workflow_edit', :locals => { :f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus } %>
             </div>
           </div>
 
@@ -254,7 +254,7 @@
       <div class="form-nav-next" style="text-align: right">
         <% unless can? :review, :all %>
             <%= f.submit "Save", class: "button light-blue", :onclick => "setStatus(\"workflow_submit_entries_status\", \"default\")", data: {"submit-without-validation" => true} %>
-            <%= render partial: "shared/workflow_submit", :locals => {:f => f, :article => @thesis, :validate => true} %>
+            <%= render partial: "shared/workflow_submit", :locals => {:f => f, :f_wf => f_wf, :wf => @wf, :wf_id => @wf_id, :currentStatus => @currentStatus, :validate => true} %>
         <% else %>
             <%= f.submit "Save", class: "button light-blue", data: {"submit-without-validation" => true} %>
             <%= f.submit "Check mandatory fields and Save", class: "button light-blue" %>
