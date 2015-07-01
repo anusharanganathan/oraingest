@@ -9,7 +9,7 @@
 
     <div class="padding-0">
       <div class="padding-25 no-pad-bottom">
-        <%= render partial: 'shared/upload/list_files' %>
+        <%= render partial: 'shared/upload/list_files', :locals => {:type => 'article short'} %>
       </div>
     </div>
   </div>
@@ -53,6 +53,7 @@
           <%= render partial: "shared/work_type_fields_edit", :locals => { :f => f, :worktype => @thesis.worktype } %>
           <%= render partial: "describe_fields_edit", as: :article, :locals => { :f => f } %>
           <%= render partial: "thesis_details_edit", as: :thesis, :locals => { :f => f } %>
+          <%= render partial: 'shared/publication_activity/thesis_fields_edit', :locals => { :f => f, :publication => @thesis.publication } %>
         </div>
       </div>
 

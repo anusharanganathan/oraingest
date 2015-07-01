@@ -1,0 +1,21 @@
+<% if publication.empty? %>
+  <% publication.build %>
+<% end %>
+<% publication.each do |p| %>
+  <%= f.fields_for :publication, p do |f_p| %>
+    <% if p.hasDocument.empty? %>
+      <% p.hasDocument.build %>
+    <% end %>
+    <% p.hasDocument.each do |p2| %>
+      <% if p2.journal.empty? %>
+        <% p2.journal.build %>
+      <% end %>
+      <%= f_p.fields_for :hasDocument, p2 do |f_p2| %>
+        <div class="fieldset">
+          <%= f_p2.label :doi, "DOI", :class=>"control-label" %>
+          <%= f_p2.text_field :doi, :value => p2.doi.first %>
+        </div>
+      <% end #fields for each document %>
+    <% end #each document %>
+  <% end #fields for each publication %>
+<% end #each publication %>
