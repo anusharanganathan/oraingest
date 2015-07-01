@@ -230,7 +230,8 @@ Sufia.config do |config|
       'Author' => RDF::ORA.author,
       'Supervisor' => RDF::ORA.supervisor,
       'Examiner' => RDF::ORA.examiner,
-      'Contributor' => RDF::DC.contributor
+      'Contributor' => RDF::DC.contributor,
+      'Copyright holder' => RDF::ORA.copyrightHolder,
     },
     'dataset' => {
       'Adapter' => RDF::ORA.adapter,
