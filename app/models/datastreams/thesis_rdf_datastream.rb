@@ -7,11 +7,12 @@ require 'fields/mads_subject'
 require 'fields/work_type'
 require 'fields/rights_activity'
 require 'fields/creation_activity'
+require 'fields/funding_activity'
 require 'fields/publication_activity'
 
 class ThesisRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
-  attr_accessor :title, :subtitle, :abstract, :subject, :keyword, :worktype, :medium, :language, :dateCopyrighted, :creation, :publication
+  attr_accessor :title, :subtitle, :abstract, :subject, :keyword, :worktype, :medium, :language, :dateCopyrighted, :rightsHolder, :rights, :rightsActivity, :license, :creation, :publication, :funding
 
   rdf_type rdf_type RDF::PROV.Entity
   map_predicates do |map|
@@ -24,19 +25,20 @@ class ThesisRdfDatastream < ActiveFedora::NtriplesRDFDatastream
 
     map.medium(:in => RDF::DC)
     map.language(:in => RDF::DC, class_name:"MadsLanguage")
-
+    # -- rights activity --
+    map.license(:in => RDF::DC, class_name:"LicenseStatement")
     map.dateCopyrighted(:in => RDF::DC)
+    map.rightsHolder(:in => RDF::DC)
+    map.rights(:in => RDF::DC, class_name:"RightsStatement")
+    map.rightsActivity(:in => RDF::PROV, :to => "hadActivity", class_name:"RightsActivity")
     map.creation(:to => "hadCreationActivity", :in => RDF::ORA, class_name:"CreationActivity")
-
+    map.funding(:to => "isOutputOf", :in => RDF::FRAPO, class_name:"FundingActivity")
     map.publication(:to => "hadPublicationActivity", :in => RDF::ORA, class_name:"PublicationActivity")
 
     map.degreeName(:in => RDF::ORA)
     map.degreeType(:in => RDF::ORA)
     map.awardingBody(:in => RDF::ORA)
     map.dateOfAward(:in => RDF::ORA)
-    map.examinerRole(:in => RDF::ORA)
-    map.examinerAffiliation(:in => RDF::ORA)
-    map.supervisor(:in => RDF::ORA)
   end
 
   accepts_nested_attributes_for :language
@@ -51,9 +53,8 @@ class ThesisRdfDatastream < ActiveFedora::NtriplesRDFDatastream
     solr_doc[Solrizer.solr_name("desc_metadata__abstract", :stored_searchable)] = self.abstract
     solr_doc[Solrizer.solr_name("desc_metadata__keyword", :stored_searchable)] = self.keyword
     solr_doc[Solrizer.solr_name("desc_metadata__medium", :stored_searchable)] = self.medium
-    # solr_doc[Solrizer.solr_name("desc_metadata__publicationStatus", :stored_searchable)] = self.publicationStatus
-    # solr_doc[Solrizer.solr_name("desc_metadata__reviewStatus", :stored_searchable)] = self.reviewStatus
     solr_doc[Solrizer.solr_name("desc_metadata__dateCopyrighted", :stored_searchable)] = self.dateCopyrighted
+    solr_doc[Solrizer.solr_name("desc_metadata__rightsHolder", :stored_searchable)] = self.rightsHolder
     # solr_doc[Solrizer.solr_name("desc_metadata__rightsHolder", :stored_searchable)] = self.rightsHolder
     # solr_doc[Solrizer.solr_name("desc_metadata__rightsHolderGroup", :stored_searchable)] = self.rightsHolderGroup
 
@@ -86,17 +87,17 @@ class ThesisRdfDatastream < ActiveFedora::NtriplesRDFDatastream
       c.to_solr(solr_doc)
     end
     # Index each license individually
-    # self.license.each do |l|
-    #   l.to_solr(solr_doc)
-    # end
+    self.license.each do |l|
+      l.to_solr(solr_doc)
+    end
     # Index each publication individually
     self.publication.each do |p|
       p.to_solr(solr_doc)
     end
     # Index each funding individually
-    # self.funding.each do |f|
-    #   f.to_solr(solr_doc)
-    # end
+    self.funding.each do |f|
+      f.to_solr(solr_doc)
+    end
     solr_doc
   end
 end

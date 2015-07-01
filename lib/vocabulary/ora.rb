@@ -45,8 +45,6 @@ module RDF
     property :isPartOfSeries
     # workflow
     property :reviewStatus
-    # Thesis
-    property :thesisDegreeLevel
     # roles
     property :adapter
     property :author
@@ -78,10 +76,7 @@ module RDF
     property :degreeType
     property :awardingBody
     property :dateOfAward
-    property :examinerRole
-    property :examinerAffiliation
-    property :supervisor
     property :dispensationFromConsultation
-    property :thirdPartyCopyright
+    property :hasThirdPartyCopyrightMaterial
   end
 end
