@@ -1,6 +1,9 @@
 <% if @model == "dataset_agreement" %>
   <% label = "dataset agreement" %>
   <% plural = "dataset agreements" %>
+<% elsif @model == 'article' || @model == 'thesis' %>
+  <% label = @model %>
+  <% plural = "publications" %>
 <% else %>
   <% label = @model %>
   <% plural = @model.pluralize %>

@@ -1,4 +1,11 @@
-<a href="<%= path[:list] %>" class="button button-small light-blue">Browse all records <img src="/assets/ora/icons/read.svg"/ class="icon icon-read"></a>
+<% if @model == "dataset_agreement" %>
+  <% plural = "dataset agreements" %>
+<% elsif @model == 'article' || @model == 'thesis' %>
+  <% plural = "publications" %>
+<% else %>
+  <% plural = @model.pluralize %>
+<% end %>
+<a href="<%= path[:list] %>" class="button button-small light-blue">My <%=plural%> <img src="/assets/ora/icons/read.svg"/ class="icon icon-read"></a>
 <% if can? :review, :all %>
   <% if Sufia.config.next_workflow_status.keys.include?(current_status) %>
     <a href="<%= path[:edit] %>" class="button button-small light-blue">Edit <img src="/assets/ora/icons/edit.svg" class="icon icon-edit"/></a>
