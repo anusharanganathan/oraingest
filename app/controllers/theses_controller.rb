@@ -33,9 +33,9 @@ class ThesesController < ApplicationController
       redirect_to action: 'show', alert: "You do not have sufficient privileges to modify this thesis record"
       #redirect_to action: 'show'
     elsif exception.action == :show
-      redirect_to theses_path, alert: "You do not have sufficient privileges to read this thesis record"
+      redirect_to publications_path, alert: "You do not have sufficient privileges to read this thesis record"
     elsif current_user and current_user.persisted?
-      redirect_to theses_path, alert: exception.message
+      redirect_to publications_path, alert: exception.message
     else
       session["user_return_to"] = request.url
       redirect_to new_user_session_url, :alert => exception.message
@@ -114,7 +114,7 @@ class ThesesController < ApplicationController
     end
     @thesis.destroy
     respond_to do |format|
-      format.html { redirect_to theses_path }
+      format.html { redirect_to publications_path }
       format.json { head :no_content }
     end
   end

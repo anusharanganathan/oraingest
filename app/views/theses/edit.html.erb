@@ -16,7 +16,7 @@
 </div>
 <div class="gutter-container">
 
-  <% path = { :new => new_thesis_path, :show => thesis_path(@pid), :edit => edit_thesis_path(@pid), :list => theses_path } %>
+  <% path = { :new => new_thesis_path, :show => thesis_path(@pid), :edit => edit_thesis_path(@pid), :list => publications_path } %>
   <%= render partial: "shared/actions/edit", locals: { :path => path } %>
 
   <div class="col col3of4">

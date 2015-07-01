@@ -14,9 +14,9 @@ class ThesisFilesController < ApplicationController
     if exception.action != :show
       redirect_to action: 'show', alert: "You do not have sufficient privileges to delete this file"
     elsif exception.action == :show
-      redirect_to action: theses_path, alert: "You do not have sufficient privileges to view or download this file"
+      redirect_to action: publications_path, alert: "You do not have sufficient privileges to view or download this file"
     elsif current_user and current_user.persisted?
-      redirect_to action: theses_path, alert: exception.message
+      redirect_to action: publications_path, alert: exception.message
     else
       session["user_return_to"] = request.url
       redirect_to new_user_session_url, :alert => exception.message
