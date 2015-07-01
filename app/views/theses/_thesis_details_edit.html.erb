@@ -22,10 +22,3 @@
   <%= f.text_field :dateOfAward, value: @thesis.dateOfAward.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
   <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Year leave to supplicate granted" , :tipDescription => "TODO" } %>
 </div>
-
-<div class="fieldset">
-  <p class="small">Year printed on thesis</p>
-  <%= f.text_field :dateCopyrighted, value: @thesis.dateCopyrighted.first, style: 'width: 60%', data: {"progress" => "discoverability"} %>
-  <%= render partial: '/shared/tooltip', :locals => {:tipType => "discoverability" , :tipTitle => "Year printed on thesis" , :tipDescription => "TODO" } %>
-</div>
-
