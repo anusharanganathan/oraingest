@@ -103,15 +103,27 @@ Sufia.config do |config|
       'MIT licence' => 'MIT licence',
       'Bespoke licence' => 'Bespoke licence'
     },
-    'dataset' => {
-      'ODC Attribution for data/databases (ODC-By)' => 'ODC Attribution for data/databases (ODC-By)',
-      'ODC Attribution Share-Alike for data/databases (ODC-ODbL)' => 'ODC Attribution Share-Alike for data/databases (ODC-ODbL)',
-      'ODC Public Domain for data/databases (PDDL)' => 'ODC Public Domain for data/databases (PDDL)',
-      'Open Government Licence (OGL)' => 'Open Government Licence (OGL)',
-      'OGL non commercial' => 'OGL non commercial',
-      'CC0 (CC Zero)' => 'CC0 (CC Zero)',
-      'Bespoke licence' => 'Bespoke licence'
-    }
+    "dataset" => {
+      "ODC Attribution for data/databases (ODC-By)" => "ODC Attribution for data/databases (ODC-By)",
+      "ODC Attribution Share-Alike for data/databases (ODC-ODbL)" => "ODC Attribution Share-Alike for data/databases (ODC-ODbL)",
+      "ODC Public Domain for data/databases (PDDL)" => "ODC Public Domain for data/databases (PDDL)",
+      "Open Government Licence (OGL)" => "Open Government Licence (OGL)",
+      "OGL non commercial" => "OGL non commercial",
+      "CC0 (CC Zero)" => "CC0 (CC Zero)",
+      "Bespoke licence" => "Bespoke licence"
+    },
+    "thesis" => {
+      "CC Attribution (CC BY 2.5)" => "CC Attribution (CC BY 2.5)",
+      "CC Attribution-NoDerivs (CC BY-ND 2.5)" => "CC Attribution-NoDerivs (CC BY-ND 2.5)",
+      "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)" => "CC Attribution-NonCommercial-NoDerivs (CC BY-NC-ND 2.5)",
+      "CC Attribution-NonCommercial (CC BY-NC 2.5)" => "CC Attribution-NonCommercial (CC BY-NC 2.5)",
+      "CC Attribution-NonCommercial-ShareAlike (CC BY-NC-SA 2.5)" => "CC Attribution-NonCommercial-ShareAlike (CC BY-NC-SA 2.5)",
+      "CC Attribution-ShareAlike (CC BY-SA 2.5)" => "CC Attribution-ShareAlike (CC BY-SA 2.5)",
+      "GPL v2" => "GPL v2",
+      "LGPL v2.1" => "LGPL v2.1",
+      "MIT licence" => "MIT licence",
+      "Bespoke licence" => "Bespoke licence"
+    },
   }
 
   config.license_urls = {
@@ -139,6 +151,12 @@ Sufia.config do |config|
       'Rights agreement with publisher' => 'Rights agreement with publisher',
       'Personal correspondence to serve as agreement' => 'Personal correspondence to serve as agreement',
       "Publisher's APC or article charge request form" => "Publisher's APC or article charge request form"
+    },
+    "thesis" => {
+      "Content" => "Content",
+      "License agreement" => "License agreement",
+      "Rights agreement with publisher" => "Rights agreement with publisher",
+      "Copyright clearance letter" => "Copyright clearance letter"
     }
   }
 
@@ -169,26 +187,36 @@ Sufia.config do |config|
   ]
 
   config.embargo_reasons = {
-    'article' => {
-      'Commercial confidentiality' => 'Commercial confidentiality',
-      'Publication pending' => 'Publication pending', 
-      'Conditional access only' => 'Conditional access only',
-      'Copyright or other intellectual property restrictions'  => 'Copyright or other intellectual property restrictions',
-      'Ethical conditions or agreements'  => 'Ethical conditions or agreements',
-      'Legal conditions or agreements'  => 'Legal conditions or agreements',
-      'National security issues'  => 'National security issues',
-      'Patent pending'  => 'Patent pending'
+    "article" => {
+      "Commercial confidentiality" => "Commercial confidentiality",
+      "Publication pending" => "Publication pending",
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
+      "Patent pending"  => "Patent pending"
     },
-    'dataset' => {
-      'Commercial confidentiality' => 'Commercial confidentiality',
-      'Publication pending' => 'Publication pending', 
-      'Conditional access only' => 'Conditional access only',
-      'Copyright or other intellectual property restrictions'  => 'Copyright or other intellectual property restrictions',
-      'Ethical conditions or agreements'  => 'Ethical conditions or agreements',
-      'Legal conditions or agreements'  => 'Legal conditions or agreements',
-      'National security issues'  => 'National security issues',
-      'Patent pending'  => 'Patent pending'
-    }
+    "dataset" => {
+      "Commercial confidentiality" => "Commercial confidentiality",
+      "Publication pending" => "Publication pending", 
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
+      "Patent pending"  => "Patent pending"
+    },
+    "thesis" => {
+      "Commercial confidentiality" => "Commercial confidentiality",
+      "Publication pending" => "Publication pending",
+      "Conditional access only" => "Conditional access only",
+      "Copyright or other intellectual property restrictions"  => "Copyright or other intellectual property restrictions",
+      "Ethical conditions or agreements"  => "Ethical conditions or agreements",
+      "Legal conditions or agreements"  => "Legal conditions or agreements",
+      "National security issues"  => "National security issues",
+      "Patent pending"  => "Patent pending"
+    },
   }
 
   config.role_types = {
@@ -379,8 +407,15 @@ Sufia.config do |config|
   }
 
   config.thesis_degree_types = {
-      'Degree type #1' => 'Degree type #1',
-      'Degree type #2' => 'Degree type #2'
+      'DPhil' => 'DPhil',
+      'MSc' => 'MSc',
+      'MSc by Research' => 'MSc by Research',
+      'MPhil' => 'MPhil',
+      'BPhil' => 'BPhil',
+      'M.St.' => 'M.St.',
+      'MLitt' => 'MLitt',
+      'BLitt' => 'BLitt',
+      'Bachelor of Divinity (B.D.)' => 'Bachelor of Divinity (B.D.)'
   }
 
   # Map hostnames onto Google Analytics tracking IDs
