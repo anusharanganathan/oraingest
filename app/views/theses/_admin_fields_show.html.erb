@@ -1,0 +1,15 @@
+<% if (!thesis.dispensationFromConsultation.empty? && !thesis.dispensationFromConsultation[0].empty?) || (!thesis.hasThirdPartyCopyrightMaterial.empty? && !thesis.hasThirdPartyCopyrightMaterial[0].empty?) %>
+<div class="accordian">
+  <div class="accordian-header">Administration details</div>
+  <div class="accordian-content">
+    <% if !thesis.dispensationFromConsultation.empty? && !thesis.dispensationFromConsultation.first.empty? %>
+      <h6>Has dispensation from consultation been applied for:</h6>
+      <p><%= thesis.dispensationFromConsultation.first %></p>
+    <% end %>
+    <% if !thesis.hasThirdPartyCopyrightMaterial.empty? && !thesis.hasThirdPartyCopyrightMaterial.first.empty? %>
+      <h6>Does the thesis contain 3rd party copyright material:</h6>
+      <p><%= thesis.hasThirdPartyCopyrightMaterial.first %></p>
+    <% end %>
+  </div>
+</div>
+<% end %>
