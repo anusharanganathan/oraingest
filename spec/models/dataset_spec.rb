@@ -56,6 +56,10 @@ describe Dataset do
       @dataset = Dataset.new
     end
 
+    after do
+      @dataset.delete
+    end
+
     it 'initializes the submission workflow' do
       @dataset.save
       expect(@dataset.workflows).not_to be_empty

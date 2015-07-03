@@ -27,7 +27,7 @@ module Qa::Authorities
       q.split(" ").each do |word|
         query.push('%s:%s'% [search_field, word])
       end
-      query.push('cud\:cas\:oxford_email_text:*')
+      #query.push('cud\:cas\:oxford_email_text:*')
       query = query.join(" AND ")
       query = URI.escape(query)
       return_fields="cud:cas:fullname,cud:cas:lastname,cud:cas:firstname,cud:cas:oxford_email,cud:cas:sso_username,cud:cas:current_affiliation"

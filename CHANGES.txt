@@ -49,6 +49,7 @@ Changelog
 - Updated helper text
 - List of roles for data steward expanded
 - Removed the form fill tracker
+- Disambiguate user and admin file sizes
 
 1.1
 ------------------

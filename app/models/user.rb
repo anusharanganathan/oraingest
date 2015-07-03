@@ -34,22 +34,25 @@ class User < ActiveRecord::Base
     return nil
   end
 
-  def display_name
-    if self.user_info
-      if self.user_info['firstname'] and self.user_info['lastname']
-        return "#{self.user_info['firstname']} #{self.user_info['lastname']}"
-      elsif self.user_info['lastname']
-        return "#{self.user_info['lastname']}"
-      elsif self.user_info['firstname']
-        return "#{self.user_info['firstname']}"
+  def display_name(user_info=nil)
+    # Passing in user_info as a parameter rather than calling self.user_info to minimie calls to CUD.
+    # NOTE: consequence of this is that sufia user model will display user key as name
+    if user_info
+      if user_info.fetch('firstname', nil) and user_info.fetch('lastname', nil)
+        return "#{user_info['firstname']} #{user_info['lastname']}"
+      elsif user_info.fetch('lastname', nil)
+        return "#{user_info['lastname']}"
+      elsif user_info.fetch('firstname', nil)
+        return "#{user_info['firstname']}"
       end
     end
     return nil
   end
 
-  def oxford_email
-    if self.user_info
-      return self.user_info['oxford_email']
+  def oxford_email(user_info=nil)
+    # Passing in user_info as a parameter rather than calling self.user_info to minimie calls to CUD.
+    if user_info and user_info.fetch('oxford_email', nil)
+      return user_info['oxford_email']
     end
     return nil
   end

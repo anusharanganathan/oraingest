@@ -11,16 +11,16 @@ class Databank
   #  }
   # TODO:- Check imputs are valid (e.g. valid names, file exists, etc)
 
-  def initialize(host, username='', password='')
+  def initialize(host, username='', password='', timeout=nil)
     # Initiate the connection with the databank <host>. 
     # Optionally, also specify <username> and <password>
     if host.end_with?('/')
       host = host[0...-1]
     end
     if host.start_with?("http://")
-      @resource = RestClient::Resource.new(host, :user => username, :password => password)
+      @resource = RestClient::Resource.new(host, :user => username, :password => password, :timeout => timeout)
     elsif host.start_with?("https://")
-      @resource = RestClient::Resource.new(host, :user => username, :password => password, :ssl_version => 'TLSv1')
+      @resource = RestClient::Resource.new(host, :user => username, :password => password, :ssl_version => 'TLSv1', :timeout => timeout)
     end
     @host = host
   end
@@ -30,10 +30,12 @@ class Databank
     begin
       data = @resource['/silos'].get(:accept => 'application/json')
       #data.headers
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, JSON.parse(data.body))
+    return create_response(data.code, data.description, JSON.parse(data.body))
   end
 
   def createSilo(silo, attributes={})
@@ -49,19 +51,23 @@ class Databank
     end
     begin
       data = @resource['/admin'].post(payload, {:accept => 'application/json'})
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def deleteSilo(silo)
     begin
       data = @resource["/#{silo}/admin"].delete
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def getDatasets(silo)
@@ -69,10 +75,12 @@ class Databank
     # Only the first 100...
     begin
       data = @resource["/#{silo}"].get(:accept => 'application/json')
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, JSON.parse(data.body))
+    return create_response(data.code, data.description, JSON.parse(data.body))
   end
 
   def createDataset(silo, id, label=nil, embargoed="true", embargoed_until=nil)
@@ -98,10 +106,12 @@ class Databank
 
     begin
       data = @resource["#{silo}/datasets"].post(payload, {:accept => 'application/json'})
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def getDataset(silo, dataset)
@@ -109,19 +119,23 @@ class Databank
     # Only the first 100...
     begin
       data = @resource["/#{silo}/datasets/#{dataset}"].get(:accept => 'application/json')
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, JSON.parse(data.body))
+    return create_response(data.code, data.description, JSON.parse(data.body))
   end
 
   def deleteDataset(silo, dataset)
     begin
       data = @resource["/#{silo}/datasets/#{dataset}"].delete
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def uploadFile(silo, dataset, filepath, filename=nil)
@@ -131,19 +145,23 @@ class Databank
     files = {:file => File.new(filepath, 'rb'), :filename => filename}
     begin
       data = @resource["/#{silo}/datasets/#{dataset}"].post(files, :accept => 'application/json')
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def getFile(silo, dataset, filename)
     begin
       data = @resource["/#{silo}/datasets/#{dataset}/#{filename}"].get
-    rescue => e
-      return create_response(e.response, nil)
+    rescue RestClient::Exception => e
+      return create_response(e.response.code, e.response.description, nil)
+    #rescue => e
+    #  return create_response(500, "#{e.message}\n#{e.backtrace.join("\n")}", nil)
     end
-    return create_response(data, data.body)
+    return create_response(data.code, data.description, data.body)
   end
 
   def getUrl(silo, dataset=nil, filename=nil)
@@ -179,8 +197,8 @@ class Databank
 
   private
 
-  def create_response(response, results)   
-    return {'code' => response.code, 'description' => response.description, 'results' => results}
+  def create_response(code, description, results)
+    return {'code' => code, 'description' => description, 'results' => results}
   end
 
 end
