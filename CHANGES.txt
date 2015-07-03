@@ -1,6 +1,16 @@
 Changelog
 =========
 
+1.4
+------------------
+- Added support for new object type - thesis 
+- Enable multi-valued creator roles
+- Added copyright related fields to forms
+- New workflow for minting DOI
+- Catalog access condition set to open access for datasets with minted DOI
+- Fixed error with downloading files from Databank
+- Moved all names for workflow states into config file
+
 1.3.1
 ------------------
 - Modified user model methods to minimize queries to CUD
