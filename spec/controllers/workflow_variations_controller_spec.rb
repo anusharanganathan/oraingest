@@ -51,14 +51,14 @@ describe 'Workflow Variations' do
           expect(response).to render_template('dashboard/index')
         end
 
-        it 'should return an array of documents I can edit and include Submission status facet' do
-          pending 'I need to understand whether this test is valid or not'
-          user_results = Blacklight.solr.get 'select', :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
-          expect(assigns(:document_list).count).to eql(user_results['response']['numFound'])
-          ['Approved', 'Assigned', 'Draft', 'Escalated', 'Rejected', 'Submitted'] .each do |statuses|
-            expect(assigns(:response).facet_fields['MediatedSubmission_status_ssim']).to include(statuses)
-          end
-        end
+        #it 'should return an array of documents I can edit and include Submission status facet' do
+        #  pending 'I need to understand whether this test is valid or not'
+        #  user_results = Blacklight.solr.get 'select', :params=>{:fq=>["edit_access_group_ssim:public OR edit_access_person_ssim:#{@user.user_key}"]}
+        #  expect(assigns(:document_list).count).to eql(user_results['response']['numFound'])
+        #  ['Approved', 'Assigned', 'Draft', 'Escalated', 'Rejected', 'Submitted'] .each do |statuses|
+        #    expect(assigns(:response).facet_fields['MediatedSubmission_status_ssim']).to include(statuses)
+        #  end
+        #end
       end
     end
     describe 'logged in as archivist' do
