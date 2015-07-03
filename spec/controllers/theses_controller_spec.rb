@@ -140,7 +140,7 @@ RSpec.describe ThesesController, type: :controller do
       expect {
         delete :destroy, id: thesis
       }.to change { Thesis.exists?(thesis.id) }.from(true).to(false)
-      expect(controller).to redirect_to(theses_path)
+      expect(controller).to redirect_to(publications_path)
     end
   end
 end
