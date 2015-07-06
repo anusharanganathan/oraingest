@@ -8,6 +8,8 @@ class UpdatePublishRecordJob
       obj = Article.find(data['pid'])
     elsif data['model'] == 'Dataset'
       obj = Dataset.find(data['pid'])
+    elsif data['model'] == 'Thesis'
+      obj = Thesis.find(data['pid'])
     end
     if data['status']
       obj.workflowMetadata.update_status(Sufia.config.published_status, data['msg'])

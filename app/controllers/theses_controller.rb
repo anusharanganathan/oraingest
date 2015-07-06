@@ -199,24 +199,12 @@ class ThesesController < ApplicationController
   end
 
   def add_metadata(thesis_params, redirect_field)
-    if !@thesis.workflows.nil? && !@thesis.workflows.first.entries.nil?
-      old_status = @thesis.workflows.first.current_status
-    else
-      old_status = nil
-    end
     MetadataBuilder.new(@thesis).build(thesis_params, contents, current_user.user_key)
-    if old_status != @thesis.workflows.first.current_status
-      WorkflowPublisher.new(@thesis).perform_action(current_user.user_key)
-    end
+    WorkflowPublisher.new(@thesis).perform_action(current_user)
     respond_to do |format|
       if @thesis.save
-        if can? :review, @thesis
-          format.html { redirect_to edit_thesis_path(@thesis), notice: 'Thesis was successfully updated.', flash:{ redirect_field: redirect_field } }
-          format.json { head :no_content }
-        else
-          format.html { redirect_to edit_thesis_path(@thesis), notice: 'Thesis was successfully updated.' }
-          format.json { head :no_content }
-        end
+        format.html { redirect_to edit_thesis_path(@thesis), notice: 'Thesis was successfully updated.' }
+        format.json { head :no_content }
       else
         format.html { render action: 'edit' }
         format.json { render json: @thesis.errors, status: :unprocessable_entity }

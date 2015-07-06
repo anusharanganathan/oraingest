@@ -51,7 +51,7 @@ class WorkflowPublisher
   end
 
   def send_email(wf_id, current_user)
-    models = { 'Article' => 'articles', 'DatasetAgreement' => 'dataset_agreements', 'Dataset' => 'datasets' }
+    models = { 'Article' => 'articles', 'DatasetAgreement' => 'dataset_agreements', 'Dataset' => 'datasets', 'Thesis' => 'theses' }
     record_url = Rails.application.routes.url_helpers.url_for(:controller => models[@parent_model.model_klass], :action=>'show', :id => @parent_model.id)
     data = {'record_id' => @parent_model.id, 'record_url' => record_url, 'doi_requested'=>@parent_model.doi_requested?}
     if @parent_model.doi_requested? && !@parent_model.doi_registered?
